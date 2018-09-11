@@ -16,7 +16,7 @@
   },
   "scripts": {
     "pack": "webpack",
-    "dev": "webpack-dev-server --hot",
+    "dev": "webpack-dev-server",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {
