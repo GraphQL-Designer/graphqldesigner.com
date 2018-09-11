@@ -7,7 +7,7 @@ module.exports = {
   output: {
     path: path.join(__dirname, '/public'),
     filename: 'main.js',
-    // publicPath: '/public'
+    publicPath: '/public'
   },
   mode: 'development',
   module: {
@@ -16,7 +16,7 @@ module.exports = {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
         loader: 'babel-loader',
-        options: {
+        query: {
             presets: ['es2015', 'react'],
           }
       },
