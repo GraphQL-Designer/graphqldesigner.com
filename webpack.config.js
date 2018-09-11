@@ -1,13 +1,13 @@
 const path = require('path');
 
 module.exports = {
-  devtool: 'inline-source-map',
+  // devtool: 'inline-source-map',
   context: path.join(__dirname, '/client'),
   entry: './app.js',
   output: {
     path: path.join(__dirname, '/public'),
     filename: 'main.js',
-    publicPath: '/server/public'
+    // publicPath: '/public'
   },
   mode: 'development',
   module: {
