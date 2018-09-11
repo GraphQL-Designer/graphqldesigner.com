@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import CircularProgress from 'material-ui/CircularProgress';
+import WelcomeBox from './welcome';
 
 //Components
 import './index.css';
@@ -14,9 +15,10 @@ class Index extends Component {
         return (
             <div>
                 <h1 style={{marginTop: '100px'}}>GraphQL Designer Coming Soon</h1>
-                <CircularProgress size={50} thickness={5} style={{marginTop: '25px', marginBottom: '25px'}}/>
+                {/* <CircularProgress size={50} thickness={5} style={{marginTop: '25px', marginBottom: '25px'}}/> */}
                 <br />
-                <img src='./images/wireframe.png' style={{width: '95vw'}} />
+                <WelcomeBox />
+                {/* <img src='./images/wireframe.png' style={{width: '95vw'}} /> */}
             </div>
         )
     }
