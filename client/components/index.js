@@ -18,7 +18,7 @@ class Index extends Component {
     return (
       <div>
         <h1 style={{marginTop: '100px'}}>GraphQL Designer Coming Soon</h1>
-        <Welcome/>
+        <Welcome />
         <Router>
           <div>
             <ul>
