@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import CircularProgress from 'material-ui/CircularProgress';
+import WelcomeBox from './welcome';
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 
 //Components
@@ -16,7 +18,7 @@ class Index extends Component {
     return (
       <div>
         <h1 style={{marginTop: '100px'}}>GraphQL Designer Coming Soon</h1>
-        <Welcome/>
+        <Welcome />
         <Router>
           <div>
             <ul>
