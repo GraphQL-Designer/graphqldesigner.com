@@ -16,7 +16,7 @@ class Index extends Component {
                 <h1 style={{marginTop: '100px'}}>GraphQL Designer Coming Soon</h1>
                 <CircularProgress size={50} thickness={5} style={{marginTop: '25px', marginBottom: '25px'}}/>
                 <br />
-                <img src='./images/wireframe.png' style={{width: '95vw'}}/>
+                <img src='./images/wireframe.png' style={{width: '95vw'}} />
             </div>
         )
     }
