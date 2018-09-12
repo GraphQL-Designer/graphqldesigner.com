@@ -10,7 +10,9 @@ import QueryApp from './query/query-app.js';
 class Index extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      test: 'hi'
+    };
   }  
   render() {
     return (
@@ -27,7 +29,8 @@ class Index extends Component {
                 <Link to='/public/queries'>Queries</Link>
               </li>
             </ul>
-            <Route path="/public/schemas" component={SchemaApp} />
+
+            <Route path="/public/schemas" render={() => <SchemaApp test={this.state.test} />}/>
             <Route path="/public/queries" component={QueryApp} />
           </div>
         </Router>
