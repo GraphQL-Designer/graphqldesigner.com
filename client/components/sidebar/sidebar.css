@@ -1,0 +1,24 @@
+container{
+  display: flex;
+  flex-direction: column;
+  padding-top: 10px;
+  margin: 0;
+}
+
+newtable {
+  display: flex;
+  flex-direction: column;
+  background-color: lightgray;
+  margin: 0;
+  height: 120px;
+}
+
+options{
+  width: 100%;
+}
+
+hr{
+  background-color: black;
+  height: 2px;
+  width: 100%;
+}
