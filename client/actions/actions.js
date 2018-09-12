@@ -1,5 +1,10 @@
 import * as types from './action-types.js'
 
+export const chooseDatabase = (dbName) => ({
+  type: types.CHOOSE_DATABASE,
+  payload: dbName,
+});
+
 export const addTable = (tableIndex) => ({
   type: types.ADD_TABLE,
   payload: tableIndex,

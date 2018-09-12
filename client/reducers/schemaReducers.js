@@ -1,84 +1,49 @@
-import * as types from '../constants/actionTypes';
+import * as types from '../actions/action-types';
 
 const initialState = {
-  totalMarkets: 0,
-  totalCards: 0,
-  marketList: [],
-  lastMarketId: 10000,
-  newLocation: ''
+  tables: {},
+  database: ''
 };
 
 const marketsReducer = (state = initialState, action) => {
-  let marketList = state.marketList.slice();;
-  let totalMarkets = state.totalMarkets;
-  let totalCards = state.totalCards;
-  let lastMarketId = state.lastMarketId;
-  let newLocation = state.newLocation;
+  let tables = state.tables;
+  let database = state.database
 
-
+  // action.payload is how you can access the info
   switch(action.type) {
-    case types.ADD_MARKET:
-      lastMarketId++
-      totalMarkets++
-      const newMarket = {
-          'lastMarketId': state.lastMarketId,
-          'location': action.payload,
-          'cards': 0,
-          'percent': 0,
-      }
-      marketList.push(newMarket);
+    // Choose Database
+    case types.CHOOSE_DATABASE:
+      database = action.payload; 
+      console.log('this database was just selected: ', database)
       return {
         ...state,
-        marketList,
-        lastMarketId,
-        totalMarkets,
-        newLocation: ''
+        database
+      }
+
+    // Add Schema Table
+    case types.ADD_TABLE:
+      return {
+        ...state,
       };
-
-    case types.SET_NEW_LOCATION:
+    
+    // Delete Schema Table
+    case types.DELETE_TABLE:
     return {
-      ...state,
-      marketList,
-      lastMarketId,
-      totalMarkets,
-      newLocation: action.payload
+      ...state
     };
 
-    case types.ADD_CARD:
-    totalCards++
-    marketList[action.payload].cards++
-    // for (let i = 0; i< marketList.length; i++) {
-    //   marketList[i].percent = ((marketList[i].cards / totalCards) * 100).toFixed(2)
-    // }
-
-
+    // Add Field
+    case types.ADD_FIELD:
 
     return {
-      ...state,
-      newLocation: '',
-      totalCards,
-      marketList,
-      lastMarketId,
-      totalMarkets,
-      newLocation,
+      ...state
     };
 
-    case types.DELETE_CARD:
-    if (marketList[action.payload].cards > 0) {
-       totalCards--
-       marketList[action.payload].cards--
-      //  for (let i = 0; i< marketList.length; i++) {
-      //   marketList[i].percent = ((marketList[i].cards / totalCards) * 100).toFixed(2)
-      // }
-    }
+    // Delete Field
+    case types.DELETE_FIELD:
 
     return {
-      ...state,
-      totalCards,
-      marketList,
-      lastMarketId,
-      totalMarkets,
-      newLocation,
+      ...state
     };
 
     default:

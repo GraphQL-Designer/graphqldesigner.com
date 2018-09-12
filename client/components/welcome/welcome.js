@@ -10,26 +10,18 @@ export default class Welcome extends React.Component {
       open: true,
       MongoDB: null,
     };
-    this.handleOpen = this.handleOpen.bind(this);
     this.handleClose = this.handleClose.bind(this);
-    this.handleMongoClick = this.handleMongoClick.bind(this);
-    this.handleSQLClick = this.handleSQLClick.bind(this);
+    this.handleDatabaseClick = this.handleDatabaseClick.bind(this);
   }
-
-  handleOpen() {
-    this.setState({open: true});
-  };
 
   handleClose() {
     this.setState({open: false});
   };
 
-  handleMongoClick(){
-    this.setState({open: false, MongoDB: true});
-  }
-
-  handleSQLClick(){
-    this.setState({open: false, MongoDB: false});
+  handleDatabaseClick(event){
+    event.preventDefault(); 
+    this.props.chooseDatabase(event.target.innerHTML)
+    this.setState({open: false});
   }
  
   render() {
@@ -48,8 +40,8 @@ export default class Welcome extends React.Component {
           <hr/>
           <h4>Select your database type</h4>
           <div id='buttonsContainer'>
-            <button onClick={this.handleMongoClick} className='dbButton btn btn-outline-primary'>MongoDB</button>
-            <button onClick={this.handleSQLClick} className='dbButton btn btn-outline-primary'>SQL</button>
+            <button onClick={this.handleDatabaseClick} className='dbButton btn btn-outline-primary'>MongoDB</button>
+            <button onClick={this.handleDatabaseClick} className='dbButton btn btn-outline-primary'>SQL</button>
           </div>
         </Dialog>
       </div>

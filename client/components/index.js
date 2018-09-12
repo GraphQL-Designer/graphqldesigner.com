@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import CircularProgress from 'material-ui/CircularProgress';
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import * as actions from '../actions/actions.js';
 
 //Components
 import './index.css';
@@ -8,18 +9,24 @@ import Welcome from './welcome/welcome.js';
 import SchemaApp from './schema/schema-app.js';
 import QueryApp from './query/query-app.js';
 
+
+const mapStateToProps = store => ({
+  test: store.data.test, //we use store.data, because of index.js reduce function
+});
+
+const mapDispatchToProps = dispatch => ({
+  chooseDatabase: dbName => dispatch(actions.chooseDatabase(dbName)),
+})
+
 class Index extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      test: 'hi'
-    };
   }  
   render() {
     return (
       <div>
         <h1 style={{marginTop: '100px'}}>GraphQL Designer Coming Soon</h1>
-        <Welcome />
+        <Welcome chooseDatabase={this.props.chooseDatabase}/>
         <Router>
           <div>
             <ul>
@@ -30,8 +37,7 @@ class Index extends Component {
                 <Link to='/public/queries'>Queries</Link>
               </li>
             </ul>
-
-            <Route path="/public/schemas" render={() => <SchemaApp test={this.state.test} />}/>
+            <Route path="/public/schemas" render={() => <SchemaApp />}/>
             <Route path="/public/queries" component={QueryApp} />
           </div>
         </Router>
@@ -40,4 +46,4 @@ class Index extends Component {
   }
 }
 
-export default Index;
+export default connect(mapStateToProps, mapDispatchToProps)(Index);
