@@ -8,7 +8,7 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import Index from './components';
 
 const ThemedIndex = () => (
-    <MuiThemeProvider muiTheme={getMuiTheme(darkBaseTheme)}>
+    <MuiThemeProvider>
       <Index />
     </MuiThemeProvider>
   );

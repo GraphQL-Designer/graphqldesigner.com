@@ -1,0 +1,38 @@
+#icon_graphql{
+  max-width: 25%;
+  max-height: 5%;
+}
+
+#icon_express{
+  max-width: 30%;
+  max-height: 50%;
+}
+
+#icon_react{
+  max-width: 30%;
+  max-height: 5%;
+}
+
+h3{
+  font-size: 50px !important;
+}
+
+#subheading{
+  font-size: 25px;
+}
+
+#buttonsContainer{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  margin-top: 20px;
+}
+
+.dbButton{ 
+  font-size: 25px;
+}
+
+hr{
+  height: 2px;
+  background-color: black;
+}
