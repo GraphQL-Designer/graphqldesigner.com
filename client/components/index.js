@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import CircularProgress from 'material-ui/CircularProgress';
-import WelcomeBox from './welcome';
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 
 //Components
