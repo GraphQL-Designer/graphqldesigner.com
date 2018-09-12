@@ -7,6 +7,7 @@ import './index.css';
 import Welcome from './welcome/welcome.js';
 import SchemaApp from './schema/schema-app.js';
 import QueryApp from './query/query-app.js';
+import SideBar from './sidebar/sidebar.js'
 
 class Index extends Component {
   constructor(props) {
@@ -17,7 +18,8 @@ class Index extends Component {
     return (
       <div>
         <h1 style={{marginTop: '100px'}}>GraphQL Designer Coming Soon</h1>
-        <Welcome />
+        {/* <Welcome /> */}
+        <SideBar />
         <Router>
           <div>
             <ul>
