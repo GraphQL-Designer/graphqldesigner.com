@@ -7,7 +7,7 @@ import Divider from 'material-ui/Divider';
 
 import './sidebar.css';
 
-export default class DrawerOpenRightExample extends React.Component {
+export default class Sidebar extends React.Component {
 
   constructor(props) {
     super(props);
