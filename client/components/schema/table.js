@@ -1,6 +1,13 @@
 import React, { Component } from 'react';
-import { connect} from 'react-redux';
+import { connect } from 'react-redux';
 import * as actions from '../../actions/actions.js';
+
+// //we use store.data, because of index.js reduce function
+// const mapStateToProps = store => ({
+//   tables: store.data.tables, 
+//   //need below to subscribe to store. store.data.tables is an object so never changes
+//   tableIndex: store.data.tableIndex 
+// });
 
 
 const mapDispatchToProps = dispatch => ({
@@ -12,29 +19,30 @@ const mapDispatchToProps = dispatch => ({
 class Table extends Component {
   constructor(props) {
     super(props);
-    this.handleClick = this.handleClick.bind(this)
-    this.handleClick = this.handleClick.bind(this)
-    this.handleClick = this.handleClick.bind(this)
+    this.handleDeleteTable = this.handleDeleteTable.bind(this)
+    this.handleDeleteField = this.handleDeleteField.bind(this)
+    this.handleAddField    = this.handleAddField.bind(this)
   } 
 
   handleDeleteTable(event){
-    console.log(event.target.value);
+    this.props.deleteTable(event.target.value)
   }
  // 
   handleDeleteField(event){
-    console.log(event.target.value);
+    this.props.deleteField(event.target.value)
   }
 
   handleAddField(event){
-    console.log(event.target.value);
+    this.props.addField(event.target.value)
   }
 
   render() {
+    console.log('props in table.js', this.props)
     return (
       <div className='table'>
-        <div>Table Name<button value={0} onClick={this.handleClick}>x</button></div>
-        <div>Table Field<button value={0} onClick={this.handleClick}>x</button></div>
-        <div>Table Field<button value={1} onClick={this.handleClick}>x</button></div>
+        <div>{this.props.tableData.tableName}<button value={0} onClick={this.handleDeleteTable}>x</button></div>
+        <div>Table Field<button value={0} onClick={this.handleDeleteField}>x</button></div>
+        <div>Table Field<button value={1} onClick={this.handleAddField}>x</button></div>
         <button onClick={this.props.addField}>Add Field</button>
       </div>  
         //     <div>
@@ -81,4 +89,4 @@ class Table extends Component {
   }
 }
 
-export default connect(mapDispatchToProps)(Table);
+export default connect(null, mapDispatchToProps)(Table);
