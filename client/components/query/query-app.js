@@ -1,14 +1,14 @@
 import React from 'react';
 
 //components
-import QuerySidebar from './query-sidebar.js';
+import Sidebar from './sidebar/sidebar.js';
 
 const QueryApp = props => {
   return (
     <div>
-      <QuerySidebar/>
+      <Sidebar/>
     </div>
   )
 };
 
-export default QuerySidebar;
+export default QueryApp;

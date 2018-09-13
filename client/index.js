@@ -5,11 +5,11 @@ import store from './store.js';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 //Components
-import Index from './components';
+import App from './components/app.js';
 
 const ThemedIndex = () => (
   <MuiThemeProvider>
-    <Index />
+    <App />
   </MuiThemeProvider>
 );
 

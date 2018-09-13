@@ -3,14 +3,12 @@ import * as types from '../actions/action-types';
 const initialState = {
   tables: {},
   tableIndex: 0,
-  fieldIndex: 0,
   database: ''
 };
 
 const marketsReducer = (state = initialState, action) => {
   let tables = state.tables;
   let tableIndex = state.tableIndex;
-  let fieldIndex = state.fieldIndex;
   let database = state.database
 
   // action.payload is how you can access the info
@@ -28,19 +26,12 @@ const marketsReducer = (state = initialState, action) => {
     case types.ADD_TABLE:
       const newTable = action.payload;
       tables[tableIndex] = {};
-      tables[tableIndex].name = newTable;
+      tables[tableIndex].tableName = newTable;
       tables[tableIndex].fields = {};
-      tables[tableIndex].fields[fieldIndex] = {};
-      tables[tableIndex].fields[fieldIndex].type = '';
-      tables[tableIndex].fields[fieldIndex].primaryKey = false;
-      tables[tableIndex].fields[fieldIndex].unique = false;
-      tables[tableIndex].fields[fieldIndex].defaultValue = '';
-      tables[tableIndex].fields[fieldIndex].multipleValue = false;
-      tables[tableIndex].fields[fieldIndex].allowNulls = 'false';
-      tables[tableIndex].fields[fieldIndex].relation = {};
+      tables[tableIndex].fieldsIndex = 0;
       tableIndex += 1;
       console.log(`table ${newTable} was added`);
-      console.log(tables);
+      console.log('here are the tables: ', tables);
       return {
         ...state,
         tables,
@@ -55,6 +46,14 @@ const marketsReducer = (state = initialState, action) => {
 
     // Add Field
     case types.ADD_FIELD:
+    // tables[tableIndex].fields[0] = {};
+    // tables[tableIndex].fields[0].type = '';
+    // tables[tableIndex].fields[0].primaryKey = false;
+    // tables[tableIndex].fields[0].unique = false;
+    // tables[tableIndex].fields[0].defaultValue = '';
+    // tables[tableIndex].fields[0].multipleValue = false;
+    // tables[tableIndex].fields[0].allowNulls = 'false';
+    // tables[tableIndex].fields[0].relation = {};
 
     return {
       ...state
