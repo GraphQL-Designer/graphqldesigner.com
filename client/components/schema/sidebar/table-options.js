@@ -2,8 +2,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 import TextField from 'material-ui/TextField';
 import DropDownMenu from 'material-ui/DropDownMenu';
-import MenuItem from 'material-ui/MenuItem';
-import * as actions from '../../actions/actions.js';
+// import MenuItem from 'material-ui/MenuItem';
+import * as actions from '../../../actions/actions.js';
+import { MenuItem, DropdownButton } from 'react-bootstrap';
 
 import './sidebar.css';
 
@@ -17,7 +18,6 @@ class TableOptions extends React.Component {
       uniqueValue: 1 // 1='False', 2='True'
     };
 
-    this.handleToggle = this.handleToggle.bind(this);
     this.handleToggle = this.handleToggle.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleNullChange = this.handleNullChange.bind(this);
@@ -44,8 +44,8 @@ class TableOptions extends React.Component {
       <div id='options'>
         <h4>Options</h4>
         <div>
-          <h5>Type: </h5> 
-          <DropDownMenu
+          {/* <h5>Type: </h5>  */}
+          {/* <DropDownMenu
             value={this.state.typeValue}
             onChange={this.handleChange}
             className='dropdown'
@@ -78,8 +78,9 @@ class TableOptions extends React.Component {
           >
             <MenuItem value={1} primaryText='False' />
             <MenuItem value={2} primaryText='True' />
-          </DropDownMenu>
-        </div>
+          </DropDownMenu> */}
+
+        {/* </div>
         <br/>
         <div>
           <h5>Nulls: </h5> 
@@ -96,7 +97,19 @@ class TableOptions extends React.Component {
           >
             <MenuItem value={1} primaryText='False' />
             <MenuItem value={2} primaryText='True' />
-          </DropDownMenu>
+          </DropDownMenu> */}
+
+          <DropdownButton
+            bsStyle='default'
+            title={'Type'}
+            id='typeId'
+            key={this.state.typeValue}
+          >
+            <MenuItem eventKey="1">String</MenuItem>
+            <MenuItem eventKey="2">Number</MenuItem>
+            <MenuItem eventKey="3">Date</MenuItem>
+            <MenuItem eventKey="4">Boolean</MenuItem>
+          </DropdownButton>
         </div>
       </div>
 

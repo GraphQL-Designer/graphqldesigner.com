@@ -6,7 +6,7 @@ import React from 'react';
 // import MenuItem from 'material-ui/MenuItem';
 
 import CreateTable from './create-table';
-// import TableOptions from './table-options';
+import TableOptions from './table-options';
 import './sidebar.css';
 
 
@@ -17,7 +17,7 @@ class Sidebar extends React.Component {
           <div id='tableContainer'>
             <CreateTable />
             {/* display options below after user creates table */}
-            {/* <TableOptions /> */}
+            <TableOptions />
           </div>
     );
   }
