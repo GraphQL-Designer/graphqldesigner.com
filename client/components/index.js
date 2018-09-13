@@ -8,7 +8,7 @@ import './index.css';
 import Welcome from './welcome/welcome.js';
 import SchemaApp from './schema/schema-app.js';
 import QueryApp from './query/query-app.js';
-import SideBar from './sidebar/sidebar.js'
+import Sidebar from './sidebar/sidebar.js'
 
 
 const mapStateToProps = store => ({
@@ -28,7 +28,6 @@ class Index extends Component {
       <div>
         <h1 style={{marginTop: '100px'}}>GraphQL Designer Coming Soon</h1>
         <Welcome chooseDatabase={this.props.chooseDatabase}/>
-        <Sidebar />
         <Router>
           <div>
             <ul>
