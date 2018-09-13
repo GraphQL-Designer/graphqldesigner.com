@@ -1,0 +1,45 @@
+#tableContainer{
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  width: 30%;
+  justify-content: flex-end;
+  float: right; 
+}
+
+#newtable {
+  display: flex;
+  flex-direction: column;
+  background-color: lightgray;
+  margin: 0;
+  height: 120px;
+}
+
+#options div{
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  width: 100%;
+}
+
+hr{
+  background-color: black;
+  height: 2px;
+  width: 100%;
+}
+
+form{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  width: 100%;
+}
+
+h5{
+  padding-top: 20px;
+}
+
+svg {
+  position: right !important;
+  color: black !important;
+}
