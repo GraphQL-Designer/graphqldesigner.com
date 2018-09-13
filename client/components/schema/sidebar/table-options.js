@@ -2,8 +2,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 import TextField from 'material-ui/TextField';
 import DropDownMenu from 'material-ui/DropDownMenu';
-import MenuItem from 'material-ui/MenuItem';
-import * as actions from '../../actions/actions.js';
+// import MenuItem from 'material-ui/MenuItem';
+import * as actions from '../../../actions/actions.js';
+import { MenuItem, DropdownButton } from 'react-bootstrap';
 
 import './sidebar.css';
 
@@ -17,7 +18,6 @@ class TableOptions extends React.Component {
       uniqueValue: 1 // 1='False', 2='True'
     };
 
-    this.handleToggle = this.handleToggle.bind(this);
     this.handleToggle = this.handleToggle.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleNullChange = this.handleNullChange.bind(this);
@@ -79,6 +79,7 @@ class TableOptions extends React.Component {
             <MenuItem value={1} primaryText='False' />
             <MenuItem value={2} primaryText='True' />
           </DropDownMenu>
+
         </div>
         <br/>
         <div>

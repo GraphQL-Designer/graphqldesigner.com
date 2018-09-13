@@ -25,9 +25,11 @@ const marketsReducer = (state = initialState, action) => {
     // Add Schema Table
     case types.ADD_TABLE:
       console.log('this is the state', state)
-      const newTable = action.payload;
+      const newTable = action.payload.name;
+      const uniqueID = action.payload.uniqueID;
       tables[tableIndex] = {};
       tables[tableIndex].tableName = newTable;
+      tables[tableIndex].idRequested = uniqueID;
       tables[tableIndex].fields = {};
       tables[tableIndex].fieldsIndex = 0;
       tableIndex += 1;

@@ -24,17 +24,20 @@ class CreateTable extends React.Component {
   createTable(e){
     e.preventDefault();
     let tableName = document.getElementById('tableName');
-    this.props.createTable(this.capitalizeFirstLetter(tableName.value));
+    let uniqueID = document.querySelector('#idCheckbox').checked;
+    this.props.createTable({name: this.capitalizeFirstLetter(tableName.value), uniqueID: uniqueID});
     tableName.value = '';
+    document.getElementById('idCheckbox').checked = false;
   }
 
   render(){
     return (
-      <div id='newtable'>
+      <div id='newTable'>
         <h4>New Table</h4>
         <form >
-          <input type='text' id='tableName' name='tableName' placeholder='Name' />
-          <input type='submit' value='Create' className='btn-outline-success btn-lg' onClick={this.createTable}/>
+          <input type='text' id='tableName' className='tableName' placeholder='Name' />
+          <span>Unique ID:<input id='idCheckbox' type='checkbox'/></span>
+          <input type='submit' value='Create' className='btn-outline-success btn-sm' onClick={this.createTable}/>
         </form>
       </div>
     );
