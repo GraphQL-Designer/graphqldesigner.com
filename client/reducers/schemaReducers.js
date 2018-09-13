@@ -24,6 +24,7 @@ const marketsReducer = (state = initialState, action) => {
 
     // Add Schema Table
     case types.ADD_TABLE:
+      console.log('this is the state', state)
       const newTable = action.payload.name;
       const uniqueID = action.payload.uniqueID;
       tables[tableIndex] = {};
@@ -56,13 +57,14 @@ const marketsReducer = (state = initialState, action) => {
     // tables[tableIndex].fields[0].multipleValue = false;
     // tables[tableIndex].fields[0].allowNulls = 'false';
     // tables[tableIndex].fields[0].relation = {};
-
+      console.log('this is action.payload', action.payload)
     return {
       ...state
     };
 
     // Delete Field
     case types.DELETE_FIELD:
+      console.log(action.payload)
 
     return {
       ...state
