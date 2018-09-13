@@ -54,13 +54,14 @@ const marketsReducer = (state = initialState, action) => {
     // tables[tableIndex].fields[0].multipleValue = false;
     // tables[tableIndex].fields[0].allowNulls = 'false';
     // tables[tableIndex].fields[0].relation = {};
-
+      console.log('this is action.payload', action.payload)
     return {
       ...state
     };
 
     // Delete Field
     case types.DELETE_FIELD:
+      console.log('delete')
 
     return {
       ...state
