@@ -11,7 +11,7 @@ const SchemaApp = props => {
   return (
     <div className='schema-app-container'>
       <Sidebar/>
-      {/* <Table/> */}
+      <Table/>
     </div>
   )
 };
