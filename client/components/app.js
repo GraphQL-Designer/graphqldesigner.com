@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import * as actions from '../actions/actions.js';
 
 //Components
-import './index.css';
+import './app.css';
 import Welcome from './welcome/welcome.js';
 import SchemaApp from './schema/schema-app.js';
 import QueryApp from './query/query-app.js';
@@ -17,7 +17,7 @@ const mapDispatchToProps = dispatch => ({
   chooseDatabase: dbName => dispatch(actions.chooseDatabase(dbName)),
 })
 
-class Index extends Component {
+class App extends Component {
   constructor(props) {
     super(props);
   }  
@@ -45,4 +45,4 @@ class Index extends Component {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Index);
+export default connect(mapStateToProps, mapDispatchToProps)(App);
