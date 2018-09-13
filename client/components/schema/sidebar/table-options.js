@@ -44,8 +44,8 @@ class TableOptions extends React.Component {
       <div id='options'>
         <h4>Options</h4>
         <div>
-          {/* <h5>Type: </h5>  */}
-          {/* <DropDownMenu
+          <h5>Type: </h5> 
+          <DropDownMenu
             value={this.state.typeValue}
             onChange={this.handleChange}
             className='dropdown'
@@ -78,9 +78,9 @@ class TableOptions extends React.Component {
           >
             <MenuItem value={1} primaryText='False' />
             <MenuItem value={2} primaryText='True' />
-          </DropDownMenu> */}
+          </DropDownMenu>
 
-        {/* </div>
+        </div>
         <br/>
         <div>
           <h5>Nulls: </h5> 
@@ -97,19 +97,7 @@ class TableOptions extends React.Component {
           >
             <MenuItem value={1} primaryText='False' />
             <MenuItem value={2} primaryText='True' />
-          </DropDownMenu> */}
-
-          <DropdownButton
-            bsStyle='default'
-            title={'Type'}
-            id='typeId'
-            key={this.state.typeValue}
-          >
-            <MenuItem eventKey="1">String</MenuItem>
-            <MenuItem eventKey="2">Number</MenuItem>
-            <MenuItem eventKey="3">Date</MenuItem>
-            <MenuItem eventKey="4">Boolean</MenuItem>
-          </DropdownButton>
+          </DropDownMenu>
         </div>
       </div>
 

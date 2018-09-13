@@ -15,9 +15,10 @@
   width: 100%;
   background-color: lightgray;
   margin: 0;
-  height: 120px;
+  height: 140px;
   justify-content: flex-start;
 }
+
 
 #options div{
   display: flex;
@@ -34,7 +35,7 @@ hr{
 
 form{
   display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  width: 100%;
+  flex-direction: column;
+  justify-content: center;
+  width: auto;
 }
