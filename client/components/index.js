@@ -8,8 +8,6 @@ import './index.css';
 import Welcome from './welcome/welcome.js';
 import SchemaApp from './schema/schema-app.js';
 import QueryApp from './query/query-app.js';
-import Sidebar from './sidebar/sidebar.js'
-
 
 const mapStateToProps = store => ({
   test: store.data.test, //we use store.data, because of index.js reduce function
