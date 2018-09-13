@@ -8,6 +8,7 @@ import './app.css';
 import Welcome from './welcome/welcome.js';
 import SchemaApp from './schema/schema-app.js';
 import QueryApp from './query/query-app.js';
+import GraphqlLoader from './loader';
 
 const mapStateToProps = store => ({
   test: store.data.test, //we use store.data, because of index.js reduce function
@@ -25,6 +26,7 @@ class App extends Component {
     return (
       <div>
         <h1 style={{marginTop: '100px'}}>GraphQL Designer Coming Soon</h1>
+        <GraphqlLoader />
         <Welcome chooseDatabase={this.props.chooseDatabase}/>
         <Router>
           <div>
