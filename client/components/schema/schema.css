@@ -1,0 +1,11 @@
+.schema-app-container{
+  width: 100%;
+  border: 5px solid black;
+  height: 100%; 
+}
+
+.table{
+  border: 1px solid black;
+  /* display: flex; */
+  width: 200px; 
+}
