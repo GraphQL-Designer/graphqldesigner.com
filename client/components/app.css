@@ -1,0 +1,29 @@
+ul{
+  display: flex; 
+}
+
+a{
+  font-size: 1.3em; 
+  text-decoration: none;
+  list-style-type: none; 
+  color: deeppink; 
+  height: 100%;
+  width: 100%; 
+}
+
+a:hover{
+  text-decoration: none;
+  color: white; 
+}
+
+li{
+  display: flex; 
+  border: 1.5px solid deeppink;
+  border-radius: 10px 10px 0px 0px; 
+  width: 50%; 
+  list-style-type: none; 
+}
+
+li:hover{
+  background-color: deeppink;
+}

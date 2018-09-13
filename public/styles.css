@@ -4,3 +4,10 @@
     box-sizing: border-box;
     text-align: center;
 }
+
+#app{
+    margin: 1%;
+    width: 98%;
+    height: 96vh; 
+    border: 1px solid black; 
+}
