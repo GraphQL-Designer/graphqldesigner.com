@@ -2,8 +2,9 @@
   display: flex;
   flex-direction: column;
   margin: 0;
-  width: 20%;
+  width: 30%;
   justify-content: flex-end;
+  float: right; 
 }
 
 #newtable {

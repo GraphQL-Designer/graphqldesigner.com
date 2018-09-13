@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import * as actions from '../../actions/actions.js';
+import * as actions from '../../../actions/actions.js';
+
 
 import './sidebar.css';
 
@@ -12,10 +13,6 @@ class CreateTable extends React.Component {
   constructor(props) {
     super(props);
 
-    this.handleToggle = this.handleToggle.bind(this);
-    this.handleChange = this.handleChange.bind(this);
-    this.handleNullChange = this.handleNullChange.bind(this);
-    this.handleUniqueChange = this.handleUniqueChange.bind(this);
     this.createTable = this.createTable.bind(this);
     this.capitalizeFirstLetter = this.capitalizeFirstLetter.bind(this);
   }
@@ -23,21 +20,6 @@ class CreateTable extends React.Component {
   capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
   }
-
-  handleToggle () {this.setState({open: !this.state.open})};
-
-  handleChange (event, index, typeValue) {
-    event.preventDefault();
-    this.setState({typeValue});
-  };
-  handleNullChange (event, index, nullValue) {
-    event.preventDefault();
-    this.setState({nullValue});
-  };
-  handleUniqueChange (event, index, uniqueValue) {
-    event.preventDefault();
-    this.setState({uniqueValue});
-  };
 
   createTable(e){
     e.preventDefault();
