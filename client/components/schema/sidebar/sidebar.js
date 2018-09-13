@@ -14,21 +14,11 @@ class Sidebar extends React.Component {
 
   render() {
     return (
-        // <div>
-        // <Drawer 
-        //   width={300} 
-        //   openSecondary={true} 
-        //   open={true} 
-        //   autoWidth={true}
-        //   style={{height: '90%'}}
-        // >
           <div id='tableContainer'>
             <CreateTable />
             {/* display options below after user creates table */}
             {/* <TableOptions /> */}
           </div>
-        // </Drawer>
-        // </div>
     );
   }
 }

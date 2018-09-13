@@ -30,7 +30,7 @@ class CreateTable extends React.Component {
 
   render(){
     return (
-      <div id='newtable'>
+      <div id='newTable'>
         <h4>New Table</h4>
         <form >
           <input type='text' id='tableName' name='tableName' placeholder='Name' />

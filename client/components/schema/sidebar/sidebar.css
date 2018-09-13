@@ -3,16 +3,20 @@
   flex-direction: column;
   margin: 0;
   width: 30%;
-  justify-content: flex-end;
+  height: 100%;
+  justify-content: flex-start;
   float: right; 
+  border: 1px solid black;
 }
 
-#newtable {
+#newTable {
   display: flex;
   flex-direction: column;
+  width: 100%;
   background-color: lightgray;
   margin: 0;
   height: 120px;
+  justify-content: flex-start;
 }
 
 #options div{
@@ -33,13 +37,4 @@ form{
   flex-direction: row;
   justify-content: space-around;
   width: 100%;
-}
-
-h5{
-  padding-top: 20px;
-}
-
-svg {
-  position: right !important;
-  color: black !important;
 }
