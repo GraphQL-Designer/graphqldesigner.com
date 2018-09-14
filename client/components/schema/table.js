@@ -29,7 +29,9 @@ class Table extends Component {
   }
 
   handleDeleteField(event){
-    this.props.deleteField(event.target.value)
+    const tableIndex = this.props.tableIndex
+    const fieldIndex = event.target.value
+    this.props.deleteField([tableIndex, fieldIndex])
   }
 
   handleAddField(event){
@@ -40,21 +42,21 @@ class Table extends Component {
     return (
       <div className='table'>
         <div>{this.props.tableData.tableName}
-          <button 
+          <button
             value={this.props.tableIndex} 
             onClick={this.handleDeleteTable}>x
           </button>
         </div>
         <div>Table Field
           <button 
-            value={0} 
+            value={0}
             onClick={this.handleDeleteField}>x
           </button>
         </div>
         <div>Table Field
           <button 
             value={1} 
-            onClick={this.handleAddField}>x
+            onClick={this.handleDeleteField}>x
           </button>
         </div>
         <button onClick={this.props.addField}>Add Field</button>

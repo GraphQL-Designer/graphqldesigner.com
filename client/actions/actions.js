@@ -1,4 +1,5 @@
 import * as types from './action-types.js'
+import table from '../components/schema/table.js';
 
 export const chooseDatabase = (dbName) => ({
   type: types.CHOOSE_DATABASE,
@@ -20,7 +21,7 @@ export const addField = (fieldName) => ({
   payload: fieldName,
 });
 
-export const deleteField = (fieldName) => ({
+export const deleteField = (...tableIndex) => ({
   type: types.DELETE_FIELD,
-  payload: fieldName,
+  payload: tableIndex
 });
