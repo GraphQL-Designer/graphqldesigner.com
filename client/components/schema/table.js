@@ -27,7 +27,7 @@ class Table extends Component {
   handleDeleteTable(event){
     this.props.deleteTable(event.target.value)
   }
- // 
+
   handleDeleteField(event){
     this.props.deleteField(event.target.value)
   }
@@ -37,54 +37,28 @@ class Table extends Component {
   }
 
   render() {
-    console.log('props in table.js', this.props)
     return (
       <div className='table'>
-        <div>{this.props.tableData.tableName}<button value={0} onClick={this.handleDeleteTable}>x</button></div>
-        <div>Table Field<button value={0} onClick={this.handleDeleteField}>x</button></div>
-        <div>Table Field<button value={1} onClick={this.handleAddField}>x</button></div>
+        <div>{this.props.tableData.tableName}
+          <button 
+            value={this.props.tableIndex} 
+            onClick={this.handleDeleteTable}>x
+          </button>
+        </div>
+        <div>Table Field
+          <button 
+            value={0} 
+            onClick={this.handleDeleteField}>x
+          </button>
+        </div>
+        <div>Table Field
+          <button 
+            value={1} 
+            onClick={this.handleAddField}>x
+          </button>
+        </div>
         <button onClick={this.props.addField}>Add Field</button>
       </div>  
-        //     <div>
-        //     <table>
-        //       <tbody>
-        //         <tr>
-        //           <th colSpan={2}>    
-        //             <FormControl className="tableName" 
-        //               type="text" 
-        //               value=''
-        //               placeholder="Table Name"
-        //               onChange={(event) => {
-        //                 props.updateTableName(event.target.value);
-        //               }} 
-        //             />     
-        //           </th>
-        //         </tr>
-        //         <tr>
-        //         <td><FormControl className='fieldInput' 
-        //         type="text" 
-        //         placeholder="property" 
-        //         value=''
-        //         onChange={(event) => {
-        //           props.updateRowProp(event.target.value);
-        //         }}
-        //         />
-        //         </td>    
-        //         </tr>
-        //             <tr>
-        //               <td className='addFieldWrap' colSpan={2}>
-        //                 <button type="addField" onClick={() => addField(this.props.addField)}> ADD FIELD </button>
-        //               </td>
-        //             </tr>                               
-        //     </tbody>
-        //   </table>
-        //   <OverlayTrigger placement="right" overlay={<Tooltip id="tooltip"> Delete table</Tooltip>}>
-        //     <div className="deleteTableButton" onClick={() => deleteTable(this.props.deleteTable)}>x</div>
-        //   </OverlayTrigger> 
-        //   <OverlayTrigger placement="right" overlay={<Tooltip id="tooltip"> Delete field</Tooltip>}>
-        //     <div className='deletefield' onClick={() =>deleteField(this.props.deleteField)}>x</div>
-        //   </OverlayTrigger>
-        // </div> 
     )
   }
 }
