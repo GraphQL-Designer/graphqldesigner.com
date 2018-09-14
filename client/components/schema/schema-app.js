@@ -8,23 +8,31 @@ import Table from './table.js';
 //styles
 import './schema.css'
 
-//we use store.data, because of index.js reduce function
+// We use store.data, because of index.js reduce function
 const mapStateToProps = store => ({
   tables: store.data.tables, 
-  //need below to subscribe to store. store.data.tables is an object so never changes
-  tableIndex: store.data.tableIndex 
+  tableIndex: store.data.tableIndex,
+  // Need below to subscribe to store. store.data.tables is an object so never changes
+  tableCount: store.data.tableCount
 });
 
 const SchemaApp = props => {
+
+  // Dynamically renders each table based on the number of tables. 
   let tableComponents = []; 
-  for (let i = 0; i < Object.keys(props.tables).length; i += 1){
-    tableComponents.push(<Table key={i} tableData={props.tables[i]}/>)
+  let keyNum = 100 //React requires a key to avoid errors. 
+  for (let property in props.tables){
+    tableComponents.push(<Table
+      key = {keyNum++} 
+      tableData={props.tables[property]}
+      tableIndex={property}
+      />
+    )
   }
 
   return (
     <div className='schema-app-container'>
       <Sidebar/>
-      {/* <Table/> */}
       {tableComponents}
     </div>
   )
