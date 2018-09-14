@@ -3,13 +3,15 @@ import * as types from '../actions/action-types';
 const initialState = {
   tables: {},
   tableIndex: 0,
-  database: ''
+  database: '',
+  tableCount: 0
 };
 
 const marketsReducer = (state = initialState, action) => {
   let tables = state.tables;
   let tableIndex = state.tableIndex;
-  let database = state.database
+  let database = state.database;
+  let tableCount = state.tableCount;
 
   // action.payload is how you can access the info
   switch(action.type) {
@@ -24,7 +26,6 @@ const marketsReducer = (state = initialState, action) => {
 
     // Add Schema Table
     case types.ADD_TABLE:
-      console.log('this is the state', state)
       const newTable = action.payload.name;
       const uniqueID = action.payload.uniqueID;
       tables[tableIndex] = {};
@@ -33,18 +34,26 @@ const marketsReducer = (state = initialState, action) => {
       tables[tableIndex].fields = {};
       tables[tableIndex].fieldsIndex = 0;
       tableIndex += 1;
+      tableCount += 1; 
       console.log(`table ${newTable} was added`);
       console.log('here are the tables: ', tables);
       return {
         ...state,
         tables,
-        tableIndex
+        tableIndex,
+        tableCount
       };
     
     // Delete Schema Table
     case types.DELETE_TABLE:
+    tableCount -= 1
+    delete tables[action.payload]
+    console.log('here are the tables now', tables)
     return {
-      ...state
+      ...state,
+      tables,
+      tableIndex,
+      tableCount
     };
 
     // Add Field
