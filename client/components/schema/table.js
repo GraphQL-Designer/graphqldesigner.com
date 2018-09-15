@@ -39,8 +39,11 @@ class Table extends Component {
   }
 
   render() {
+    console.log(this.props.tableData)
+
     return (
       <div className='table'>
+       <script>console.log('hi')</script>
         <div>{this.props.tableData.tableName}
           <button
             value={this.props.tableIndex} 
