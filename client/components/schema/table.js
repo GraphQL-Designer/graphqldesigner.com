@@ -4,7 +4,7 @@ import * as actions from '../../actions/actions.js';
 
 // //we use store.data, because of index.js reduce function
 const mapStateToProps = store => ({
-  // tables: store.data.tables, 
+  tables: store.data.tables, 
   fieldCount: store.data.fieldCount
   //need below to subscribe to store. store.data.tables is an object so never changes
   // tableIndex: store.data.tableIndex 
@@ -15,6 +15,7 @@ const mapDispatchToProps = dispatch => ({
   deleteTable: tableIndex => dispatch(actions.deleteTable(tableIndex)),
   addField: fieldName => dispatch(actions.addFieldClicked(fieldName)),
   deleteField: fieldName => dispatch(actions.deleteField(fieldName)),
+  updateField: fieldIndex => dispatch(actions.updateField(fieldIndex))
 });
 
 class Table extends Component {
@@ -23,6 +24,7 @@ class Table extends Component {
     this.handleDeleteTable = this.handleDeleteTable.bind(this)
     this.handleDeleteField = this.handleDeleteField.bind(this)
     this.handleAddField    = this.handleAddField.bind(this)
+    this.handleUpdateField = this.handleUpdateField.bind(this)
   } 
 
   handleDeleteTable(event){
@@ -39,19 +41,39 @@ class Table extends Component {
     this.props.addField(this.props.tableIndex);
   }
 
+  handleUpdateField(event){
+    console.log(this.props.tableData);
+    this.props.updateField({
+      fieldIndex: event.target.id,
+      tableIndex: this.props.tableIndex,
+      submitUpdate: false
+    })
+  }
+
+  
   render() {
     console.log('table render, this is field count', this.props.fieldCount)
 
     let fields = []
     for (let property in this.props.tableData.fields){
       fields.push
-      (<div>{this.props.tableData.fields[property].name}
-        <button 
-          value={property}
-          onClick={this.handleDeleteField}
-          >x
-        </button>
-      </div>
+      (
+        <div>
+          <button 
+            className='btn btn-success'
+            id={property}
+            onClick={this.handleUpdateField}
+          >
+            {this.props.tableData.fields[property].name}
+            </button>
+          <button 
+            className='btn btn-danger'
+            value={property}
+            onClick={this.handleDeleteField}
+          >
+            x
+          </button>
+        </div>
       )
     }
   
