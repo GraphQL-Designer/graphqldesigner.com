@@ -30,3 +30,8 @@ export const addFieldClicked = (fieldName) => ({
   type: types.ADD_FIELD_CLICKED,
   payload: fieldName,
 })
+
+export const updateField = (fieldIndex) => ({
+  type: types.UPDATE_FIELD,
+  payload: fieldIndex,
+})
