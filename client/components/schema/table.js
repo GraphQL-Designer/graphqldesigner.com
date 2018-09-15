@@ -37,7 +37,9 @@ class Table extends Component {
   }
 
   render() {
-    // let length = Object.keys().length;
+    let length = Object.keys(this.props.tableData.fields).length;
+    console.log('length is : ', length);
+    console.log(this.props.tableData.fields);
 
     //map through list of fields here
   
