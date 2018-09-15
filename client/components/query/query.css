@@ -1,0 +1,11 @@
+
+.query-app {
+  width: 100%;
+  display: flex;
+  flex-direction: column; 
+}
+
+.query-code-container {
+  border: 1px solid green;
+  width: 65%;
+}

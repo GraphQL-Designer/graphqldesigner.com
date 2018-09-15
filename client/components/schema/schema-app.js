@@ -26,6 +26,7 @@ const SchemaApp = props => {
       key = {keyNum++} 
       tableData={props.tables[property]}
       tableIndex={property}
+      fieldCount={props.tables[property].fieldCount}
       />
     )
   }

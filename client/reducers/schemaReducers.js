@@ -40,7 +40,6 @@ const marketsReducer = (state = initialState, action) => {
       tables[tableIndex].idRequested = uniqueID;
       tables[tableIndex].fields = {};
       tables[tableIndex].fieldsIndex = 0;
-      // tables[tableIndex].fieldsCount = 0;
       tables[tableIndex].tableID = state.tableIndex;
       tableIndex += 1;
       tableCount += 1; 
@@ -96,9 +95,8 @@ const marketsReducer = (state = initialState, action) => {
     // Delete Field
     case types.DELETE_FIELD:
       fieldCount -= 1; 
-      const indexes = action.payload;
-      const tablesIndexSelected = indexes[0];
-      const fieldIndexSelected = indexes[1];
+      const tablesIndexSelected = action.payload[0];
+      const fieldIndexSelected = action.payload[1];
       delete tables[tablesIndexSelected].fields[fieldIndexSelected];
       console.log('here are the fields now', tables[tablesIndexSelected].fields)
     return {

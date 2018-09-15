@@ -2,14 +2,11 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as actions from '../../actions/actions.js';
 
-// //we use store.data, because of index.js reduce function
+// we use store.data, because of index.js reduce function
 const mapStateToProps = store => ({
-  // tables: store.data.tables, 
+  // fieldCount isn't used, but is necessary so the Table component rerenders after a field is deleted
   fieldCount: store.data.fieldCount
-  //need below to subscribe to store. store.data.tables is an object so never changes
-  // tableIndex: store.data.tableIndex 
 });
-
 
 const mapDispatchToProps = dispatch => ({
   deleteTable: tableIndex => dispatch(actions.deleteTable(tableIndex)),
@@ -40,18 +37,19 @@ class Table extends Component {
   }
 
   render() {
-    console.log('table render, this is field count', this.props.fieldCount)
-
+    console.log('table props', this.props)
     let fields = []
+
+    // will push each individual field to the array 'fields' to be rendered. 
     for (let property in this.props.tableData.fields){
-      fields.push
-      (<div>{this.props.tableData.fields[property].name}
-        <button 
-          value={property}
-          onClick={this.handleDeleteField}
-          >x
-        </button>
-      </div>
+      fields.push(
+        <div key={this.props.fieldCount}>{this.props.tableData.fields[property].name}
+          <button 
+            value={property}
+            onClick={this.handleDeleteField}
+            >{this.props.fieldCount}
+          </button>
+        </div>
       )
     }
   
@@ -64,12 +62,6 @@ class Table extends Component {
             onClick={this.handleDeleteTable}>x
           </button>
         </div>
-         {/* <div>Table Field
-          <button 
-            value={0}
-            onClick={this.handleDeleteField}>x
-          </button>
-        </div> */}
         {fields}
         <button 
           onClick={this.handleAddField}

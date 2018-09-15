@@ -1,9 +1,13 @@
 import React from 'react';
+import './sidebar.css';
 
-const QuerySidebar = props => {
+
+const Sidebar = props => {
   return (
-    <h4>QuerySidebar</h4>
+    <div className='sidebar'>
+      <h4>QuerySidebar</h4>
+    </div>
   )
 };
 
-export default QuerySidebar;
+export default Sidebar;
