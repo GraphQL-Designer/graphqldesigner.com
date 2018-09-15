@@ -73,7 +73,7 @@ const marketsReducer = (state = initialState, action) => {
       console.log('selected: ', tables[tableIndexSelected]);
       let fieldsIndex = tables[tableIndexSelected].fieldsIndex;
       addFieldClicked = false;
-      tables.fieldCount += 1;
+      fieldCount += 1;
       tables[tableIndexSelected].fieldsIndex += 1;
       tables[tableIndexSelected].fields[fieldsIndex] = {};
       tables[tableIndexSelected].fields[fieldsIndex].name = action.payload.name;
@@ -85,6 +85,7 @@ const marketsReducer = (state = initialState, action) => {
       tables[tableIndexSelected].fields[fieldsIndex].required = action.payload.required;
       tables[tableIndexSelected].fields[fieldsIndex].relations = action.payload.relations;
       console.log('table is: ', tables);
+      console.log('this is fieldCount', fieldCount)
     return {
       ...state, 
       tables,

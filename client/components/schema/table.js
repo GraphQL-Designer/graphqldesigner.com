@@ -44,12 +44,12 @@ class Table extends Component {
 
     let fields = []
     for (let property in this.props.tableData.fields){
-      fields.push(<div>
+      fields.push
+      (<div>{this.props.tableData.fields[property].name}
         <button 
           value={property}
           onClick={this.handleDeleteField}
-          >
-          {this.props.tableData.fields[property].name}
+          >x
         </button>
       </div>
       )
