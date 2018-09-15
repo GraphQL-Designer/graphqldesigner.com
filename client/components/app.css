@@ -16,6 +16,10 @@ a:hover{
   color: white; 
 }
 
+ul{
+  margin: 0;
+}
+
 li{
   display: flex; 
   border: 1.5px solid deeppink;
@@ -26,4 +30,8 @@ li{
 
 li:hover{
   background-color: deeppink;
+}
+
+h1{
+  margin-top: 0 !important;
 }
