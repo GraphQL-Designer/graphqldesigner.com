@@ -19,11 +19,18 @@
   justify-content: flex-start;
 }
 
+#options {
+  margin: 0;
+}
+
+#options span {
+  margin-top: 0;
+}
 
 #options div{
   display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
+  flex-direction: column;
+  justify-content: space-around;
   width: 100%;
 }
 
@@ -38,4 +45,10 @@ form{
   flex-direction: column;
   justify-content: center;
   width: auto;
+}
+
+select{
+  -webkit-appearance: none; 
+  -moz-appearance: none;
+  appearance: none;
 }

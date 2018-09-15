@@ -12,7 +12,7 @@ import * as actions from '../../actions/actions.js';
 
 const mapDispatchToProps = dispatch => ({
   deleteTable: tableIndex => dispatch(actions.deleteTable(tableIndex)),
-  addField: fieldName => dispatch(actions.addField(fieldName)),
+  addField: fieldName => dispatch(actions.addFieldClicked(fieldName)),
   deleteField: fieldName => dispatch(actions.deleteField(fieldName)),
 });
 
@@ -33,10 +33,14 @@ class Table extends Component {
   }
 
   handleAddField(event){
-    this.props.addField(event.target.value)
+    this.props.addField(this.props.tableIndex);
   }
 
   render() {
+    // let length = Object.keys().length;
+
+    //map through list of fields here
+  
     return (
       <div className='table'>
         <div>{this.props.tableData.tableName}
@@ -45,19 +49,16 @@ class Table extends Component {
             onClick={this.handleDeleteTable}>x
           </button>
         </div>
-        <div>Table Field
+         {/* <div>Table Field
           <button 
             value={0} 
             onClick={this.handleDeleteField}>x
           </button>
-        </div>
-        <div>Table Field
-          <button 
-            value={1} 
-            onClick={this.handleAddField}>x
-          </button>
-        </div>
-        <button onClick={this.props.addField}>Add Field</button>
+        </div> */}
+        <button 
+          onClick={this.handleAddField}
+          >Add Field
+        </button>
       </div>  
     )
   }

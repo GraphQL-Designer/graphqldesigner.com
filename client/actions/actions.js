@@ -24,3 +24,8 @@ export const deleteField = (fieldName) => ({
   type: types.DELETE_FIELD,
   payload: fieldName,
 });
+
+export const addFieldClicked = (fieldName) => ({
+  type: types.ADD_FIELD_CLICKED,
+  payload: fieldName,
+})
