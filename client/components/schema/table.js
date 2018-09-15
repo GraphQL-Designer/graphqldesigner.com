@@ -39,9 +39,18 @@ class Table extends Component {
   }
 
   render() {
-    // let length = Object.keys().length;
-
-    //map through list of fields here
+    let fields = []
+    for (let property in this.props.tableData.fields){
+      fields.push(<div>
+        <button 
+          value={property}
+          onClick={this.handleDeleteField}
+          >
+          {this.props.tableData.fields[property].name}
+        </button>
+      </div>
+      )
+    }
   
     return (
       <div className='table'>
@@ -52,12 +61,13 @@ class Table extends Component {
             onClick={this.handleDeleteTable}>x
           </button>
         </div>
-         {/* <div>Table Field
+         <div>Table Field
           <button 
             value={0}
             onClick={this.handleDeleteField}>x
           </button>
-        </div> */}
+        </div>
+        {fields}
         <button 
           onClick={this.handleAddField}
           >Add Field

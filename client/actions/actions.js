@@ -21,17 +21,12 @@ export const addField = (fieldName) => ({
   payload: fieldName,
 });
 
-export const deleteField = (...tableIndex) => ({
+export const deleteField = (tableIndex) => ({
   type: types.DELETE_FIELD,
-<<<<<<< HEAD
   payload: tableIndex
-});
-=======
-  payload: fieldName,
 });
 
 export const addFieldClicked = (fieldName) => ({
   type: types.ADD_FIELD_CLICKED,
   payload: fieldName,
 })
->>>>>>> 5e9e4308b240d52079c4407b2dd27d58c1176c8e

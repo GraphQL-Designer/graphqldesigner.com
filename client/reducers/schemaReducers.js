@@ -37,6 +37,7 @@ const marketsReducer = (state = initialState, action) => {
       tables[tableIndex].idRequested = uniqueID;
       tables[tableIndex].fields = {};
       tables[tableIndex].fieldsIndex = 0;
+      tables[tableIndex].fieldsCount = 0;
       tables[tableIndex].tableID = state.tableIndex;
       tableIndex += 1;
       tableCount += 1; 
@@ -67,6 +68,8 @@ const marketsReducer = (state = initialState, action) => {
     case types.ADD_FIELD:
       let fieldsIndex = tables[tablesIndexSelected].fieldsIndex;
       addFieldClicked = false;
+      tables[tablesIndexSelected].fieldsIndex += 1
+      tables[tablesIndexSelected].fieldsCount += 1
       tables[tablesIndexSelected].fields[fieldsIndex] = {};
       tables[tablesIndexSelected].fields[fieldsIndex].name = action.payload.name;
       tables[tablesIndexSelected].fields[fieldsIndex].type = action.payload.type;
@@ -76,7 +79,6 @@ const marketsReducer = (state = initialState, action) => {
       tables[tablesIndexSelected].fields[fieldsIndex].multipleValues = action.payload.multipleValues;
       tables[tablesIndexSelected].fields[fieldsIndex].required = action.payload.required;
       tables[tablesIndexSelected].fields[fieldsIndex].relations = action.payload.relations;
-      tables[tablesIndexSelected].fieldsIndex += 1
     return {
       ...state, 
       tables,
@@ -85,10 +87,14 @@ const marketsReducer = (state = initialState, action) => {
 
     // Delete Field
     case types.DELETE_FIELD:
-      console.log(action.payload)
-
+      const indexes = action.payload
+      const tablesIndexSelected = indices[0]
+      const fieldIndexSelected = indexes[1]
+      delete tables[tablesIndexSelected].fields[fieldIndexSelected]
+      console.log('here are the fields now', tables[tablesIndexSelected].fields)
     return {
-      ...state
+      ...state,
+      tables
     };
 
     // Add Field in Table was clicked to display field options
