@@ -18,7 +18,7 @@ const mapStateToProps = store => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  // createField: field => dispatch(actions.addField(field))
+  createField: field => dispatch(actions.addField(field))
 })
 
 class TableOptions extends React.Component {

@@ -6,7 +6,8 @@ const initialState = {
   database: '',
   tableCount: 0,
   addFieldClicked: false,
-  tableIndexSelected: undefined
+  tableIndexSelected: null,
+  selectedField : {}
 };
 
 const marketsReducer = (state = initialState, action) => {
@@ -65,18 +66,22 @@ const marketsReducer = (state = initialState, action) => {
 
     // Add Field
     case types.ADD_FIELD:
-      let fieldsIndex = tables[tablesIndexSelected].fieldsIndex;
+      console.log('tableselected: ', tableIndexSelected);
+      console.log('selected: ', tables[tableIndexSelected]);
+      let fieldsIndex = tables[tableIndexSelected].fieldsIndex;
       addFieldClicked = false;
-      tables[tablesIndexSelected].fields[fieldsIndex] = {};
-      tables[tablesIndexSelected].fields[fieldsIndex].name = action.payload.name;
-      tables[tablesIndexSelected].fields[fieldsIndex].type = action.payload.type;
-      tables[tablesIndexSelected].fields[fieldsIndex].primaryKey = action.payload.primaryKey;
-      tables[tablesIndexSelected].fields[fieldsIndex].unique = action.payload.unique;
-      tables[tablesIndexSelected].fields[fieldsIndex].defaultValue = action.payload.defaultValue;
-      tables[tablesIndexSelected].fields[fieldsIndex].multipleValues = action.payload.multipleValues;
-      tables[tablesIndexSelected].fields[fieldsIndex].required = action.payload.required;
-      tables[tablesIndexSelected].fields[fieldsIndex].relations = action.payload.relations;
-      tables[tablesIndexSelected].fieldsIndex += 1
+      tables[tableIndexSelected].fields[fieldsIndex] = {};
+      tables[tableIndexSelected].fields[fieldsIndex].name = action.payload.name;
+      tables[tableIndexSelected].fields[fieldsIndex].type = action.payload.type;
+      tables[tableIndexSelected].fields[fieldsIndex].primaryKey = action.payload.primaryKey;
+      tables[tableIndexSelected].fields[fieldsIndex].unique = action.payload.unique;
+      tables[tableIndexSelected].fields[fieldsIndex].defaultValue = action.payload.defaultValue;
+      tables[tableIndexSelected].fields[fieldsIndex].multipleValues = action.payload.multipleValues;
+      tables[tableIndexSelected].fields[fieldsIndex].required = action.payload.required;
+      tables[tableIndexSelected].fields[fieldsIndex].relations = action.payload.relations;
+      tables[tableIndexSelected].fieldsIndex += 1;
+
+      console.log('table is: ', tables);
     return {
       ...state, 
       tables,
@@ -93,9 +98,9 @@ const marketsReducer = (state = initialState, action) => {
 
     // Add Field in Table was clicked to display field options
     case types.ADD_FIELD_CLICKED:
-      const tableIndexSelected = action.payload;
+      tableIndexSelected = action.payload;
       addFieldClicked = true;
-      
+      console.log('table index selected: ', tableIndexSelected);
       return{
         ...state,
         addFieldClicked,
