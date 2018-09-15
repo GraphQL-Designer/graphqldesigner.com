@@ -26,6 +26,7 @@ const SchemaApp = props => {
       key = {keyNum++} 
       tableData={props.tables[property]}
       tableIndex={property}
+      fieldCount={props.tables[property].fieldCount}
       />
     )
   }
@@ -33,7 +34,9 @@ const SchemaApp = props => {
   return (
     <div className='schema-app-container'>
       <Sidebar/>
-      {tableComponents}
+      <div className='table-components-container'>
+        {tableComponents}
+      </div>
     </div>
   )
 };
