@@ -3,11 +3,12 @@ import { connect } from 'react-redux';
 import * as actions from '../../actions/actions.js';
 
 // //we use store.data, because of index.js reduce function
-// const mapStateToProps = store => ({
-//   tables: store.data.tables, 
-//   //need below to subscribe to store. store.data.tables is an object so never changes
-//   tableIndex: store.data.tableIndex 
-// });
+const mapStateToProps = store => ({
+  // tables: store.data.tables, 
+  fieldCount: store.data.fieldCount
+  //need below to subscribe to store. store.data.tables is an object so never changes
+  // tableIndex: store.data.tableIndex 
+});
 
 
 const mapDispatchToProps = dispatch => ({
@@ -39,6 +40,8 @@ class Table extends Component {
   }
 
   render() {
+    console.log('table render, this is field count', this.props.fieldCount)
+
     let fields = []
     for (let property in this.props.tableData.fields){
       fields.push(<div>
@@ -61,12 +64,12 @@ class Table extends Component {
             onClick={this.handleDeleteTable}>x
           </button>
         </div>
-         <div>Table Field
+         {/* <div>Table Field
           <button 
             value={0}
             onClick={this.handleDeleteField}>x
           </button>
-        </div>
+        </div> */}
         {fields}
         <button 
           onClick={this.handleAddField}
@@ -77,4 +80,4 @@ class Table extends Component {
   }
 }
 
-export default connect(null, mapDispatchToProps)(Table);
+export default connect(mapStateToProps, mapDispatchToProps)(Table);
