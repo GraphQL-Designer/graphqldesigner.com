@@ -24,12 +24,14 @@ class App extends Component {
   }  
   render() {
     return (
-      <div>
-        <h1 style={{marginTop: '100px'}}>GraphQL Designer Coming Soon</h1>
-        <GraphqlLoader />
+      <div className='app-container'>
+        <div className='app-header'>
+          <h1 style={{marginTop: '100px'}}>GraphQL Designer Coming Soon</h1>
+          <GraphqlLoader />
+        </div>
         <Welcome chooseDatabase={this.props.chooseDatabase}/>
         <Router>
-          <div>
+          <div className='app-body-container'>
             <ul>
               <li>
                 <Link to='/public/schemas'>Schemas</Link>

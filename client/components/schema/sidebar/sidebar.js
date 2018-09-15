@@ -14,7 +14,7 @@ class Sidebar extends React.Component {
 
   render() {
     return (
-          <div id='tableContainer'>
+          <div id='sidebar-container'>
             <CreateTable />
             {/* display options below after user creates table */}
             <TableOptions />
