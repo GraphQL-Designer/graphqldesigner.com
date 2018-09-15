@@ -8,13 +8,23 @@ import * as actions from '../../../actions/actions.js';
 
 import './sidebar.css';
 
+const mapStateToProps = store => ({
+  // tables: store.data.tables, 
+  // tableIndex: store.data.tableIndex,
+  // // Need below to subscribe to store. store.data.tables is an object so never changes
+  // tableCount: store.data.tableCount,
+  tableIndex : store.data.tableIndexSelected,
+  addFieldClicked: store.data.addFieldClicked
+})
+
 const mapDispatchToProps = dispatch => ({
-  createField: field => dispatch(actions.addField(field)),
+  // createField: field => dispatch(actions.addField(field))
 })
 
 class TableOptions extends React.Component {
   constructor(props) {
     super(props);
+
     this.submitOptions = this.submitOptions.bind(this);
   }
 
@@ -35,139 +45,91 @@ class TableOptions extends React.Component {
 
   submitOptions(event){
     event.preventDefault();
-    const options = {
-      type: document.getElementById('typeDropDown').value,
-      primaryKey: document.getElementById('primaryKeyDropDown').value,
-      unique: document.getElementById('uniqueDropDown').value,
-      defaultValue: document.getElementById('defaultValueOption').value,
-      required: document.getElementById('requiredDropDown').value,
-      relation: document.getElementById('relationDropDown').value
+    let fieldName = document.getElementById('fieldNameOption').value;
+    
+    if(fieldName.length !== 0){
+      const options = {
+        name: document.getElementById('fieldNameOption').value,
+        type: document.getElementById('typeDropDown').value,
+        primaryKey: document.getElementById('primaryKeyDropDown').value,
+        unique: document.getElementById('uniqueDropDown').value,
+        defaultValue: document.getElementById('defaultValueOption').value,
+        multipleValues: document.getElementById('defaultValueOption').value,
+        required: document.getElementById('requiredDropDown').value,
+        relation: document.getElementById('relationDropDown').value
+      }
+  
+      console.log('options: ', options);
+      this.props.createField(options);
     }
-
-    console.log('options: ', options);
-    this.props.createField(options);
   }
 
   render() {
+    console.log('props: ', this.props);
     return (
-      <div id='options'>
-        <h4>Options</h4>
-        <div>
-          {/* <h5>Type: </h5> 
-          <DropDownMenu
-            value={this.state.typeValue}
-            onChange={this.handleChange}
-            className='dropdown'
-            labelStyle = {{
-              'fontSize': '20px'
-            }}
-            listStyle = {{
-              'fontSize': '20px'
-            }}
-          >
-            <MenuItem value={1} primaryText='String' />
-            <MenuItem value={2} primaryText='Number' />
-            <MenuItem value={3} primaryText='Date' />
-            <MenuItem value={4} primaryText='Boolean' />
-          </DropDownMenu>
+      <div>
+        { this.props.addFieldClicked  &&
+        <div id='options'>
+          <h4>Options</h4>
+          <form>
+              <span>
+                  Field Name : <input id='fieldNameOption' type='text' name='fieldNameValue' />
+              </span>
+
+              <span>Type : 
+                <select id="typeDropDown">
+                  <option value="String">String</option>
+                  <option value="Number">Number</option>
+                  <option value="Date">Date</option>
+                </select>
+              </span>
+
+              <span>Primary Key :
+                <select id="primaryKeyDropDown">
+                  <option value="False">False</option>
+                  <option value="True">True</option>
+                </select>
+              </span>
+
+              <span>Unique : 
+                <select id="uniqueDropDown">
+                  <option value="False">False</option>
+                  <option value="True">True</option>
+                </select>
+              </span>
+              <span>
+                  Default Value : <input id='defaultValueOption' type='text' name='defaultValue' />
+              </span>
+
+              <span>Required : 
+                <select id="multipleValuesDropDown">
+                  <option value="False">False</option>
+                  <option value="True">True</option>
+                </select>
+              </span>
+
+              <span>Multiple Values : 
+                <select id="requiredDropDown">
+                  <option value="False">False</option>
+                  <option value="True">True</option>
+                </select>
+              </span>
+
+              <span>Relation : 
+                <select id="relationDropDown">
+                  <option value="False">False</option>
+                  <option value="True">True</option>
+                </select>
+              </span>
+              <button onClick={this.submitOptions} className='btn btn-success'>
+              Submit
+              </button>
+          </form>
         </div>
-        <br/>
-        <div>
-          <h5>Unique: </h5> 
-          <DropDownMenu
-            value={this.state.uniqueValue}
-            onChange={this.handleUniqueChange}
-            className='dropdown'
-            labelStyle = {{
-              'fontSize': '20px'
-            }}
-            listStyle = {{
-              'fontSize': '20px'
-            }}
-          >
-            <MenuItem value={1} primaryText='False' />
-            <MenuItem value={2} primaryText='True' />
-          </DropDownMenu>
-
-        </div>
-        <br/>
-        <div>
-          <h5>Nulls: </h5> 
-          <DropDownMenu
-            value={this.state.nullValue}
-            onChange={this.handleNullChange}
-            className='dropdown'
-            labelStyle = {{
-              'fontSize': '20px'
-            }}
-            listStyle = {{
-              'fontSize': '20px'
-            }}
-          >
-            <MenuItem value={1} primaryText='False' />
-            <MenuItem value={2} primaryText='True' />
-          </DropDownMenu> */}
-
-
-          {/* <div className="dropdown">
-            <button className="btn btn-primary dropdown-toggle" id="menu1" type="button" data-toggle="dropdown">Type
-            <span className="caret"></span></button>
-            <ul className="dropdown-menu" role="menu" aria-labelledby="typeOption">
-              <li role="presentation"><a className='options' role="menuitem" tabIndex="-1" href="#">String</a></li>
-              <li role="presentation"><a className='options' role="menuitem" tabIndex="-1" href="#">Number</a></li>
-              <li role="presentation"><a className='options' role="menuitem" tabIndex="-1" href="#">Date</a></li>
-              <li role="presentation"><a className='options' role="menuitem" tabIndex="-1" href="#">Boolean</a></li>    
-            </ul>
-          </div> */}
-            <span>Type : 
-              <select id="typeDropDown">
-                <option value="String">String</option>
-                <option value="Number">Number</option>
-                <option value="Date">Date</option>
-              </select>
-            </span>
-
-            <span>Primary Key :
-              <select id="primaryKeyDropDown">
-                <option value="False">False</option>
-                <option value="True">True</option>
-              </select>
-            </span>
-
-            <span>Unique : 
-              <select id="uniqueDropDown">
-                <option value="False">False</option>
-                <option value="True">True</option>
-              </select>
-            </span>
-            <span>
-              <form>
-                Default Value : <input id='defaultValueOption' type='text' name='defaultValue' />
-              </form>
-            </span>
-
-            <span>Required : 
-              <select id="requiredDropDown">
-                <option value="False">False</option>
-                <option value="True">True</option>
-              </select>
-            </span>
-
-            <span>Relation : 
-              <select id="relationDropDown">
-                <option value="False">False</option>
-                <option value="True">True</option>
-              </select>
-            </span>
-            <button onClick={this.submitOptions} className='btn btn-success'>
-            Submit
-            </button>
-
-        </div>
+        }
       </div>
-
     );
   }
 }
 
-export default TableOptions;
+export default connect(mapStateToProps, mapDispatchToProps)(TableOptions);

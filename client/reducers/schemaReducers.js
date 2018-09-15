@@ -4,7 +4,9 @@ const initialState = {
   tables: {},
   tableIndex: 0,
   database: '',
-  tableCount: 0
+  tableCount: 0,
+  addFieldClicked: false,
+  tableIndexSelected: undefined
 };
 
 const marketsReducer = (state = initialState, action) => {
@@ -12,6 +14,8 @@ const marketsReducer = (state = initialState, action) => {
   let tableIndex = state.tableIndex;
   let database = state.database;
   let tableCount = state.tableCount;
+  let addFieldClicked = state.addFieldClicked;
+  let tableIndexSelected = state.tableIndexSelected;
 
   // action.payload is how you can access the info
   switch(action.type) {
@@ -33,6 +37,7 @@ const marketsReducer = (state = initialState, action) => {
       tables[tableIndex].idRequested = uniqueID;
       tables[tableIndex].fields = {};
       tables[tableIndex].fieldsIndex = 0;
+      tables[tableIndex].tableID = state.tableIndex;
       tableIndex += 1;
       tableCount += 1; 
       console.log(`table ${newTable} was added`);
@@ -41,34 +46,41 @@ const marketsReducer = (state = initialState, action) => {
         ...state,
         tables,
         tableIndex,
-        tableCount
+        tableCount,
       };
     
     // Delete Schema Table
     case types.DELETE_TABLE:
-    tableCount -= 1
-    delete tables[action.payload]
-    console.log('here are the tables now', tables)
-    return {
-      ...state,
-      tables,
-      tableIndex,
-      tableCount
-    };
+      tableCount -= 1;
+      addFieldClicked = false;
+      delete tables[action.payload]
+      console.log('here are the tables now', tables)
+      return {
+        ...state,
+        tables,
+        tableIndex,
+        tableCount,
+        addFieldClicked
+      };
 
     // Add Field
     case types.ADD_FIELD:
-    // tables[tableIndex].fields[0] = {};
-    // tables[tableIndex].fields[0].type = '';
-    // tables[tableIndex].fields[0].primaryKey = false;
-    // tables[tableIndex].fields[0].unique = false;
-    // tables[tableIndex].fields[0].defaultValue = '';
-    // tables[tableIndex].fields[0].multipleValue = false;
-    // tables[tableIndex].fields[0].allowNulls = 'false';
-    // tables[tableIndex].fields[0].relation = {};
-      console.log('this is action.payload', action.payload)
+      let fieldsIndex = tables[tablesIndexSelected].fieldsIndex;
+      addFieldClicked = false;
+      tables[tablesIndexSelected].fields[fieldsIndex] = {};
+      tables[tablesIndexSelected].fields[fieldsIndex].name = action.payload.name;
+      tables[tablesIndexSelected].fields[fieldsIndex].type = action.payload.type;
+      tables[tablesIndexSelected].fields[fieldsIndex].primaryKey = action.payload.primaryKey;
+      tables[tablesIndexSelected].fields[fieldsIndex].unique = action.payload.unique;
+      tables[tablesIndexSelected].fields[fieldsIndex].defaultValue = action.payload.defaultValue;
+      tables[tablesIndexSelected].fields[fieldsIndex].multipleValues = action.payload.multipleValues;
+      tables[tablesIndexSelected].fields[fieldsIndex].required = action.payload.required;
+      tables[tablesIndexSelected].fields[fieldsIndex].relations = action.payload.relations;
+      tables[tablesIndexSelected].fieldsIndex += 1
     return {
-      ...state
+      ...state, 
+      tables,
+      addFieldClicked
     };
 
     // Delete Field
@@ -78,6 +90,17 @@ const marketsReducer = (state = initialState, action) => {
     return {
       ...state
     };
+
+    // Add Field in Table was clicked to display field options
+    case types.ADD_FIELD_CLICKED:
+      const tableIndexSelected = action.payload;
+      addFieldClicked = true;
+      
+      return{
+        ...state,
+        addFieldClicked,
+        tableIndexSelected
+      }
 
     default:
       return state;

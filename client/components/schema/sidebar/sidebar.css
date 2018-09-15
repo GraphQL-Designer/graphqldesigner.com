@@ -46,3 +46,9 @@ form{
   justify-content: center;
   width: auto;
 }
+
+select{
+  -webkit-appearance: none; 
+  -moz-appearance: none;
+  appearance: none;
+}
