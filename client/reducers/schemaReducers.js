@@ -95,9 +95,8 @@ const marketsReducer = (state = initialState, action) => {
     // Delete Field
     case types.DELETE_FIELD:
       fieldCount -= 1; 
-      const indexes = action.payload;
-      const tablesIndexSelected = indexes[0];
-      const fieldIndexSelected = indexes[1];
+      const tablesIndexSelected = action.payload[0];
+      const fieldIndexSelected = action.payload[1];
       delete tables[tablesIndexSelected].fields[fieldIndexSelected];
     return {
       ...state,
