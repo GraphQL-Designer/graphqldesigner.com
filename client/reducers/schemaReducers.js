@@ -20,13 +20,12 @@ const marketsReducer = (state = initialState, action) => {
   let addFieldClicked = state.addFieldClicked;
   let tableIndexSelected = state.tableIndexSelected;
   let selectedField = state.selectedField;
-  console.log('tables IS: ', tables);
+
   // action.payload is how you can access the info
   switch(action.type) {
     // Choose Database
     case types.CHOOSE_DATABASE:
       database = action.payload; 
-      console.log('this database was just selected: ', database)
       return {
         ...state,
         database
@@ -42,12 +41,12 @@ const marketsReducer = (state = initialState, action) => {
       tables[tableIndex].idRequested = uniqueID;
       tables[tableIndex].fields = {};
       tables[tableIndex].fieldsIndex = 0;
-      // tables[tableIndex].fieldsCount = 0;
       tables[tableIndex].tableID = state.tableIndex;
       tableIndex += 1;
       tableCount += 1; 
-      console.log(`table ${newTable} was added`);
-      console.log('here are the tables: ', tables);
+      // console.log(`table ${newTable} was added`);
+      // console.log('here are the tables: ', tables);
+
       return {
         ...state,
         tables,
@@ -60,7 +59,6 @@ const marketsReducer = (state = initialState, action) => {
       tableCount -= 1;
       addFieldClicked = false;
       delete tables[action.payload]
-      console.log('here are the tables now', tables)
       return {
         ...state,
         tables,
@@ -71,8 +69,6 @@ const marketsReducer = (state = initialState, action) => {
 
     // Add Field
     case types.ADD_FIELD:
-      console.log('tableselected: ', tableIndexSelected);
-      console.log('selected: ', tables[tableIndexSelected]);
       let fieldsIndex = tables[tableIndexSelected].fieldsIndex;
       addFieldClicked = false;
       fieldCount += 1;
@@ -88,8 +84,6 @@ const marketsReducer = (state = initialState, action) => {
       tables[tableIndexSelected].fields[fieldsIndex].multipleValues = action.payload.multipleValues;
       tables[tableIndexSelected].fields[fieldsIndex].required = action.payload.required;
       tables[tableIndexSelected].fields[fieldsIndex].relations = action.payload.relations;
-      console.log('table is: ', tables);
-      console.log('this is fieldCount', fieldCount)
     return {
       ...state, 
       tables,
@@ -105,7 +99,6 @@ const marketsReducer = (state = initialState, action) => {
       const tablesIndexSelected = indexes[0];
       const fieldIndexSelected = indexes[1];
       delete tables[tablesIndexSelected].fields[fieldIndexSelected];
-      console.log('here are the fields now', tables[tablesIndexSelected].fields)
     return {
       ...state,
       tables,
@@ -114,8 +107,6 @@ const marketsReducer = (state = initialState, action) => {
 
     // Update Field
     case types.UPDATE_FIELD:
-    console.log('update field(fieldindex): ', action.payload.fieldIndex);
-    console.log('update field(tableIndex): ', action.payload.tableIndex);
     let tableIndexUpdate = action.payload.tableIndex;
     let fieldIndexUpdate = action.payload.fieldIndex;
     addFieldClicked = true;
@@ -145,9 +136,10 @@ const marketsReducer = (state = initialState, action) => {
 
     return {
       ...state,
-      ...tables,
+      tables,
       selectedField,
-      addFieldClicked
+      addFieldClicked,
+      tempCounter
     }  
 
 
@@ -156,7 +148,6 @@ const marketsReducer = (state = initialState, action) => {
       tableIndexSelected = action.payload;
       addFieldClicked = true;
       selectedField = {};
-      console.log('table index selected: ', tableIndexSelected);
       return{
         ...state,
         addFieldClicked,

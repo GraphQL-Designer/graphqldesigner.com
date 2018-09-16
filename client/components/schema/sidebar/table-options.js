@@ -28,7 +28,6 @@ class TableOptions extends React.Component {
     super(props);
 
     this.submitOptions = this.submitOptions.bind(this);
-    this.populateSelected = this.populateSelected.bind(this);
   }
 
   handleToggle () {this.setState({open: !this.state.open})};
@@ -77,28 +76,6 @@ class TableOptions extends React.Component {
     
   }
 
-  updateOption(event){
-    event.preventDefault();
-    this.props.updateField({
-      tableIndex : this.props.selectedField.tableIndex,
-      fieldIndex : this.props.selectedField.fieldIndex
-    })
-  }
-
-  populateSelected = function () {
-    console.log('in function populatedSelected');
-    console.log(this.props.selectedField);
-    if(this.props.selectedField){
-      console.log('it is populated', selectedField.name);
-      document.getElementById('fieldNameOption').value = selectedField.name;
-      document.getElementById('typeDropDown').value = selectedField.type;
-      document.getElementById('primaryKeyDropDown').value = selectedField.primaryKey;
-      document.getElementById('uniqueDropDown').value = selectedField.unique;
-      document.getElementById('defaultValueOption').value = selectedField.defaultValue;
-      document.getElementById('multipleValuesDropDown').value = selectedField.multipleValues;
-      document.getElementById('requiredDropDown').value = selectedField.required;
-    }
-  }
   render() {
     console.log('props: ', this.props);
     
