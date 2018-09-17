@@ -2,7 +2,7 @@ import React from 'react';
 import './sidebar.css';
 
 
-const Sidebar = props => {
+const CustomizeQuerySidebar = props => {
   return (
     <div className='sidebar'>
       <h4>QuerySidebar</h4>
@@ -10,4 +10,4 @@ const Sidebar = props => {
   )
 };
 
-export default Sidebar;
+export default CustomizeQuerySidebar;

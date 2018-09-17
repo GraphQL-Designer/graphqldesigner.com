@@ -78,8 +78,7 @@ class Table extends Component {
   
     return (
       <div className='table'>
-       <script>console.log('hi')</script>
-        <div>{this.props.tableData.tableName}
+        <div>{this.props.tableData.type}
           <button
             value={this.props.tableIndex} 
             onClick={this.handleDeleteTable}>x

@@ -38,7 +38,7 @@ const marketsReducer = (state = initialState, action) => {
       const newTable = action.payload.name;
       const uniqueID = action.payload.uniqueID;
       tables[tableIndex] = {};
-      tables[tableIndex].tableName = newTable;
+      tables[tableIndex].type = newTable;
       tables[tableIndex].idRequested = uniqueID;
       tables[tableIndex].fields = {};
       tables[tableIndex].fieldsIndex = 0;
@@ -70,8 +70,7 @@ const marketsReducer = (state = initialState, action) => {
 
     // Add Field
     case types.ADD_FIELD:
-      console.log('tableselected: ', tableIndexSelected);
-      console.log('selected: ', tables[tableIndexSelected]);
+      console.log('selected table: ', tables[tableIndexSelected]);
       let fieldsIndex = tables[tableIndexSelected].fieldsIndex;
       addFieldClicked = false;
       fieldCount += 1;
@@ -87,8 +86,7 @@ const marketsReducer = (state = initialState, action) => {
       tables[tableIndexSelected].fields[fieldsIndex].multipleValues = action.payload.multipleValues;
       tables[tableIndexSelected].fields[fieldsIndex].required = action.payload.required;
       tables[tableIndexSelected].fields[fieldsIndex].relations = action.payload.relations;
-      console.log('table is: ', tables);
-      console.log('this is fieldCount', fieldCount)
+      console.log('tables: ', tables);
     return {
       ...state, 
       tables,
@@ -112,8 +110,6 @@ const marketsReducer = (state = initialState, action) => {
 
     // Update Field
     case types.UPDATE_FIELD:
-    console.log('update field(fieldindex): ', action.payload.fieldIndex);
-    console.log('update field(tableIndex): ', action.payload.tableIndex);
     let tableIndexUpdate = action.payload.tableIndex;
     let fieldIndexUpdate = action.payload.fieldIndex;
     addFieldClicked = true;
