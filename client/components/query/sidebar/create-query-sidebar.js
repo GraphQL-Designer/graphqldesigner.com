@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import './sidebar.css';
-import table from '../../schema/table';
 
 const mapDispatchToProps = dispatch => ({
 });
@@ -14,48 +13,53 @@ class CreateQuerySidebar extends Component {
   constructor(props){
     super(props)
     this.state = {
-      queryCreator: {
-        queryType: '',
-        querySearch: '',
+        querySearchFor: null,
         queryName: '',
-        typeSelected: null,
-      }
+        selectedTableIndex: null,
     }
-    this.handleChange      = this.handleChange.bind(this);
-    this.selectTypeHandler = this.selectTypeHandler.bind(this);
-    this.submitHandler     = this.submitHandler.bind(this);
+    this.handleChange        = this.handleChange.bind(this);
+    this.selectTypeHandler   = this.selectTypeHandler.bind(this);
+    this.selectSearchHandler = this.selectSearchHandler.bind(this);
+    this.submitHandler       = this.submitHandler.bind(this);
   }
 
+  // when a user types into the input for Query Name
   handleChange(event){
-    const queryCreator = this.state.queryCreator
-    queryCreator.queryName = event.target.value
-    this.setState({queryCreator})
+    console.log('this is state', this.state)
+
+    this.setState({queryName: event.target.value})
   }
 
+  // user selects a query type
   selectTypeHandler(event){
-    const queryCreator = this.state.queryCreator
-
+    console.log('this is state', this.state)
     // if the default select is picked, change state to default values. 
     if (event.target.value === 'default'){
-      queryCreator.typeSelected = null;
-      queryCreator.queryType = ''
+      this.setState({selectedTableIndex: null})
     } 
-    // otherwise update state of selected query type
+    // Otherwise, user selected specific query type 
     else {
-      const tableIndex = event.target.value
-      queryCreator.typeSelected = tableIndex
-      queryCreator.queryType = this.props.tables[tableIndex].type
-      console.log('queryCreator', queryCreator)
-      this.setState({queryCreator})
+      this.setState({selectedTableIndex: event.target.value})
     }
   }
 
+  // user selects how to search the particular type
   selectSearchHandler(event){
-    console.log(event.target.value);
+    console.log('this is state', this.state)
+
+      // user selected to search for all of a type
+      if (event.target.value === 'every'){
+        this.setState({querySearchFor: 'every'})
+      }
+      // Otherwise, user selected a particular field to search for
+      else {
+        this.setState({querySearchFor: event.target.value})
+      }
   }
 
   submitHandler(event){
     event.preventDefault();
+    console.log(this.state)
   }
 
   render(){
@@ -71,9 +75,14 @@ class CreateQuerySidebar extends Component {
 
     // Dynamically set the GraphQL search options to be selected based on selected GraphQL Type
     let graphQLSearchOptions = []
-    const selectedTableIndex = this.state.queryCreator.typeSelected
+    const selectedTableIndex = this.state.selectedTableIndex
     if (selectedTableIndex){
+      // Allow user to search for all of a type
+      graphQLSearchOptions.push(
+        <option value='Every'>Every {this.props.tables[selectedTableIndex].type}</option> 
+      )
 
+      // push all the fields of the selected type into graphQLSearchOptions
       for (let property in this.props.tables[selectedTableIndex].fields){
         const fieldName = this.props.tables[selectedTableIndex].fields[property].name
         graphQLSearchOptions.push(
