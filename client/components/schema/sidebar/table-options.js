@@ -13,12 +13,7 @@ const mapStateToProps = store => ({
   tableIndex : store.data.tableIndexSelected,
   addFieldClicked: store.data.addFieldClicked,
   selectedField: store.data.selectedField,
-<<<<<<< HEAD
-  updatedField: store.data.fieldUpdated,
-  database: store.data.database
-=======
-  updatedField: store.data.fieldUpdated, 
->>>>>>> master
+  updatedField: store.data.fieldUpdated
 })
 
 const mapDispatchToProps = dispatch => ({

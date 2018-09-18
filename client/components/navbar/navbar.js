@@ -36,7 +36,6 @@ class MainNav extends React.Component {
 
   
   render() {
-    console.log('HEYYYYOOOO');
     return (
       <nav className="menu">
         <header className="mdc-top-app-bar mdc-top-app-bar--fixed">
