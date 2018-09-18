@@ -1,6 +1,5 @@
 export const CHOOSE_DATABASE = 'CHOOSE_DATABASE';
 export const ADD_TABLE = 'ADD_TABLE';
-<<<<<<< HEAD
 export const DELETE_TABLE = 'DELETE_TABLE'
 export const ADD_FIELD = 'ADD_FIELD'
 export const DELETE_FIELD = 'DELETE_FIELD'
@@ -8,11 +7,4 @@ export const ADD_FIELD_CLICKED = 'ADD_FIELD_CLICKED'
 export const UPDATE_FIELD = 'UPDATE_FIELD'
 export const HANDLE_FIELDS_UPDATE = 'HANDLE_FIELDS_UPDATE'
 export const HANDLE_FIELDS_SELECT = 'HANDLE_FIELDS_SELECT'
-=======
-export const DELETE_TABLE = 'DELETE_TABLE';
-export const ADD_FIELD = 'ADD_FIELD';
-export const DELETE_FIELD = 'DELETE_FIELD';
-export const ADD_FIELD_CLICKED = 'ADD_FIELD_CLICKED';
-export const UPDATE_FIELD = 'UPDATE_FIELD';
 export const CHOOSE_APP = 'CHOOSE_APP';
->>>>>>> 836b1b22faa573d6a8c7b8479040ba72dec9fa38

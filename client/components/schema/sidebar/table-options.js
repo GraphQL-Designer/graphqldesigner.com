@@ -9,10 +9,6 @@ import * as actions from '../../../actions/actions.js';
 import './sidebar.css';
 
 const mapStateToProps = store => ({
-  // tables: store.data.tables, 
-  // tableIndex: store.data.tableIndex,
-  // // Need below to subscribe to store. store.data.tables is an object so never changes
-  // tableCount: store.data.tableCount,
   tableIndex : store.data.tableIndexSelected,
   addFieldClicked: store.data.addFieldClicked,
   selectedField: store.data.selectedField,
@@ -37,7 +33,6 @@ class TableOptions extends React.Component {
   handleToggle () {this.setState({open: !this.state.open})};
 
   handleChange (event) {
-    
     this.props.handleChange({name: event.target.name, value: event.target.value});
     
   };
