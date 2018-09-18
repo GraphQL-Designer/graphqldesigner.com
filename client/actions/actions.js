@@ -26,12 +26,22 @@ export const deleteField = (tableIndex) => ({
   payload: tableIndex
 });
 
-export const addFieldClicked = (fieldName) => ({
+export const addFieldClicked = (tableIndex) => ({
   type: types.ADD_FIELD_CLICKED,
-  payload: fieldName,
+  payload: tableIndex,
 })
 
 export const updateField = (fieldIndex) => ({
   type: types.UPDATE_FIELD,
   payload: fieldIndex,
+})
+
+export const handleFieldsUpdate = (field) => ({
+  type: types.HANDLE_FIELDS_UPDATE,
+  payload: field,
+})
+
+export const handleFieldsSelect = (field) => ({
+  type: types.HANDLE_FIELDS_SELECT,
+  payload: field,
 })

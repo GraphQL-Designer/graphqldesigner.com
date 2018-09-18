@@ -15,7 +15,8 @@
 }
 
 .table{
-  display: flex; 
+  display: flex;
+  flex-direction: column; 
   border: 1px solid black;
   width: 200px; 
 }

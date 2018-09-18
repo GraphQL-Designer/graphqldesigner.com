@@ -15,12 +15,15 @@ const mapStateToProps = store => ({
   // tableCount: store.data.tableCount,
   tableIndex : store.data.tableIndexSelected,
   addFieldClicked: store.data.addFieldClicked,
-  selectedField: store.data.selectedField
+  selectedField: store.data.selectedField,
+  updatedField: store.data.fieldUpdated,
+  
 })
 
 const mapDispatchToProps = dispatch => ({
   createField: field => dispatch(actions.addField(field)),
-  updateField: field => dispatch(actions.updateField(field))
+  updateField: () => dispatch(actions.updateField()),
+  handleChange: field => dispatch(actions.handleFieldsUpdate(field))
 })
 
 class TableOptions extends React.Component {
@@ -28,13 +31,15 @@ class TableOptions extends React.Component {
     super(props);
 
     this.submitOptions = this.submitOptions.bind(this);
+    this.handleChange = this.handleChange.bind(this);
   }
 
   handleToggle () {this.setState({open: !this.state.open})};
 
-  handleChange (event, index, typeValue) {
-    event.preventDefault();
-    this.setState({typeValue});
+  handleChange (event) {
+    
+    this.props.handleChange({name: event.target.name, value: event.target.value});
+    
   };
   handleNullChange (event, index, nullValue) {
     event.preventDefault();
@@ -47,38 +52,36 @@ class TableOptions extends React.Component {
 
   submitOptions(event){
     event.preventDefault();
-    let fieldName = document.getElementById('fieldNameOption').value;
+    // let fieldName = document.getElementById('fieldNameOption').value;
     
-    if(fieldName.length !== 0){
-      const options = {
-        name: document.getElementById('fieldNameOption').value,
-        type: document.getElementById('typeDropDown').value,
-        primaryKey: document.getElementById('primaryKeyDropDown').value,
-        unique: document.getElementById('uniqueDropDown').value,
-        defaultValue: document.getElementById('defaultValueOption').value,
-        multipleValues: document.getElementById('defaultValueOption').value,
-        required: document.getElementById('requiredDropDown').value,
-        relation: document.getElementById('relationDropDown').value
-      }
+    if(this.props.selectedField.name){
+      // const options = {
+      //   name: document.getElementById('fieldNameOption').value,
+      //   type: document.getElementById('typeDropDown').value,
+      //   primaryKey: document.getElementById('primaryKeyDropDown').value,
+      //   unique: document.getElementById('uniqueDropDown').value,
+      //   defaultValue: document.getElementById('defaultValueOption').value,
+      //   multipleValues: document.getElementById('multipleValuesDropDown').value,
+      //   required: document.getElementById('requiredDropDown').value,
+      //   relations: document.getElementById('relationDropDown').value
+      // }
   
-      console.log('options: ', options);
 
-      if(Object.keys(this.props.selectedField).length){
-        console.log('we are updating the following options: ', options);
-        options.tableIndex = this.props.selectedField.tableIndex;
-        options.fieldIndex = this.props.selectedField.fieldIndex;
-        options.submitUpdate = true;
-        this.props.updateField(options);
-      } else{
-        this.props.createField(options);
-      }
+      // if(Object.keys(this.props.selectedField).length){
+      //   options.tableIndex = this.props.selectedField.tableIndex;
+      //   options.fieldIndex = this.props.selectedField.fieldIndex;
+      //   options.submitUpdate = true;
+      //   this.props.updateField(options);
+      // } else{
+      //   this.props.createField(options);
+      // }
+      this.props.updateField();
     }
     
   }
 
   render() {
-    console.log('props: ', this.props);
-    
+
     return (
       <div>
         { this.props.addFieldClicked  &&
@@ -86,11 +89,11 @@ class TableOptions extends React.Component {
           <h4>Options</h4>
           <form>
               <span>
-                  Field Name : <input id='fieldNameOption' type='text' name='fieldNameValue' defaultValue={this.props.selectedField.name}/>
+                  Field Name : <input onChange={this.handleChange} id='fieldNameOption' type='text' name='name' value={this.props.selectedField.name}/>
               </span>
 
               <span>Type : 
-                <select id="typeDropDown" defaultValue={this.props.selectedField.type}>
+                <select onChange={this.handleChange} id="typeDropDown" name='type' value={this.props.selectedField.type}>
                   <option value="String">String</option>
                   <option value="Number">Number</option>
                   <option value="Date">Date</option>
@@ -100,44 +103,44 @@ class TableOptions extends React.Component {
               </span>
 
               <span>Primary Key :
-                <select id="primaryKeyDropDown" defaultValue={this.props.selectedField.primaryKey}>
+                <select onChange={this.handleChange} id="primaryKeyDropDown" name='primaryKey' value={this.props.selectedField.primaryKey}>
                   <option value="False">False</option>
                   <option value="True">True</option>
                 </select>
               </span>
 
               <span>Unique : 
-                <select id="uniqueDropDown" defaultValue={this.props.selectedField.unique}>
+                <select onChange={this.handleChange} id="uniqueDropDown" name='unique' value={this.props.selectedField.unique}>
                   <option value="False">False</option>
                   <option value="True">True</option>
                 </select>
               </span>
               <span>
-                  Default Value : <input id='defaultValueOption' type='text' name='defaultValue' defaultValue={this.props.selectedField.defaultValue} />
+                  Default Value : <input onChange={this.handleChange} id='defaultValueOption' type='text' name='defaultValue' value={this.props.selectedField.defaultValue} />
               </span>
 
               <span>Required : 
-                <select id="multipleValuesDropDown" defaultValue={this.props.selectedField.required}>
+                <select onChange={this.handleChange} id="requiredDropDown" name='required' value={this.props.selectedField.required}>
                   <option value="False">False</option>
                   <option value="True">True</option>
                 </select>
               </span>
 
               <span>Multiple Values : 
-                <select id="requiredDropDown" defaultValue={this.props.selectedField.multipleValues}>
+                <select onChange={this.handleChange} id="multipleValuesDropDown" name='multipleValues' value={this.props.selectedField.multipleValues}>
                   <option value="False">False</option>
                   <option value="True">True</option>
                 </select>
               </span>
 
               <span>Relation : 
-                <select id="relationDropDown" defaultValue={this.props.selectedField.relation}>
+                <select onChange={this.handleChange} id="relationDropDown" name='relations' value={this.props.selectedField.relations}>
                   <option value="False">False</option>
                   <option value="True">True</option>
                 </select>
               </span>
               <button onClick={this.submitOptions} className='btn btn-success'>
-              {Object.keys(this.props.selectedField).length ? 'Update Field' : 'Create Field'}
+                {this.props.selectedField.fieldNum > -1 ?'Update Field' : 'Create Field'}
               </button>
           </form>
         </div>
