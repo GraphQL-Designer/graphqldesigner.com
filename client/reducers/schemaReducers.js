@@ -152,19 +152,14 @@ const marketsReducer = (state = initialState, action) => {
       return {
         ...state,
         tables: updatedTables,
-        selectedField: newSelectField,
-        addFieldClicked,
-        fieldUpdated
+        selectedField: newSelectField
       } 
 
     case types.HANDLE_FIELDS_UPDATE:
     newSelectedField = Object.assign({}, state.selectedField, {[action.payload.name]: [action.payload.value]})
     return {
       ...state,
-      tables,
-      selectedField: newSelectedField,
-      addFieldClicked,
-      fieldUpdated
+      selectedField: newSelectedField
     }  
 
     case types.HANDLE_FIELDS_SELECT: 

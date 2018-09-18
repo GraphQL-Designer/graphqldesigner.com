@@ -13,7 +13,7 @@ const mapStateToProps = store => ({
   addFieldClicked: store.data.addFieldClicked,
   selectedField: store.data.selectedField,
   updatedField: store.data.fieldUpdated,
-  
+  database: store.data.database
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -76,12 +76,12 @@ class TableOptions extends React.Component {
   }
 
   render() {
-
+    const optionsBackground = this.props.selectedField.fieldNum > -1 ? {backgroundColor: 'lightblue'} : {backgroundColor: 'white'};
     return (
-      <div>
+      <div style={optionsBackground} id='fieldOptions'> 
         { this.props.selectedField.tableNum > -1  &&
         <div id='options'>
-          <h4>Options</h4>
+          <h4>Field Options</h4>
           <form>
               <span>
                   Field Name : <input onChange={this.handleChange} id='fieldNameOption' type='text' name='name' value={this.props.selectedField.name}/>
@@ -97,12 +97,12 @@ class TableOptions extends React.Component {
                 </select>
               </span>
 
-              <span>Primary Key :
+              {this.props.database === 'SQL' && <span>Primary Key :
                 <select onChange={this.handleChange} id="primaryKeyDropDown" name='primaryKey' value={this.props.selectedField.primaryKey}>
                   <option value="False">False</option>
                   <option value="True">True</option>
                 </select>
-              </span>
+              </span>}
 
               <span>Unique : 
                 <select onChange={this.handleChange} id="uniqueDropDown" name='unique' value={this.props.selectedField.unique}>
