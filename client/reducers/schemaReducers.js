@@ -1,6 +1,7 @@
 import * as types from '../actions/action-types';
 
 const initialState = {
+  appSelected: '',
   tables: {},
   database: '',
   tableIndex: 0,
@@ -12,6 +13,7 @@ const initialState = {
 };
 
 const marketsReducer = (state = initialState, action) => {
+  let appSelected = state.appSelected;
   let tables = state.tables;
   let tableIndex = state.tableIndex;
   let database = state.database;
@@ -53,6 +55,15 @@ const marketsReducer = (state = initialState, action) => {
         tableIndex,
         tableCount,
       };
+
+    // toggle between the different apps: Schema, Query, and Code
+    case types.CHOOSE_APP:
+      appSelected = action.payload;
+      return {
+        ...state,
+        appSelected
+      }
+
     
     // Delete Schema Table
     case types.DELETE_TABLE:
