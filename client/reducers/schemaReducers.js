@@ -1,6 +1,7 @@
 import * as types from '../actions/action-types';
 
 const initialState = {
+  appSelected: '',
   tables: {},
   database: '',
   tableIndex: 0,
@@ -25,6 +26,7 @@ const initialState = {
 };
 
 const marketsReducer = (state = initialState, action) => {
+  let appSelected = state.appSelected;
   let tables = state.tables;
   let tableIndex = state.tableIndex;
   let database = state.database;
@@ -51,7 +53,7 @@ const marketsReducer = (state = initialState, action) => {
       const newTable = action.payload.name;
       const uniqueID = action.payload.uniqueID;
       tables[tableIndex] = {};
-      tables[tableIndex].tableName = newTable;
+      tables[tableIndex].type = newTable;
       tables[tableIndex].idRequested = uniqueID;
       tables[tableIndex].fields = {};
       tables[tableIndex].fieldsIndex = 0;
@@ -69,6 +71,15 @@ const marketsReducer = (state = initialState, action) => {
         tableCount,
         addFieldClicked
       };
+
+    // toggle between the different apps: Schema, Query, and Code
+    case types.CHOOSE_APP:
+      appSelected = action.payload;
+      return {
+        ...state,
+        appSelected
+      }
+
     
     // Delete Schema Table
     case types.DELETE_TABLE:
@@ -85,6 +96,10 @@ const marketsReducer = (state = initialState, action) => {
 
     // Add Field
     case types.ADD_FIELD:
+<<<<<<< HEAD
+=======
+      console.log('selected table: ', tables[tableIndexSelected]);
+>>>>>>> 836b1b22faa573d6a8c7b8479040ba72dec9fa38
       let fieldsIndex = tables[tableIndexSelected].fieldsIndex;
       addFieldClicked = false;
       fieldCount += 1;
@@ -100,6 +115,10 @@ const marketsReducer = (state = initialState, action) => {
       tables[tableIndexSelected].fields[fieldsIndex].multipleValues = action.payload.multipleValues;
       tables[tableIndexSelected].fields[fieldsIndex].required = action.payload.required;
       tables[tableIndexSelected].fields[fieldsIndex].relations = action.payload.relations;
+<<<<<<< HEAD
+=======
+      console.log('tables: ', tables);
+>>>>>>> 836b1b22faa573d6a8c7b8479040ba72dec9fa38
     return {
       ...state, 
       tables,
@@ -122,8 +141,13 @@ const marketsReducer = (state = initialState, action) => {
 
     // Update Field
     case types.UPDATE_FIELD:
+<<<<<<< HEAD
     // let tableIndexUpdate = action.payload.tableIndex;
     // let fieldIndexUpdate = action.payload.fieldIndex;
+=======
+    let tableIndexUpdate = action.payload.tableIndex;
+    let fieldIndexUpdate = action.payload.fieldIndex;
+>>>>>>> 836b1b22faa573d6a8c7b8479040ba72dec9fa38
     addFieldClicked = true;
 
     //selectedField = Object.assign({}, tables[tableIndexUpdate].fields[fieldIndexUpdate])
