@@ -5,6 +5,7 @@ import * as actions from '../actions/actions.js';
 
 //Components
 import './app.css';
+import MainNav from './navbar/navbar';
 import Welcome from './welcome/welcome.js';
 import SchemaApp from './schema/schema-app.js';
 import QueryApp from './query/query-app.js';
@@ -26,7 +27,9 @@ class App extends Component {
     return (
       <div className='app-container'>
         <div className='app-header'>
-          <h1 style={{marginTop: '100px'}}>GraphQL Designer Coming Soon</h1>
+          <h1 style={{marginTop: '100px'}}>
+          {/* <MainNav */}
+          </h1>
           <GraphqlLoader />
         </div>
         <Welcome chooseDatabase={this.props.chooseDatabase}/>
