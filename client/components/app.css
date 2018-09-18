@@ -22,27 +22,14 @@ ul{
   height: 10%;  
 }
 
-a{
-  font-size: 1.3em; 
-  text-decoration: none;
-  list-style-type: none; 
-  color: deeppink; 
-  height: 100%;
-  width: 100%; 
-}
-
-a:hover{
-  text-decoration: none;
-  color: white; 
-}
-
 ul{
   margin: 0;
 }
 
 li{
-  display: flex; 
   border: 1.5px solid deeppink;
+  font-size: 1.3em; 
+  color: deeppink; 
   border-radius: 10px 10px 0px 0px; 
   width: 50%; 
   list-style-type: none; 
@@ -50,6 +37,7 @@ li{
 
 li:hover{
   background-color: deeppink;
+  color: white; 
 }
 
 h1{

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import * as actions from '../actions/actions.js';
 
@@ -11,18 +10,31 @@ import QueryApp from './query/query-app.js';
 import GraphqlLoader from './loader';
 
 const mapStateToProps = store => ({
-  test: store.data.test, //we use store.data, because of index.js reduce function
+  appSelected: store.data.appSelected, //we use store.data, because of index.js reduce function
 });
 
 const mapDispatchToProps = dispatch => ({
-  chooseDatabase: dbName => dispatch(actions.chooseDatabase(dbName)),
+  chooseApp: app => dispatch(actions.chooseApp(app)),
+  chooseDatabase: dbName => dispatch(actions.chooseDatabase(dbName))
 })
 
 class App extends Component {
   constructor(props) {
     super(props);
+    this.handleTabSelect = this.handleTabSelect.bind(this)
   }  
+
+  handleTabSelect(event){
+    console.log(event.target.innerHTML)
+    this.props.chooseApp(event.target.innerHTML)
+  }
+
   render() {
+     // toggle between the different apps: Schema, Query, and Code
+    let app = ''
+    if (this.props.appSelected === 'Schemas') app = <SchemaApp/>
+    else if (this.props.appSelected === 'Queries') app = <QueryApp/>
+
     return (
       <div className='app-container'>
         <div className='app-header'>
@@ -30,20 +42,13 @@ class App extends Component {
           <GraphqlLoader />
         </div>
         <Welcome chooseDatabase={this.props.chooseDatabase}/>
-        <Router>
           <div className='app-body-container'>
             <ul>
-              <li>
-                <Link to='/public/schemas'>Schemas</Link>
-              </li>
-              <li>
-                <Link to='/public/queries'>Queries</Link>
-              </li>
+              <li onClick={this.handleTabSelect}>Schemas</li>
+              <li onClick={this.handleTabSelect}>Queries</li>
             </ul>
-            <Route path="/public/schemas" render={() => <SchemaApp />}/>
-            <Route path="/public/queries" component={QueryApp} />
+            {app}
           </div>
-        </Router>
       </div>
     )
   }
