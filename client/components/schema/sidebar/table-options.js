@@ -111,7 +111,6 @@ class TableOptions extends React.Component {
                 </select>
               </span>)}
 
-
               <span>Unique : 
                 <select onChange={this.handleChange} id="uniqueDropDown" name='unique' value={this.props.selectedField.unique}>
                   <option value="False">False</option>
@@ -148,8 +147,6 @@ class TableOptions extends React.Component {
           </form>
         </div>
         }
-        
-
       </div>
     );
   }
