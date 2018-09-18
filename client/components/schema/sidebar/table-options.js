@@ -9,11 +9,11 @@ import * as actions from '../../../actions/actions.js';
 import './sidebar.css';
 
 const mapStateToProps = store => ({
+  database: store.data.database,
   tableIndex : store.data.tableIndexSelected,
   addFieldClicked: store.data.addFieldClicked,
   selectedField: store.data.selectedField,
-  updatedField: store.data.fieldUpdated,
-  
+  updatedField: store.data.fieldUpdated, 
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -97,12 +97,13 @@ class TableOptions extends React.Component {
                 </select>
               </span>
 
-              <span>Primary Key :
+              {this.props.database === 'SQL' && (<span> Primary Key :
                 <select onChange={this.handleChange} id="primaryKeyDropDown" name='primaryKey' value={this.props.selectedField.primaryKey}>
                   <option value="False">False</option>
                   <option value="True">True</option>
                 </select>
-              </span>
+              </span>)}
+
 
               <span>Unique : 
                 <select onChange={this.handleChange} id="uniqueDropDown" name='unique' value={this.props.selectedField.unique}>
