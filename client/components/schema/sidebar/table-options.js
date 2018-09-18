@@ -61,7 +61,7 @@ class TableOptions extends React.Component {
       //   relations: document.getElementById('relationDropDown').value
       // }
   
-
+      //
       // if(Object.keys(this.props.selectedField).length){
       //   options.tableIndex = this.props.selectedField.tableIndex;
       //   options.fieldIndex = this.props.selectedField.fieldIndex;
