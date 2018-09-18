@@ -1,0 +1,28 @@
+
+.code-app {
+  width: 100%;
+  height: 100%; 
+  border: 1px solid blue; 
+  display: flex;
+  flex-direction: row; 
+  padding: 0;
+  margin: 0; 
+}
+
+.code-db-schema-container {
+  border: 1px solid green;
+  margin: 0;
+  width: 33%;
+}
+
+.code-client-container {
+  border: 1px solid orange;
+  margin: 0;
+  width: 33%;
+}
+
+.code-server-container {
+  border: 1px solid purple;
+  margin: 0;
+  width: 33%;
+}
