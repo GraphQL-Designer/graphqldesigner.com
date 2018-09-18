@@ -15,11 +15,7 @@
 }
 
 .table{
-<<<<<<< HEAD
-  display: flex;
-=======
   display: flex; 
->>>>>>> 836b1b22faa573d6a8c7b8479040ba72dec9fa38
   flex-direction: column; 
   border: 1px solid black;
   width: 200px; 

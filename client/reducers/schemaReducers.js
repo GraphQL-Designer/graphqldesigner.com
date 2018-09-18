@@ -131,64 +131,24 @@ const marketsReducer = (state = initialState, action) => {
 
     // Update Field
     case types.UPDATE_FIELD:
-    // let tableIndexUpdate = action.payload.tableIndex;
-    // let fieldIndexUpdate = action.payload.fieldIndex;
-    addFieldClicked = true;
+      const currentFieldIndex = state.tables[state.selectedField.tableNum].fieldsIndex;
+      const newSelectField = Object.assign({}, selectedField, {fieldNum: currentFieldIndex})
+      let updatedTables = {}
+      if (state.selectedField.fieldNum < 0) {
 
-    //selectedField = Object.assign({}, tables[tableIndexUpdate].fields[fieldIndexUpdate])
+        updatedTables = 
+        Object.assign({}, state.tables, {[state.selectedField.tableNum]:
+          Object.assign({}, state.tables[state.selectedField.tableNum], {fieldsIndex: currentFieldIndex + 1}, {
+            fields: Object.assign({}, state.tables[state.selectedField.tableNum].fields, {[currentFieldIndex]: 
+              Object.assign({}, state.selectedField, {fieldNum: currentFieldIndex})})})})
 
-      // name : tables[tableIndexUpdate].fields[fieldIndexUpdate].name,
-      // type : tables[tableIndexUpdate].fields[fieldIndexUpdate].type,
-      // primaryKey : tables[tableIndexUpdate].fields[fieldIndexUpdate].primaryKey,
-      // unique : tables[tableIndexUpdate].fields[fieldIndexUpdate].unique,
-      // defaultValue : tables[tableIndexUpdate].fields[fieldIndexUpdate].defaultValue,
-      // multipleValues : tables[tableIndexUpdate].fields[fieldIndexUpdate].multipleValues,
-      // required : tables[tableIndexUpdate].fields[fieldIndexUpdate].required,
-      // relations: tables[tableIndexUpdate].fields[fieldIndexUpdate].relations,
-      // tableIndex: tableIndexUpdate,
-      // fieldIndex: fieldIndexUpdate
-      //};
-
-    // if(action.payload.submitUpdate){
-    //   tables[tableIndexUpdate].fields[fieldIndexUpdate].name = action.payload.name;
-    //   tables[tableIndexUpdate].fields[fieldIndexUpdate].type = action.payload.type;
-    //   tables[tableIndexUpdate].fields[fieldIndexUpdate].primaryKey = action.payload.primaryKey;
-    //   tables[tableIndexUpdate].fields[fieldIndexUpdate].unique = action.payload.unique;
-    //   tables[tableIndexUpdate].fields[fieldIndexUpdate].defaultValue = action.payload.defaultValue;
-    //   tables[tableIndexUpdate].fields[fieldIndexUpdate].multipleValues = action.payload.multipleValues;
-    //   tables[tableIndexUpdate].fields[fieldIndexUpdate].required = action.payload.required;
-    //   tables[tableIndexUpdate].fields[fieldIndexUpdate].relation = action.payload.relations;
-    //   fieldUpdated += 1;
-      
-    //   selectedField = {};
-    //   addFieldClicked = false;
-    // }
-
-    // new field
-    const currentFieldIndex = state.tables[state.selectedField.tableNum].fieldsIndex;
-    const newSelectField = Object.assign({}, selectedField, {fieldNum: currentFieldIndex})
-    if (state.selectedField.fieldNum < 0) {
-
-      const updatedTables = 
-      Object.assign({}, state.tables, {[state.selectedField.tableNum]:
-        Object.assign({}, state.tables[state.selectedField.tableNum], {fieldsIndex: currentFieldIndex + 1}, {
-          fields: Object.assign({}, state.tables[state.selectedField.tableNum].fields, {[currentFieldIndex]: 
-            Object.assign({}, state.selectedField, {fieldNum: currentFieldIndex})})})})
-
-      return {
-        ...state,
-        tables: updatedTables,
-        selectedField: newSelectField,
-        addFieldClicked,
-        fieldUpdated
-      }  
-     } else {
-      const updatedTables = 
-      Object.assign({}, state.tables, {[state.selectedField.tableNum]:
-        Object.assign({}, state.tables[state.selectedField.tableNum], {fieldsIndex: currentFieldIndex}, {
-          fields: Object.assign({}, state.tables[state.selectedField.tableNum].fields, {[state.selectedField.fieldNum]: 
-            Object.assign({}, state.selectedField, {fieldNum: currentFieldIndex})})})})
-
+      } else {
+        updatedTables = 
+        Object.assign({}, state.tables, {[state.selectedField.tableNum]:
+          Object.assign({}, state.tables[state.selectedField.tableNum], {fieldsIndex: currentFieldIndex}, {
+            fields: Object.assign({}, state.tables[state.selectedField.tableNum].fields, {[state.selectedField.fieldNum]: 
+              Object.assign({}, state.selectedField, {fieldNum: currentFieldIndex})})})})        
+      } 
       return {
         ...state,
         tables: updatedTables,
@@ -196,8 +156,6 @@ const marketsReducer = (state = initialState, action) => {
         addFieldClicked,
         fieldUpdated
       } 
-
-     } 
 
     case types.HANDLE_FIELDS_UPDATE:
     newSelectedField = Object.assign({}, state.selectedField, {[action.payload.name]: [action.payload.value]})

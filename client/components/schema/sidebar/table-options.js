@@ -79,7 +79,7 @@ class TableOptions extends React.Component {
 
     return (
       <div>
-        { this.props.addFieldClicked  &&
+        { this.props.selectedField.tableNum > -1  &&
         <div id='options'>
           <h4>Options</h4>
           <form>
