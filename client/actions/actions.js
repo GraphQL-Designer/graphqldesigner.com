@@ -44,13 +44,6 @@ export const updateField = (fieldIndex) => ({
   payload: fieldIndex,
 })
 
-<<<<<<< HEAD
-// ----------------------------- Query App -------------------------------//
-
-export const createQuery = (query) => ({
-  type: types.CREATE_QUERY,
-  payload: query
-=======
 export const handleFieldsUpdate = (field) => ({
   type: types.HANDLE_FIELDS_UPDATE,
   payload: field,
@@ -59,5 +52,12 @@ export const handleFieldsUpdate = (field) => ({
 export const handleFieldsSelect = (field) => ({
   type: types.HANDLE_FIELDS_SELECT,
   payload: field,
->>>>>>> 9a2586e80a59c44c2048202adf17fe0299eaef4e
 })
+
+// ----------------------------- Query App -------------------------------//
+
+export const createQuery = (query) => ({
+  type: types.CREATE_QUERY,
+  payload: query
+})
+
