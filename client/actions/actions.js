@@ -1,5 +1,7 @@
 import * as types from './action-types.js'
 
+// -------------------------- Welcome and Intro ----------------------------//
+
 export const chooseDatabase = (dbName) => ({
   type: types.CHOOSE_DATABASE,
   payload: dbName,
@@ -9,6 +11,8 @@ export const chooseApp = (app) => ({
   type: types.CHOOSE_APP,
   payload: app
 })
+
+// ----------------------------- Schema App --------------------------------//
 
 export const addTable = (tableIndex) => ({
   type: types.ADD_TABLE,
@@ -38,4 +42,11 @@ export const addFieldClicked = (fieldName) => ({
 export const updateField = (fieldIndex) => ({
   type: types.UPDATE_FIELD,
   payload: fieldIndex,
+})
+
+// ----------------------------- Query App -------------------------------//
+
+export const createQuery = (query) => ({
+  type: types.CREATE_QUERY,
+  payload: query
 })

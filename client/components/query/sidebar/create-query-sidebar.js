@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import * as actions from '../../../actions/actions.js';
+
 import './sidebar.css';
 
 const mapDispatchToProps = dispatch => ({
+  createQuery: query => dispatch(actions.createQuery(query))
 });
 
 const mapStateToProps = store => ({
@@ -25,14 +28,11 @@ class CreateQuerySidebar extends Component {
 
   // when a user types into the input for Query Name
   handleChange(event){
-    console.log('this is state', this.state)
-
     this.setState({queryName: event.target.value})
   }
 
   // user selects a query type
   selectTypeHandler(event){
-    console.log('this is state', this.state)
     // if the default select is picked, change state to default values. 
     if (event.target.value === 'default'){
       this.setState({selectedTableIndex: null})
@@ -45,8 +45,6 @@ class CreateQuerySidebar extends Component {
 
   // user selects how to search the particular type
   selectSearchHandler(event){
-    console.log('this is state', this.state)
-
       // user selected to search for all of a type
       if (event.target.value === 'every'){
         this.setState({querySearchFor: 'every'})
@@ -59,11 +57,11 @@ class CreateQuerySidebar extends Component {
 
   submitHandler(event){
     event.preventDefault();
+    this.props.createQuery(this.state)
     console.log(this.state)
   }
 
   render(){
-
     // Dynamically set the GraphQL types that can be selected based on Schema setup
     let graphQLTypeOptions = []
     for (let property in this.props.tables){

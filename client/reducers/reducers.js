@@ -2,6 +2,7 @@ import * as types from '../actions/action-types';
 
 const initialState = {
   appSelected: '',
+  queryMode: 'create',
   tables: {},
   database: '',
   tableIndex: 0,
@@ -12,7 +13,7 @@ const initialState = {
   selectedField : {}
 };
 
-const marketsReducer = (state = initialState, action) => {
+const reducers = (state = initialState, action) => {
   let appSelected = state.appSelected;
   let tables = state.tables;
   let tableIndex = state.tableIndex;
@@ -22,9 +23,10 @@ const marketsReducer = (state = initialState, action) => {
   let addFieldClicked = state.addFieldClicked;
   let tableIndexSelected = state.tableIndexSelected;
   let selectedField = state.selectedField;
-  console.log('tables IS: ', tables);
-  // action.payload is how you can access the info
+
   switch(action.type) {
+    // -------------------------- Welcome and Intro ----------------------------//
+
     // Choose Database
     case types.CHOOSE_DATABASE:
       database = action.payload; 
@@ -33,6 +35,16 @@ const marketsReducer = (state = initialState, action) => {
         ...state,
         database
       }
+
+    // toggle between the different apps: Schema, Query, and Code
+    case types.CHOOSE_APP:
+      appSelected = action.payload;
+      return {
+        ...state,
+        appSelected
+      }
+
+    // ----------------------------- Schema App --------------------------------//
 
     // Add Schema Table
     case types.ADD_TABLE:
@@ -55,15 +67,6 @@ const marketsReducer = (state = initialState, action) => {
         tableIndex,
         tableCount,
       };
-
-    // toggle between the different apps: Schema, Query, and Code
-    case types.CHOOSE_APP:
-      appSelected = action.payload;
-      return {
-        ...state,
-        appSelected
-      }
-
     
     // Delete Schema Table
     case types.DELETE_TABLE:
@@ -169,9 +172,15 @@ const marketsReducer = (state = initialState, action) => {
         selectedField
       }
 
+
+      // ----------------------------- Query App -------------------------------//
+    
+    case types.CREATE_QUERY:
+      console.log(action.payload)
+
     default:
       return state;
   }
 };
 
-export default marketsReducer;
+export default reducers;
