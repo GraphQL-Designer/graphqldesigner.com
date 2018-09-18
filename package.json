@@ -39,6 +39,7 @@
   "dependencies": {
     "@material/top-app-bar": "^0.39.3",
     "babel-preset-stage-2": "^6.24.1",
+    "eslint-config-airbnb": "^17.1.0",
     "material-ui": "^0.20.2",
     "react-bootstrap": "^0.32.4",
     "react-redux": "^5.0.7",
