@@ -10,7 +10,20 @@ const initialState = {
   fieldCount: 0,
   addFieldClicked: false,
   tableIndexSelected: null,
-  selectedField : {}
+  selectedField : {
+    name: '',
+    type: 'String',
+    primaryKey: 'False',
+    unique: 'False',
+    defaultValue: '',
+    required: 'False',
+    multipleValues: 'False',
+    relation: 'False',
+    tableNum: -1,
+    fieldNum: -1
+  },
+
+  fieldUpdated: 0
 };
 
 const reducers = (state = initialState, action) => {
@@ -23,14 +36,16 @@ const reducers = (state = initialState, action) => {
   let addFieldClicked = state.addFieldClicked;
   let tableIndexSelected = state.tableIndexSelected;
   let selectedField = state.selectedField;
+  let fieldUpdated = state.fieldUpdated;
+  let newSelectedField;
 
+  // action.payload is how you can access the info
   switch(action.type) {
     // -------------------------- Welcome and Intro ----------------------------//
 
     // Choose Database
     case types.CHOOSE_DATABASE:
       database = action.payload; 
-      console.log('this database was just selected: ', database)
       return {
         ...state,
         database
@@ -48,7 +63,6 @@ const reducers = (state = initialState, action) => {
 
     // Add Schema Table
     case types.ADD_TABLE:
-    console.log('tableIndex: ', tableIndex);
       const newTable = action.payload.name;
       const uniqueID = action.payload.uniqueID;
       tables[tableIndex] = {};
@@ -59,13 +73,14 @@ const reducers = (state = initialState, action) => {
       tables[tableIndex].tableID = state.tableIndex;
       tableIndex += 1;
       tableCount += 1; 
-      console.log(`table ${newTable} was added`);
-      console.log('here are the tables: ', tables);
+      addFieldClicked = false;
+
       return {
         ...state,
         tables,
         tableIndex,
         tableCount,
+        addFieldClicked
       };
     
     // Delete Schema Table
@@ -73,7 +88,6 @@ const reducers = (state = initialState, action) => {
       tableCount -= 1;
       addFieldClicked = false;
       delete tables[action.payload]
-      console.log('here are the tables now', tables)
       return {
         ...state,
         tables,
@@ -84,7 +98,6 @@ const reducers = (state = initialState, action) => {
 
     // Add Field
     case types.ADD_FIELD:
-      console.log('selected table: ', tables[tableIndexSelected]);
       let fieldsIndex = tables[tableIndexSelected].fieldsIndex;
       addFieldClicked = false;
       fieldCount += 1;
@@ -100,7 +113,6 @@ const reducers = (state = initialState, action) => {
       tables[tableIndexSelected].fields[fieldsIndex].multipleValues = action.payload.multipleValues;
       tables[tableIndexSelected].fields[fieldsIndex].required = action.payload.required;
       tables[tableIndexSelected].fields[fieldsIndex].relations = action.payload.relations;
-      console.log('tables: ', tables);
     return {
       ...state, 
       tables,
@@ -115,7 +127,6 @@ const reducers = (state = initialState, action) => {
       const tablesIndexSelected = action.payload[0];
       const fieldIndexSelected = action.payload[1];
       delete tables[tablesIndexSelected].fields[fieldIndexSelected];
-      console.log('here are the fields now', tables[tablesIndexSelected].fields)
     return {
       ...state,
       tables,
@@ -124,52 +135,76 @@ const reducers = (state = initialState, action) => {
 
     // Update Field
     case types.UPDATE_FIELD:
-    let tableIndexUpdate = action.payload.tableIndex;
-    let fieldIndexUpdate = action.payload.fieldIndex;
-    addFieldClicked = true;
+      const currentFieldIndex = state.tables[state.selectedField.tableNum].fieldsIndex;
+      const newSelectField = Object.assign({}, selectedField, {fieldNum: currentFieldIndex})
+      let updatedTables = {}
+      if (state.selectedField.fieldNum < 0) {
 
-    selectedField = {
-      name : tables[tableIndexUpdate].fields[fieldIndexUpdate].name,
-      type : tables[tableIndexUpdate].fields[fieldIndexUpdate].type,
-      primaryKey : tables[tableIndexUpdate].fields[fieldIndexUpdate].primaryKey,
-      unique : tables[tableIndexUpdate].fields[fieldIndexUpdate].unique,
-      defaultValue : tables[tableIndexUpdate].fields[fieldIndexUpdate].defaultValue,
-      multipleValues : tables[tableIndexUpdate].fields[fieldIndexUpdate].multipleValues,
-      required : tables[tableIndexUpdate].fields[fieldIndexUpdate].required,
-      tableIndex: tableIndexUpdate,
-      fieldIndex: fieldIndexUpdate
-    };
+        updatedTables = 
+        Object.assign({}, state.tables, {[state.selectedField.tableNum]:
+          Object.assign({}, state.tables[state.selectedField.tableNum], {fieldsIndex: currentFieldIndex + 1}, {
+            fields: Object.assign({}, state.tables[state.selectedField.tableNum].fields, {[currentFieldIndex]: 
+              Object.assign({}, state.selectedField, {fieldNum: currentFieldIndex})})})})
 
-    if(action.payload.submitUpdate){
-      tables[tableIndexUpdate].fields[fieldIndexUpdate].name = action.payload.name;
-      tables[tableIndexUpdate].fields[fieldIndexUpdate].type = action.payload.type;
-      tables[tableIndexUpdate].fields[fieldIndexUpdate].primaryKey = action.payload.primaryKey;
-      tables[tableIndexUpdate].fields[fieldIndexUpdate].unique = action.payload.unique;
-      tables[tableIndexUpdate].fields[fieldIndexUpdate].defaultValue = action.payload.defaultValue;
-      tables[tableIndexUpdate].fields[fieldIndexUpdate].multipleValues = action.payload.multipleValues;
-      tables[tableIndexUpdate].fields[fieldIndexUpdate].required = action.payload.required;
-      addFieldClicked = false;
-    }
+      } else {
+        updatedTables = 
+        Object.assign({}, state.tables, {[state.selectedField.tableNum]:
+          Object.assign({}, state.tables[state.selectedField.tableNum], {fieldsIndex: currentFieldIndex}, {
+            fields: Object.assign({}, state.tables[state.selectedField.tableNum].fields, {[state.selectedField.fieldNum]: 
+              Object.assign({}, state.selectedField, {fieldNum: currentFieldIndex})})})})        
+      } 
+      return {
+        ...state,
+        tables: updatedTables,
+        selectedField: newSelectField,
+        addFieldClicked,
+        fieldUpdated
+      } 
 
+    case types.HANDLE_FIELDS_UPDATE:
+    newSelectedField = Object.assign({}, state.selectedField, {[action.payload.name]: [action.payload.value]})
     return {
       ...state,
-      ...tables,
-      selectedField,
-      addFieldClicked
+      tables,
+      selectedField: newSelectedField,
+      addFieldClicked,
+      fieldUpdated
     }  
 
+    case types.HANDLE_FIELDS_SELECT: 
+    console.log('payload: ', action.payload);
+    const location = action.payload.location.split(" ")
+
+    newSelectedField = Object.assign({}, state.tables[Number(location[0])].fields[Number(location[1])]);
+    return {
+      ...state,
+      tables,
+      selectedField: newSelectedField,
+      addFieldClicked,
+      fieldUpdated
+    }  
 
     // Add Field in Table was clicked to display field options
     case types.ADD_FIELD_CLICKED:
-      tableIndexSelected = action.payload;
       addFieldClicked = true;
-      selectedField = {};
-      console.log('table index selected: ', tableIndexSelected);
+      newSelectedField = {
+        name: '',
+        type: 'String',
+        primaryKey: 'False',
+        unique: 'False',
+        defaultValue: '',
+        required: 'False',
+        multipleValues: 'False',
+        relation: 'False',
+        tableNum: action.payload,
+        fieldNum: -1
+      };
+
       return{
         ...state,
         addFieldClicked,
         tableIndexSelected,
-        selectedField
+        selectedField: newSelectedField
       }
 
 
