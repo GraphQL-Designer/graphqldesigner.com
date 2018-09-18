@@ -1,1 +1,33 @@
 
+.navBar {
+    border-top: 1px solid #79b1c3;
+    /* text-align: center; */
+    padding-left: 30px;
+  }
+  
+  .navBar ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color :#44708a;
+    border-radius: 0 0 10px 10px;
+    display: inline-block;
+  }
+  
+  .navBar li {
+    float: left;
+  }
+  
+  .navBar li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-weight: bold;
+  }
+  
+  .navBar li a:hover {
+    background-color: #111;
+  }

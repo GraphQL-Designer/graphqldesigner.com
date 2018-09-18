@@ -8,7 +8,7 @@ import MainNav from './navbar/navbar';
 import Welcome from './welcome/welcome.js';
 import SchemaApp from './schema/schema-app.js';
 import QueryApp from './query/query-app.js';
-import GraphqlLoader from './loader';
+//import GraphqlLoader from './loader';
 
 const mapStateToProps = store => ({
   appSelected: store.data.appSelected, //we use store.data, because of index.js reduce function
@@ -39,10 +39,10 @@ class App extends Component {
     return (
       <div className='app-container'>
         <div className='app-header'>
-          <h1 style={{marginTop: '100px'}}>
-          {/* <MainNav */}
+          <h1 style={{marginTop: '100px'}}> GraphQL Designer Coming Soon
+          {/* <GraphqlLoader */}
+          <MainNav />
           </h1>
-          <GraphqlLoader />
         </div>
         <Welcome chooseDatabase={this.props.chooseDatabase}/>
           <div className='app-body-container'>
