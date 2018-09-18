@@ -96,7 +96,8 @@ class CreateQuerySidebar extends Component {
           <input type="text"
             placeholder="Query Name"
             value={this.state.queryName}
-            onChange={this.handleChange} 
+            onChange={this.handleChange}
+            autoFocus 
             />
           <br/>
           <select name='graphqlTypes' onChange={this.selectTypeHandler}>

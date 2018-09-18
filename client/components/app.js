@@ -9,6 +9,7 @@ import Welcome from './welcome/welcome.js';
 import SchemaApp from './schema/schema-app.js';
 import QueryApp from './query/query-app.js';
 import GraphqlLoader from './loader';
+import CodeApp from './code/code-app.js';
 
 const mapStateToProps = store => ({
   appSelected: store.data.appSelected, //we use store.data, because of index.js reduce function
@@ -35,6 +36,7 @@ class App extends Component {
     let app = ''
     if (this.props.appSelected === 'Schemas') app = <SchemaApp/>
     else if (this.props.appSelected === 'Queries') app = <QueryApp/>
+    else if (this.props.appSelected === 'Code') app = <CodeApp/>
 
     return (
       <div className='app-container'>
@@ -49,6 +51,7 @@ class App extends Component {
             <ul>
               <li onClick={this.handleTabSelect}>Schemas</li>
               <li onClick={this.handleTabSelect}>Queries</li>
+              <li onClick={this.handleTabSelect}>Code</li>
             </ul>
             {app}
           </div>

@@ -35,10 +35,21 @@ class CreateTable extends React.Component {
       <div id='newTable'>
         <h4>New Table</h4>
         <form >
-          <input type='text' id='tableName' className='tableName' placeholder='Name' />
+          <input 
+            type='text' 
+            id='tableName' 
+            className='tableName' 
+            placeholder='Name' 
+            autoFocus
+          />
           <h6>(Works with singular naming convention)</h6>
           <span>Unique ID:<input id='idCheckbox' type='checkbox'/></span>
-          <input type='submit' value='Create' className='btn-outline-success btn-sm' onClick={this.createTable}/>
+          <input 
+            type='submit' 
+            value='Create' 
+            className='btn-outline-success btn-sm' 
+            onClick={this.createTable}
+          />
         </form>
       </div>
     );

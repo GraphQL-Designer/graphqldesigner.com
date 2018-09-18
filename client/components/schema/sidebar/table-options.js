@@ -84,7 +84,14 @@ class TableOptions extends React.Component {
           <h4>Options</h4>
           <form>
               <span>
-                  Field Name : <input onChange={this.handleChange} id='fieldNameOption' type='text' name='name' value={this.props.selectedField.name}/>
+                  Field Name : <input 
+                                    onChange={this.handleChange} 
+                                    id='fieldNameOption' 
+                                    type='text' 
+                                    name='name' 
+                                    value={this.props.selectedField.name}
+                                    autoFocus
+                                />
               </span>
 
               <span>Type : 
