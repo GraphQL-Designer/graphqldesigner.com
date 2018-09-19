@@ -167,6 +167,14 @@ class TableOptions extends React.Component {
                   <option value="True">True</option>
                 </select>
               </span>)}
+
+                 <span>Required : 
+                <select onChange={this.handleChange} id="requiredDropDown" name='required' value={this.props.selectedField.required}>
+                  <option value="False">False</option>
+                  <option value="True">True</option>
+                </select>
+              </span>
+
               <span>Unique : 
                 <select onChange={this.handleChange} id="uniqueDropDown" name='unique' value={this.props.selectedField.unique}>
                   <option value="False">False</option>
@@ -174,13 +182,6 @@ class TableOptions extends React.Component {
                 </select>
               </span>
               
-              <span>Required : 
-                <select onChange={this.handleChange} id="requiredDropDown" name='required' value={this.props.selectedField.required}>
-                  <option value="False">False</option>
-                  <option value="True">True</option>
-                </select>
-              </span>
-
               <span>Multiple Values : 
                 <select onChange={this.handleChange} id="multipleValuesDropDown" name='multipleValues' value={this.props.selectedField.multipleValues}>
                   <option value="False">False</option>
