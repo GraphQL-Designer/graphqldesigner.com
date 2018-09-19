@@ -43,3 +43,16 @@ li:hover{
 h1{
   margin-top: 0 !important;
 }
+
+hr {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+button{
+  margin-top: 5px;
+}
+
+.table div span {
+  margin-top: 5px;
+}

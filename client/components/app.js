@@ -43,9 +43,9 @@ class App extends Component {
         <div className='app-header'>
           <h1 style={{marginTop: '100px'}}> GraphQL Designer Coming Soon
           {/* <GraphqlLoader */}
-          <MainNav />
           </h1>
         </div>
+        <MainNav />
         <Welcome chooseDatabase={this.props.chooseDatabase}/>
           <div className='app-body-container'>
             <ul>
