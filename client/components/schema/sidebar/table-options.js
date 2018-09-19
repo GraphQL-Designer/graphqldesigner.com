@@ -82,7 +82,7 @@ class TableOptions extends React.Component {
   }
 
   render() {
-    const optionsBackground = this.props.selectedField.fieldNum > -1 ? {backgroundColor: 'lightblue'} : {backgroundColor: 'white'};
+    const optionsBackground = this.props.selectedField.fieldNum > -1 ? {backgroundColor: 'lightblue'} : {backgroundColor: '#5f5e5e'};
     
     // create option with default of empty string when viewed
     let tables = [<option key='empty'> </option>];

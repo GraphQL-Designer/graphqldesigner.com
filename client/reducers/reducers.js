@@ -145,8 +145,7 @@ const reducers = (state = initialState, action) => {
     // Update Field
     case types.UPDATE_FIELD:
       const selectedTableIndex = state.selectedField.tableNum;
-      const currentFieldIndex = state.tables[state.selectedField.tableNum].fieldsIndex;
-      const newSelectField = Object.assign({}, selectedField, {fieldNum: currentFieldIndex})
+      const currentFieldIndex = state.tables[selectedTableIndex].fieldsIndex;
       let updatedTables = {}
 
       // no field has been selected yet
@@ -160,16 +159,32 @@ const reducers = (state = initialState, action) => {
       // field has been selected
       else {
         updatedTables = 
-        Object.assign({}, state.tables, {[state.selectedField.tableNum]:
-          Object.assign({}, state.tables[state.selectedField.tableNum], {fieldsIndex: currentFieldIndex}, {
-            fields: Object.assign({}, state.tables[state.selectedField.tableNum].fields, {[state.selectedField.fieldNum]: 
+        Object.assign({}, state.tables, {[selectedTableIndex]:
+          Object.assign({}, state.tables[selectedTableIndex], {fieldsIndex: currentFieldIndex}, {
+            fields: Object.assign({}, state.tables[selectedTableIndex].fields, {[state.selectedField.fieldNum]: 
               // Object.assign({}, state.selectedField, {fieldNum: currentFieldIndex})})})})        
               Object.assign({}, state.selectedField, {fieldNum: state.selectedField.fieldNum})})})})        
       } 
+
+      const fieldReset = Object.assign({}, selectedField, 
+          {name: '',
+          type: 'String',
+          primaryKey: 'False',
+          unique: 'False',
+          defaultValue: '',
+          required: 'False',
+          multipleValues: 'False',
+          relation: {
+            type: '',
+            field: '',
+            refType: ''
+          },
+          fieldNum: -1
+        })
       return {
         ...state,
         tables: updatedTables,
-        selectedField: newSelectField
+        selectedField: fieldReset
       } 
 
     case types.HANDLE_FIELDS_UPDATE:
@@ -203,6 +218,7 @@ const reducers = (state = initialState, action) => {
 
     // Add Field in Table was clicked to display field options
     case types.ADD_FIELD_CLICKED:
+      createTableState = false; 
       addFieldClicked = true;
       newSelectedField = {
         name: '',
@@ -223,6 +239,7 @@ const reducers = (state = initialState, action) => {
 
       return{
         ...state,
+        createTableState,
         addFieldClicked,
         tableIndexSelected,
         selectedField: newSelectedField

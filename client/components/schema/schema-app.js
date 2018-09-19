@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import Sidebar from './sidebar/sidebar.js';
 import Table from './table.js';
 import CreateTable from './sidebar/create-table.js'
+import TableOptions from './sidebar/table-options.js'
 
 //styles
 import './schema.css'
@@ -15,7 +16,8 @@ const mapStateToProps = store => ({
   tableIndex: store.data.tableIndex,
   // Need below to subscribe to store. store.data.tables is an object so never changes
   tableCount: store.data.tableCount,
-  createTableState: store.data.createTableState
+  createTableState: store.data.createTableState,
+  tableNum: store.data.selectedField.tableNum
 });
 
 const SchemaApp = props => {
@@ -35,6 +37,7 @@ const SchemaApp = props => {
 
   let sidebar = '';
   if (props.createTableState) sidebar = <CreateTable/>
+  if (props.tableNum > -1) sidebar = <TableOptions/>
 
   return (
     <div className='schema-app-container'>

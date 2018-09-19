@@ -40,7 +40,7 @@ class MainNav extends React.Component {
     }
   }
 
-  handleExport(event){
+  handleExport(){
     const data = Object.assign({}, {data: this.props.tables}, {
       database: 'MongoDB'
     })
@@ -51,26 +51,15 @@ class MainNav extends React.Component {
       },
       body: JSON.stringify(data)
      })
-
-     //.then(res => console.log(res))
-    //  .then(res => new Response(res.body))
-    //  .then(response => {
-    //    console.log('res', response)
-    //    console.log('res.body==>>>', response.body)
-    //    return response.blob()
-    //   })
-    //  .then(blob => {
-    //    console.log('blob', blob)
-    //    return URL.createObjectURL(blob)
-    //  })
-    //  .then(file => {
-    //     var element = document.createElement("a");
-    //     element.href = file;
-    //     element.download = "graphql.txt";
-    //     console.log('file', file)
-    //     element.click();
-    //  })
-
+     .then(res => res.blob())
+     .then(blob => URL.createObjectURL(blob))
+     .then(file => {
+       console.log('file', file)
+        var element = document.createElement("a");
+        element.href = file;
+        element.download = "graphql.zip";
+        element.click();
+     })
      .catch((err) => console.log(err))
     }
 
@@ -85,12 +74,10 @@ class MainNav extends React.Component {
     <nav id="navbar">
       <div id="nav-left">
         <FlatButton label="New Project" />
-        {/* <FlatButton label="Save" />
-        <FlatButton label="Load" /> */}
-        <FlatButton label="Export Code" />
+        <FlatButton label="Export Code" onClick={this.handleExport}/>
       </div>
       <div id="nav-mid">
-        <FlatButton label={createButtonText} onClick={this.handleCreate} />
+        {/* <FlatButton label={createButtonText} onClick={this.handleCreate} /> */}
       </div>
       <div id='nav-right'>
         <FlatButton label="Logout" />
