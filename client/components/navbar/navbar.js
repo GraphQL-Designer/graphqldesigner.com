@@ -5,7 +5,7 @@ import './navbar.css';
 
 
 const mapStateToProps = store => ({
-  table: store.data.table,  
+  tables: store.data.tables,
 });
 
 
@@ -19,20 +19,42 @@ class MainNav extends React.Component {
   constructor(props) {
     super(props);
     //this.handleSave= this.handleSave.bind(this)
-    //this.handleExport = this.handleExportbind(this)
+    this.handleExport = this.handleExport.bind(this)
   }
 
   handleExport(event){
-    event.preventDefault();
-    this.props.exportTable(this.props.table);
-    // this.props.handleExport({
-    //   tableIndex: this.props.tableIndex,
-    //   fieldIndex: event.target.id,
-    //   submitUpdate: false
-    // })
-  }
-  
+    const data = Object.assign({}, {data: this.props.tables}, {
+      database: 'MongoDB'
+    })
+    fetch('http://localhost:4100/write-files', {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(data)
+     })
 
+     //.then(res => console.log(res))
+    //  .then(res => new Response(res.body))
+    //  .then(response => {
+    //    console.log('res', response)
+    //    console.log('res.body==>>>', response.body)
+    //    return response.blob()
+    //   })
+    //  .then(blob => {
+    //    console.log('blob', blob)
+    //    return URL.createObjectURL(blob)
+    //  })
+    //  .then(file => {
+    //     var element = document.createElement("a");
+    //     element.href = file;
+    //     element.download = "graphql.txt";
+    //     console.log('file', file)
+    //     element.click();
+    //  })
+
+     .catch((err) => console.log(err))
+    }
   
   render() {
     return (
