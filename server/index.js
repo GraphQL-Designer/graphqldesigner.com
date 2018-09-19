@@ -10,7 +10,7 @@ const createReadMe = require('./create_file_func/create_readme');
 const buildExpressServer = require('./create_file_func/express_server')
 const parseClientQueries = require('./create_file_func/client_queries');
 const parseClientMutations = require('./create_file_func/client_mutations');
-const parseGraphqlMongoServer = require('./create_file_func/graphql_mongo_server.js');
+const parseGraphqlMongoServer = require('./create_file_func/graphql_mongo_server');
 const parseMongoschema = require('./create_file_func/mongo_schema');
 
 app.use(bodyParser.json())
@@ -33,21 +33,18 @@ app.post('/write-files', (req, res) => {
                     if (data.database = 'MongoDB') {
                         buildForMongo(data.data, dateStamp, () => {
                             
-                            // zipper.sync.zip(path.join(__dirname, `build-files${dateStamp}/index.js`)).compress().save(path.join(__dirname, "graphql.zip"));
-                            
                             zipper.sync.zip(path.join(__dirname, `build-files${dateStamp}`)).compress().save(path.join(__dirname, "graphql.zip"));
 
-                            //res.set('Content-Type', 'text/plain')
-                            //res.set('Content-Type', 'application/octet-stream')
-                            console.log('dirname', __dirname)
-                            res.download(path.join(__dirname, "graphql.zip"), (err) => {
+                            const file = __dirname + "/graphql.zip";
+                            res.setHeader('Content-Type', 'application/force-download');
+                            res.setHeader('Content-disposition', 'filename=graphql.zip');
+                            res.download(file, err => {
                                 if (err) {
                                     console.log(err)
                                 } else {
                                     console.log('Done')
                                 }
                             })
-                            //res.download(path.join(__dirname, `build-files${dateStamp}`))
                         })
                     }
                 })
@@ -57,7 +54,7 @@ app.post('/write-files', (req, res) => {
 })
 
 app.listen(4100, () => {
-    console.log('Listening on 4000')
+    console.log('Listening on 4100')
 });
 
 
