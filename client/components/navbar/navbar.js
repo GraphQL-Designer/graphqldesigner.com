@@ -54,7 +54,7 @@ class MainNav extends React.Component {
             <button type="button" className="btn btn-outline-secondary">New</button>
             <button type="button" className="btn btn-secondary">Save</button>
             <button type="button" className="btn btn-secondary">Load</button>
-            <button type="button" className="btn btn-secondary">Export</button>
+            <button type="button" className="btn btn-secondary" onClick={this.handleExport}>Export</button>
           </div>
           <div className="btn-group justify-content-end" role="group" aria-label="Basic example">
             <button className="btn btn-outline-success my-2 my-md-0" type="submit">Account</button>
