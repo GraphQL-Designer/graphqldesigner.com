@@ -33,9 +33,21 @@ app.post('/write-files', (req, res) => {
                     if (data.database = 'MongoDB') {
                         buildForMongo(data.data, dateStamp, () => {
                             
+                            // zipper.sync.zip(path.join(__dirname, `build-files${dateStamp}/index.js`)).compress().save(path.join(__dirname, "graphql.zip"));
+                            
                             zipper.sync.zip(path.join(__dirname, `build-files${dateStamp}`)).compress().save(path.join(__dirname, "graphql.zip"));
 
-                            res.sendFile(path.join(__dirname, 'graphql.zip'))
+                            //res.set('Content-Type', 'text/plain')
+                            //res.set('Content-Type', 'application/octet-stream')
+                            console.log('dirname', __dirname)
+                            res.download(path.join(__dirname, "graphql.zip"), (err) => {
+                                if (err) {
+                                    console.log(err)
+                                } else {
+                                    console.log('Done')
+                                }
+                            })
+                            //res.download(path.join(__dirname, `build-files${dateStamp}`))
                         })
                     }
                 })
@@ -44,7 +56,7 @@ app.post('/write-files', (req, res) => {
     })
 })
 
-app.listen(4000, () => {
+app.listen(4100, () => {
     console.log('Listening on 4000')
 });
 

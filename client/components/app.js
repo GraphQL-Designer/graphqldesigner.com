@@ -43,12 +43,12 @@ class App extends Component {
 
     return (
       <div className='app-container'>
-        <div className='app-header'>
+        {/* <div className='app-header'>
           <h1 style={{marginTop: '100px'}}> GraphQL Designer Coming Soon
           <GraphqlLoader/>
-          <MainNav />
           </h1>
-        </div>
+        </div> */}
+        <MainNav />
         <Welcome chooseDatabase={this.props.chooseDatabase}/>
           <div className='app-body-container'>
             <Tabs className='tabs'>
