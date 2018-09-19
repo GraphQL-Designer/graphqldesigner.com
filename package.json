@@ -17,6 +17,7 @@
   "scripts": {
     "pack": "webpack",
     "dev": "webpack-dev-server",
+    "server": "nodemon server/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {
@@ -27,6 +28,7 @@
     "babelify": "^8.0.0",
     "browserify": "^16.2.2",
     "css-loader": "^1.0.0",
+    "nodemon": "^1.18.4",
     "react": "^16.4.2",
     "react-dom": "^16.5.0",
     "redux-devtools-extension": "^2.13.5",

@@ -2,8 +2,11 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as actions from '../actions/actions.js';
 
-//Components
+// Styling 
 import './app.css';
+import {Tabs, Tab} from 'material-ui/Tabs';
+
+// Components
 import MainNav from './navbar/navbar';
 import Welcome from './welcome/welcome.js';
 import SchemaApp from './schema/schema-app.js';
@@ -40,20 +43,25 @@ class App extends Component {
 
     return (
       <div className='app-container'>
-        <div className='app-header'>
+        {/* <div className='app-header'>
           <h1 style={{marginTop: '100px'}}> GraphQL Designer Coming Soon
-          {/* <GraphqlLoader */}
+          <GraphqlLoader/>
           </h1>
-        </div>
+        </div> */}
         <MainNav />
         <Welcome chooseDatabase={this.props.chooseDatabase}/>
           <div className='app-body-container'>
-            <ul>
-              <li onClick={this.handleTabSelect}>Schemas</li>
-              <li onClick={this.handleTabSelect}>Queries</li>
-              <li onClick={this.handleTabSelect}>Code</li>
-            </ul>
-            {app}
+            <Tabs className='tabs'>
+              <Tab label="Schemas" id='tab'>
+                <SchemaApp className='schemaTest'/>
+              </Tab>
+              <Tab label="Queries">
+                <QueryApp/>
+              </Tab>
+              <Tab label="Code">
+                <CodeApp/>
+              </Tab>
+            </Tabs>
           </div>
       </div>
     )

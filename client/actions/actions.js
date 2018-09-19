@@ -1,14 +1,25 @@
 import * as types from './action-types.js'
 
+// -------------------------- Welcome and Intro ----------------------------//
+
 export const chooseDatabase = (dbName) => ({
   type: types.CHOOSE_DATABASE,
   payload: dbName,
 });
 
-export const chooseApp = (app) => ({
-  type: types.CHOOSE_APP,
-  payload: app
-})
+// export const chooseApp = (app) => ({
+//   type: types.CHOOSE_APP,
+//   payload: app
+// })
+
+// ------------------------------- Nav Bar ---------------------------------//
+
+export const openTableCreator = (tableState) => ({
+  type: types.OPEN_TABLE_CREATOR,
+  payload: tableState,
+});
+
+// ----------------------------- Schema App --------------------------------//
 
 export const addTable = (tableIndex) => ({
   type: types.ADD_TABLE,
@@ -50,17 +61,10 @@ export const handleFieldsSelect = (field) => ({
   payload: field,
 })
 
-export const createTable = (tableIndex) => ({
-  type: types.CREATE_TABLE,
-  payload: tableIndex,
+// ----------------------------- Query App -------------------------------//
+
+export const createQuery = (query) => ({
+  type: types.CREATE_QUERY,
+  payload: query
 })
 
-export const saveFile = (table) => ({
-  type: types.FILE,
-  payload: table,
-})
-
-export const exportFile = (table) => ({
-  type: types.FILE,
-  payload: table
-})
