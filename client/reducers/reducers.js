@@ -1,8 +1,8 @@
 import * as types from '../actions/action-types';
 
 const initialState = {
-  appSelected: '',
   queryMode: 'create',
+  createTableState: true,
   tables: {},
   database: '',
   tableIndex: 0,
@@ -30,6 +30,7 @@ const initialState = {
 };
 
 const reducers = (state = initialState, action) => {
+  let createTableState = state.createTableState;
   let appSelected = state.appSelected;
   let tables = state.tables;
   let tableIndex = state.tableIndex;
@@ -44,7 +45,7 @@ const reducers = (state = initialState, action) => {
 
   // action.payload is how you can access the info
   switch(action.type) {
-    // -------------------------- Welcome and Intro ----------------------------//
+    // ------------------------------ Welcome  ----------------------------//
 
     // Choose Database
     case types.CHOOSE_DATABASE:
@@ -53,17 +54,21 @@ const reducers = (state = initialState, action) => {
         ...state,
         database
       }
+    
+    // ------------------------------ NavBar  ----------------------------//
 
-    // toggle between the different apps: Schema, Query, and Code
-    case types.CHOOSE_APP:
-      appSelected = action.payload;
-      return {
-        ...state,
-        appSelected
-      }
+    // Open Table Creator
+    case types.OPEN_TABLE_CREATOR:
+      console.log('opening table', action.payload)
+      createTableState = action.payload
+    return {
+      ...state,
+      createTableState
+    }
 
     // ----------------------------- Schema App --------------------------------//
 
+  
     // Add Schema Table
     case types.ADD_TABLE:
       const newTable = action.payload.name;
@@ -80,6 +85,7 @@ const reducers = (state = initialState, action) => {
 
       return {
         ...state,
+        createTableState,
         tables,
         tableIndex,
         tableCount,

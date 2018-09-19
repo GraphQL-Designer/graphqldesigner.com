@@ -1,4 +1,5 @@
 #sidebar-container{
+  background-color:  #5f5e5e;
   display: flex;
   flex-direction: column;
   margin: 0;

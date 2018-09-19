@@ -52,7 +52,7 @@ class App extends Component {
         <Welcome chooseDatabase={this.props.chooseDatabase}/>
           <div className='app-body-container'>
             <Tabs className='tabs'>
-              <Tab label="Schemas" className="tab">
+              <Tab label="Schemas" id='tab'>
                 <SchemaApp className='schemaTest'/>
               </Tab>
               <Tab label="Queries">
@@ -62,13 +62,6 @@ class App extends Component {
                 <CodeApp/>
               </Tab>
             </Tabs>
-
-            {/* <ul>
-              <li onClick={this.handleTabSelect}>Schemas</li>
-              <li onClick={this.handleTabSelect}>Queries</li>
-              <li onClick={this.handleTabSelect}>Code</li>
-            </ul> */}
-            {/* {app} */}
           </div>
       </div>
     )
