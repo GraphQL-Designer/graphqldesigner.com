@@ -52,3 +52,9 @@ select{
   -moz-appearance: none;
   appearance: none;
 }
+
+#fieldOptions {
+  display: flex;
+  justify-content: center;
+  margin: 0;
+}

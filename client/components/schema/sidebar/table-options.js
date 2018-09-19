@@ -14,6 +14,8 @@ const mapStateToProps = store => ({
   addFieldClicked: store.data.addFieldClicked,
   selectedField: store.data.selectedField,
   updatedField: store.data.fieldUpdated, 
+  tableCount: store.data.tableCount,
+  tables: store.data.tables
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -25,6 +27,9 @@ const mapDispatchToProps = dispatch => ({
 class TableOptions extends React.Component {
   constructor(props) {
     super(props);
+    this.state={
+      selectedTableIndex : null
+    }
 
     this.submitOptions = this.submitOptions.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -76,12 +81,38 @@ class TableOptions extends React.Component {
   }
 
   render() {
+    const optionsBackground = this.props.selectedField.fieldNum > -1 ? {backgroundColor: 'lightblue'} : {backgroundColor: 'white'};
+    
+    // create option with default of empty string when viewed
+    let tables = [<option key='empty'> </option>];
+    let fields = [<option key='empty'> </option>];
+
+    // if there is more than one type, render the relation dropdown options in the sidebar
+    if(this.props.tableCount > 1){
+      for(let types in this.props.tables){
+        tables.push(<option key={types} value={this.props.tables[types].tableID.type}>{this.props.tables[types].type}</option>)
+      }
+
+      let tempTableNumList = Object.keys(this.props.tables);
+      let tempTableNum = 0;
+      // iterate through list of types and get type index number matching type in relation selected
+      for(let x = 0; x < tempTableNumList.length; x += 1){
+        if(this.props.tables[tempTableNumList[x]].type === this.props.selectedField.relation.type){
+          tempTableNum = tempTableNumList[x];
+        }
+      }
+
+      // list all of the fields for type selected in relation in sidebar
+      for(let field in this.props.tables[tempTableNum].fields){
+        fields.push(<option key={field} value={this.props.tables[tempTableNum].fields[field].name}>{this.props.tables[tempTableNum].fields[field].name}</option>)
+      }
+    }
 
     return (
-      <div>
+      <div style={optionsBackground} id='fieldOptions'> 
         { this.props.selectedField.tableNum > -1  &&
         <div id='options'>
-          <h4>Options</h4>
+          <h4>Field Options</h4>
           <form>
               <span>
                   Field Name : <input onChange={this.handleChange} id='fieldNameOption' type='text' name='name' value={this.props.selectedField.name}/>
@@ -129,12 +160,27 @@ class TableOptions extends React.Component {
                 </select>
               </span>
 
-              <span>Relation : 
-                <select onChange={this.handleChange} id="relationDropDown" name='relations' value={this.props.selectedField.relations}>
-                  <option value="False">False</option>
-                  <option value="True">True</option>
-                </select>
-              </span>
+              {this.props.tableCount > 1 && (<span>
+                <p>Relation : </p>
+                <p>Type:
+                  <select onChange={this.handleChange} id="relationTypeDropDown" name='relation.type' value={this.props.selectedField.relation.type}>
+                    {tables}
+                  </select>
+                </p>
+                <p>Field:
+                  <select onChange={this.handleChange} id="relationFieldDropDown" name='relation.field' value={this.props.selectedField.relation.field}>
+                    {fields}
+                  </select>
+                </p>
+                <p>RefType:
+                  <select onChange={this.handleChange} id="relationRefTypeDropDown" name='relation.refType' value={this.props.selectedField.relation.refType}>
+                    <option value="one to one">one to one</option>
+                    <option value="one to many">one to many</option>
+                    <option value="many to one">many to one</option>
+                    <option value="many to many">many to many</option>
+                  </select>
+                </p>
+              </span>)}
               <button onClick={this.submitOptions} className='btn btn-success'>
                 {this.props.selectedField.fieldNum > -1 ?'Update Field' : 'Create Field'}
               </button>

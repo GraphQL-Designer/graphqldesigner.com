@@ -17,7 +17,11 @@ const initialState = {
     defaultValue: '',
     required: 'False',
     multipleValues: 'False',
-    relation: 'False',
+    relation: {
+      type: '',
+      field: '',
+      refType: ''
+    },
     tableNum: -1,
     fieldNum: -1
   },
@@ -147,28 +151,30 @@ const marketsReducer = (state = initialState, action) => {
         Object.assign({}, state.tables, {[state.selectedField.tableNum]:
           Object.assign({}, state.tables[state.selectedField.tableNum], {fieldsIndex: currentFieldIndex}, {
             fields: Object.assign({}, state.tables[state.selectedField.tableNum].fields, {[state.selectedField.fieldNum]: 
-              Object.assign({}, state.selectedField, {fieldNum: currentFieldIndex})})})})        
+              // Object.assign({}, state.selectedField, {fieldNum: currentFieldIndex})})})})        
+              Object.assign({}, state.selectedField, {fieldNum: state.selectedField.fieldNum})})})})        
       } 
       return {
         ...state,
         tables: updatedTables,
-        selectedField: newSelectField,
-        addFieldClicked,
-        fieldUpdated
+        selectedField: newSelectField
       } 
 
     case types.HANDLE_FIELDS_UPDATE:
-    newSelectedField = Object.assign({}, state.selectedField, {[action.payload.name]: [action.payload.value]})
+    // parse if relations field is selected
+    if(action.payload.name.indexOf('.') !== -1){
+      const rel = action.payload.name.split('.'); 
+      newSelectedField = Object.assign({}, state.selectedField, {[rel[0]] :
+                          Object.assign({}, state.selectedField[rel[0]], {[rel[1]] : [action.payload.value]})})
+    } else{
+      newSelectedField = Object.assign({}, state.selectedField, {[action.payload.name]: [action.payload.value]})
+    }
     return {
       ...state,
-      tables,
-      selectedField: newSelectedField,
-      addFieldClicked,
-      fieldUpdated
+      selectedField: newSelectedField
     }  
 
     case types.HANDLE_FIELDS_SELECT: 
-    console.log('payload: ', action.payload);
     const location = action.payload.location.split(" ")
 
     newSelectedField = Object.assign({}, state.tables[Number(location[0])].fields[Number(location[1])]);
@@ -191,7 +197,11 @@ const marketsReducer = (state = initialState, action) => {
         defaultValue: '',
         required: 'False',
         multipleValues: 'False',
-        relation: 'False',
+        relation: {
+          type: '',
+          field: '',
+          refType: ''
+        },
         tableNum: action.payload,
         fieldNum: -1
       };

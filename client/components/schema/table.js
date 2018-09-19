@@ -79,12 +79,14 @@ class Table extends Component {
   
     return (
       <div className='table'>
-        <div>{this.props.tableData.type}
+        <div><span className='btn btn-info'>{this.props.tableData.type}</span>
           <button
+            className='btn btn-danger'
             value={this.props.tableIndex} 
             onClick={this.handleDeleteTable}>x
           </button>
         </div>
+        <hr/>
         {fields}
         <button 
           onClick={this.handleAddField}
