@@ -1,28 +1,43 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import * as actions from '../../actions/actions';
+
 import './navbar.css';
 
 
 
 const mapStateToProps = store => ({
-  tables: store.data.tables,
+  tableIndex: store.data.tableIndex,
+  tables: store.data.tables
 });
 
 
 const mapDispatchToProps = dispatch => ({
-  exportTable: table => dispatch(actions.exportTable(table)) 
-  //saveTable: table => dispatch(actions.saveTable(table)) 
+  createTable: tableIndex => dispatch(actions.createTable(tableIndex)),  
+  exportFile: tables => dispatch(actions.exportFile(tables)), 
+  saveFile: tables => dispatch(actions.saveFile(tables)) 
+
 });
 
  
 class MainNav extends React.Component {
   constructor(props) {
     super(props);
-    //this.handleSave= this.handleSave.bind(this)
-    this.handleExport = this.handleExport.bind(this)
+    this.createTable = this.createTable.bind(this);
+    this.saveFile = this.saveFile.bind(this);
+    this.exportFile = this.exportFile.bind(this);
   }
 
-  handleExport(event){
+  createTable(event){
+    this.props.createTable(this.props.tableIndex);
+  }
+    
+    saveFile(event){
+      this.props.saveFile(this.props.tables);
+    }
+   
+    
+    exportFile(event){
     const data = Object.assign({}, {data: this.props.tables}, {
       database: 'MongoDB'
     })
@@ -56,27 +71,29 @@ class MainNav extends React.Component {
      .catch((err) => console.log(err))
     }
   
-  render() {
-    return (
-    <nav className="navbar-nav fixed-top navbar-dark bg-light">
-        <div className="navbar-nav-container">
-        <container>
-          <div className="btn-group" role="group" aria-label="Basic example">
-            <button type="button" className="btn btn-outline-secondary">New</button>
-            <button type="button" className="btn btn-secondary">Save</button>
-            <button type="button" className="btn btn-secondary">Load</button>
-            <button type="button" className="btn btn-secondary">Export</button>
+    render() {
+      return (
+        <nav className="navbar-nav fixed-top navbar-dark bg-light">
+          <div className="navbar-nav-container">
+            <div className="btn-group" role="group" aria-label="Basic example">
+              <button type="button" className="btn btn-outline-secondary" onClick={this.createTable}>New Table</button>
+              <button type="button" className="btn btn-secondary">Load</button>
+              <button type="button" className="btn btn-secondary" onClick={this.saveFile}>Save</button>
+              <button 
+                className="btn btn-secondary"
+                onClick={this.exportFile}
+                >Export
+              </button>    
+            <div className="btn-group justify-content-end" role="group" aria-label="Basic example">
+              <button className="btn btn-outline-success my-2 my-md-0" type="submit">Account</button>
+              <button className="btn btn-outline-success my-2 my-md-0" type="submit">Logout</button>
+            </div>
           </div>
-          <div className="btn-group justify-content-end" role="group" aria-label="Basic example">
-            <button className="btn btn-outline-success my-2 my-md-0" type="submit">Account</button>
-            <button className="btn btn-outline-success my-2 my-md-0" type="submit">Logout</button>
           </div>
-          </container>
-        </div>       
-    </nav>
-   );
- }
-}
+        </nav>
+      );
+    }
+  }
 export default connect (mapStateToProps, mapDispatchToProps)(MainNav);
 
 

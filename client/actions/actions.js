@@ -49,3 +49,18 @@ export const handleFieldsSelect = (field) => ({
   type: types.HANDLE_FIELDS_SELECT,
   payload: field,
 })
+
+export const createTable = (tableIndex) => ({
+  type: types.CREATE_TABLE,
+  payload: tableIndex,
+})
+
+export const saveFile = (table) => ({
+  type: types.FILE,
+  payload: table,
+})
+
+export const exportFile = (table) => ({
+  type: types.FILE,
+  payload: table
+})
