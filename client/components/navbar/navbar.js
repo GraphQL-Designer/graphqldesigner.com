@@ -1,9 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
-//import { MDCTopAppBar } from '@material/top-app-bar/index';
+import './navbar.css';
 
-//const topAppBarElement = document.querySelector('.mdc-top-app-bar');
-//const topAppBar = new MDCTopAppBar(topAppBarElement);
+
 
 const mapStateToProps = store => ({
   table: store.data.table,  
@@ -37,18 +36,27 @@ class MainNav extends React.Component {
   
   render() {
     return (
-      <nav className="menu">
-        <header className="mdc-top-app-bar mdc-top-app-bar--fixed">
-          <div className="mdc-top-app-bar__row">
-            <section className="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
-            <button onClick={this.handleSave} className='dbtn btn-success'>Save</button>
-            <button onClick={this.handleExport} className='dbtn btn-success'>Export</button>
-            </section>
+    <nav className="navbar-nav fixed-top navbar-dark bg-light">
+        <div className="navbar-nav-container">
+        <container>
+          <div className="btn-group" role="group" aria-label="Basic example">
+            <button type="button" className="btn btn-outline-secondary">New</button>
+            <button type="button" className="btn btn-secondary">Save</button>
+            <button type="button" className="btn btn-secondary">Load</button>
+            <button type="button" className="btn btn-secondary">Export</button>
           </div>
-         </header>
-       </nav>  
-    );
-  }
+          <div className="btn-group justify-content-end" role="group" aria-label="Basic example">
+            <button className="btn btn-outline-success my-2 my-md-0" type="submit">Account</button>
+            <button className="btn btn-outline-success my-2 my-md-0" type="submit">Logout</button>
+          </div>
+          </container>
+        </div>       
+    </nav>
+   );
+ }
 }
 export default connect (mapStateToProps, mapDispatchToProps)(MainNav);
+
+
+
 
