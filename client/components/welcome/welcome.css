@@ -1,3 +1,7 @@
+.welcome-container{
+  text-align: center;
+}
+
 #icon_graphql{
   max-width: 25%;
   max-height: 5%;
@@ -32,7 +36,7 @@ h3{
   font-size: 25px;
 }
 
-hr{
+.welcome-hr{
   height: 2px;
   background-color: black;
 }

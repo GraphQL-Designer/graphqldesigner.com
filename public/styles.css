@@ -1,13 +1,11 @@
 * {
     padding: 0;
-    margin: 0 auto;
+    margin: 0;
     box-sizing: border-box;
-    text-align: center;
 }
 
 #app{
     margin: 1%;
     width: 98%;
     height: 96vh; 
-    border: 1px solid black; 
 }
