@@ -65,3 +65,4 @@ public/main.js
 .DS_Store
 graphql.zip
 main.js
+package-lock.json
