@@ -18,9 +18,13 @@ const initialState = {
     defaultValue: '',
     required: 'False',
     multipleValues: 'False',
-    relation: 'False',
-    tableNum: -1, // no field has been selected
-    fieldNum: -1  // no field has been selected
+    relation: {
+      type: '',
+      field: '',
+      refType: ''
+    },
+    tableNum: -1,
+    fieldNum: -1
   },
   fieldUpdated: 0
 };
@@ -150,33 +154,35 @@ const reducers = (state = initialState, action) => {
       // field has been selected
       else {
         updatedTables = 
-        Object.assign({}, state.tables, {[selectedTableIndex]:
-          Object.assign({}, state.tables[selectedTableIndex], {fieldsIndex: currentFieldIndex}, {
-            fields: Object.assign({}, state.tables[selectedTableIndex].fields, {[state.selectedField.fieldNum]: 
-              Object.assign({}, state.selectedField, {fieldNum: currentFieldIndex})})})})        
+        Object.assign({}, state.tables, {[state.selectedField.tableNum]:
+          Object.assign({}, state.tables[state.selectedField.tableNum], {fieldsIndex: currentFieldIndex}, {
+            fields: Object.assign({}, state.tables[state.selectedField.tableNum].fields, {[state.selectedField.fieldNum]: 
+              // Object.assign({}, state.selectedField, {fieldNum: currentFieldIndex})})})})        
+              Object.assign({}, state.selectedField, {fieldNum: state.selectedField.fieldNum})})})})        
       } 
       return {
         ...state,
         tables: updatedTables,
-        selectedField: newSelectField,
-        addFieldClicked,
-        fieldUpdated
+        selectedField: newSelectField
       } 
 
     case types.HANDLE_FIELDS_UPDATE:
-    newSelectedField = Object.assign({}, state.selectedField, {[action.payload.name]: [action.payload.value]})
+    // parse if relations field is selected
+    if(action.payload.name.indexOf('.') !== -1){
+      const rel = action.payload.name.split('.'); 
+      newSelectedField = Object.assign({}, state.selectedField, {[rel[0]] :
+                          Object.assign({}, state.selectedField[rel[0]], {[rel[1]] : [action.payload.value]})})
+    } else{
+      newSelectedField = Object.assign({}, state.selectedField, {[action.payload.name]: [action.payload.value]})
+    }
     return {
       ...state,
-      tables,
-      selectedField: newSelectedField,
-      addFieldClicked,
-      fieldUpdated
+      selectedField: newSelectedField
     }  
 
     // when a user selects a field, it changes selectedField to be an object with the necessary 
     // info from the selected table and field. 
     case types.HANDLE_FIELDS_SELECT: 
-    console.log('payload: ', action.payload);
     // location contains the table index at [0], and field at [1]
     const location = action.payload.location.split(" ")
 
@@ -200,7 +206,11 @@ const reducers = (state = initialState, action) => {
         defaultValue: '',
         required: 'False',
         multipleValues: 'False',
-        relation: 'False',
+        relation: {
+          type: '',
+          field: '',
+          refType: ''
+        },
         tableNum: action.payload,
         fieldNum: -1
       };

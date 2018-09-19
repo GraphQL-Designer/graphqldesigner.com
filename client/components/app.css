@@ -54,3 +54,16 @@ h1{
 .loader{
   margin: 0 auto; 
 }
+
+hr {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+button{
+  margin-top: 5px;
+}
+
+.table div span {
+  margin-top: 5px;
+}
