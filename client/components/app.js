@@ -2,8 +2,11 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as actions from '../actions/actions.js';
 
-//Components
+// Styling 
 import './app.css';
+import {Tabs, Tab} from 'material-ui/Tabs';
+
+// Components
 import MainNav from './navbar/navbar';
 import Welcome from './welcome/welcome.js';
 import SchemaApp from './schema/schema-app.js';
@@ -48,12 +51,24 @@ class App extends Component {
         </div>
         <Welcome chooseDatabase={this.props.chooseDatabase}/>
           <div className='app-body-container'>
-            <ul>
+            <Tabs className='tabs'>
+              <Tab label="Schemas" className="tab">
+                <SchemaApp className='schemaTest'/>
+              </Tab>
+              <Tab label="Queries">
+                <QueryApp/>
+              </Tab>
+              <Tab label="Code">
+                <CodeApp/>
+              </Tab>
+            </Tabs>
+
+            {/* <ul>
               <li onClick={this.handleTabSelect}>Schemas</li>
               <li onClick={this.handleTabSelect}>Queries</li>
               <li onClick={this.handleTabSelect}>Code</li>
-            </ul>
-            {app}
+            </ul> */}
+            {/* {app} */}
           </div>
       </div>
     )

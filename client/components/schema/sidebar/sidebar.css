@@ -3,19 +3,22 @@
   flex-direction: column;
   margin: 0;
   width: 30%;
+  min-width: 150px; 
   height: 100%;
   justify-content: flex-start;
   float: right; 
   border: 1px solid black;
 }
 
+#tableName{
+  display: flex;
+}
+
 #newTable {
   display: flex;
   flex-direction: column;
   width: 100%;
-  background-color: lightgray;
   margin: 0;
-  height: 140px;
   justify-content: flex-start;
 }
 
@@ -34,17 +37,12 @@
   width: 100%;
 }
 
-hr{
-  background-color: black;
-  height: 2px;
-  width: 100%;
-}
 
 form{
   display: flex;
   flex-direction: column;
-  justify-content: center;
   width: auto;
+  padding: 0px 10px;
 }
 
 select{

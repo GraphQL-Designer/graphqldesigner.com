@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as actions from '../../../actions/actions.js';
 
+import TextField from 'material-ui/TextField'; 
+import RaisedButton from 'material-ui/RaisedButton';
 import './sidebar.css';
 
 const mapDispatchToProps = dispatch => ({
@@ -93,12 +95,20 @@ class CreateQuerySidebar extends Component {
       <div className='sidebar'>
         <h4>Create Custom Query</h4>
         <form onSubmit={this.submitHandler}> 
-          <input type="text"
+          {/* <input type="text"
             placeholder="Query Name"
             value={this.state.queryName}
             onChange={this.handleChange}
             autoFocus 
-            />
+            /> */}
+          <TextField
+            hintText="Query Name"
+            floatingLabelText="Query Name"
+            value={this.state.queryName}
+            onChange={this.handleChange}
+            autoFocus
+          /> 
+
           <br/>
           <select name='graphqlTypes' onChange={this.selectTypeHandler}>
             <option value='default'>Select Query Type</option> 
@@ -110,9 +120,12 @@ class CreateQuerySidebar extends Component {
             {graphQLSearchOptions}
           </select>
           <br/>
-          <input type="submit" 
-            value="Create Query"
-            />
+          <RaisedButton 
+            label="Create Query" 
+            fullWidth={true}
+            secondary={true} 
+            type='submit'
+          />
         </form>
       </div>
     )
