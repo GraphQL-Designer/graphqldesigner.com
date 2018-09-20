@@ -6,7 +6,6 @@ const initialState = {
   tables: {},
   database: '',
   tableIndex: 0,
-  tableCount: 0,
   selectedField : {
     name: '',
     type: 'String',
@@ -23,8 +22,7 @@ const initialState = {
     tableNum: -1,
     fieldNum: -1
   },
-  fieldUpdated: 0,
-  selectedTableIndex: '',
+  //selectedTableIndex: -1, //for field use
   selectedTable: {
     type: '',
     idRequested: false,
@@ -45,7 +43,11 @@ const reducers = (state = initialState, action) => {
   let selectedTable = state.selectedTable
   let newSelectedField;
   let newSelectedTable;
+  let newTables;
+  let newTable;
+  let newFields;
   let newState;
+  let tableNum;
 
   const fieldReset = Object.assign({}, selectedField, 
     {
@@ -171,29 +173,38 @@ const reducers = (state = initialState, action) => {
 
                     // ---------- Select Table For Update ------------//
     case types.HANDLE_SELECTED_TABLE:
-      newSelectedTable = state.tables[action.payload]
-      createTableState = true 
-      fieldReset.tableNum = newSelectedTable //reset the field selected, but keep the table selected
+      tableNum = Number(action.payload)
+      newSelectedTable = Object.assign({}, state.tables[tableNum])
+      fieldReset.tableNum = newSelectedTable //reset the field selected, but keep the table selec
+      
       return {
         ...state,
         selectedTable: newSelectedTable,
-        createTableState,
-        selectedField: fieldReset //fieldReset is defined above the cases
+        createTableState: true,
+        //selectedField: fieldReset //fieldReset is defined above the cases
       };
 
                     // --------------- Delete Table ----------------//
     case types.DELETE_TABLE:
-      tableCount -= 1;
-      delete tables[action.payload]
-      return {
-        ...state,
-        tables,
-        tableIndex,
-        tableCount,
-      };
+    tableNum = Number(action.payload);
+      newSelectedTable = {
+        type: '',
+        idRequested: false,
+        fields: {},
+        fieldsIndex: 0,
+        tableID: -1,
+      }
 
+    newTables = Object.assign({}, state.tables);
+    delete newTables[tableNum];
 
-                    // -------------- Add or Update Field ----------------//
+    return {
+      ...state,
+      tables: newTables,
+      selectedTable: newSelectedTable
+    }
+
+    // -------------- Add or Update Field ----------------//
     case types.SAVE_FIELD_INPUT:
       const selectedTableIndex = state.selectedField.tableNum;
       const currentFieldIndex = state.tables[selectedTableIndex].fieldsIndex;
@@ -222,17 +233,47 @@ const reducers = (state = initialState, action) => {
         selectedField: fieldReset //fieldReset is defined above the cases
       } 
 
-                          // -------------- Delete Field ----------------//
+    // -------------- Delete Field ----------------//
     case types.DELETE_FIELD:
-    console.log(action.payload)
-    const tablesIndexSelected = action.payload[0];
-    const fieldIndexSelected = action.payload[1];
-    let newTables = Object.assign({}, tables)
-    delete newTables[tablesIndexSelected].fields[fieldIndexSelected];
-    return {
-      ...state,
-      tables: newTables,
-    };
+      tableNum = Number(action.payload[0]);
+      const fieldNum = Number(action.payload[1]);
+      if (state.selectedField.tableNum === tableNum && state.selectedField.fieldNum === fieldNum) {
+        newSelectedField = {
+          name: '',
+          type: 'String',
+          primaryKey: false,
+          unique: false,
+          defaultValue: '',
+          required: false,
+          multipleValues: false,
+          relation: {
+            type: '',
+            field: '',
+            refType: ''
+          },
+          tableNum: -1,
+          fieldNum: -1
+        }
+
+      newTable = Object.assign({}, state.tables[tableNum])
+      delete newTable.fields[fieldNum];
+      newTables = Object.assign({}, state.tables, {[tableNum]: newTable})
+
+      return {
+        ...state,
+        tables: newTables,
+        selectedField: newSelectedField
+      }
+    } else {
+      newTable = Object.assign({}, state.tables[tableNum])
+      delete newTable.fields[fieldNum];
+      newTables = Object.assign({}, state.tables, {[tableNum]: newTable})
+
+      return {
+        ...state,
+        tables: newTables
+      }
+    }
 
                     // ------------ HANDLE FIELD UPDATE ----------------//
     // updates selected field on each data entry
@@ -285,7 +326,7 @@ const reducers = (state = initialState, action) => {
           field: '',
           refType: ''
         },
-        tableNum: action.payload,
+        tableNum: Number(action.payload),
         fieldNum: -1
       };
 
@@ -299,7 +340,6 @@ const reducers = (state = initialState, action) => {
       // ----------------------------- Query App -------------------------------//
     
     case types.CREATE_QUERY:
-      console.log(action.payload)
 
     default:
       return state;
