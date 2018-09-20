@@ -21,7 +21,7 @@ function parseClientQueries(data) {
         }
     })
 
-    return query += endString + " };";
+    return query += endString + "};";
 }
 
 function buildClientQueryAll(data) {

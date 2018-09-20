@@ -7,11 +7,17 @@ export default class Welcome extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      open: true,
+      open: false,
       MongoDB: null,
     };
     this.handleClose = this.handleClose.bind(this);
     this.handleDatabaseClick = this.handleDatabaseClick.bind(this);
+  }
+
+  componentDidMount() {
+    setTimeout(() => {
+      this.setState({open: true})
+    }, 1000)
   }
 
   handleClose() {
@@ -32,6 +38,7 @@ export default class Welcome extends React.Component {
           modal={true}
           open={this.state.open}
           onRequestClose={this.handleClose}
+          style={{marginTop: '-15vh'}}
         >
           <div id='subheading'>Simply create and implement a full stack React GraphQL App.</div>
           <img id='icon_graphql' src='https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/GraphQL_Logo.svg/2000px-GraphQL_Logo.svg.png'/>

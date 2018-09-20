@@ -96,30 +96,30 @@ const marketsReducer = (state = initialState, action) => {
         addFieldClicked
       };
 
-    // Add Field
-    case types.ADD_FIELD:
-      let fieldsIndex = tables[tableIndexSelected].fieldsIndex;
-      addFieldClicked = false;
-      fieldCount += 1;
-      selectedField = {};
+    // // Add Field
+    // case types.ADD_FIELD:
+    //   let fieldsIndex = tables[tableIndexSelected].fieldsIndex;
+    //   addFieldClicked = false;
+    //   fieldCount += 1;
+    //   selectedField = {};
 
-      tables[tableIndexSelected].fieldsIndex += 1;
-      tables[tableIndexSelected].fields[fieldsIndex] = {};
-      tables[tableIndexSelected].fields[fieldsIndex].name = action.payload.name;
-      tables[tableIndexSelected].fields[fieldsIndex].type = action.payload.type;
-      tables[tableIndexSelected].fields[fieldsIndex].primaryKey = action.payload.primaryKey;
-      tables[tableIndexSelected].fields[fieldsIndex].unique = action.payload.unique;
-      tables[tableIndexSelected].fields[fieldsIndex].defaultValue = action.payload.defaultValue;
-      tables[tableIndexSelected].fields[fieldsIndex].multipleValues = action.payload.multipleValues;
-      tables[tableIndexSelected].fields[fieldsIndex].required = action.payload.required;
-      tables[tableIndexSelected].fields[fieldsIndex].relations = action.payload.relations;
-    return {
-      ...state, 
-      tables,
-      fieldCount,
-      addFieldClicked,
-      selectedField
-    };
+    //   tables[tableIndexSelected].fieldsIndex += 1;
+    //   tables[tableIndexSelected].fields[fieldsIndex] = {};
+    //   tables[tableIndexSelected].fields[fieldsIndex].name = action.payload.name;
+    //   tables[tableIndexSelected].fields[fieldsIndex].type = action.payload.type;
+    //   tables[tableIndexSelected].fields[fieldsIndex].primaryKey = action.payload.primaryKey;
+    //   tables[tableIndexSelected].fields[fieldsIndex].unique = action.payload.unique;
+    //   tables[tableIndexSelected].fields[fieldsIndex].defaultValue = action.payload.defaultValue;
+    //   tables[tableIndexSelected].fields[fieldsIndex].multipleValues = action.payload.multipleValues;
+    //   tables[tableIndexSelected].fields[fieldsIndex].required = action.payload.required;
+    //   tables[tableIndexSelected].fields[fieldsIndex].relations = action.payload.relations;
+    // return {
+    //   ...state, 
+    //   tables,
+    //   fieldCount,
+    //   addFieldClicked,
+    //   selectedField
+    // };
 
     // Delete Field
     case types.DELETE_FIELD:

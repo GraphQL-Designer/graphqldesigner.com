@@ -26,6 +26,7 @@ class MainNav extends React.Component {
     const data = Object.assign({}, {data: this.props.tables}, {
       database: 'MongoDB'
     })
+    console.log('data', data)
     fetch('http://localhost:4100/write-files', {
       method: 'POST',
       headers: {
