@@ -21,9 +21,8 @@ export const openTableCreator = (tableState) => ({
 
 // ----------------------------- Schema App --------------------------------//
 
-export const addTable = (tableIndex) => ({
-  type: types.ADD_TABLE,
-  payload: tableIndex,
+export const saveTableDataInput = () => ({
+  type: types.SAVE_TABLE_DATA_INPUT,
 });
 
 export const deleteTable = (tableIndex) => ({
@@ -59,6 +58,20 @@ export const handleFieldsUpdate = (field) => ({
 export const handleFieldsSelect = (field) => ({
   type: types.HANDLE_FIELDS_SELECT,
   payload: field,
+})
+
+export const handleTableNameChange = (tableName) => ({
+  type: types.HANDLE_TABLE_NAME_CHANGE,
+  payload: tableName,
+})
+
+export const handleTableID = () => ({
+  type: types.HANDLE_TABLE_ID,
+})
+
+export const handleSelectedTable = (tableIndex) => ({
+  type: types.HANDLE_SELECTED_TABLE,
+  payload: tableIndex
 })
 
 // ----------------------------- Query App -------------------------------//

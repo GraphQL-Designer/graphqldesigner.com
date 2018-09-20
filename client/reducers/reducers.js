@@ -7,9 +7,9 @@ const initialState = {
   database: '',
   tableIndex: 0,
   tableCount: 0,
-  fieldCount: 0,
-  addFieldClicked: false,
-  tableIndexSelected: null,
+  // fieldCount: 0,
+  // addFieldClicked: false,
+  // tableIndexSelected: null,
   selectedField : {
     name: '',
     type: 'String',
@@ -26,7 +26,15 @@ const initialState = {
     tableNum: -1,
     fieldNum: -1
   },
-  fieldUpdated: 0
+  fieldUpdated: 0,
+  selectedTableIndex: '',
+  selectedTable: {
+    type: '',
+    idRequested: false,
+    fields: {},
+    fieldsIndex: 0,
+    tableID: -1,
+  }
 };
 
 const reducers = (state = initialState, action) => {
@@ -36,12 +44,14 @@ const reducers = (state = initialState, action) => {
   let tableIndex = state.tableIndex;
   let database = state.database;
   let tableCount = state.tableCount;
-  let fieldCount = state.fieldCount;
-  let addFieldClicked = state.addFieldClicked;
-  let tableIndexSelected = state.tableIndexSelected;
+  // let fieldCount = state.fieldCount;
+  // let addFieldClicked = state.addFieldClicked;
+  // let tableIndexSelected = state.tableIndexSelected;
   let selectedField = state.selectedField;
   let fieldUpdated = state.fieldUpdated;
   let newSelectedField;
+  let newSelectedTable;
+  let newState;
 
   // action.payload is how you can access the info
   switch(action.type) {
@@ -67,42 +77,71 @@ const reducers = (state = initialState, action) => {
     }
 
     // ----------------------------- Schema App --------------------------------//
-
-  
-    // Add Schema Table
-    case types.ADD_TABLE:
-      const newTable = action.payload.name;
-      const uniqueID = action.payload.uniqueID;
-      tables[tableIndex] = {};
-      tables[tableIndex].type = newTable;
-      tables[tableIndex].idRequested = uniqueID;
-      tables[tableIndex].fields = {};
-      tables[tableIndex].fieldsIndex = 0;
-      tables[tableIndex].tableID = state.tableIndex;
-      tableIndex += 1;
-      tableCount += 1; 
-      addFieldClicked = false;
+    case types.HANDLE_TABLE_NAME_CHANGE:
+      newSelectedTable = Object.assign({}, state.selectedTable, {type: action.payload})
 
       return {
-        ...state,
-        createTableState,
-        tables,
-        tableIndex,
-        tableCount,
-        addFieldClicked
-      };
-    
+      ...state,
+      selectedTable: newSelectedTable
+    }
+
+    case types.HANDLE_TABLE_ID:
+      newSelectedTable = Object.assign({}, state.selectedTable, {idRequested: !state.selectedTable.idRequested})
+
+      return {
+      ...state,
+      selectedTable: newSelectedTable
+    }
+    // Add Schema Table
+    case types.SAVE_TABLE_DATA_INPUT:
+      let newState;
+      if(state.selectedTable.tableID < 0){
+        const newTableData = Object.assign({}, state.selectedTable, {tableID: state.tableIndex})
+        const newTables = Object.assign({}, state.tables, {[state.tableIndex]: newTableData})
+        newState = Object.assign({}, state, {
+          tableIndex: state.tableIndex + 1,
+          tableCount: state.tableCount + 1,
+          tables: newTables,
+          selectedTable: {
+            type: '',
+            idRequested: false,
+            fields: {},
+            fieldsIndex: 0,
+            tableID: -1,
+          }
+        })
+      } else {
+        const newTableData = Object.assign({}, state.selectedTable)
+        const newTables = Object.assign({}, state.tables, {[state.selectedTable.tableID]: newTableData})
+        newState = Object.assign({}, state, {
+          tables: newTables,
+          selectedTable: {
+            type: '',
+            idRequested: false,
+            fields: {},
+            fieldsIndex: 0,
+            tableID: -1,
+          }
+        })
+      }
+      return newState
+      
+    case types.HANDLE_SELECTED_TABLE:
+      newSelectedTable = state.tables[action.payload]
+      newState = Object.assign({}, state, {selectedTable: newSelectedTable})
+      return newState;
+
     // Delete Schema Table
     case types.DELETE_TABLE:
       tableCount -= 1;
-      addFieldClicked = false;
+      // addFieldClicked = false;
       delete tables[action.payload]
       return {
         ...state,
         tables,
         tableIndex,
         tableCount,
-        addFieldClicked
+        // addFieldClicked
       };
 
     // // Add Field
@@ -132,14 +171,14 @@ const reducers = (state = initialState, action) => {
 
     // Delete Field
     case types.DELETE_FIELD:
-      fieldCount -= 1; 
+      // fieldCount -= 1; 
       const tablesIndexSelected = action.payload[0];
       const fieldIndexSelected = action.payload[1];
       delete tables[tablesIndexSelected].fields[fieldIndexSelected];
     return {
       ...state,
       tables,
-      fieldCount
+      // fieldCount
     };
 
     // Update Field
@@ -214,14 +253,14 @@ const reducers = (state = initialState, action) => {
       ...state,
       tables,
       selectedField: newSelectedField,
-      addFieldClicked,
+      // addFieldClicked,
       fieldUpdated
     }  
 
     // Add Field in Table was clicked to display field options
     case types.ADD_FIELD_CLICKED:
       createTableState = false; 
-      addFieldClicked = true;
+      // addFieldClicked = true;
       newSelectedField = {
         name: '',
         type: 'String',
@@ -242,8 +281,8 @@ const reducers = (state = initialState, action) => {
       return{
         ...state,
         createTableState,
-        addFieldClicked,
-        tableIndexSelected,
+        // addFieldClicked,
+        // tableIndexSelected,
         selectedField: newSelectedField
       }
 

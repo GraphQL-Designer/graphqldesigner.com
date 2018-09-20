@@ -16,7 +16,8 @@ const mapDispatchToProps = dispatch => ({
   addField: fieldName => dispatch(actions.addFieldClicked(fieldName)),
   deleteField: fieldName => dispatch(actions.deleteField(fieldName)),
   updateField: fieldIndex => dispatch(actions.updateField(fieldIndex)),
-  handleFieldsSelect: field => dispatch(actions.handleFieldsSelect(field))
+  handleFieldsSelect: field => dispatch(actions.handleFieldsSelect(field)),
+  handleSelectedTable: tableIndex => dispatch(actions.handleSelectedTable(tableIndex))
 });
 
 class Table extends Component {
@@ -26,6 +27,7 @@ class Table extends Component {
     this.handleDeleteField = this.handleDeleteField.bind(this)
     this.handleAddField    = this.handleAddField.bind(this)
     this.handleUpdateField = this.handleUpdateField.bind(this)
+    this.handleSelectedTable = this.handleSelectedTable.bind(this)
   } 
 
   handleDeleteTable(event){
@@ -47,6 +49,10 @@ class Table extends Component {
       location: event.target.value,
       submitUpdate: false
     })
+  }
+
+  handleSelectedTable(event){
+    this.props.handleSelectedTable(event.target.value);
   }
 
 
@@ -79,7 +85,14 @@ class Table extends Component {
   
     return (
       <div className='table'>
-        <div><span className='btn btn-info'>{this.props.tableData.type}</span>
+        <div>
+          <button 
+            className='btn btn-info'
+            onClick={this.handleSelectedTable}
+            value={this.props.tableIndex} 
+          >
+            {this.props.tableData.type}
+          </button>
           <button
             className='btn btn-danger'
             value={this.props.tableIndex} 
