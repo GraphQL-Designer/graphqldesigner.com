@@ -95,14 +95,14 @@ class TableOptions extends React.Component {
     if(this.props.tableCount > 1){
       for(let types in this.props.tables){
         if(this.props.selectedField.tableNum !== types){
-          tables.push(<option key={types} value={this.props.tables[types].tableID.type}>{this.props.tables[types].type}</option>);
-          // tables.push(
-          //   <MenuItem
-          //     key={types}
-          //     value={this.props.tables[types].tableID.type} 
-          //     primaryText={this.props.tables[types].type}
-          //   />
-          // )
+          // tables.push(<option key={types} value={this.props.tables[types].tableID.type}>{this.props.tables[types].type}</option>);
+          tables.push(
+            <MenuItem
+              key={types}
+              value={this.props.tables[types].tableID.type} 
+              primaryText={this.props.tables[types].type}
+            />
+          )
           tempTableNumList.push(types);
         }
       }
@@ -118,13 +118,13 @@ class TableOptions extends React.Component {
       for(let field in this.props.tables[tempTableNum].fields){
         // fields.push(<option key={field} value={this.props.tables[tempTableNum].fields[field].name}>{this.props.tables[tempTableNum].fields[field].name}</option>)
         fields.push(
-        <option key={field} value={this.props.tables[tempTableNum].fields[field].name}>
-        {this.props.tables[tempTableNum].fields[field].name}</option>
-          // <MenuItem
-          //   key={field}
-          //   value={this.props.tables[tempTableNum].fields[field].name} 
-          //   primaryText={this.props.tables[tempTableNum].fields[field].name}
-          // />
+        // <option key={field} value={this.props.tables[tempTableNum].fields[field].name}>
+        // {/* {this.props.tables[tempTableNum].fields[field].name}</option> */}
+          <MenuItem
+            key={field}
+            value={this.props.tables[tempTableNum].fields[field].name} 
+            primaryText={this.props.tables[tempTableNum].fields[field].name}
+          />
         )
       
       }
@@ -215,28 +215,41 @@ class TableOptions extends React.Component {
                   {tables}
                 </DropDownMenu> 
                 </div>
-                <p>Type:
+                {/* <p>Type:
                   <select onChange={this.handleChange} id="relationTypeDropDown" name='relation.type' value={this.props.selectedField.relation.type}>
                     {tables}
                   </select>
                 </p>
                   <select onChange={this.handleChange} id="relationFieldDropDown" name='relation.field' value={this.props.selectedField.relation.field}>
                     {fields}
-                  </select>
-                  {/* <DropDownMenu
+                  </select> */}
+                  <div className='relation-options'>
+                  <p>Field:</p>
+                  <DropDownMenu
                   // floatingLabelText="Field:"
                   value={this.props.selectedField.relation.field}
                   onChange={this.handleMaterialChange.bind(null, 'relation.field')} // access 'relation.field' as name in handleChange
                 >
                   {fields}
-                </DropDownMenu>  */}
+                </DropDownMenu> 
+                </div>
+                <div className='relation-options'>
 
                 <p>RefType:
-                  <select onChange={this.handleChange} id="relationRefTypeDropDown" name='relation.refType' value={this.props.selectedField.relation.refType}>
+                  {/* <select onChange={this.handleChange} id="relationRefTypeDropDown" name='relation.refType' value={this.props.selectedField.relation.refType}>
                     <option value="one to one">one to one</option>
                     <option value="one to many">one to many</option>
-                  </select>
+                  </select> */}
                 </p>
+                <DropDownMenu
+                  value={this.props.selectedField.relation.refType}
+                  onChange={this.handleMaterialChange.bind(null, 'relation.refType')} // access 'relation.refType' as name in handleChange
+                >
+                  <MenuItem value='one to one' primaryText="one to one" />
+                  <MenuItem value='one to many' primaryText="one to many" />
+                </DropDownMenu> 
+                {/* </p> */}
+                </div>
               </span>)}
               <RaisedButton
                 secondary={true}
