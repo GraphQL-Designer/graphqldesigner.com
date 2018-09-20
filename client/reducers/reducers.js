@@ -128,7 +128,13 @@ const reducers = (state = initialState, action) => {
           }
         })
       }
-      return newState
+
+      if(state.selectedTable.type){
+        // if(state.selectedTable.type.trim().length !== 0){
+          console.log('newState type: ', state.selectedTable.type, 'end');
+          return newState
+        // }
+      }
 
                     // ------------ Change Table Name ----------------//
     case types.HANDLE_TABLE_NAME_CHANGE:
