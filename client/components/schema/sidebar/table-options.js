@@ -38,7 +38,6 @@ class TableOptions extends React.Component {
   handleToggle () {this.setState({open: !this.state.open})};
 
   handleChange (event) {
-    console.log(event.target.value)
     this.props.handleChange({name: event.target.name, value: event.target.value});
     
   };
@@ -156,36 +155,36 @@ class TableOptions extends React.Component {
                 >
                   <option value="String">String</option>
                   <option value="Number">Number</option>
-                  <option value="Date">Date</option>
+                  {/* <option value="Date">Date</option> */}
                   <option value="Boolean">Boolean</option>
                   <option value="ID">ID</option>
                 </select>
               </span>
               {this.props.database === 'SQL' && (<span> Primary Key :
                 <select onChange={this.handleChange} id="primaryKeyDropDown" name='primaryKey' value={this.props.selectedField.primaryKey}>
-                  <option value="False">False</option>
-                  <option value="True">True</option>
+                  <option value={false}>False</option>
+                  <option value={true}>True</option>
                 </select>
               </span>)}
 
                  <span>Required : 
                 <select onChange={this.handleChange} id="requiredDropDown" name='required' value={this.props.selectedField.required}>
-                  <option value="False">False</option>
-                  <option value="True">True</option>
+                  <option value={false}>False</option>
+                  <option value={true}>True</option>
                 </select>
               </span>
 
               <span>Unique : 
                 <select onChange={this.handleChange} id="uniqueDropDown" name='unique' value={this.props.selectedField.unique}>
-                  <option value="False">False</option>
-                  <option value="True">True</option>
+                  <option value={false}>False</option>
+                  <option value={true}>True</option>
                 </select>
               </span>
               
               <span>Multiple Values : 
                 <select onChange={this.handleChange} id="multipleValuesDropDown" name='multipleValues' value={this.props.selectedField.multipleValues}>
-                  <option value="False">False</option>
-                  <option value="True">True</option>
+                  <option value={false}>False</option>
+                  <option value={true}>True</option>
                 </select>
               </span>
 
@@ -205,8 +204,8 @@ class TableOptions extends React.Component {
                   <select onChange={this.handleChange} id="relationRefTypeDropDown" name='relation.refType' value={this.props.selectedField.relation.refType}>
                     <option value="one to one">one to one</option>
                     <option value="one to many">one to many</option>
-                    <option value="many to one">many to one</option>
-                    <option value="many to many">many to many</option>
+                    {/* <option value="many to one">many to one</option>
+                    <option value="many to many">many to many</option> */}
                   </select>
                 </p>
               </span>)}

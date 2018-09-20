@@ -7,11 +7,17 @@ export default class Welcome extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      open: true,
+      open: false,
       MongoDB: null,
     };
     this.handleClose = this.handleClose.bind(this);
     this.handleDatabaseClick = this.handleDatabaseClick.bind(this);
+  }
+
+  componentDidMount() {
+    setTimeout(() => {
+      this.setState({open: true})
+    }, 1000)
   }
 
   handleClose() {
