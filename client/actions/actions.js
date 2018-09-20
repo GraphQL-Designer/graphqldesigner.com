@@ -7,23 +7,19 @@ export const chooseDatabase = (dbName) => ({
   payload: dbName,
 });
 
-// export const chooseApp = (app) => ({
-//   type: types.CHOOSE_APP,
-//   payload: app
-// })
 
-// ------------------------------- Nav Bar ---------------------------------//
+
+
+// ----------------------------- Schema App --------------------------------//
 
 export const openTableCreator = (tableState) => ({
   type: types.OPEN_TABLE_CREATOR,
   payload: tableState,
 });
 
-// ----------------------------- Schema App --------------------------------//
 
-export const addTable = (tableIndex) => ({
-  type: types.ADD_TABLE,
-  payload: tableIndex,
+export const saveTableDataInput = () => ({
+  type: types.SAVE_TABLE_DATA_INPUT,
 });
 
 export const deleteTable = (tableIndex) => ({
@@ -46,8 +42,8 @@ export const addFieldClicked = (tableIndex) => ({
   payload: tableIndex,
 })
 
-export const updateField = (fieldIndex) => ({
-  type: types.UPDATE_FIELD,
+export const saveFieldInput = (fieldIndex) => ({
+  type: types.SAVE_FIELD_INPUT,
   payload: fieldIndex,
 })
 
@@ -61,27 +57,23 @@ export const handleFieldsSelect = (field) => ({
   payload: field,
 })
 
-<<<<<<< HEAD
-export const createTable = (tableIndex) => ({
-  type: types.CREATE_TABLE,
-  payload: tableIndex,
+export const handleTableNameChange = (tableName) => ({
+  type: types.HANDLE_TABLE_NAME_CHANGE,
+  payload: tableName,
 })
 
-export const saveFile = (table) => ({
-  type: types.FILE,
-  payload: table,
+export const handleTableID = () => ({
+  type: types.HANDLE_TABLE_ID,
 })
 
-export const exportFile = (table) => ({
-  type: types.FILE,
-  payload: table
+export const handleSelectedTable = (tableIndex) => ({
+  type: types.HANDLE_SELECTED_TABLE,
+  payload: tableIndex
 })
-=======
+
 // ----------------------------- Query App -------------------------------//
 
 export const createQuery = (query) => ({
   type: types.CREATE_QUERY,
   payload: query
 })
-
->>>>>>> 2ea10f8de656e0db6423ee346a12ce84240ae3c7
