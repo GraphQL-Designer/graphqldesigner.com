@@ -50,24 +50,25 @@ const reducers = (state = initialState, action) => {
     // Choose Database
     case types.CHOOSE_DATABASE:
       database = action.payload; 
+      console.log('database selected:', action.payload)
       return {
         ...state,
         database
       }
     
-    // ------------------------------ NavBar  ----------------------------//
+
+    // ----------------------------- Schema App --------------------------------//
 
     // Open Table Creator
     case types.OPEN_TABLE_CREATOR:
       console.log('opening table', action.payload)
-      createTableState = action.payload
+      createTableState = true
+      selectedField.tableNum = -1
     return {
       ...state,
-      createTableState
+      createTableState,
+      selectedField
     }
-
-    // ----------------------------- Schema App --------------------------------//
-
   
     // Add Schema Table
     case types.ADD_TABLE:
