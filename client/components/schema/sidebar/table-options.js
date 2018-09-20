@@ -7,6 +7,7 @@ import TextField from 'material-ui/TextField';
 import KeyboardArrowLeft from 'material-ui/svg-icons/hardware/keyboard-arrow-left'
 import FlatButton from 'material-ui/FlatButton';
 import './sidebar.css';
+import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
 
 const mapStateToProps = store => ({
   database: store.data.database,
@@ -20,7 +21,7 @@ const mapStateToProps = store => ({
 
 const mapDispatchToProps = dispatch => ({
   createField: field => dispatch(actions.addField(field)),
-  updateField: () => dispatch(actions.updateField()),
+  saveFieldInput: () => dispatch(actions.saveFieldInput()),
   handleChange: field => dispatch(actions.handleFieldsUpdate(field)),
   openTableCreator: () => dispatch(actions.openTableCreator())
 })
@@ -41,12 +42,13 @@ class TableOptions extends React.Component {
 
   handleChange (event) {
     this.props.handleChange({name: event.target.name, value: event.target.value});
-    
   };
+
   handleNullChange (event, index, nullValue) {
     event.preventDefault();
     this.setState({nullValue});
   };
+
   handleUniqueChange (event, index, uniqueValue) {
     event.preventDefault();
     this.setState({uniqueValue});
@@ -55,7 +57,7 @@ class TableOptions extends React.Component {
   submitOptions(event){
     event.preventDefault();
     if(this.props.selectedField.name){
-      this.props.updateField();
+      this.props.saveFieldInput();
     }
   }
 
@@ -182,9 +184,12 @@ class TableOptions extends React.Component {
                   </select>
                 </p>
               </span>)}
-              <button onClick={this.submitOptions} className='btn btn-success'>
-                {this.props.selectedField.fieldNum > -1 ?'Update Field' : 'Create Field'}
-              </button>
+              <RaisedButton
+                secondary={true}
+                label={this.props.selectedField.fieldNum > -1 ?'Update Field' : 'Create Field'}
+                type='submit'
+                onClick={this.submitOptions}
+              />
           </form>
         </div>
         }

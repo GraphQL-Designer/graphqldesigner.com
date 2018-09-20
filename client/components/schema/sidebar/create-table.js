@@ -9,6 +9,8 @@ import Loader from '../../loader/index.js'
 import TextField from 'material-ui/TextField'; 
 import RaisedButton from 'material-ui/RaisedButton';
 import Checkbox from 'material-ui/Checkbox';
+import KeyboardArrowLeft from 'material-ui/svg-icons/hardware/keyboard-arrow-left'
+import FlatButton from 'material-ui/FlatButton';
 import './sidebar.css';
 
 const mapStateToProps = store => ({
@@ -21,7 +23,8 @@ const mapStateToProps = store => ({
 const mapDispatchToProps = dispatch => ({
   saveTableDataInput: () => dispatch(actions.saveTableDataInput()),
   tableNameChange: tableName => dispatch(actions.handleTableNameChange(tableName)),
-  idSelector: () => dispatch(actions.handleTableID())
+  idSelector: () => dispatch(actions.handleTableID()),
+  openTableCreator: () => dispatch(actions.openTableCreator())
 })
 
 class CreateTable extends React.Component {
@@ -32,6 +35,7 @@ class CreateTable extends React.Component {
     this.capitalizeFirstLetter = this.capitalizeFirstLetter.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleClick = this.handleClick.bind(this);
+    this.handleOpenTableCreator = this.handleOpenTableCreator.bind(this)
   }
   
   capitalizeFirstLetter(string) {
@@ -51,9 +55,24 @@ class CreateTable extends React.Component {
     this.props.idSelector()
   }
 
+  handleOpenTableCreator(event){
+    this.props.openTableCreator()
+  }
+
   render(){
+
+    
     return (
-      <div id='newTable'>
+      <div id='newTable' key={this.props.tableID}>
+
+        {(this.props.tableID >= 0) && 
+        <FlatButton
+          id='back-to-create'
+          label="Create Table"
+          icon={<KeyboardArrowLeft />}
+          onClick={this.handleOpenTableCreator}
+        />}
+
         <form onSubmit={this.saveTableDataInput}>
           <TextField
             // hintText="Table Name"
@@ -79,7 +98,6 @@ class CreateTable extends React.Component {
             secondary={true} 
             type='submit'
             />
-          {/* // >{this.props.tableID >= 0 ? 'Update Table' : 'Create Table'}</RaisedButton> */}
         </form>
         <div id='loader-container'>
           <Loader/>

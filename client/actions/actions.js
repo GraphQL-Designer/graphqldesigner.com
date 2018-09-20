@@ -17,7 +17,6 @@ export const openTableCreator = (tableState) => ({
   payload: tableState,
 });
 
-// ----------------------------- Schema App --------------------------------//
 
 export const saveTableDataInput = () => ({
   type: types.SAVE_TABLE_DATA_INPUT,
@@ -43,8 +42,8 @@ export const addFieldClicked = (tableIndex) => ({
   payload: tableIndex,
 })
 
-export const updateField = (fieldIndex) => ({
-  type: types.UPDATE_FIELD,
+export const saveFieldInput = (fieldIndex) => ({
+  type: types.SAVE_FIELD_INPUT,
   payload: fieldIndex,
 })
 
