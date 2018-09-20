@@ -1,20 +1,27 @@
-import React from 'react';
+import React, { Component } from 'react';
 
 //components
-// import Sidebar from './sidebar/create-query-sidebar.js';
-// import QueryCodeContainer from './query-code-container.js'
 import CodeDBSchemaContainer from './code-dbschema-container.js';
 import CodeClientContainer from './code-client-container.js';
 import CodeServerContainer from './code-server-container.js';
+import DrawerSidebar from './drawer.js'
 
-const CodeApp = props => {
-  return (
-    <div className='code-app'>
-      <CodeDBSchemaContainer/>
-      <CodeClientContainer/>
-      <CodeServerContainer/>
-    </div>
-  )
+class CodeApp extends Component {
+  constructor (props){
+    super(props)
+  }
+
+  render(){
+  
+    return (
+      <div className='code-app'>
+        <CodeDBSchemaContainer/>
+        <CodeClientContainer/>
+        <CodeServerContainer/>
+        <DrawerSidebar/>
+      </div>
+    )
+  }
 };
 
 export default CodeApp;
