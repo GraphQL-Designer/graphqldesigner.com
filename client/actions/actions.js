@@ -7,12 +7,10 @@ export const chooseDatabase = (dbName) => ({
   payload: dbName,
 });
 
-// export const chooseApp = (app) => ({
-//   type: types.CHOOSE_APP,
-//   payload: app
-// })
 
-// ------------------------------- Nav Bar ---------------------------------//
+
+
+// ----------------------------- Schema App --------------------------------//
 
 export const openTableCreator = (tableState) => ({
   type: types.OPEN_TABLE_CREATOR,

@@ -4,8 +4,8 @@ import * as actions from '../../../actions/actions.js';
 
 //styles
 import TextField from 'material-ui/TextField';
-import SelectField from 'material-ui/SelectField';
-import MenuItem from 'material-ui/MenuItem';
+import KeyboardArrowLeft from 'material-ui/svg-icons/hardware/keyboard-arrow-left'
+import FlatButton from 'material-ui/FlatButton';
 import './sidebar.css';
 
 const mapStateToProps = store => ({
@@ -21,7 +21,8 @@ const mapStateToProps = store => ({
 const mapDispatchToProps = dispatch => ({
   createField: field => dispatch(actions.addField(field)),
   updateField: () => dispatch(actions.updateField()),
-  handleChange: field => dispatch(actions.handleFieldsUpdate(field))
+  handleChange: field => dispatch(actions.handleFieldsUpdate(field)),
+  openTableCreator: () => dispatch(actions.openTableCreator())
 })
 
 class TableOptions extends React.Component {
@@ -33,6 +34,7 @@ class TableOptions extends React.Component {
 
     this.submitOptions = this.submitOptions.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.handleOpenTableCreator = this.handleOpenTableCreator.bind(this)
   }
 
   handleToggle () {this.setState({open: !this.state.open})};
@@ -52,36 +54,17 @@ class TableOptions extends React.Component {
 
   submitOptions(event){
     event.preventDefault();
-    // let fieldName = document.getElementById('fieldNameOption').value;
-    
     if(this.props.selectedField.name){
-      // const options = {
-      //   name: document.getElementById('fieldNameOption').value,
-      //   type: document.getElementById('typeDropDown').value,
-      //   primaryKey: document.getElementById('primaryKeyDropDown').value,
-      //   unique: document.getElementById('uniqueDropDown').value,
-      //   defaultValue: document.getElementById('defaultValueOption').value,
-      //   multipleValues: document.getElementById('multipleValuesDropDown').value,
-      //   required: document.getElementById('requiredDropDown').value,
-      //   relations: document.getElementById('relationDropDown').value
-      // }
-  
-      //
-      // if(Object.keys(this.props.selectedField).length){
-      //   options.tableIndex = this.props.selectedField.tableIndex;
-      //   options.fieldIndex = this.props.selectedField.fieldIndex;
-      //   options.submitUpdate = true;
-      //   this.props.updateField(options);
-      // } else{
-      //   this.props.createField(options);
-      // }
       this.props.updateField();
     }
-    
+  }
+
+  handleOpenTableCreator(event){
+    this.props.openTableCreator()
   }
 
   render() {
-    const optionsBackground = this.props.selectedField.fieldNum > -1 ? {backgroundColor: 'lightblue'} : {backgroundColor: '#5f5e5e'};
+    // const optionsBackground = this.props.selectedField.fieldNum > -1 ? {backgroundColor: 'lightblue'} : {backgroundColor: '#5f5e5e'};
     
     // create option with default of empty string when viewed
     let tables = [<option key='empty'> </option>];
@@ -112,10 +95,15 @@ class TableOptions extends React.Component {
     }
 
     return (
-      <div style={optionsBackground} id='fieldOptions'> 
+      <div id='fieldOptions'> 
         { this.props.selectedField.tableNum > -1  &&
         <div id='options'>
-          <h4>Field Options</h4>
+          <FlatButton
+            id='back-to-create'
+            label="Create Table"
+            icon={<KeyboardArrowLeft />}
+            onClick={this.handleOpenTableCreator}
+          />
           <form>
             <TextField
               hintText="Field Name"

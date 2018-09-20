@@ -1,11 +1,8 @@
 // Welcome and Intro
 export const CHOOSE_DATABASE = 'CHOOSE_DATABASE';
-// export const CHOOSE_APP = 'CHOOSE_APP';
-
-// Navbar
-export const OPEN_TABLE_CREATOR = 'OPEN_TABLE_CREATOR'
 
 // Schema App
+export const OPEN_TABLE_CREATOR = 'OPEN_TABLE_CREATOR'
 export const SAVE_TABLE_DATA_INPUT = 'SAVE_TABLE_DATA_INPUT';
 export const DELETE_TABLE = 'DELETE_TABLE';
 export const ADD_FIELD = 'ADD_FIELD';
