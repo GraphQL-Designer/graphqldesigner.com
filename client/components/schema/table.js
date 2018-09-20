@@ -2,6 +2,19 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as actions from '../../actions/actions.js';
 
+// styling
+import FlatButton from 'material-ui/FlatButton';
+import Delete from 'material-ui/svg-icons/action/delete'
+import RaisedButton from 'material-ui/RaisedButton';
+
+const deleteStyle = {
+  minWidth: '25px',
+}
+const fieldNameStyle = {
+  width: '100%'
+}
+
+
 // we use store.data, because of index.js reduce function
 const mapStateToProps = store => ({
   // fieldCount isn't used, but is necessary so the Table component rerenders after a field is deleted
@@ -34,7 +47,7 @@ class Table extends Component {
 
   handleDeleteField(event){
     const tableIndex = this.props.tableIndex
-    const fieldIndex = event.target.value
+    const fieldIndex = event.currentTarget.value //need currentTarget because of Material-UI
     this.props.deleteField([tableIndex, fieldIndex])
   }
 
@@ -44,7 +57,7 @@ class Table extends Component {
 
   handleUpdateField(event){
     this.props.handleFieldsSelect({
-      location: event.target.value,
+      location: event.currentTarget.value,  //need currentTarget because of Material-UI
       submitUpdate: false
     })
   }
@@ -56,30 +69,34 @@ class Table extends Component {
 
     // will push each individual field to the array 'fields' to be rendered. 
     for (let property in this.props.tableData.fields){
-      fields.push
-      (
-        <div key={property}>
-          <button 
-            className='btn btn-success'
-            value={`${this.props.tableData.fields[property].tableNum} ${this.props.tableData.fields[property].fieldNum}`}
+      const tableIndex = this.props.tableData.fields[property].tableNum;
+      const fieldIndex = this.props.tableData.fields[property].fieldNum;
+      const fieldName = this.props.tableData.fields[property].name
+      const fieldType = this.props.tableData.fields[property].type
+
+      fields.push(
+        <div key={property} className='field'>
+          <FlatButton
+            label={`${fieldName} ${fieldType}`}
+            value={`${tableIndex} ${fieldIndex}`}
             onClick={this.handleUpdateField}
-          >
-            {this.props.tableData.fields[property].name} {this.props.tableData.fields[property].type}
-            </button>
-          <button 
-            className='btn btn-danger'
+            style={fieldNameStyle}
+          />
+          <FlatButton
+            className='delete-button'
+            icon={<Delete />}
             value={property}
             onClick={this.handleDeleteField}
-          >
-            x
-          </button>
+            style={deleteStyle}
+          />
         </div>
       )
     }
   
     return (
       <div className='table'>
-        <div><span className='btn btn-info'>{this.props.tableData.type}</span>
+        <div>
+          <span className='btn btn-info'>{this.props.tableData.type}</span>
           <button
             className='btn btn-danger'
             value={this.props.tableIndex} 
@@ -88,10 +105,14 @@ class Table extends Component {
         </div>
         <hr/>
         {fields}
-        <button 
+        <RaisedButton 
+          label="Add Field" 
+          onClick={this.handleAddField}
+        />
+        {/* <button 
           onClick={this.handleAddField}
           >Add Field
-        </button>
+        </button> */}
       </div>  
     )
   }

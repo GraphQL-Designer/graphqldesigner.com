@@ -7,6 +7,7 @@ import TextField from 'material-ui/TextField';
 import KeyboardArrowLeft from 'material-ui/svg-icons/hardware/keyboard-arrow-left'
 import FlatButton from 'material-ui/FlatButton';
 import './sidebar.css';
+import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
 
 const mapStateToProps = store => ({
   database: store.data.database,
@@ -197,9 +198,16 @@ class TableOptions extends React.Component {
                   </select>
                 </p>
               </span>)}
-              <button onClick={this.submitOptions} className='btn btn-success'>
+              <RaisedButton
+                secondary={true}
+                label={this.props.selectedField.fieldNum > -1 ?'Update Field' : 'Create Field'}
+                type='submit'
+                onClick={this.submitOptions}
+              />
+
+              {/* <button onClick={this.submitOptions} className='btn btn-success'>
                 {this.props.selectedField.fieldNum > -1 ?'Update Field' : 'Create Field'}
-              </button>
+              </button> */}
           </form>
         </div>
         }
