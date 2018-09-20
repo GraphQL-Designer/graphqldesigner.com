@@ -12,7 +12,8 @@ mongoose.connect('Your Database Here!');
 app.use(express.static(path.join(__dirname, './public')))
 
 app.use('/graphql', graphqlHTTP({
-    GQLSchema
+    GQLSchema,
+    graphiql: false //Set to true to view GraphiQl in browser at /graphql
 }));
 
 app.listen(4000, () => {
