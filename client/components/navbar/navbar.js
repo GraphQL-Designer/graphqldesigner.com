@@ -14,12 +14,10 @@ import GraphqlLoader from '../loader/index.js';
 const mapStateToProps = store => ({
   tables: store.data.tables,
   database: store.data.database,
-  createTableState: store.data.createTableState
 });
 
 const mapDispatchToProps = dispatch => ({
   exportTable: table => dispatch(actions.exportTable(table)),
-  openTableCreator: tableState => dispatch(actions.openTableCreator(tableState))
   //saveTable: table => dispatch(actions.saveTable(table)) 
 });
  
@@ -27,17 +25,6 @@ class MainNav extends React.Component {
   constructor(props) {
     super(props);
     this.handleExport = this.handleExport.bind(this)
-    this.handleCreate = this.handleCreate.bind(this)
-  }
-
-  handleCreate(){
-    const schema = document.getElementById('tab')
-    schema.click()
-    // if the table is closed, open it. 
-    if (!this.props.createTableState) {
-      console.log('true')
-      this.props.openTableCreator(true)
-    }
   }
 
   handleExport(){
@@ -65,19 +52,13 @@ class MainNav extends React.Component {
 
   
   render() {
-    // depending on the database selected, the create button language will reflect the database
-    let createButtonText = 'Create Schema'
-    if (this.props.database === 'MongoDB') createButtonText='Create Schema'
-    else if (this.props.database === 'SQL') createButtonText='Create Table'
-
     return (
     <nav id="navbar">
       <div id="nav-left">
         <FlatButton label="New Project" />
         <FlatButton label="Export Code" onClick={this.handleExport}/>
       </div>
-      <div id="nav-mid">
-        {/* <FlatButton label={createButtonText} onClick={this.handleCreate} /> */}
+      <div id="nav-misd">
       </div>
       <div id='nav-right'>
         <FlatButton label="Logout" />
