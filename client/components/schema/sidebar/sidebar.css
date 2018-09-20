@@ -8,7 +8,8 @@
   height: 100%;
   justify-content: flex-start;
   float: right; 
-  border: 1px solid black;
+  /* border: 1px solid black; */
+  box-shadow: -3px 0 5px rgba(0, 0, 0, 0.5);
 }
 
 #tableName{
