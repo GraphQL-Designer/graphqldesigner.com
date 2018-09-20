@@ -112,7 +112,6 @@ class Table extends Component {
           <div className='field'>
             <FlatButton
               backgroundColor={colors[this.props.tableData.tableID]}
-              label={this.props.tableData.type}
               value={this.props.tableIndex}
               onClick={this.handleSelectedTable}
               style={fieldNameStyle}
