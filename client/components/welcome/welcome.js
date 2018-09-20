@@ -1,4 +1,7 @@
 import React from 'react';
+
+// styling
+import RaisedButton from 'material-ui/RaisedButton';
 import Dialog from 'material-ui/Dialog';
 import './welcome.css';
 
@@ -47,8 +50,8 @@ export default class Welcome extends React.Component {
           <hr className='welcome-hr'/>
           <h4>Select your database type</h4>
           <div id='buttonsContainer'>
-            <button onClick={this.handleDatabaseClick} className='dbButton btn btn-outline-primary'>MongoDB</button>
-            <button onClick={this.handleDatabaseClick} className='dbButton btn btn-outline-primary'>SQL</button>
+            <RaisedButton value='test' label="MongoDB" onClick={this.handleDatabaseClick}/>
+            <RaisedButton label="SQL" onClick={this.handleDatabaseClick}/>
           </div>
         </Dialog>
       </div>

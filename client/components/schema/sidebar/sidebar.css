@@ -32,9 +32,6 @@
 }
 
 #options div{
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
   width: 100%;
 }
 
@@ -56,4 +53,9 @@ select{
   display: flex;
   justify-content: center;
   margin: 0;
+}
+
+#back-to-create{
+  text-align: left !important;
+  width: 100%; 
 }
