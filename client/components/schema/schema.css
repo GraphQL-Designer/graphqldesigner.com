@@ -23,3 +23,8 @@
   width: 200px; 
   margin: 10px; 
 }
+
+.field{
+  display: flex; 
+  justify-content: space-between; 
+}
