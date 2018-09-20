@@ -2,7 +2,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 import * as actions from '../../../actions/actions.js';
 
-
+import TextField from 'material-ui/TextField'; 
+import RaisedButton from 'material-ui/RaisedButton';
+import Checkbox from 'material-ui/Checkbox';
 import './sidebar.css';
 
 const mapDispatchToProps = dispatch => ({
@@ -33,12 +35,29 @@ class CreateTable extends React.Component {
   render(){
     return (
       <div id='newTable'>
-        <h4>New Table</h4>
-        <form >
-          <input type='text' id='tableName' className='tableName' placeholder='Name' />
+        <form onSubmit={this.createTable}>
+          <TextField
+            hintText="Table Name"
+            floatingLabelText="Table Name"
+            id='tableName'
+            fullWidth={true}
+            autoFocus
+            
+          />  
           <h6>(Works with singular naming convention)</h6>
-          <span>Unique ID:<input id='idCheckbox' type='checkbox'/></span>
-          <input type='submit' value='Create' className='btn-outline-success btn-sm' onClick={this.createTable}/>
+          <Checkbox
+            label="Unique ID"
+          
+            id='idCheckbox'
+          />
+          {/* <span>Unique ID:<input id='idCheckbox' type='checkbox'/></span> */}
+          <RaisedButton 
+            label="Create Table" 
+            fullWidth={true}
+            secondary={true} 
+            value='Create' 
+            type='submit'
+          />
         </form>
       </div>
     );

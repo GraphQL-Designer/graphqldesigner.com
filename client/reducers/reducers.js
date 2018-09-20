@@ -1,7 +1,8 @@
 import * as types from '../actions/action-types';
 
 const initialState = {
-  appSelected: '',
+  queryMode: 'create',
+  createTableState: true,
   tables: {},
   database: '',
   tableIndex: 0,
@@ -12,11 +13,11 @@ const initialState = {
   selectedField : {
     name: '',
     type: 'String',
-    primaryKey: 'False',
-    unique: 'False',
+    primaryKey: false,
+    unique: false,
     defaultValue: '',
-    required: 'False',
-    multipleValues: 'False',
+    required: false,
+    multipleValues: false,
     relation: {
       type: '',
       field: '',
@@ -25,11 +26,11 @@ const initialState = {
     tableNum: -1,
     fieldNum: -1
   },
-
   fieldUpdated: 0
 };
 
-const marketsReducer = (state = initialState, action) => {
+const reducers = (state = initialState, action) => {
+  let createTableState = state.createTableState;
   let appSelected = state.appSelected;
   let tables = state.tables;
   let tableIndex = state.tableIndex;
@@ -44,6 +45,8 @@ const marketsReducer = (state = initialState, action) => {
 
   // action.payload is how you can access the info
   switch(action.type) {
+    // ------------------------------ Welcome  ----------------------------//
+
     // Choose Database
     case types.CHOOSE_DATABASE:
       database = action.payload; 
@@ -51,7 +54,21 @@ const marketsReducer = (state = initialState, action) => {
         ...state,
         database
       }
+    
+    // ------------------------------ NavBar  ----------------------------//
 
+    // Open Table Creator
+    case types.OPEN_TABLE_CREATOR:
+      console.log('opening table', action.payload)
+      createTableState = action.payload
+    return {
+      ...state,
+      createTableState
+    }
+
+    // ----------------------------- Schema App --------------------------------//
+
+  
     // Add Schema Table
     case types.ADD_TABLE:
       const newTable = action.payload.name;
@@ -68,20 +85,12 @@ const marketsReducer = (state = initialState, action) => {
 
       return {
         ...state,
+        createTableState,
         tables,
         tableIndex,
         tableCount,
         addFieldClicked
       };
-
-    // toggle between the different apps: Schema, Query, and Code
-    case types.CHOOSE_APP:
-      appSelected = action.payload;
-      return {
-        ...state,
-        appSelected
-      }
-
     
     // Delete Schema Table
     case types.DELETE_TABLE:
@@ -135,29 +144,47 @@ const marketsReducer = (state = initialState, action) => {
 
     // Update Field
     case types.UPDATE_FIELD:
-      const currentFieldIndex = state.tables[state.selectedField.tableNum].fieldsIndex;
-      const newSelectField = Object.assign({}, selectedField, {fieldNum: currentFieldIndex})
+      const selectedTableIndex = state.selectedField.tableNum;
+      const currentFieldIndex = state.tables[selectedTableIndex].fieldsIndex;
       let updatedTables = {}
+
+      // no field has been selected yet
       if (state.selectedField.fieldNum < 0) {
-
         updatedTables = 
-        Object.assign({}, state.tables, {[state.selectedField.tableNum]:
-          Object.assign({}, state.tables[state.selectedField.tableNum], {fieldsIndex: currentFieldIndex + 1}, {
-            fields: Object.assign({}, state.tables[state.selectedField.tableNum].fields, {[currentFieldIndex]: 
+        Object.assign({}, state.tables, {[selectedTableIndex]:
+          Object.assign({}, state.tables[selectedTableIndex], {fieldsIndex: currentFieldIndex + 1}, {
+            fields: Object.assign({}, state.tables[selectedTableIndex].fields, {[currentFieldIndex]: 
               Object.assign({}, state.selectedField, {fieldNum: currentFieldIndex})})})})
-
-      } else {
+      } 
+      // field has been selected
+      else {
         updatedTables = 
-        Object.assign({}, state.tables, {[state.selectedField.tableNum]:
-          Object.assign({}, state.tables[state.selectedField.tableNum], {fieldsIndex: currentFieldIndex}, {
-            fields: Object.assign({}, state.tables[state.selectedField.tableNum].fields, {[state.selectedField.fieldNum]: 
+        Object.assign({}, state.tables, {[selectedTableIndex]:
+          Object.assign({}, state.tables[selectedTableIndex], {fieldsIndex: currentFieldIndex}, {
+            fields: Object.assign({}, state.tables[selectedTableIndex].fields, {[state.selectedField.fieldNum]: 
               // Object.assign({}, state.selectedField, {fieldNum: currentFieldIndex})})})})        
               Object.assign({}, state.selectedField, {fieldNum: state.selectedField.fieldNum})})})})        
       } 
+
+      const fieldReset = Object.assign({}, selectedField, 
+          {name: '',
+          type: 'String',
+          primaryKey: false,
+          unique: false,
+          defaultValue: '',
+          required: false,
+          multipleValues: false,
+          relation: {
+            type: '',
+            field: '',
+            refType: ''
+          },
+          fieldNum: -1
+        })
       return {
         ...state,
         tables: updatedTables,
-        selectedField: newSelectField
+        selectedField: fieldReset
       } 
 
     case types.HANDLE_FIELDS_UPDATE:
@@ -165,16 +192,21 @@ const marketsReducer = (state = initialState, action) => {
     if(action.payload.name.indexOf('.') !== -1){
       const rel = action.payload.name.split('.'); 
       newSelectedField = Object.assign({}, state.selectedField, {[rel[0]] :
-                          Object.assign({}, state.selectedField[rel[0]], {[rel[1]] : [action.payload.value]})})
+                          Object.assign({}, state.selectedField[rel[0]], {[rel[1]] : action.payload.value})})
     } else{
-      newSelectedField = Object.assign({}, state.selectedField, {[action.payload.name]: [action.payload.value]})
+      if (action.payload.value === 'true') action.payload.value = true;
+      if (action.payload.value === 'false') action.payload.value = false;
+      newSelectedField = Object.assign({}, state.selectedField, {[action.payload.name]: action.payload.value})
     }
     return {
       ...state,
       selectedField: newSelectedField
     }  
 
+    // when a user selects a field, it changes selectedField to be an object with the necessary 
+    // info from the selected table and field. 
     case types.HANDLE_FIELDS_SELECT: 
+    // location contains the table index at [0], and field at [1]
     const location = action.payload.location.split(" ")
 
     newSelectedField = Object.assign({}, state.tables[Number(location[0])].fields[Number(location[1])]);
@@ -188,15 +220,16 @@ const marketsReducer = (state = initialState, action) => {
 
     // Add Field in Table was clicked to display field options
     case types.ADD_FIELD_CLICKED:
+      createTableState = false; 
       addFieldClicked = true;
       newSelectedField = {
         name: '',
         type: 'String',
-        primaryKey: 'False',
-        unique: 'False',
+        primaryKey: false,
+        unique: false,
         defaultValue: '',
-        required: 'False',
-        multipleValues: 'False',
+        required: false,
+        multipleValues: false,
         relation: {
           type: '',
           field: '',
@@ -208,14 +241,21 @@ const marketsReducer = (state = initialState, action) => {
 
       return{
         ...state,
+        createTableState,
         addFieldClicked,
         tableIndexSelected,
         selectedField: newSelectedField
       }
+
+
+      // ----------------------------- Query App -------------------------------//
+    
+    case types.CREATE_QUERY:
+      console.log(action.payload)
 
     default:
       return state;
   }
 };
 
-export default marketsReducer;
+export default reducers;

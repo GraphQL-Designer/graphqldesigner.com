@@ -4,7 +4,8 @@
   flex-direction: row;
   justify-content: space-between;
   width: 100%;
-  height: 100%; 
+  /* height: 100%;  */
+  height: 65vh; 
   border: 1px solid blue; 
   padding: 0;
   margin: 0; 
@@ -29,4 +30,21 @@
   display: flex;
   margin: 0;
   width: 100%;
+}
+
+.drawer-container{
+  height: 100%;
+}
+
+.drawer{
+  top: initial !important;
+  position: absolute !important;
+  /* display: none !important */
+}
+
+.drawer-closed{
+  display: none !important;
+  top: initial !important;
+  position: absolute !important;
+
 }

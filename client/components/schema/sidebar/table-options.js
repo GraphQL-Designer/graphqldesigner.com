@@ -1,11 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import TextField from 'material-ui/TextField';
-import DropDownMenu from 'material-ui/DropDownMenu';
-import MenuItem from 'material-ui/MenuItem';
 import * as actions from '../../../actions/actions.js';
-// import { MenuItem, DropdownButton } from 'react-bootstrap';
 
+//styles
+import TextField from 'material-ui/TextField';
+import SelectField from 'material-ui/SelectField';
+import MenuItem from 'material-ui/MenuItem';
 import './sidebar.css';
 
 const mapStateToProps = store => ({
@@ -81,7 +81,7 @@ class TableOptions extends React.Component {
   }
 
   render() {
-    const optionsBackground = this.props.selectedField.fieldNum > -1 ? {backgroundColor: 'lightblue'} : {backgroundColor: 'white'};
+    const optionsBackground = this.props.selectedField.fieldNum > -1 ? {backgroundColor: 'lightblue'} : {backgroundColor: '#5f5e5e'};
     
     // create option with default of empty string when viewed
     let tables = [<option key='empty'> </option>];
@@ -114,49 +114,77 @@ class TableOptions extends React.Component {
         <div id='options'>
           <h4>Field Options</h4>
           <form>
-              <span>
-                  Field Name : <input onChange={this.handleChange} id='fieldNameOption' type='text' name='name' value={this.props.selectedField.name}/>
-              </span>
-
+            <TextField
+              hintText="Field Name"
+              floatingLabelText="Field Name"
+              fullWidth={true}
+              name='name' 
+              id='fieldNameOption' 
+              onChange={this.handleChange} 
+              value={this.props.selectedField.name}
+              autoFocus
+            />
+            <TextField
+                hintText="Default Value"
+                floatingLabelText="Default Value"
+                fullWidth={true}
+                id='defaultValueOption'
+                name='defaultValue' 
+                onChange={this.handleChange}
+                value={this.props.selectedField.defaultValue} 
+              />
+            {/* <SelectField
+              floatingLabelText="Select Field Type"
+              value={this.props.selectedField.type}
+              onChange={this.handleChange} 
+              id="typeDropDown" 
+              name='type' 
+            >
+              <MenuItem value='String'  primaryText='String'/>
+              <MenuItem value='Number'  primaryText='Number'/>
+              <MenuItem value='Date'    primaryText='Date'/>
+              <MenuItem value='Boolean' primaryText='Boolean'/>
+              <MenuItem value='ID'      primaryText='ID'/>
+            </SelectField> */}
               <span>Type : 
-                <select onChange={this.handleChange} id="typeDropDown" name='type' value={this.props.selectedField.type}>
+                <select 
+                  onChange={this.handleChange} 
+                  id="typeDropDown" 
+                  name='type' 
+                  value={this.props.selectedField.type}
+                >
                   <option value="String">String</option>
                   <option value="Number">Number</option>
-                  <option value="Date">Date</option>
+                  {/* <option value="Date">Date</option> */}
                   <option value="Boolean">Boolean</option>
                   <option value="ID">ID</option>
                 </select>
               </span>
-
               {this.props.database === 'SQL' && (<span> Primary Key :
                 <select onChange={this.handleChange} id="primaryKeyDropDown" name='primaryKey' value={this.props.selectedField.primaryKey}>
-                  <option value="False">False</option>
-                  <option value="True">True</option>
+                  <option value={false}>False</option>
+                  <option value={true}>True</option>
                 </select>
               </span>)}
 
+                 <span>Required : 
+                <select onChange={this.handleChange} id="requiredDropDown" name='required' value={this.props.selectedField.required}>
+                  <option value={false}>False</option>
+                  <option value={true}>True</option>
+                </select>
+              </span>
 
               <span>Unique : 
                 <select onChange={this.handleChange} id="uniqueDropDown" name='unique' value={this.props.selectedField.unique}>
-                  <option value="False">False</option>
-                  <option value="True">True</option>
+                  <option value={false}>False</option>
+                  <option value={true}>True</option>
                 </select>
               </span>
-              <span>
-                  Default Value : <input onChange={this.handleChange} id='defaultValueOption' type='text' name='defaultValue' value={this.props.selectedField.defaultValue} />
-              </span>
-
-              <span>Required : 
-                <select onChange={this.handleChange} id="requiredDropDown" name='required' value={this.props.selectedField.required}>
-                  <option value="False">False</option>
-                  <option value="True">True</option>
-                </select>
-              </span>
-
+              
               <span>Multiple Values : 
                 <select onChange={this.handleChange} id="multipleValuesDropDown" name='multipleValues' value={this.props.selectedField.multipleValues}>
-                  <option value="False">False</option>
-                  <option value="True">True</option>
+                  <option value={false}>False</option>
+                  <option value={true}>True</option>
                 </select>
               </span>
 
@@ -176,8 +204,8 @@ class TableOptions extends React.Component {
                   <select onChange={this.handleChange} id="relationRefTypeDropDown" name='relation.refType' value={this.props.selectedField.relation.refType}>
                     <option value="one to one">one to one</option>
                     <option value="one to many">one to many</option>
-                    <option value="many to one">many to one</option>
-                    <option value="many to many">many to many</option>
+                    {/* <option value="many to one">many to one</option>
+                    <option value="many to many">many to many</option> */}
                   </select>
                 </p>
               </span>)}
@@ -187,8 +215,6 @@ class TableOptions extends React.Component {
           </form>
         </div>
         }
-        
-
       </div>
     );
   }
