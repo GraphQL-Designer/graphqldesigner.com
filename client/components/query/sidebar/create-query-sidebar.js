@@ -86,7 +86,7 @@ class CreateQuerySidebar extends Component {
       for (let property in this.props.tables[selectedTableIndex].fields){
         const fieldName = this.props.tables[selectedTableIndex].fields[property].name
         graphQLSearchOptions.push(
-          <option value={property}>{fieldName}</option> 
+          <option key={property} value={property}>{fieldName}</option> 
         )
       }
     }

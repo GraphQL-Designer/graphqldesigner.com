@@ -1,4 +1,7 @@
 import React from 'react';
+
+// styling
+import RaisedButton from 'material-ui/RaisedButton';
 import Dialog from 'material-ui/Dialog';
 import './welcome.css';
 
@@ -39,16 +42,19 @@ export default class Welcome extends React.Component {
           open={this.state.open}
           onRequestClose={this.handleClose}
           className='welcome-container'
+          paperClassName='welcome-box'
         >
           <div id='subheading'>Simply create and implement a full stack React GraphQL App.</div>
-          <img id='icon_graphql' src='https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/GraphQL_Logo.svg/2000px-GraphQL_Logo.svg.png'/>
-          <img id='icon_express' src='https://amandeepmittal.gallerycdn.vsassets.io/extensions/amandeepmittal/expressjs/2.0.0/1509881293872/Microsoft.VisualStudio.Services.Icons.Default' />
-          <img id='icon_react' src='https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/1200px-React-icon.svg.png' />
+          <div className='iconContainer'>
+            <img id='icon_graphql' src='./images/graphql.png'/>
+            <img id='icon_express' src='./images/express.png' />
+            <img id='icon_react' src='./images/react.png' />
+          </div>
           <hr className='welcome-hr'/>
           <h4>Select your database type</h4>
           <div id='buttonsContainer'>
-            <button onClick={this.handleDatabaseClick} className='dbButton btn btn-outline-primary'>MongoDB</button>
-            <button onClick={this.handleDatabaseClick} className='dbButton btn btn-outline-primary'>SQL</button>
+            <RaisedButton value='test' label="MongoDB" onClick={this.handleDatabaseClick}/>
+            <RaisedButton label="SQL" onClick={this.handleDatabaseClick}/>
           </div>
         </Dialog>
       </div>

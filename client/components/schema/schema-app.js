@@ -2,7 +2,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 //components
-import Sidebar from './sidebar/sidebar.js';
 import Table from './table.js';
 import CreateTable from './sidebar/create-table.js'
 import TableOptions from './sidebar/table-options.js'
@@ -27,14 +26,14 @@ const SchemaApp = props => {
   let keyNum = 100 //React requires a key to avoid errors. 
   for (let property in props.tables){
     tableComponents.push(<Table
-      key = {keyNum++} 
+      key={property} 
       tableData={props.tables[property]}
       tableIndex={property}
       fieldCount={props.tables[property].fieldCount}
       />
     )
   }
-
+  //
   let sidebar = '';
   if (props.createTableState) sidebar = <CreateTable/>
   if (props.tableNum > -1) sidebar = <TableOptions/>
