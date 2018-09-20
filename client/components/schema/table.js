@@ -3,9 +3,10 @@ import { connect } from 'react-redux';
 import * as actions from '../../actions/actions.js';
 
 // styling
+import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import Delete from 'material-ui/svg-icons/action/delete'
-import RaisedButton from 'material-ui/RaisedButton';
+import Close from 'material-ui/svg-icons/navigation/close'
 
 const deleteStyle = {
   minWidth: '25px',
@@ -29,7 +30,8 @@ const mapDispatchToProps = dispatch => ({
   addField: fieldName => dispatch(actions.addFieldClicked(fieldName)),
   deleteField: fieldName => dispatch(actions.deleteField(fieldName)),
   updateField: fieldIndex => dispatch(actions.updateField(fieldIndex)),
-  handleFieldsSelect: field => dispatch(actions.handleFieldsSelect(field))
+  handleFieldsSelect: field => dispatch(actions.handleFieldsSelect(field)),
+  handleSelectedTable: tableIndex => dispatch(actions.handleSelectedTable(tableIndex))
 });
 
 class Table extends Component {
@@ -39,15 +41,16 @@ class Table extends Component {
     this.handleDeleteField = this.handleDeleteField.bind(this)
     this.handleAddField    = this.handleAddField.bind(this)
     this.handleUpdateField = this.handleUpdateField.bind(this)
+    this.handleSelectedTable = this.handleSelectedTable.bind(this)
   } 
 
   handleDeleteTable(event){
-    this.props.deleteTable(event.target.value)
+    this.props.deleteTable(event.currentTarget.value) // need currentTarget because of Material-UI
   }
 
   handleDeleteField(event){
     const tableIndex = this.props.tableIndex
-    const fieldIndex = event.currentTarget.value //need currentTarget because of Material-UI
+    const fieldIndex = event.currentTarget.value // need currentTarget because of Material-UI
     this.props.deleteField([tableIndex, fieldIndex])
   }
 
@@ -57,9 +60,13 @@ class Table extends Component {
 
   handleUpdateField(event){
     this.props.handleFieldsSelect({
-      location: event.currentTarget.value,  //need currentTarget because of Material-UI
+      location: event.currentTarget.value,  // need currentTarget because of Material-UI
       submitUpdate: false
     })
+  }
+
+  handleSelectedTable(event){
+    this.props.handleSelectedTable(event.currentTarget.value);
   }
 
 
@@ -84,7 +91,7 @@ class Table extends Component {
           />
           <FlatButton
             className='delete-button'
-            icon={<Delete />}
+            icon={<Close />}
             value={property}
             onClick={this.handleDeleteField}
             style={deleteStyle}
@@ -96,12 +103,21 @@ class Table extends Component {
     return (
       <div className='table'>
         <div>
-          <span className='btn btn-info'>{this.props.tableData.type}</span>
-          <button
-            className='btn btn-danger'
-            value={this.props.tableIndex} 
-            onClick={this.handleDeleteTable}>x
-          </button>
+          <div className='field'>
+            <FlatButton
+              label={this.props.tableData.type}
+              value={this.props.tableIndex}
+              onClick={this.handleSelectedTable}
+              style={fieldNameStyle}
+            />
+            <FlatButton
+              className='delete-button'
+              icon={<Delete />}
+              value={this.props.tableIndex}
+              onClick={this.handleDeleteTable}
+              style={deleteStyle}
+            />
+          </div>
         </div>
         <hr/>
         {fields}
@@ -109,10 +125,6 @@ class Table extends Component {
           label="Add Field" 
           onClick={this.handleAddField}
         />
-        {/* <button 
-          onClick={this.handleAddField}
-          >Add Field
-        </button> */}
       </div>  
     )
   }

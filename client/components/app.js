@@ -17,7 +17,6 @@ import MainNav from './navbar/navbar';
 import Welcome from './welcome/welcome.js';
 import SchemaApp from './schema/schema-app.js';
 import QueryApp from './query/query-app.js';
-import GraphqlLoader from './loader';
 import CodeApp from './code/code-app.js';
 
 const mapStateToProps = store => ({
@@ -41,12 +40,6 @@ class App extends Component {
   }
 
   render() {
-     // toggle between the different apps: Schema, Query, and Code
-    let app = ''
-    if (this.props.appSelected === 'Schemas') app = <SchemaApp/>
-    else if (this.props.appSelected === 'Queries') app = <QueryApp/>
-    else if (this.props.appSelected === 'Code') app = <CodeApp/>
-
     return (
       <div className='app-container'>
         <MainNav />

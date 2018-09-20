@@ -33,7 +33,7 @@ const SchemaApp = props => {
       />
     )
   }
-
+  //
   let sidebar = '';
   if (props.createTableState) sidebar = <CreateTable/>
   if (props.tableNum > -1) sidebar = <TableOptions/>
