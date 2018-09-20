@@ -99,43 +99,59 @@ const reducers = (state = initialState, action) => {
                     // ------------- Add Table ----------------//
     case types.SAVE_TABLE_DATA_INPUT:
       let newState;
-      if (state.selectedTable.tableID < 0) {
-        const newTableData = Object.assign({}, state.selectedTable, {tableID: state.tableIndex})
-        const newTables = Object.assign({}, state.tables, {[state.tableIndex]: newTableData})
-        newState = Object.assign({}, state, {
-          tableIndex: state.tableIndex + 1,
-          tableCount: state.tableCount + 1,
-          tables: newTables,
-          selectedTable: {
-            type: '',
-            idRequested: false || state.database === 'MongoDB',
-            fields: {},
-            fieldsIndex: 0,
-            tableID: -1,
-          }
-        })
-      } else {
-        const newTableData = Object.assign({}, state.selectedTable)
-        const newTables = Object.assign({}, state.tables, {[state.selectedTable.tableID]: newTableData})
-        newState = Object.assign({}, state, {
-          tables: newTables,
-          selectedTable: {
-            type: '',
-            idRequested: false || state.database === 'MongoDB',
-            fields: {},
-            fieldsIndex: 0,
-            tableID: -1,
-          }
-        })
+      let newTableData;
+
+      // save table or update table if the type is entered
+      if(state.selectedTable.type.length > 0){
+        if (state.selectedTable.tableID < 0) {
+          newTableData = Object.assign({}, state.selectedTable, {tableID: state.tableIndex})
+          
+          //capitalize first letter
+          newTableData.type = newTableData.type.charAt(0).toUpperCase() + newTableData.type.slice(1);
+          //remove white space
+          newTableData.type = newTableData.type.replace(/ /g, '');
+  
+          const newTables = Object.assign({}, state.tables, {[state.tableIndex]: newTableData})
+          newState = Object.assign({}, state, {
+            tableIndex: state.tableIndex + 1,
+            tableCount: state.tableCount + 1,
+            tables: newTables,
+            selectedTable: {
+              type: '',
+              idRequested: false || state.database === 'MongoDB',
+              fields: {},
+              fieldsIndex: 0,
+              tableID: -1,
+            }
+          })
+        } else {
+          newTableData = Object.assign({}, state.selectedTable)
+  
+          //capitalize first letter
+          newTableData.type = newTableData.type.charAt(0).toUpperCase() + newTableData.type.slice(1);
+          //remove white space
+          newTableData.type = newTableData.type.replace(/ /g, '');
+  
+          const newTables = Object.assign({}, state.tables, {[state.selectedTable.tableID]: newTableData})
+          newState = Object.assign({}, state, {
+            tables: newTables,
+            selectedTable: {
+              type: '',
+              idRequested: false || state.database === 'MongoDB',
+              fields: {},
+              fieldsIndex: 0,
+              tableID: -1,
+            }
+          })
+        }
+
+        if(newTableData.type !== ''){
+            return newState
+        }
       }
 
-      if(state.selectedTable.type){
-        // if(state.selectedTable.type.trim().length !== 0){
-          console.log('newState type: ', state.selectedTable.type, 'end');
-          return newState
-        // }
-      }
-
+      // return state if user submits empty table name
+      return state;
                     // ------------ Change Table Name ----------------//
     case types.HANDLE_TABLE_NAME_CHANGE:
       newSelectedTable = Object.assign({}, state.selectedTable, {type: action.payload})

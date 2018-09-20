@@ -88,9 +88,7 @@ class CreateTable extends React.Component {
             fullWidth={true}
             autoFocus
             onChange={this.handleChange}
-            // name='type'
-            value={this.capitalizeFirstLetter(this.props.tableName)}
-            // value={this.props.tableName}
+            value={this.props.tableName || ''}
           />
           <h6>(Works with singular naming convention)</h6>
           <Checkbox
