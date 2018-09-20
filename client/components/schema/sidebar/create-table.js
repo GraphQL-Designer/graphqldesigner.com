@@ -39,12 +39,19 @@ class CreateTable extends React.Component {
   }
   
   capitalizeFirstLetter(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
+    
+    if(string){
+      const newString = string.replace(' ', '');
+      // console.log('string: ', string);
+      // console.log('newString: ', newString);
+      return newString.charAt(0).toUpperCase() + newString.slice(1);
+    }
   }
 
   saveTableDataInput(e){
     e.preventDefault();
     this.props.saveTableDataInput()
+    document.getElementById('tableName').value = '';
   }
 
   handleChange(e){
@@ -82,8 +89,9 @@ class CreateTable extends React.Component {
             autoFocus
             onChange={this.handleChange}
             // name='type'
-            value={this.props.tableName}
-          />  
+            value={this.capitalizeFirstLetter(this.props.tableName)}
+            // value={this.props.tableName}
+          />
           <h6>(Works with singular naming convention)</h6>
           <Checkbox
             label="Unique ID"
