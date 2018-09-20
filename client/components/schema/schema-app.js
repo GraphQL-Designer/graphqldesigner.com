@@ -2,7 +2,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 //components
-import Sidebar from './sidebar/sidebar.js';
 import Table from './table.js';
 import CreateTable from './sidebar/create-table.js'
 import TableOptions from './sidebar/table-options.js'
