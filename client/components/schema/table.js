@@ -85,11 +85,12 @@ class Table extends Component {
       fields.push(
         <div key={property} className='field'>
           <FlatButton
-            label={`${fieldName} ${fieldType}`}
             value={`${tableIndex} ${fieldIndex}`}
             onClick={this.handleUpdateField}
             style={fieldNameStyle}
-          />
+          >
+          {`${fieldName} - ${fieldType}`}
+          </FlatButton>
           <FlatButton
             className='delete-button'
             icon={<Close />}
@@ -106,11 +107,13 @@ class Table extends Component {
         <div >
           <div className='field' >
             <FlatButton
-              label={this.props.tableData.type}
+              // label={this.props.tableData.type}
               value={this.props.tableIndex}
               onClick={this.handleSelectedTable}
               style={fieldNameStyle}
-            />
+            >
+              {this.props.tableData.type}
+            </FlatButton>
             <FlatButton
               className='delete-button'
               icon={<Delete />}
