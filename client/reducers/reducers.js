@@ -72,10 +72,12 @@ const reducers = (state = initialState, action) => {
     // Choose Database
     case types.CHOOSE_DATABASE:
       database = action.payload; 
-      console.log('database selected:', action.payload)
+      newSelectedTable = Object.assign({}, state.selectedTable, {idRequested: database === 'MongoDB'})
+
       return {
         ...state,
-        database
+        database, 
+        selectedTable: newSelectedTable
       }
     
 
@@ -106,7 +108,7 @@ const reducers = (state = initialState, action) => {
           tables: newTables,
           selectedTable: {
             type: '',
-            idRequested: false,
+            idRequested: false || state.database === 'MongoDB',
             fields: {},
             fieldsIndex: 0,
             tableID: -1,
@@ -119,7 +121,7 @@ const reducers = (state = initialState, action) => {
           tables: newTables,
           selectedTable: {
             type: '',
-            idRequested: false,
+            idRequested: false || state.database === 'MongoDB',
             fields: {},
             fieldsIndex: 0,
             tableID: -1,
@@ -241,14 +243,12 @@ const reducers = (state = initialState, action) => {
       ...state,
       tables,
       selectedField: newSelectedField,
-      // addFieldClicked,
       fieldUpdated
     }  
                     // ------------ OPEN FIELD CREATOR ----------------//
     // Add Field in Table was clicked to display field options
     case types.ADD_FIELD_CLICKED:
       createTableState = false; 
-      // addFieldClicked = true;
       newSelectedField = {
         name: '',
         type: 'String',
@@ -269,8 +269,6 @@ const reducers = (state = initialState, action) => {
       return{
         ...state,
         createTableState,
-        // addFieldClicked,
-        // tableIndexSelected,
         selectedField: newSelectedField
       }
 
