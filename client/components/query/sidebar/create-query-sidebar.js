@@ -1,8 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import * as actions from '../../../actions/actions.js';
+
+import TextField from 'material-ui/TextField'; 
+import RaisedButton from 'material-ui/RaisedButton';
 import './sidebar.css';
 
 const mapDispatchToProps = dispatch => ({
+  createQuery: query => dispatch(actions.createQuery(query))
 });
 
 const mapStateToProps = store => ({
@@ -25,14 +30,11 @@ class CreateQuerySidebar extends Component {
 
   // when a user types into the input for Query Name
   handleChange(event){
-    console.log('this is state', this.state)
-
     this.setState({queryName: event.target.value})
   }
 
   // user selects a query type
   selectTypeHandler(event){
-    console.log('this is state', this.state)
     // if the default select is picked, change state to default values. 
     if (event.target.value === 'default'){
       this.setState({selectedTableIndex: null})
@@ -45,8 +47,6 @@ class CreateQuerySidebar extends Component {
 
   // user selects how to search the particular type
   selectSearchHandler(event){
-    console.log('this is state', this.state)
-
       // user selected to search for all of a type
       if (event.target.value === 'every'){
         this.setState({querySearchFor: 'every'})
@@ -59,11 +59,11 @@ class CreateQuerySidebar extends Component {
 
   submitHandler(event){
     event.preventDefault();
+    this.props.createQuery(this.state)
     console.log(this.state)
   }
 
   render(){
-
     // Dynamically set the GraphQL types that can be selected based on Schema setup
     let graphQLTypeOptions = []
     for (let property in this.props.tables){
@@ -95,11 +95,20 @@ class CreateQuerySidebar extends Component {
       <div className='sidebar'>
         <h4>Create Custom Query</h4>
         <form onSubmit={this.submitHandler}> 
-          <input type="text"
+          {/* <input type="text"
             placeholder="Query Name"
             value={this.state.queryName}
-            onChange={this.handleChange} 
-            />
+            onChange={this.handleChange}
+            autoFocus 
+            /> */}
+          <TextField
+            hintText="Query Name"
+            floatingLabelText="Query Name"
+            value={this.state.queryName}
+            onChange={this.handleChange}
+            autoFocus
+          /> 
+
           <br/>
           <select name='graphqlTypes' onChange={this.selectTypeHandler}>
             <option value='default'>Select Query Type</option> 
@@ -111,9 +120,12 @@ class CreateQuerySidebar extends Component {
             {graphQLSearchOptions}
           </select>
           <br/>
-          <input type="submit" 
-            value="Create Query"
-            />
+          <RaisedButton 
+            label="Create Query" 
+            fullWidth={true}
+            secondary={true} 
+            type='submit'
+          />
         </form>
       </div>
     )
