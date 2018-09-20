@@ -7,9 +7,6 @@ const initialState = {
   database: '',
   tableIndex: 0,
   tableCount: 0,
-  // fieldCount: 0,
-  // addFieldClicked: false,
-  // tableIndexSelected: null,
   selectedField : {
     name: '',
     type: 'String',
@@ -44,9 +41,6 @@ const reducers = (state = initialState, action) => {
   let tableIndex = state.tableIndex;
   let database = state.database;
   let tableCount = state.tableCount;
-  // let fieldCount = state.fieldCount;
-  // let addFieldClicked = state.addFieldClicked;
-  // let tableIndexSelected = state.tableIndexSelected;
   let selectedField = state.selectedField;
   let fieldUpdated = state.fieldUpdated;
   let newSelectedField;
@@ -60,10 +54,12 @@ const reducers = (state = initialState, action) => {
     // Choose Database
     case types.CHOOSE_DATABASE:
       database = action.payload; 
-      console.log('database selected:', action.payload)
+      newSelectedTable = Object.assign({}, state.selectedTable, {idRequested: database === 'MongoDB'})
+
       return {
         ...state,
-        database
+        database, 
+        selectedTable: newSelectedTable
       }
     
 
@@ -108,7 +104,7 @@ const reducers = (state = initialState, action) => {
           tables: newTables,
           selectedTable: {
             type: '',
-            idRequested: false,
+            idRequested: false || state.database === 'MongoDB',
             fields: {},
             fieldsIndex: 0,
             tableID: -1,
@@ -121,7 +117,7 @@ const reducers = (state = initialState, action) => {
           tables: newTables,
           selectedTable: {
             type: '',
-            idRequested: false,
+            idRequested: false || state.database === 'MongoDB',
             fields: {},
             fieldsIndex: 0,
             tableID: -1,
@@ -138,51 +134,22 @@ const reducers = (state = initialState, action) => {
     // Delete Schema Table
     case types.DELETE_TABLE:
       tableCount -= 1;
-      // addFieldClicked = false;
       delete tables[action.payload]
       return {
         ...state,
         tables,
         tableIndex,
         tableCount,
-        // addFieldClicked
       };
-
-    // // Add Field
-    // case types.ADD_FIELD:
-    //   let fieldsIndex = tables[tableIndexSelected].fieldsIndex;
-    //   addFieldClicked = false;
-    //   fieldCount += 1;
-    //   selectedField = {};
-
-    //   tables[tableIndexSelected].fieldsIndex += 1;
-    //   tables[tableIndexSelected].fields[fieldsIndex] = {};
-    //   tables[tableIndexSelected].fields[fieldsIndex].name = action.payload.name;
-    //   tables[tableIndexSelected].fields[fieldsIndex].type = action.payload.type;
-    //   tables[tableIndexSelected].fields[fieldsIndex].primaryKey = action.payload.primaryKey;
-    //   tables[tableIndexSelected].fields[fieldsIndex].unique = action.payload.unique;
-    //   tables[tableIndexSelected].fields[fieldsIndex].defaultValue = action.payload.defaultValue;
-    //   tables[tableIndexSelected].fields[fieldsIndex].multipleValues = action.payload.multipleValues;
-    //   tables[tableIndexSelected].fields[fieldsIndex].required = action.payload.required;
-    //   tables[tableIndexSelected].fields[fieldsIndex].relations = action.payload.relations;
-    // return {
-    //   ...state, 
-    //   tables,
-    //   fieldCount,
-    //   addFieldClicked,
-    //   selectedField
-    // };
 
     // Delete Field
     case types.DELETE_FIELD:
-      // fieldCount -= 1; 
       const tablesIndexSelected = action.payload[0];
       const fieldIndexSelected = action.payload[1];
       delete tables[tablesIndexSelected].fields[fieldIndexSelected];
     return {
       ...state,
       tables,
-      // fieldCount
     };
 
     // Update Field
@@ -257,14 +224,12 @@ const reducers = (state = initialState, action) => {
       ...state,
       tables,
       selectedField: newSelectedField,
-      // addFieldClicked,
       fieldUpdated
     }  
 
     // Add Field in Table was clicked to display field options
     case types.ADD_FIELD_CLICKED:
       createTableState = false; 
-      // addFieldClicked = true;
       newSelectedField = {
         name: '',
         type: 'String',
@@ -285,8 +250,6 @@ const reducers = (state = initialState, action) => {
       return{
         ...state,
         createTableState,
-        // addFieldClicked,
-        // tableIndexSelected,
         selectedField: newSelectedField
       }
 

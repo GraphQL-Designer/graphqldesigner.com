@@ -64,8 +64,6 @@ class TableOptions extends React.Component {
   }
 
   render() {
-    // const optionsBackground = this.props.selectedField.fieldNum > -1 ? {backgroundColor: 'lightblue'} : {backgroundColor: '#5f5e5e'};
-    
     // create option with default of empty string when viewed
     let tables = [<option key='empty'> </option>];
     let fields = [<option key='empty'> </option>];
@@ -79,15 +77,14 @@ class TableOptions extends React.Component {
           tempTableNumList.push(types);
         }
       }
-
       let tempTableNum = 0;
       // iterate through list of types and get type index number matching type in relation selected
       for(let x = 0; x < tempTableNumList.length; x += 1){
-        if(this.props.tables[tempTableNumList[x]].type === this.props.selectedField.relation.type[0]){
+        if(this.props.tables[tempTableNumList[x]].type === this.props.selectedField.relation.type){
           tempTableNum = tempTableNumList[x];
         }
       }
-
+      
       // list all of the fields for type selected in relation in sidebar
       for(let field in this.props.tables[tempTableNum].fields){
         fields.push(<option key={field} value={this.props.tables[tempTableNum].fields[field].name}>{this.props.tables[tempTableNum].fields[field].name}</option>)

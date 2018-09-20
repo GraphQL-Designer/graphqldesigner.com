@@ -14,7 +14,8 @@ import './sidebar.css';
 const mapStateToProps = store => ({
   tableName: store.data.selectedTable.type,
   tableIDRequested: store.data.selectedTable.idRequested,
-  tableID: store.data.selectedTable.tableID
+  tableID: store.data.selectedTable.tableID,
+  database: store.data.database
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -52,7 +53,7 @@ class CreateTable extends React.Component {
 
   render(){
     return (
-      <div id='newTable' key={this.props.tableID}>
+      <div id='newTable'>
         <form onSubmit={this.saveTableDataInput}>
           <TextField
             // hintText="Table Name"
@@ -69,9 +70,9 @@ class CreateTable extends React.Component {
             label="Unique ID"
             onCheck={this.handleClick}
             id='idCheckbox'
-            checked={this.props.tableIDRequested}
+            checked={this.props.database === 'MongoDB'? true : this.props.tableIDRequested}
+            disabled={this.props.database === 'MongoDB'}
           />
-          {/* <span>Unique ID:<input id='idCheckbox' type='checkbox'/></span> */}
           <RaisedButton 
             label={this.props.tableID >= 0 ? 'Update Table' : 'Create Table'}
             fullWidth={true}
