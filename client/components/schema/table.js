@@ -51,6 +51,7 @@ class Table extends Component {
   handleDeleteField(event){
     const tableIndex = this.props.tableIndex
     const fieldIndex = event.currentTarget.value // need currentTarget because of Material-UI
+    console.log(tableIndex, fieldIndex)
     this.props.deleteField([tableIndex, fieldIndex])
   }
 
@@ -102,8 +103,8 @@ class Table extends Component {
   
     return (
       <div className='table'>
-        <div>
-          <div className='field'>
+        <div >
+          <div className='field' >
             <FlatButton
               label={this.props.tableData.type}
               value={this.props.tableIndex}

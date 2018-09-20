@@ -85,7 +85,6 @@ const reducers = (state = initialState, action) => {
 
     // Open Table Creator
     case types.OPEN_TABLE_CREATOR:
-      console.log('opening table', action.payload)
       createTableState = true
       selectedField.tableNum = -1
       selectedTable.tableID = -1
@@ -203,12 +202,14 @@ const reducers = (state = initialState, action) => {
 
                           // -------------- Delete Field ----------------//
     case types.DELETE_FIELD:
-      const tablesIndexSelected = action.payload[0];
-      const fieldIndexSelected = action.payload[1];
-      delete tables[tablesIndexSelected].fields[fieldIndexSelected];
+    console.log(action.payload)
+    const tablesIndexSelected = action.payload[0];
+    const fieldIndexSelected = action.payload[1];
+    let newTables = Object.assign({}, tables)
+    delete newTables[tablesIndexSelected].fields[fieldIndexSelected];
     return {
       ...state,
-      tables,
+      tables: newTables,
     };
 
                     // ------------ HANDLE FIELD UPDATE ----------------//
