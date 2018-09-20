@@ -10,9 +10,12 @@ import Close from 'material-ui/svg-icons/navigation/close'
 
 const deleteStyle = {
   minWidth: '25px',
+  position: 'absolute',
+  right: '10px'
 }
 const fieldNameStyle = {
-  width: '100%'
+  width: '100%',
+  height: '100%'
 }
 
 
@@ -73,6 +76,7 @@ class Table extends Component {
   
   render() {
     let fields = []
+    const colors = ['deeppink', 'crimson', 'orangered', 'gold', 'darkcyan', 'dodgerblue', 'darkviolet', 'seagreen', 'darkorange', 'tomato', 'mediumspringgreen', 'purple', 'darkkhaki', 'hotpink', 'firebrick', 'steelblue', 'limegreen', 'sienna', 'darkslategrey', 'goldenrod'];
 
     // will push each individual field to the array 'fields' to be rendered. 
     for (let property in this.props.tableData.fields){
@@ -95,18 +99,19 @@ class Table extends Component {
             icon={<Close />}
             value={property}
             onClick={this.handleDeleteField}
-            style={deleteStyle}
+            style={{minWidth: '25px'}}
           />
         </div>
       )
     }
   
     return (
-      <div className='table'>
+      <div className='table' style={{border: `1px solid ${colors[this.props.tableData.tableID]}`}}>
         <div>
           <div className='field'>
             <FlatButton
-              // label={this.props.tableData.type}
+              backgroundColor={colors[this.props.tableData.tableID]}
+              label={this.props.tableData.type}
               value={this.props.tableIndex}
               onClick={this.handleSelectedTable}
               style={fieldNameStyle}
@@ -122,7 +127,6 @@ class Table extends Component {
             />
           </div>
         </div>
-        <hr/>
         {fields}
         <RaisedButton 
           label="Add Field" 

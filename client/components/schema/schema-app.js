@@ -26,7 +26,7 @@ const SchemaApp = props => {
   let keyNum = 100 //React requires a key to avoid errors. 
   for (let property in props.tables){
     tableComponents.push(<Table
-      key = {keyNum++} 
+      key={property} 
       tableData={props.tables[property]}
       tableIndex={property}
       fieldCount={props.tables[property].fieldCount}
