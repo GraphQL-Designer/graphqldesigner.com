@@ -2,6 +2,10 @@ import React from 'react';
 import { connect } from 'react-redux';
 import * as actions from '../../../actions/actions.js';
 
+// components
+import Loader from '../../loader/index.js'
+
+// styles
 import TextField from 'material-ui/TextField'; 
 import RaisedButton from 'material-ui/RaisedButton';
 import Checkbox from 'material-ui/Checkbox';
@@ -42,7 +46,6 @@ class CreateTable extends React.Component {
             id='tableName'
             fullWidth={true}
             autoFocus
-            
           />  
           <h6>(Works with singular naming convention)</h6>
           <Checkbox
@@ -59,6 +62,9 @@ class CreateTable extends React.Component {
             type='submit'
           />
         </form>
+        <div id='loader-container'>
+          <Loader/>
+        </div>
       </div>
     );
   }
