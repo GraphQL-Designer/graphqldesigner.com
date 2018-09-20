@@ -5,6 +5,12 @@ import * as actions from '../actions/actions.js';
 // Styling 
 import './app.css';
 import {Tabs, Tab} from 'material-ui/Tabs';
+const tabStyle = {
+  backgroundColor: 'rgb(38,42,48)',
+  // backgroundColor: 'rgb(50,54,60)',
+
+  color: 'white'
+}
 
 // Components
 import MainNav from './navbar/navbar';
@@ -43,22 +49,17 @@ class App extends Component {
 
     return (
       <div className='app-container'>
-        {/* <div className='app-header'>
-          <h1 style={{marginTop: '100px'}}> GraphQL Designer Coming Soon
-          <GraphqlLoader/>
-          </h1>
-        </div> */}
         <MainNav />
         <Welcome chooseDatabase={this.props.chooseDatabase}/>
           <div className='app-body-container'>
             <Tabs className='tabs'>
-              <Tab label="Schemas" id='tab'>
+              <Tab label="Schemas" style={tabStyle}>
                 <SchemaApp className='schemaTest'/>
               </Tab>
-              <Tab label="Queries">
+              <Tab label="Queries" style={tabStyle}>
                 <QueryApp/>
               </Tab>
-              <Tab label="Code">
+              <Tab label="Code" style={tabStyle}>
                 <CodeApp/>
               </Tab>
             </Tabs>

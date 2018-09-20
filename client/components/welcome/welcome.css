@@ -3,6 +3,11 @@
   margin-top: -15vh;
 }
 
+.welcome-box{
+  min-width: 300px;
+  min-height: 400px; 
+}
+
 #icon_graphql{
   max-width: 25%;
   max-height: 5%;

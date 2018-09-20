@@ -2,6 +2,10 @@ import React from 'react';
 import { connect } from 'react-redux';
 import * as actions from '../../../actions/actions.js';
 
+// components
+import Loader from '../../loader/index.js'
+
+// styles
 import TextField from 'material-ui/TextField'; 
 import RaisedButton from 'material-ui/RaisedButton';
 import Checkbox from 'material-ui/Checkbox';
@@ -48,7 +52,7 @@ class CreateTable extends React.Component {
 
   render(){
     return (
-      <div id='newTable'>
+      <div id='newTable' key={this.props.tableID}>
         <form onSubmit={this.saveTableDataInput}>
           <TextField
             // hintText="Table Name"
@@ -76,6 +80,9 @@ class CreateTable extends React.Component {
             />
           {/* // >{this.props.tableID >= 0 ? 'Update Table' : 'Create Table'}</RaisedButton> */}
         </form>
+        <div id='loader-container'>
+          <Loader/>
+        </div>
       </div>
     );
   }

@@ -124,19 +124,6 @@ class TableOptions extends React.Component {
                 onChange={this.handleChange}
                 value={this.props.selectedField.defaultValue} 
               />
-            {/* <SelectField
-              floatingLabelText="Select Field Type"
-              value={this.props.selectedField.type}
-              onChange={this.handleChange} 
-              id="typeDropDown" 
-              name='type' 
-            >
-              <MenuItem value='String'  primaryText='String'/>
-              <MenuItem value='Number'  primaryText='Number'/>
-              <MenuItem value='Date'    primaryText='Date'/>
-              <MenuItem value='Boolean' primaryText='Boolean'/>
-              <MenuItem value='ID'      primaryText='ID'/>
-            </SelectField> */}
               <span>Type : 
                 <select 
                   onChange={this.handleChange} 
@@ -195,8 +182,6 @@ class TableOptions extends React.Component {
                   <select onChange={this.handleChange} id="relationRefTypeDropDown" name='relation.refType' value={this.props.selectedField.relation.refType}>
                     <option value="one to one">one to one</option>
                     <option value="one to many">one to many</option>
-                    {/* <option value="many to one">many to one</option>
-                    <option value="many to many">many to many</option> */}
                   </select>
                 </p>
               </span>)}
