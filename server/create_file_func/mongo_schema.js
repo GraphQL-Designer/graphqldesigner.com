@@ -15,24 +15,21 @@ function parseMongoschema(data) {
 }
 
 function createSchemaField(data) {
-    const keys = Object.keys(data);
-    const values = Object.values(data)
+    let query = `${data.name}: ${checkForArray('start')}{\n\t\ttype: ${data.type},\n\t\tunique: ${data.unique},\n\t\trequired: ${data.required}`;
+
+    if (data.defaultValue) {
+        query += `,\n\t\tdefault: "${data.defaultValue}"`
+    }
+
+    return query += `\n\t}${checkForArray('end')}`
 
     function checkForArray(position) {
-        if (values[5]) {
+        if (data.multipleValues) {
             if( position === 'start') return '['
             if( position === 'end') return ']'
         }
         return ''
     }
-
-    let query = `${values[0]}: ${checkForArray('start')}{\n\t\t${keys[1]}: ${values[1]},\n\t\tunique: ${values[3]},\n\t\trequired: ${values[6]}`;
-
-    if (values[4]) {
-        query += `,\n\t\tdefault: "${values[4]}"`
-    }
-
-    return query += `\n\t}${checkForArray('end')}`
 }
 
 module.exports = parseMongoschema;

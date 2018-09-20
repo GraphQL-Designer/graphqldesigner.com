@@ -1,20 +1,16 @@
 
 #navbar{
-  background-color: #5f5e5e;
+  /* background-color: #5f5e5e; */
+  background-color: rgb(50,54,60);
+  /* background-color: rgb(44,48,56); */
+  /* background-color: rgb(38,42,48); */
   width: 100%;
   height: 50px; 
   display: flex; 
   flex-direction: row; 
-  /* align-content: space-between; */
-  justify-content: space-between
+  justify-content: space-between;
+  align-items: center; 
 }
 
-/* #nav-right{
-  float: right; 
-}
-
-#nav-left{
-  float: left; 
-} */
 
 

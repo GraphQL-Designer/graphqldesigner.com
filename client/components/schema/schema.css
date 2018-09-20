@@ -2,16 +2,18 @@
   display: flex; 
   flex-direction: row-reverse;
   width: 100%;
-  height: 65vh;
+  height: 85vh;
   border: 1px solid black;
 }
 
 .table-components-container{
   display: flex; 
+  background-color: rgb(54,58,66);
   justify-content: flex-start; 
   align-items: flex-start; 
   flex-wrap: wrap; 
-  width: 70%;
+  width: 100%;
+  min-height: 350px; 
 }
 
 .table{
@@ -20,4 +22,9 @@
   border: 1px solid black;
   width: 200px; 
   margin: 10px; 
+}
+
+.field{
+  display: flex; 
+  justify-content: space-between; 
 }

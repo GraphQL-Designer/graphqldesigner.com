@@ -1,5 +1,11 @@
 .welcome-container{
   text-align: center;
+  margin-top: -15vh;
+}
+
+.welcome-box{
+  min-width: 300px;
+  min-height: 400px; 
 }
 
 #icon_graphql{

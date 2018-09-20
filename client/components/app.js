@@ -5,13 +5,18 @@ import * as actions from '../actions/actions.js';
 // Styling 
 import './app.css';
 import {Tabs, Tab} from 'material-ui/Tabs';
+const tabStyle = {
+  backgroundColor: 'rgb(38,42,48)',
+  // backgroundColor: 'rgb(50,54,60)',
+
+  color: 'white'
+}
 
 // Components
 import MainNav from './navbar/navbar';
 import Welcome from './welcome/welcome.js';
 import SchemaApp from './schema/schema-app.js';
 import QueryApp from './query/query-app.js';
-import GraphqlLoader from './loader';
 import CodeApp from './code/code-app.js';
 
 const mapStateToProps = store => ({
@@ -35,30 +40,19 @@ class App extends Component {
   }
 
   render() {
-     // toggle between the different apps: Schema, Query, and Code
-    let app = ''
-    if (this.props.appSelected === 'Schemas') app = <SchemaApp/>
-    else if (this.props.appSelected === 'Queries') app = <QueryApp/>
-    else if (this.props.appSelected === 'Code') app = <CodeApp/>
-
     return (
       <div className='app-container'>
-        {/* <div className='app-header'>
-          <h1 style={{marginTop: '100px'}}> GraphQL Designer Coming Soon
-          <GraphqlLoader/>
-          </h1>
-        </div> */}
         <MainNav />
         <Welcome chooseDatabase={this.props.chooseDatabase}/>
           <div className='app-body-container'>
             <Tabs className='tabs'>
-              <Tab label="Schemas" id='tab'>
+              <Tab label="Schemas" style={tabStyle}>
                 <SchemaApp className='schemaTest'/>
               </Tab>
-              <Tab label="Queries">
+              <Tab label="Queries" style={tabStyle}>
                 <QueryApp/>
               </Tab>
-              <Tab label="Code">
+              <Tab label="Code" style={tabStyle}>
                 <CodeApp/>
               </Tab>
             </Tabs>
