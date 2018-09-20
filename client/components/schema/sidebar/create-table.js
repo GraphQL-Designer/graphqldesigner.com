@@ -16,7 +16,8 @@ import './sidebar.css';
 const mapStateToProps = store => ({
   tableName: store.data.selectedTable.type,
   tableIDRequested: store.data.selectedTable.idRequested,
-  tableID: store.data.selectedTable.tableID
+  tableID: store.data.selectedTable.tableID,
+  database: store.data.database
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -38,12 +39,19 @@ class CreateTable extends React.Component {
   }
   
   capitalizeFirstLetter(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
+    
+    if(string){
+      const newString = string.replace(' ', '');
+      // console.log('string: ', string);
+      // console.log('newString: ', newString);
+      return newString.charAt(0).toUpperCase() + newString.slice(1);
+    }
   }
 
   saveTableDataInput(e){
     e.preventDefault();
     this.props.saveTableDataInput()
+    document.getElementById('tableName').value = '';
   }
 
   handleChange(e){
@@ -80,17 +88,16 @@ class CreateTable extends React.Component {
             fullWidth={true}
             autoFocus
             onChange={this.handleChange}
-            // name='type'
-            value={this.props.tableName}
-          />  
+            value={this.props.tableName || ''}
+          />
           <h6>(Works with singular naming convention)</h6>
           <Checkbox
             label="Unique ID"
             onCheck={this.handleClick}
             id='idCheckbox'
-            checked={this.props.tableIDRequested}
+            checked={this.props.database === 'MongoDB'? true : this.props.tableIDRequested}
+            disabled={this.props.database === 'MongoDB'}
           />
-          {/* <span>Unique ID:<input id='idCheckbox' type='checkbox'/></span> */}
           <RaisedButton 
             label={this.props.tableID >= 0 ? 'Update Table' : 'Create Table'}
             fullWidth={true}
