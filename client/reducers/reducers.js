@@ -87,7 +87,6 @@ const reducers = (state = initialState, action) => {
 
     // Open Table Creator
     case types.OPEN_TABLE_CREATOR:
-      console.log('opening table', action.payload)
       createTableState = true
       selectedField.tableNum = -1
       selectedTable.tableID = -1

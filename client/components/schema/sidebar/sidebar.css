@@ -72,3 +72,16 @@ select{
   align-items: center; 
   min-height: 150px; 
 }
+
+.relation-options{
+  font-size: 14px;
+  display: flex;
+  align-items: flex-end; 
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-weight: 600; 
+}
+
+option{
+  background-color:rgb(48,51,59)
+  
+}

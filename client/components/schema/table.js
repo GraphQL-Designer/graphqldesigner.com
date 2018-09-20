@@ -54,6 +54,7 @@ class Table extends Component {
   handleDeleteField(event){
     const tableIndex = this.props.tableIndex
     const fieldIndex = event.currentTarget.value // need currentTarget because of Material-UI
+    console.log(tableIndex, fieldIndex)
     this.props.deleteField([tableIndex, fieldIndex])
   }
 
@@ -111,7 +112,6 @@ class Table extends Component {
           <div className='field'>
             <FlatButton
               backgroundColor={colors[this.props.tableData.tableID]}
-              label={this.props.tableData.type}
               value={this.props.tableIndex}
               onClick={this.handleSelectedTable}
               style={fieldNameStyle}
