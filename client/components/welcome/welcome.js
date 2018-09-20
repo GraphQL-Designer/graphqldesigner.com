@@ -42,6 +42,7 @@ export default class Welcome extends React.Component {
           open={this.state.open}
           onRequestClose={this.handleClose}
           className='welcome-container'
+          paperClassName='welcome-box'
         >
           <div id='subheading'>Simply create and implement a full stack React GraphQL App.</div>
           <img id='icon_graphql' src='https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/GraphQL_Logo.svg/2000px-GraphQL_Logo.svg.png'/>
