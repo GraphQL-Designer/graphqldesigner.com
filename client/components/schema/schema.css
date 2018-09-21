@@ -13,14 +13,15 @@
   align-items: flex-start; 
   flex-wrap: wrap; 
   width: 100%;
-  min-height: 350px; 
+  min-height: 300px;
+  overflow: scroll;
 }
 
 .table{
   display: flex; 
   flex-direction: column; 
   width: 200px; 
-  margin: 25px; 
+  margin: 40px; 
   box-shadow: 2px 2px 7.5px black;
 }
 
