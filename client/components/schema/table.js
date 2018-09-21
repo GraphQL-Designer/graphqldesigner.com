@@ -87,21 +87,24 @@ class Table extends Component {
       const fieldType = this.props.tableData.fields[property].type
 
       fields.push(
-        <div key={property} className='field'>
-          <FlatButton
-            value={`${tableIndex} ${fieldIndex}`}
-            onClick={this.handleUpdateField}
-            style={fieldNameStyle}
-          >
-          {`${fieldName} - ${fieldType}`}
-          </FlatButton>
-          <FlatButton
-            className='delete-button'
-            icon={<Close />}
-            value={property}
-            onClick={this.handleDeleteField}
-            style={{minWidth: '25px'}}
-          />
+        <div>
+          <div key={property} className='field'>
+            <FlatButton
+              value={`${tableIndex} ${fieldIndex}`}
+              onClick={this.handleUpdateField}
+              style={fieldNameStyle}
+            >
+            {`${fieldName} - ${fieldType}`}
+            </FlatButton>
+            <FlatButton
+              className='delete-button'
+              icon={<Close />}
+              value={property}
+              onClick={this.handleDeleteField}
+              style={{minWidth: '25px'}}
+            />
+          </div>
+          <hr className='fieldBreak'/>
         </div>
       )
     }
@@ -127,11 +130,20 @@ class Table extends Component {
             />
           </div>
         </div>
+        { this.props.tableData.idRequested && (
+          <div onClick={this.handleSelectedTable}>
+            <div  className='field idField'>
+              <p>id - ID</p>
+            </div>
+            <hr className='fieldBreak'/>
+          </div>
+        )}
         {fields}
-        <RaisedButton 
-          label="Add Field" 
-          onClick={this.handleAddField}
-        />
+        <div onClick={this.handleAddField} className='field addField'>
+          <p style={{marginTop: '10px'}}>
+            ADD FIELD
+          </p>
+        </div>
       </div>  
     )
   }
