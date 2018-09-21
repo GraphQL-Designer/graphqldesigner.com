@@ -110,7 +110,7 @@ const reducers = (state = initialState, action) => {
           //capitalize first letter
           newTableData.type = newTableData.type.charAt(0).toUpperCase() + newTableData.type.slice(1);
           //remove white space
-          newTableData.type = newTableData.type.replace(/ /g, '');
+          newTableData.type = newTableData.type.replace(/[^\w]/gi, '');
   
           const newTables = Object.assign({}, state.tables, {[state.tableIndex]: newTableData})
           newState = Object.assign({}, state, {
@@ -131,7 +131,7 @@ const reducers = (state = initialState, action) => {
           //capitalize first letter
           newTableData.type = newTableData.type.charAt(0).toUpperCase() + newTableData.type.slice(1);
           //remove white space
-          newTableData.type = newTableData.type.replace(/ /g, '');
+          newTableData.type = newTableData.type.replace(/[^\w]/gi, '');
   
           const newTables = Object.assign({}, state.tables, {[state.selectedTable.tableID]: newTableData})
           newState = Object.assign({}, state, {
@@ -210,6 +210,16 @@ const reducers = (state = initialState, action) => {
       const currentFieldIndex = state.tables[selectedTableIndex].fieldsIndex;
       let updatedTables = {}
 
+      // let newSelectedFieldName = state.selectedField.name;
+      // console.log(newSelectedFieldName);
+//////////
+      // if(newSelectedFieldName.length > 0){
+      //   //capitalize first letter and remove whitespace
+      //   newSelectedFieldName = newSelectedFieldName.charAt(0).toUpperCase() + newTableData.type.slice(1).replace(/[^\w]/gi, '');
+      //   console.log('modified field: ',newSelectedFieldName);
+      //   console.log('original field: ', state.selectedField.name);
+      // }
+ /////////////     
       // no field has been selected yet
       if (state.selectedField.fieldNum < 0) {
         updatedTables = 
