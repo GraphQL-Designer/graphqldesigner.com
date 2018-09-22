@@ -23,6 +23,7 @@
   margin: 0;
   justify-content: flex-start;
   min-height: 350px; 
+  position: absolute;
 }
 
 #options {
@@ -54,6 +55,7 @@ select{
 }
 
 #fieldOptions {
+  position: absolute;
   display: flex;
   justify-content: center;
   margin: 0;

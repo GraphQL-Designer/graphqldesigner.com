@@ -85,16 +85,8 @@ const reducers = (state = initialState, action) => {
     
     case types.OPEN_TABLE_CREATOR:
       newState = Object.assign({}, state)
-
-      // if a field was previously selected
-      if (state.selectedField.tableNum > -1) {
-        newState.selectedField = Object.assign({}, fieldReset)
-      }
-      // table was previously selected
-      else {
-        newState.selectedTable.tableID = Object.assign({}, tableReset) 
-      }
-
+      newState.selectedField = Object.assign({}, fieldReset)
+      newState.selectedTable.tableID = Object.assign({}, tableReset) 
     return newState
 
                     // ------------- Add Table ----------------//
@@ -269,7 +261,7 @@ const reducers = (state = initialState, action) => {
     case types.HANDLE_FIELDS_UPDATE:
       // parse if relations field is selected
       if(action.payload.name.indexOf('.') !== -1){
-        const rel = action.payload.name.split('.'); 
+        const rel = action.payload.name.split('.'); // rel[0] is 'relation' and rel[1] is either 'type', 'field', or 'ref'type'
         newSelectedField = Object.assign({}, state.selectedField, {[rel[0]] :
                             Object.assign({}, state.selectedField[rel[0]], {[rel[1]] : action.payload.value})})
       } else{

@@ -14,6 +14,7 @@ import FlatButton from 'material-ui/FlatButton';
 import './sidebar.css';
 
 const mapStateToProps = store => ({
+  tables: store.data.tables,
   tableName: store.data.selectedTable.type,
   tableIDRequested: store.data.selectedTable.idRequested,
   tableID: store.data.selectedTable.tableID,
@@ -67,7 +68,12 @@ class CreateTable extends React.Component {
   }
 
   render(){
-
+    function tableName(tableID, tables) {
+      if (tableID >= 0) {
+        return <h2>{tables[tableID].type} Table</h2>
+      }
+      return <h2>Create Table</h2>
+    }
     
     return (
       <div id='newTable' key={this.props.tableID}>
@@ -81,6 +87,8 @@ class CreateTable extends React.Component {
         />}
 
         <form onSubmit={this.saveTableDataInput}>
+          {tableName(this.props.tableID, this.props.tables)}
+
           <TextField
             // hintText="Table Name"
             floatingLabelText="Table Name"
@@ -105,9 +113,6 @@ class CreateTable extends React.Component {
             type='submit'
             />
         </form>
-        <div id='loader-container'>
-          <Loader/>
-        </div>
       </div>
     );
   }
