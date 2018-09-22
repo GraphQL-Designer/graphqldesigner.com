@@ -97,7 +97,16 @@ const reducers = (state = initialState, action) => {
           
           //capitalize first letter and remove whitespace
           newTableData.type = newTableData.type.replace(/[^\w]/gi, '');
-          newTableData.type = newTableData.type.charAt(0).toUpperCase() + newTableData.type.slice(1)
+          newTableData.type = newTableData.type.charAt(0).toUpperCase() + newTableData.type.slice(1);
+
+          // get list of table indexes
+          const listTableIndexes = Object.getOwnPropertyNames(state.tables);
+          for(let x = 0; x < listTableIndexes.length; x += 1){
+            if(state.tables[listTableIndexes[x]].type === newTableData.type){
+              alert('duplicate detected!');
+              return state;
+            }
+          }
 
           const newTables = Object.assign({}, state.tables, {[state.tableIndex]: newTableData})
           newState = Object.assign({}, state, {
@@ -117,7 +126,16 @@ const reducers = (state = initialState, action) => {
   
           //capitalize first letter and remove whitespace
           newTableData.type = newTableData.type.replace(/[^\w]/gi, '');
-          newTableData.type = newTableData.type.charAt(0).toUpperCase() + newTableData.type.slice(1)
+          newTableData.type = newTableData.type.charAt(0).toUpperCase() + newTableData.type.slice(1);
+
+          // get list of table indexes
+          const listTableIndexes = Object.getOwnPropertyNames(state.tables);
+          for(let x = 0; x < listTableIndexes.length; x += 1){
+            if(state.tables[listTableIndexes[x]].type === newTableData.type){
+              alert('Please enter unique type');
+              return state;
+            }
+          }
   
           const newTables = Object.assign({}, state.tables, {[state.selectedTable.tableID]: newTableData})
           newState = Object.assign({}, state, {
@@ -205,6 +223,17 @@ const reducers = (state = initialState, action) => {
       //capitalize first letter and remove whitespace
       newSelectedFieldName = newSelectedFieldName.replace(/[^\w]/gi, '');
       newSelectedFieldName = newSelectedFieldName.charAt(0).toUpperCase() + newSelectedFieldName.slice(1);
+
+      // get list of fields
+        const listFieldIndexes = Object.getOwnPropertyNames(state.tables[state.selectedField.tableNum].fields);
+        for(let x = 0; x < listFieldIndexes.length; x += 1){
+          if(state.tables[state.selectedField.tableNum].fields[listFieldIndexes[x]].name === newSelectedFieldName){
+            alert('Please enter unique field');
+            return state;
+          }
+        }
+
+      // }
 
       if(newSelectedFieldName.length > 0) {
       tableNum = state.selectedField.tableNum;
