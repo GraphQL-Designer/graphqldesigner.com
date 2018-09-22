@@ -71,7 +71,6 @@ const reducers = (state = initialState, action) => {
     // Choose Database
     case types.CHOOSE_DATABASE:
       database = action.payload; 
-      tableReset.idRequested = false || database === 'MongoDB' //permanently change table reset to reflect idRequested
       newSelectedTable = Object.assign({}, state.selectedTable, {idRequested: database === 'MongoDB'})
       console.log('table reset', tableReset)
 
