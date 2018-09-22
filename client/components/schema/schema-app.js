@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { CSSTransition } from 'react-transition-group'
 
 //components
 import Table from './table.js';
@@ -15,8 +16,7 @@ const mapStateToProps = store => ({
   tableIndex: store.data.tableIndex,
   // Need below to subscribe to store. store.data.tables is an object so never changes
   tableCount: store.data.tableCount,
-  createTableState: store.data.createTableState,
-  tableNum: store.data.selectedField.tableNum
+  selectedField: store.data.selectedField.tableNum
 });
 
 const SchemaApp = props => {
@@ -33,15 +33,13 @@ const SchemaApp = props => {
       />
     )
   }
-  //
+  
   let sidebar = '';
-  if (props.createTableState) sidebar = <CreateTable/>
-  if (props.tableNum > -1) sidebar = <TableOptions/>
 
   return (
     <div className='schema-app-container'>
       <div id='sidebar-container'>
-        {sidebar}
+        {props.selectedField < 0 ? <CreateTable/> : <TableOptions/>}
       </div>
       <div className='table-components-container'>
         {tableComponents}
