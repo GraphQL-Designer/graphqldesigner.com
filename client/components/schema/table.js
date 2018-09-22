@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import * as actions from '../../actions/actions.js';
 
 // styling
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import Delete from 'material-ui/svg-icons/action/delete'
 import Close from 'material-ui/svg-icons/navigation/close'
+import * as actions from '../../actions/actions.js';
 
 const deleteStyle = {
   minWidth: '25px',
@@ -15,7 +15,7 @@ const deleteStyle = {
 }
 const fieldNameStyle = {
   width: '100%',
-  height: '100%'
+  height: '100%',
 }
 
 
@@ -76,11 +76,11 @@ class Table extends Component {
 
   
   render() {
-    let fields = []
+    const fields = []
     const colors = ['deeppink', 'crimson', 'orangered', 'gold', 'darkcyan', 'dodgerblue', 'darkviolet', 'seagreen', 'darkorange', 'tomato', 'mediumspringgreen', 'purple', 'darkkhaki', 'hotpink', 'firebrick', 'steelblue', 'limegreen', 'sienna', 'darkslategrey', 'goldenrod'];
 
     // will push each individual field to the array 'fields' to be rendered. 
-    for (let property in this.props.tableData.fields){
+    for (const property in this.props.tableData.fields){
       const tableIndex = this.props.tableData.fields[property].tableNum;
       const fieldIndex = this.props.tableData.fields[property].fieldNum;
       const fieldName = this.props.tableData.fields[property].name
