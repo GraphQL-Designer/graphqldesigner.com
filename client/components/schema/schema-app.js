@@ -42,7 +42,6 @@ class SchemaApp extends Component {
     }
     
     let sidebar = '';
-    console.log(this.props.selectedField.tableNum)
     return (
       <div className='schema-app-container'>
         <CSSTransition
