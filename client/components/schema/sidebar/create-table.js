@@ -22,6 +22,7 @@ const style = {
 };
 
 const mapStateToProps = store => ({
+  tables: store.data.tables,
   tableName: store.data.selectedTable.type,
   tableIDRequested: store.data.selectedTable.idRequested,
   tableID: store.data.selectedTable.tableID,
@@ -95,7 +96,14 @@ class CreateTable extends React.Component {
     })
   }
 
-  render(){    
+  render(){
+    function tableName(tableID, tables) {
+      if (tableID >= 0) {
+        return <h2>{tables[tableID].type} Table</h2>
+      }
+      return <h2>Create Table</h2>
+    }
+    
     return (
       <div id='newTable' key={this.props.tableID}>
 
@@ -108,6 +116,8 @@ class CreateTable extends React.Component {
         />}
 
         <form onSubmit={this.saveTableDataInput}>
+          {tableName(this.props.tableID, this.props.tables)}
+
           <TextField
             // hintText="Table Name"
             floatingLabelText="Table Name"

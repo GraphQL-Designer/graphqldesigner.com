@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { CSSTransition } from 'react-transition-group'
+import { TransitionGroup, CSSTransition } from 'react-transition-group'
 
 //components
 import Table from './table.js';
@@ -16,36 +16,69 @@ const mapStateToProps = store => ({
   tableIndex: store.data.tableIndex,
   // Need below to subscribe to store. store.data.tables is an object so never changes
   tableCount: store.data.tableCount,
-  selectedField: store.data.selectedField.tableNum
+  selectedField: store.data.selectedField
 });
 
-const SchemaApp = props => {
+class SchemaApp extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      sidebar: true
+    }
+  }
 
-  // Dynamically renders each table based on the number of tables. 
-  let tableComponents = []; 
-  let keyNum = 100 //React requires a key to avoid errors. 
-  for (let property in props.tables){
-    tableComponents.push(<Table
-      key={property} 
-      tableData={props.tables[property]}
-      tableIndex={property}
-      fieldCount={props.tables[property].fieldCount}
-      />
+  render() {
+    // Dynamically renders each table based on the number of tables. 
+    let tableComponents = []; 
+    let keyNum = 100 //React requires a key to avoid errors. 
+    for (let property in this.props.tables){
+      tableComponents.push(<Table
+        key={property} 
+        tableData={this.props.tables[property]}
+        tableIndex={property}
+        fieldCount={this.props.tables[property].fieldCount}
+        />
+      )
+    }
+    
+    let sidebar = '';
+    return (
+      <div className='schema-app-container'>
+        <CSSTransition
+          in={this.state.sidebar}
+          appear={true}
+          timeout={350}
+          classNames='fade'
+        >
+          <div id='sidebar-container'>
+            <CSSTransition
+              in={this.props.selectedField.tableNum < 0}
+              key='table'
+              appear={true}
+              timeout={350}
+              classNames='fade'
+            >
+              <CreateTable/>
+            </CSSTransition>
+            
+            <CSSTransition
+              in={this.props.selectedField.tableNum >= 0}
+              key='fields'
+              appear={true}
+              timeout={350}
+              classNames='fade'
+            >
+              <TableOptions/> 
+            </CSSTransition>
+          </div>
+            {/* {this.props.selectedField < 0 ? <CreateTable/> : <TableOptions/>} */}
+        </CSSTransition>
+        <div className='table-components-container'>
+          {tableComponents}
+        </div>
+      </div>
     )
   }
-  
-  let sidebar = '';
-
-  return (
-    <div className='schema-app-container'>
-      <div id='sidebar-container'>
-        {props.selectedField < 0 ? <CreateTable/> : <TableOptions/>}
-      </div>
-      <div className='table-components-container'>
-        {tableComponents}
-      </div>
-    </div>
-  )
-};
+}
 
 export default connect(mapStateToProps, null)(SchemaApp);

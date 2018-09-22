@@ -39,17 +39,17 @@
        border-top: 25px solid rgb(255,66,128);
      }
      .inner {
-       background-color:rgb(44,48,56);
+       background-color:rgb(36, 40, 46);
        -webkit-transform: scale(.86, .86);
        -moz-transform: scale(.86, .86);
        transform: scale(.86, .86);
        z-index:1;
        }
        .inner:before {
-       border-bottom: 25px solid rgb(44,48,56);
+       border-bottom: 25px solid rgb(36, 40, 46);
        }
        .inner:after {
-       border-top: 25px solid rgb(44,48,56);
+       border-top: 25px solid rgb(36, 40, 46);
        } 
    
    
@@ -75,7 +75,7 @@
        top: 11px;
        left: -23.5px;
        z-index: 4;
-       border-bottom: solid 42px rgb(44,48,56);
+       border-bottom: solid 42px rgb(36, 40, 46);
        border-right: solid 24px transparent;
        border-left: solid 24px transparent;
      }

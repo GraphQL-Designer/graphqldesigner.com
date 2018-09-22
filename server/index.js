@@ -33,9 +33,9 @@ app.post('/write-files', (req, res) => {
                     if (data.database = 'MongoDB') {
                         buildForMongo(data.data, dateStamp, () => {
                             
-                            zipper.sync.zip(path.join(__dirname, `build-files${dateStamp}`)).compress().save(path.join(__dirname, "graphql.zip"));
+                            zipper.sync.zip(path.join(__dirname, `build-files${dateStamp}`)).compress().save(path.join(__dirname, `graphql${dateStamp}.zip`));
 
-                            const file = __dirname + "/graphql.zip";
+                            const file = __dirname + `/graphql${dateStamp}.zip`;
                             res.setHeader('Content-Type', 'application/force-download');
                             res.setHeader('Content-disposition', 'filename=graphql.zip');
                             res.download(file, err => {
@@ -43,6 +43,10 @@ app.post('/write-files', (req, res) => {
                                     console.log(err)
                                 } else {
                                     console.log('Download Complete!')
+                                    deleteTempFiles(dateStamp, () => {
+
+                                        console.log('Deleted Temp Files')
+                                    })
                                 }
                             })
                         })
@@ -125,5 +129,17 @@ function buildForMongo(data, dateStamp, cb) {
             }
         }
         step(0);
+    })
+}
+
+function deleteTempFiles(dateStamp, cb) {
+    fs.rmdir(path.join(__dirname, `build-files${dateStamp}`), (err) => {
+        if (err) console.log(err)
+
+        fs.unlink(path.join(__dirname, `graphql${dateStamp}.zip`), (err) => {
+            if (err) console.log(err);
+
+            return cb()
+        })
     })
 }
