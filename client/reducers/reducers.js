@@ -210,13 +210,11 @@ const reducers = (state = initialState, action) => {
 
       let newSelectedFieldName = state.selectedField.name;
 
+      //capitalize first letter and remove whitespace
       newSelectedFieldName = newSelectedFieldName.replace(/[^\w]/gi, '');
       newSelectedFieldName = newSelectedFieldName.charAt(0).toUpperCase() + newSelectedFieldName.slice(1);
 
       if(newSelectedFieldName.length > 0){
-        //capitalize first letter and remove whitespace
-        
-
         // no field has been selected yet
         if (state.selectedField.fieldNum < 0) {
           updatedTables = 

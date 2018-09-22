@@ -199,8 +199,6 @@ class TableOptions extends React.Component {
               toggled={this.props.selectedField.multipleValues}
               onToggle={this.handleToggle.bind(null, 'multipleValues')}
             />
-
-              {/* {this.props.tableCount > 1 && (<span> */}
             
               {Object.keys(this.props.tables).length > 1 && (<span>
                 <p>Relation : </p>
