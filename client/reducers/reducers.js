@@ -27,25 +27,32 @@ const initialState = {
     fields: {},
     fieldsIndex: 0,
     tableID: -1,
+  },
+  inputError: {
+    status: -1,
+    dupTable: 'Error: Table name already exist',
+    dupField: 'Error: Field name already exist'
   }
 };
 
+
+
 const reducers = (state = initialState, action) => {
-  let createTableState = state.createTableState;
-  let tables = state.tables;
-  let tableIndex = state.tableIndex;
   let database = state.database;
-  let tableCount = state.tableCount;
-  let selectedField = state.selectedField;
-  let fieldUpdated = state.fieldUpdated;
-  let selectedTable = state.selectedTable
   let newSelectedField;
   let newSelectedTable;
   let newTables;
   let newTable;
-  let newFields;
   let newState;
   let tableNum;
+  let inputError = state.inputError;
+  const tableReset = {
+    type: '',
+    idRequested:  false || database === 'MongoDB',
+    fields: {},
+    fieldsIndex: 0,
+    tableID: -1,
+  }
   const fieldReset = {
     name: '',
     type: 'String',
@@ -61,13 +68,6 @@ const reducers = (state = initialState, action) => {
     },
     tableNum: -1,
     fieldNum: -1
-  }
-  const tableReset = {
-    type: '',
-    idRequested: false,
-    fields: {},
-    fieldsIndex: 0,
-    tableID: -1,
   }
 
   // action.payload is how you can access the info
@@ -85,71 +85,72 @@ const reducers = (state = initialState, action) => {
         selectedTable: newSelectedTable
       }
 
+    // ------------------------------ Schmea App  ----------------------------//
+
+                  // ----------- Open Table Creator --------------//
+    
+    case types.OPEN_TABLE_CREATOR:
+      // code to open the table creator
+    return {
+
+    }
+
                     // ------------- Add Table ----------------//
     case types.SAVE_TABLE_DATA_INPUT:
-      let newState;
       let newTableData;
+      newTableData = Object.assign({}, state.selectedTable)
 
-      // save table or update table if the type is entered
-      if(state.selectedTable.type.length > 0){
-        if (state.selectedTable.tableID < 0) {
-          newTableData = Object.assign({}, state.selectedTable, {tableID: state.tableIndex})
-          
-          //capitalize first letter and remove whitespace
-          newTableData.type = newTableData.type.replace(/[^\w]/gi, '');
-          newTableData.type = newTableData.type.charAt(0).toUpperCase() + newTableData.type.slice(1);
+      //capitalize first letter and remove whitespace
+      newTableData.type = newTableData.type.replace(/[^\w]/gi, '');
+      newTableData.type = newTableData.type.charAt(0).toUpperCase() + newTableData.type.slice(1)
 
-          // get list of table indexes
-          const listTableIndexes = Object.getOwnPropertyNames(state.tables);
-          for(let x = 0; x < listTableIndexes.length; x += 1){
-            if(state.tables[listTableIndexes[x]].type === newTableData.type){
-              alert('duplicate detected!');
-              return state;
-            }
+      // get list of table indexes, and alert if table name already exists
+      if(newTableData.type.length > 0){
+        const listTableIndexes = Object.getOwnPropertyNames(state.tables);
+
+        // remove the selected from list of tables if updating to prevent snackbar from displaying table error
+        if(state.selectedTable.tableID !== -1){
+          listTableIndexes.splice(listTableIndexes.indexOf(String(state.selectedTable.tableID)),1);
+        }
+
+        for(let x = 0; x < listTableIndexes.length; x += 1){
+          if(state.tables[listTableIndexes[x]].type === newTableData.type){
+            inputError.status = inputError.dupTable;
+            return {
+              ...state,
+              selectedTable: tableReset,
+              inputError
+            } 
           }
+        }
+      }
+    
+      inputError.status = -1;
+
+      // Save a new table
+      if(state.selectedTable.type.length > 0){ // a type name has been provided
+        if (state.selectedTable.tableID < 0) {  // no table selected, aka save new table
+          newTableData.tableID = state.tableIndex
 
           const newTables = Object.assign({}, state.tables, {[state.tableIndex]: newTableData})
           newState = Object.assign({}, state, {
             tableIndex: state.tableIndex + 1,
-            tableCount: state.tableCount + 1,
             tables: newTables,
-            selectedTable: {
-              type: '',
-              idRequested: false || state.database === 'MongoDB',
-              fields: {},
-              fieldsIndex: 0,
-              tableID: -1,
-            }
+            selectedTable: tableReset,
+            inputError
           })
-        } else {
-          newTableData = Object.assign({}, state.selectedTable)
-  
-          //capitalize first letter and remove whitespace
-          newTableData.type = newTableData.type.replace(/[^\w]/gi, '');
-          newTableData.type = newTableData.type.charAt(0).toUpperCase() + newTableData.type.slice(1);
-
-          // get list of table indexes
-          const listTableIndexes = Object.getOwnPropertyNames(state.tables);
-          for(let x = 0; x < listTableIndexes.length; x += 1){
-            if(state.tables[listTableIndexes[x]].type === newTableData.type){
-              alert('Please enter unique type');
-              return state;
-            }
-          }
-  
+        } 
+        // Update table
+        else {
           const newTables = Object.assign({}, state.tables, {[state.selectedTable.tableID]: newTableData})
           newState = Object.assign({}, state, {
             tables: newTables,
-            selectedTable: {
-              type: '',
-              idRequested: false || state.database === 'MongoDB',
-              fields: {},
-              fieldsIndex: 0,
-              tableID: -1,
-            }
+            selectedTable: tableReset,
+            inputError
           })
         }
 
+        // so long as a table name is provided. 
         if(newTableData.type !== ''){
             return newState
         }
@@ -217,23 +218,33 @@ const reducers = (state = initialState, action) => {
       }
     }
 
-    // -------------- Add or Update Field ----------------//
+                // -------------- Add or Update Field ----------------//
     case types.SAVE_FIELD_INPUT:
       let newSelectedFieldName = state.selectedField.name;
-      //capitalize first letter and remove whitespace
+
+      // capitalize first letter and remove whitespace
       newSelectedFieldName = newSelectedFieldName.replace(/[^\w]/gi, '');
       newSelectedFieldName = newSelectedFieldName.charAt(0).toUpperCase() + newSelectedFieldName.slice(1);
 
-      // get list of fields
-        const listFieldIndexes = Object.getOwnPropertyNames(state.tables[state.selectedField.tableNum].fields);
-        for(let x = 0; x < listFieldIndexes.length; x += 1){
-          if(state.tables[state.selectedField.tableNum].fields[listFieldIndexes[x]].name === newSelectedFieldName){
-            alert('Please enter unique field');
-            return state;
+      // get list of field indexes, and alert if field name already exists in the table
+      const listFieldIndexes = Object.getOwnPropertyNames(state.tables[state.selectedField.tableNum].fields);
+      
+      //remove the field from list of fields if updating to prevent snackbar from displaying field error
+      if(state.selectedField.fieldNum !== -1){
+        listFieldIndexes.splice(listFieldIndexes.indexOf(String(state.selectedField.fieldNum)),1);
+      }
+
+      for(let x = 0; x < listFieldIndexes.length; x += 1){
+        if(state.tables[state.selectedField.tableNum].fields[listFieldIndexes[x]].name === newSelectedFieldName){
+          inputError.status = inputError.dupField;
+          return {
+            ...state,
+            inputError
           }
         }
+      }
 
-      // }
+      inputError.status = -1;
 
       if(newSelectedFieldName.length > 0) {
       tableNum = state.selectedField.tableNum;
@@ -250,7 +261,8 @@ const reducers = (state = initialState, action) => {
               return {
                 ...state,
                 tables: newTables,
-                selectedField: newSelectedField 
+                selectedField: newSelectedField,
+                inputError
               } 
       } 
       // field has been selected
@@ -263,13 +275,14 @@ const reducers = (state = initialState, action) => {
               
               return {
                 ...state,
-                tables: newTables
+                tables: newTables,
+                inputError
               } 
           } 
       }
       return state;
 
-    // -------------- Delete Field ----------------//
+                     // -------------- Delete Field ----------------//
     case types.DELETE_FIELD:
       tableNum = Number(action.payload[0]);
       const fieldNum = Number(action.payload[1]);
@@ -331,27 +344,11 @@ const reducers = (state = initialState, action) => {
                     // ------------ OPEN FIELD CREATOR ----------------//
     // Add Field in Table was clicked to display field options
     case types.ADD_FIELD_CLICKED:
-      createTableState = false; 
-      newSelectedField = {
-        name: '',
-        type: 'String',
-        primaryKey: false,
-        unique: false,
-        defaultValue: '',
-        required: false,
-        multipleValues: false,
-        relation: {
-          type: '',
-          field: '',
-          refType: ''
-        },
-        tableNum: Number(action.payload),
-        fieldNum: -1
-      };
+      newSelectedField = fieldReset
+      newSelectedField.tableNum = Number(action.payload)
 
       return{
         ...state,
-        createTableState,
         selectedField: newSelectedField
       }
 

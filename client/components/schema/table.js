@@ -48,6 +48,7 @@ const mapDispatchToProps = dispatch => ({
 class Table extends Component {
   constructor(props) {
     super(props);
+
     this.handleDeleteTable = this.handleDeleteTable.bind(this)
     this.handleDeleteField = this.handleDeleteField.bind(this)
     this.handleAddField    = this.handleAddField.bind(this)

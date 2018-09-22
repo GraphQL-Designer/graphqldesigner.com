@@ -12,9 +12,8 @@ export const chooseDatabase = (dbName) => ({
 
 // ----------------------------- Schema App --------------------------------//
 
-export const openTableCreator = (tableState) => ({
+export const openTableCreator = () => ({
   type: types.OPEN_TABLE_CREATOR,
-  payload: tableState,
 });
 
 

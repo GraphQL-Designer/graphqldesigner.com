@@ -12,10 +12,15 @@ import SelectField from 'material-ui/SelectField';
 import Toggle from 'material-ui/Toggle';
 import MenuItem from 'material-ui/MenuItem';
 import DropDownMenu from 'material-ui/DropDownMenu';
-const styles = {
+import Snackbar from 'material-ui/Snackbar';
+const style = {
   customWidth: {
     width: 150,
   },
+  snackBarStyle: {
+    backgroundColor: 'rgb(255,66,128)',
+    color: 'black'
+  }
 };
 
 const mapStateToProps = store => ({
@@ -25,7 +30,8 @@ const mapStateToProps = store => ({
   selectedField: store.data.selectedField,
   updatedField: store.data.fieldUpdated, 
   tableCount: store.data.tableCount,
-  tables: store.data.tables
+  tables: store.data.tables,
+  inputError: store.data.inputError
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -39,14 +45,16 @@ class TableOptions extends React.Component {
   constructor(props) {
     super(props);
     this.state={
-      selectedTableIndex : null
+      selectedTableIndex : null, 
+      open: false
     }
 
     this.submitOptions = this.submitOptions.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleMaterialChange = this.handleMaterialChange.bind(this);
-    this.handleToggle = this.handleToggle.bind(this)
-    this.handleOpenTableCreator = this.handleOpenTableCreator.bind(this)
+    this.handleToggle = this.handleToggle.bind(this);
+    this.handleOpenTableCreator = this.handleOpenTableCreator.bind(this);
+    this.handleRequestClose = this.handleRequestClose.bind(this);
   }
 
   handleToggle(name, event, value) {
@@ -75,11 +83,28 @@ class TableOptions extends React.Component {
     event.preventDefault();
     if(this.props.selectedField.name){
       this.props.saveFieldInput();
+
+      // check if entered input already exists in the table to trigger snackbar to display error
+      if(this.props.inputError.status !== -1){
+        this.setState({
+          open: true,
+        })
+      } else {
+        this.setState({
+          open: false,
+        })
+      }
     }
   }
 
   handleOpenTableCreator(event){
     this.props.openTableCreator()
+  }
+
+  handleRequestClose = () => {
+    this.setState({
+      open: false,
+    })
   }
 
   render() {
@@ -260,6 +285,13 @@ class TableOptions extends React.Component {
           </form>
         </div>
         }
+        <Snackbar
+          open={this.state.open}
+          message={this.props.inputError.dupField + ' in Table ' + this.props.tables[this.props.selectedField.tableNum].type}
+          autoHideDuration={3000}
+          onRequestClose={this.handleRequestClose}
+          bodyStyle={style.snackBarStyle}
+        />
       </div>
     );
   }

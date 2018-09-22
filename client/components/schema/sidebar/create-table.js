@@ -11,13 +11,22 @@ import RaisedButton from 'material-ui/RaisedButton';
 import Checkbox from 'material-ui/Checkbox';
 import KeyboardArrowLeft from 'material-ui/svg-icons/hardware/keyboard-arrow-left'
 import FlatButton from 'material-ui/FlatButton';
+import Snackbar from 'material-ui/Snackbar';
 import './sidebar.css';
+
+const style = {
+  snackBarStyle: {
+    backgroundColor: 'rgb(255,66,128)',
+    color: 'black'
+  }
+};
 
 const mapStateToProps = store => ({
   tableName: store.data.selectedTable.type,
   tableIDRequested: store.data.selectedTable.idRequested,
   tableID: store.data.selectedTable.tableID,
-  database: store.data.database
+  database: store.data.database,
+  inputError: store.data.inputError
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -31,11 +40,16 @@ class CreateTable extends React.Component {
   constructor(props) {
     super(props);
 
+    this.state = {
+      open: false,
+    }
+
     this.saveTableDataInput = this.saveTableDataInput.bind(this);
     this.capitalizeFirstLetter = this.capitalizeFirstLetter.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleClick = this.handleClick.bind(this);
     this.handleOpenTableCreator = this.handleOpenTableCreator.bind(this)
+    this.handleRequestClose = this.handleRequestClose.bind(this);
   }
   
   capitalizeFirstLetter(string) {
@@ -52,6 +66,15 @@ class CreateTable extends React.Component {
     e.preventDefault();
     this.props.saveTableDataInput()
     document.getElementById('tableName').value = '';
+    if(this.props.inputError.status !== -1){
+      this.setState({
+        open: true,
+      })
+    } else {
+      this.setState({
+        open: false,
+      })
+    }
   }
 
   handleChange(e){
@@ -66,9 +89,13 @@ class CreateTable extends React.Component {
     this.props.openTableCreator()
   }
 
-  render(){
+  handleRequestClose = () => {
+    this.setState({
+      open: false,
+    })
+  }
 
-    
+  render(){    
     return (
       <div id='newTable' key={this.props.tableID}>
 
@@ -108,6 +135,13 @@ class CreateTable extends React.Component {
         <div id='loader-container'>
           <Loader/>
         </div>
+        <Snackbar
+          open={this.state.open}
+          message={this.props.inputError.dupTable}
+          autoHideDuration={3000}
+          onRequestClose={this.handleRequestClose}
+          bodyStyle={style.snackBarStyle}
+        />
       </div>
     );
   }
