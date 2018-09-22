@@ -105,9 +105,6 @@ class CreateTable extends React.Component {
             type='submit'
             />
         </form>
-        <div id='loader-container'>
-          <Loader/>
-        </div>
       </div>
     );
   }

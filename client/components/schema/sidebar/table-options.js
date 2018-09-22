@@ -133,14 +133,14 @@ class TableOptions extends React.Component {
     return (
       <div id='fieldOptions'> 
         { this.props.selectedField.tableNum > -1  &&
-        <div id='options'>
+        <div id='options' style={{width: '250px'}}>
           <FlatButton
             id='back-to-create'
             label="Create Table"
             icon={<KeyboardArrowLeft />}
             onClick={this.handleOpenTableCreator}
           />
-          <form>
+          <form style={{width: '100%'}}>
             <TextField
               hintText="Field Name"
               floatingLabelText="Field Name"
