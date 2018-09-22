@@ -13,6 +13,7 @@ const initialState = {
     defaultValue: '',
     required: false,
     multipleValues: false,
+    relationSelected: false,
     relation: {
       type: '',
       field: '',
@@ -55,6 +56,7 @@ const reducers = (state = initialState, action) => {
     defaultValue: '',
     required: false,
     multipleValues: false,
+    relationSelected: false,
     relation: {
       type: '',
       field: '',
@@ -188,7 +190,7 @@ const reducers = (state = initialState, action) => {
       }
     }
 
-                // -------------- Add or Update Field ----------------//
+                // ----------- Save Added or Updated Field ----------------//
     case types.SAVE_FIELD_INPUT:
       let newSelectedFieldName = state.selectedField.name;
 
@@ -199,22 +201,22 @@ const reducers = (state = initialState, action) => {
       if(newSelectedFieldName.length > 0) {
       tableNum = state.selectedField.tableNum;
       const currentFieldIndex = state.tables[tableNum].fieldsIndex;
-      // no field has been selected yet
-      if (state.selectedField.fieldNum < 0) {
-        newTables = 
-        Object.assign({}, state.tables, {[tableNum]:
-          Object.assign({}, state.tables[tableNum], {fieldsIndex: currentFieldIndex + 1}, {
-            fields: Object.assign({}, state.tables[tableNum].fields, {[currentFieldIndex]: 
-              Object.assign({}, state.selectedField, {fieldNum: currentFieldIndex, name: newSelectedFieldName})})})})
-
-              newSelectedField = Object.assign({}, fieldReset, {tableNum})
-              return {
-                ...state,
-                tables: newTables,
-                selectedField: newSelectedField 
-              } 
-      } 
-      // field has been selected
+        // Save new field
+        if (state.selectedField.fieldNum < 0) {
+          newTables = 
+          Object.assign({}, state.tables, {[tableNum]:
+            Object.assign({}, state.tables[tableNum], {fieldsIndex: currentFieldIndex + 1}, {
+              fields: Object.assign({}, state.tables[tableNum].fields, {[currentFieldIndex]: 
+                Object.assign({}, state.selectedField, {fieldNum: currentFieldIndex, name: newSelectedFieldName})})})})
+  
+                newSelectedField = Object.assign({}, fieldReset, {tableNum})
+                return {
+                  ...state,
+                  tables: newTables,
+                  selectedField: newSelectedField 
+                } 
+        } 
+      // Update existing field
       else {
         newTables = 
         Object.assign({}, state.tables, {[tableNum]:
@@ -224,7 +226,8 @@ const reducers = (state = initialState, action) => {
               
               return {
                 ...state,
-                tables: newTables
+                tables: newTables,
+                selectedField: fieldReset
               } 
           } 
       }

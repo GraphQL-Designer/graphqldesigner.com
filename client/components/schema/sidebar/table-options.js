@@ -37,11 +37,8 @@ const mapDispatchToProps = dispatch => ({
 class TableOptions extends React.Component {
   constructor(props) {
     super(props);
-    this.state={
-      showRelations: false
-    }
 
-    this.showRelations = this.showRelations.bind(this)
+    // this.showRelations = this.showRelations.bind(this)
     this.submitOptions = this.submitOptions.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleSelectChange = this.handleSelectChange.bind(this);
@@ -53,11 +50,11 @@ class TableOptions extends React.Component {
     this.props.openTableCreator()
   }
 
-  showRelations(event, value){
-    console.log(value)
-    if (value) this.setState({showRelations: true})
-    else this.setState({showRelations: false})
-  }
+  // showRelations(event, value){
+  //   console.log(value)
+  //   if (value) this.setState({showRelations: true})
+  //   else this.setState({showRelations: false})
+  // }
 
   handleToggle(name, event, value) {
     this.props.handleChange({name: name, value: value})
@@ -73,13 +70,13 @@ class TableOptions extends React.Component {
 
   submitOptions(event){
     event.preventDefault();
+    // this.setState({showRelations: false})
     if(this.props.selectedField.name){
       this.props.saveFieldInput();
     }
   }
 
   render() {
-    console.log('what is state?', this.state.showRelations)
     let tables = []
     let fields = [];
     let tempTableNumList = [];
@@ -99,17 +96,20 @@ class TableOptions extends React.Component {
       }
     }
 
-    let tempTableNum = 0;
-    // iterate through list of types and get type index number matching type in relation selected
-    for(let i = 0; i < tempTableNumList.length; i += 1){
-      if(this.props.tables[tempTableNumList[i]].type === this.props.selectedField.relation.type){
-        tempTableNum = tempTableNumList[i];
-      }
-    }
-    
-    //list all of the fields for type selected in relation in sidebar
+    // Generate relation field options
     if (Object.keys(this.props.tables).length > 0) {
+      
+      // iterate through list of types and get type index number matching type in relation selected
+      let tempTableNum = Object.keys(this.props.tables)[0]; // start at first table index
+      for(let i = 0; i < tempTableNumList.length; i += 1){
+        if(this.props.tables[tempTableNumList[i]].type === this.props.selectedField.relation.type){
+          tempTableNum = tempTableNumList[i];
+        }
+      }
+      
+      //list all of the fields for type selected in relation in sidebar
       for(let field in this.props.tables[tempTableNum].fields){
+        console.log('fields', field)
         fields.push(
           <MenuItem
           key={field}
@@ -211,11 +211,11 @@ class TableOptions extends React.Component {
 
              <Toggle
               label="Relation"
-              toggled={this.state.showRelations}
-              onToggle={this.showRelations}
+              toggled={this.props.selectedField.relationSelected}
+              onToggle={this.handleToggle.bind(null, 'relationSelected')}
             />
             
-              {this.state.showRelations && (<span>
+              {this.props.selectedField.relationSelected && (<span>
                 <div className='relation-options'>
                   <p>Type:</p>
                   <DropDownMenu
