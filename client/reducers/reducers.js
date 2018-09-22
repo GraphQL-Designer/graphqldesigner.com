@@ -107,11 +107,10 @@ const reducers = (state = initialState, action) => {
         if (state.selectedTable.tableID < 0) {
           newTableData = Object.assign({}, state.selectedTable, {tableID: state.tableIndex})
           
-          //capitalize first letter
-          newTableData.type = newTableData.type.charAt(0).toUpperCase() + newTableData.type.slice(1);
-          //remove white space
-          newTableData.type = newTableData.type.replace(/ /g, '');
-  
+          //capitalize first letter and remove whitespace
+          newTableData.type = newTableData.type.replace(/[^\w]/gi, '');
+          newTableData.type = newTableData.type.charAt(0).toUpperCase() + newTableData.type.slice(1)
+
           const newTables = Object.assign({}, state.tables, {[state.tableIndex]: newTableData})
           newState = Object.assign({}, state, {
             tableIndex: state.tableIndex + 1,
@@ -128,10 +127,9 @@ const reducers = (state = initialState, action) => {
         } else {
           newTableData = Object.assign({}, state.selectedTable)
   
-          //capitalize first letter
-          newTableData.type = newTableData.type.charAt(0).toUpperCase() + newTableData.type.slice(1);
-          //remove white space
-          newTableData.type = newTableData.type.replace(/ /g, '');
+          //capitalize first letter and remove whitespace
+          newTableData.type = newTableData.type.replace(/[^\w]/gi, '');
+          newTableData.type = newTableData.type.charAt(0).toUpperCase() + newTableData.type.slice(1)
   
           const newTables = Object.assign({}, state.tables, {[state.selectedTable.tableID]: newTableData})
           newState = Object.assign({}, state, {
@@ -210,29 +208,37 @@ const reducers = (state = initialState, action) => {
       const currentFieldIndex = state.tables[selectedTableIndex].fieldsIndex;
       let updatedTables = {}
 
-      // no field has been selected yet
-      if (state.selectedField.fieldNum < 0) {
-        updatedTables = 
-        Object.assign({}, state.tables, {[selectedTableIndex]:
-          Object.assign({}, state.tables[selectedTableIndex], {fieldsIndex: currentFieldIndex + 1}, {
-            fields: Object.assign({}, state.tables[selectedTableIndex].fields, {[currentFieldIndex]: 
-              Object.assign({}, state.selectedField, {fieldNum: currentFieldIndex})})})})
-      } 
-      // field has been selected
-      else {
-        updatedTables = 
-        Object.assign({}, state.tables, {[selectedTableIndex]:
-          Object.assign({}, state.tables[selectedTableIndex], {fieldsIndex: currentFieldIndex}, {
-            fields: Object.assign({}, state.tables[selectedTableIndex].fields, {[state.selectedField.fieldNum]: 
-              // Object.assign({}, state.selectedField, {fieldNum: currentFieldIndex})})})})        
-              Object.assign({}, state.selectedField, {fieldNum: state.selectedField.fieldNum})})})})        
-      } 
-      return {
-        ...state,
-        tables: updatedTables,
-        selectedField: fieldReset //fieldReset is defined above the cases
-      } 
+      let newSelectedFieldName = state.selectedField.name;
 
+      //capitalize first letter and remove whitespace
+      newSelectedFieldName = newSelectedFieldName.replace(/[^\w]/gi, '');
+      newSelectedFieldName = newSelectedFieldName.charAt(0).toUpperCase() + newSelectedFieldName.slice(1);
+
+      if(newSelectedFieldName.length > 0){
+        // no field has been selected yet
+        if (state.selectedField.fieldNum < 0) {
+          updatedTables = 
+          Object.assign({}, state.tables, {[selectedTableIndex]:
+            Object.assign({}, state.tables[selectedTableIndex], {fieldsIndex: currentFieldIndex + 1}, {
+              fields: Object.assign({}, state.tables[selectedTableIndex].fields, {[currentFieldIndex]: 
+                Object.assign({}, state.selectedField, {fieldNum: currentFieldIndex, name: newSelectedFieldName})})})})
+        } 
+        // field has been selected
+        else {
+          updatedTables = 
+          Object.assign({}, state.tables, {[selectedTableIndex]:
+            Object.assign({}, state.tables[selectedTableIndex], {fieldsIndex: currentFieldIndex}, {
+              fields: Object.assign({}, state.tables[selectedTableIndex].fields, {[state.selectedField.fieldNum]: 
+                // Object.assign({}, state.selectedField, {fieldNum: currentFieldIndex})})})})        
+                Object.assign({}, state.selectedField, {fieldNum: state.selectedField.fieldNum, name: newSelectedFieldName})})})})        
+        } 
+        return {
+          ...state,
+          tables: updatedTables,
+          selectedField: fieldReset //fieldReset is defined above the cases
+        } 
+      }
+      return state;
     // -------------- Delete Field ----------------//
     case types.DELETE_FIELD:
       tableNum = Number(action.payload[0]);
