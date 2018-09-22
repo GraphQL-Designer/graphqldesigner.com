@@ -28,6 +28,11 @@ const initialState = {
     fields: {},
     fieldsIndex: 0,
     tableID: -1,
+  },
+  inputError: {
+    status: -1,
+    dupTable: 'Error: Table name already exist',
+    dupField: 'Error: Field name already exist'
   }
 };
 
@@ -41,6 +46,7 @@ const reducers = (state = initialState, action) => {
   let newTable;
   let newState;
   let tableNum;
+  let inputError = state.inputError;
   const tableReset = {
     type: '',
     idRequested:  false || database === 'MongoDB',
@@ -100,6 +106,29 @@ const reducers = (state = initialState, action) => {
       newTableData.type = newTableData.type.replace(/[^\w]/gi, '');
       newTableData.type = newTableData.type.charAt(0).toUpperCase() + newTableData.type.slice(1)
 
+      // get list of table indexes, and alert if table name already exists
+      if(newTableData.type.length > 0){
+        const listTableIndexes = Object.getOwnPropertyNames(state.tables);
+
+        // remove the selected from list of tables if updating to prevent snackbar from displaying table error
+        if(state.selectedTable.tableID !== -1){
+          listTableIndexes.splice(listTableIndexes.indexOf(String(state.selectedTable.tableID)),1);
+        }
+
+        for(let x = 0; x < listTableIndexes.length; x += 1){
+          if(state.tables[listTableIndexes[x]].type === newTableData.type){
+            inputError.status = inputError.dupTable;
+            return {
+              ...state,
+              selectedTable: tableReset,
+              inputError
+            } 
+          }
+        }
+      }
+    
+      inputError.status = -1;
+
       // Save a new table
       if(state.selectedTable.type.length > 0){ // a type name has been provided
         if (state.selectedTable.tableID < 0) {  // no table selected, aka save new table
@@ -109,7 +138,8 @@ const reducers = (state = initialState, action) => {
           newState = Object.assign({}, state, {
             tableIndex: state.tableIndex + 1,
             tables: newTables,
-            selectedTable: tableReset
+            selectedTable: tableReset,
+            inputError
           })
         } 
         // Update table
@@ -117,7 +147,8 @@ const reducers = (state = initialState, action) => {
           const newTables = Object.assign({}, state.tables, {[state.selectedTable.tableID]: newTableData})
           newState = Object.assign({}, state, {
             tables: newTables,
-            selectedTable: tableReset
+            selectedTable: tableReset,
+            inputError
           })
         }
 
@@ -197,26 +228,47 @@ const reducers = (state = initialState, action) => {
       // capitalize first letter and remove whitespace
       newSelectedFieldName = newSelectedFieldName.replace(/[^\w]/gi, '');
       newSelectedFieldName = newSelectedFieldName.charAt(0).toUpperCase() + newSelectedFieldName.slice(1);
+
+      // get list of field indexes, and alert if field name already exists in the table
+      const listFieldIndexes = Object.getOwnPropertyNames(state.tables[state.selectedField.tableNum].fields);
       
+      //remove the field from list of fields if updating to prevent snackbar from displaying field error
+      if(state.selectedField.fieldNum !== -1){
+        listFieldIndexes.splice(listFieldIndexes.indexOf(String(state.selectedField.fieldNum)),1);
+      }
+
+      for(let x = 0; x < listFieldIndexes.length; x += 1){
+        if(state.tables[state.selectedField.tableNum].fields[listFieldIndexes[x]].name === newSelectedFieldName){
+          inputError.status = inputError.dupField;
+          return {
+            ...state,
+            inputError
+          }
+        }
+      }
+
+      inputError.status = -1;
+
       if(newSelectedFieldName.length > 0) {
       tableNum = state.selectedField.tableNum;
       const currentFieldIndex = state.tables[tableNum].fieldsIndex;
-        // Save new field
-        if (state.selectedField.fieldNum < 0) {
-          newTables = 
-          Object.assign({}, state.tables, {[tableNum]:
-            Object.assign({}, state.tables[tableNum], {fieldsIndex: currentFieldIndex + 1}, {
-              fields: Object.assign({}, state.tables[tableNum].fields, {[currentFieldIndex]: 
-                Object.assign({}, state.selectedField, {fieldNum: currentFieldIndex, name: newSelectedFieldName})})})})
-  
-                newSelectedField = Object.assign({}, fieldReset, {tableNum})
-                return {
-                  ...state,
-                  tables: newTables,
-                  selectedField: newSelectedField 
-                } 
-        } 
-      // Update existing field
+      // no field has been selected yet
+      if (state.selectedField.fieldNum < 0) {
+        newTables = 
+        Object.assign({}, state.tables, {[tableNum]:
+          Object.assign({}, state.tables[tableNum], {fieldsIndex: currentFieldIndex + 1}, {
+            fields: Object.assign({}, state.tables[tableNum].fields, {[currentFieldIndex]: 
+              Object.assign({}, state.selectedField, {fieldNum: currentFieldIndex, name: newSelectedFieldName})})})})
+
+              newSelectedField = Object.assign({}, fieldReset, {tableNum})
+              return {
+                ...state,
+                tables: newTables,
+                selectedField: newSelectedField,
+                inputError
+              } 
+      } 
+      // field has been selected
       else {
         newTables = 
         Object.assign({}, state.tables, {[tableNum]:
@@ -227,6 +279,7 @@ const reducers = (state = initialState, action) => {
               return {
                 ...state,
                 tables: newTables,
+                inputError,
                 selectedField: fieldReset
               } 
           } 
