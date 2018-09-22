@@ -2,6 +2,15 @@ h1,h2,h3,h4,h5,h6,p{
   font-family: "Roboto", sans-serif
 }
 
+#create-table-form h2{
+  margin-top: 10px; 
+}
+
+#create-table-form h6,input{
+  margin-top: 10px; 
+  margin-bottom: 10px; 
+}
+
 #sidebar-container{
   background-color:  rgb(44,48,56);
   display: flex;
