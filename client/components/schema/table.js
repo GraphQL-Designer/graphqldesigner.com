@@ -8,13 +8,24 @@ import FlatButton from 'material-ui/FlatButton';
 import Delete from 'material-ui/svg-icons/action/delete'
 import Close from 'material-ui/svg-icons/navigation/close'
 
-const deleteStyle = {
-  minWidth: '25px',
+const style = {
+  deleteStyle: {
+    minWidth: '25px',
+    position: 'absolute',
+    right: '10px'
+  },
+  fieldNameStyle: {
+    width: '100%',
+    height: '100%'
+  },
+  idFiled: {
+    width: '100%',
+    justifyContent: 'center',
+    color: 'white',
+    marginTop: '5px',
+    cursor: 'pointer'
+  }
 }
-const fieldNameStyle = {
-  width: '100%'
-}
-
 
 // we use store.data, because of index.js reduce function
 const mapStateToProps = store => ({
@@ -51,6 +62,7 @@ class Table extends Component {
   handleDeleteField(event){
     const tableIndex = this.props.tableIndex
     const fieldIndex = event.currentTarget.value // need currentTarget because of Material-UI
+    console.log(tableIndex, fieldIndex)
     this.props.deleteField([tableIndex, fieldIndex])
   }
 
@@ -73,6 +85,7 @@ class Table extends Component {
   
   render() {
     let fields = []
+    const colors = ['deeppink', 'crimson', 'orangered', 'gold', 'darkcyan', 'dodgerblue', 'darkviolet', 'seagreen', 'darkorange', 'tomato', 'mediumspringgreen', 'purple', 'darkkhaki', 'hotpink', 'firebrick', 'steelblue', 'limegreen', 'sienna', 'darkslategrey', 'goldenrod'];
 
     // will push each individual field to the array 'fields' to be rendered. 
     for (let property in this.props.tableData.fields){
@@ -82,49 +95,67 @@ class Table extends Component {
       const fieldType = this.props.tableData.fields[property].type
 
       fields.push(
-        <div key={property} className='field'>
-          <FlatButton
-            label={`${fieldName} ${fieldType}`}
-            value={`${tableIndex} ${fieldIndex}`}
-            onClick={this.handleUpdateField}
-            style={fieldNameStyle}
-          />
-          <FlatButton
-            className='delete-button'
-            icon={<Close />}
-            value={property}
-            onClick={this.handleDeleteField}
-            style={deleteStyle}
-          />
+        <div>
+          <div key={property} className='field'>
+            <FlatButton
+              value={`${tableIndex} ${fieldIndex}`}
+              onClick={this.handleUpdateField}
+              style={style.fieldNameStyle}
+            >
+            {`${fieldName} - ${fieldType}`}
+            </FlatButton>
+            <FlatButton
+              className='delete-button'
+              icon={<Close />}
+              value={property}
+              onClick={this.handleDeleteField}
+              style={{minWidth: '25px'}}
+            />
+          </div>
+          <hr className='fieldBreak'/>
         </div>
       )
     }
   
     return (
-      <div className='table'>
+      <div className='table' style={{border: `1px solid ${colors[this.props.tableData.tableID]}`}}>
         <div>
           <div className='field'>
             <FlatButton
-              label={this.props.tableData.type}
+              backgroundColor={colors[this.props.tableData.tableID]}
               value={this.props.tableIndex}
               onClick={this.handleSelectedTable}
-              style={fieldNameStyle}
-            />
+              style={style.fieldNameStyle}
+            >
+              {this.props.tableData.type}
+            </FlatButton>
             <FlatButton
               className='delete-button'
               icon={<Delete />}
               value={this.props.tableIndex}
               onClick={this.handleDeleteTable}
-              style={deleteStyle}
+              style={style.deleteStyle}
             />
           </div>
         </div>
-        <hr/>
+        { this.props.tableData.idRequested && (
+          <div>
+            <FlatButton
+              value={this.props.tableIndex}
+              onClick={this.handleSelectedTable}
+              style={style.idFiled}
+            >
+              id - ID
+            </FlatButton>
+            <hr className='fieldBreak'/>
+          </div>
+        )}
         {fields}
-        <RaisedButton 
-          label="Add Field" 
-          onClick={this.handleAddField}
-        />
+        <div onClick={this.handleAddField} className='field addField'>
+          <p style={{marginTop: '10px'}}>
+            ADD FIELD
+          </p>
+        </div>
       </div>  
     )
   }

@@ -1,6 +1,6 @@
 .welcome-container{
   text-align: center;
-  margin-top: -15vh;
+  margin-top: -10vh;
 }
 
 .welcome-box{
@@ -38,11 +38,15 @@ h3{
   margin-top: 20px;
 }
 
-.dbButton{ 
-  font-size: 25px;
-}
-
 .welcome-hr{
   height: 2px;
   background-color: black;
+}
+
+.iconContainer {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
 }

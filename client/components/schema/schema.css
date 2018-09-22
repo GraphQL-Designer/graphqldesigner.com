@@ -2,8 +2,9 @@
   display: flex; 
   flex-direction: row-reverse;
   width: 100%;
-  height: 85vh;
+  height: calc(100vh - 95px);
   border: 1px solid black;
+  overflow: hidden;
 }
 
 .table-components-container{
@@ -13,18 +14,42 @@
   align-items: flex-start; 
   flex-wrap: wrap; 
   width: 100%;
-  min-height: 350px; 
+  min-height: 300px;
+  overflow: scroll;
+}
+
+#sidebar-container {
+  position: relative;
 }
 
 .table{
   display: flex; 
   flex-direction: column; 
-  border: 1px solid black;
   width: 200px; 
-  margin: 10px; 
+  margin: 40px; 
+  box-shadow: 2px 2px 7.5px black;
 }
 
 .field{
   display: flex; 
-  justify-content: space-between; 
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+}
+
+.addField {
+  justify-content: center;
+  height: 50px;
+  margin-top: -5px;
+  background-color: rgb(48, 48, 48);
+  color: white;
+  cursor: pointer;
+  text-align: center;
+}
+
+.fieldBreak {
+  width: 100%;
+  height: 1px;
+  border: none;
+  background-color: rgba(200, 200, 200, 0.6);
 }

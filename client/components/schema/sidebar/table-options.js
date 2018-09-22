@@ -3,11 +3,20 @@ import { connect } from 'react-redux';
 import * as actions from '../../../actions/actions.js';
 
 //styles
-import TextField from 'material-ui/TextField';
-import KeyboardArrowLeft from 'material-ui/svg-icons/hardware/keyboard-arrow-left'
-import FlatButton from 'material-ui/FlatButton';
 import './sidebar.css';
+import KeyboardArrowLeft from 'material-ui/svg-icons/hardware/keyboard-arrow-left'
+import TextField from 'material-ui/TextField';
+import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
+import SelectField from 'material-ui/SelectField';
+import Toggle from 'material-ui/Toggle';
+import MenuItem from 'material-ui/MenuItem';
+import DropDownMenu from 'material-ui/DropDownMenu';
+const styles = {
+  customWidth: {
+    width: 200,
+  },
+};
 
 const mapStateToProps = store => ({
   database: store.data.database,
@@ -15,7 +24,6 @@ const mapStateToProps = store => ({
   addFieldClicked: store.data.addFieldClicked,
   selectedField: store.data.selectedField,
   updatedField: store.data.fieldUpdated, 
-  tableCount: store.data.tableCount,
   tables: store.data.tables
 })
 
@@ -29,81 +37,119 @@ const mapDispatchToProps = dispatch => ({
 class TableOptions extends React.Component {
   constructor(props) {
     super(props);
-    this.state={
-      selectedTableIndex : null
-    }
 
+    // this.showRelations = this.showRelations.bind(this)
     this.submitOptions = this.submitOptions.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.handleSelectChange = this.handleSelectChange.bind(this);
+    this.handleToggle = this.handleToggle.bind(this)
     this.handleOpenTableCreator = this.handleOpenTableCreator.bind(this)
   }
 
-  handleToggle () {this.setState({open: !this.state.open})};
+  handleOpenTableCreator(){
+    this.props.openTableCreator()
+  }
+
+  // showRelations(event, value){
+  //   console.log(value)
+  //   if (value) this.setState({showRelations: true})
+  //   else this.setState({showRelations: false})
+  // }
+
+  handleToggle(name, event, value) {
+    this.props.handleChange({name: name, value: value})
+  };
 
   handleChange (event) {
     this.props.handleChange({name: event.target.name, value: event.target.value});
   };
 
-  handleNullChange (event, index, nullValue) {
-    event.preventDefault();
-    this.setState({nullValue});
-  };
-
-  handleUniqueChange (event, index, uniqueValue) {
-    event.preventDefault();
-    this.setState({uniqueValue});
+  handleSelectChange (name, event, index, value) {
+    this.props.handleChange({name: name, value: value});
   };
 
   submitOptions(event){
     event.preventDefault();
+    // this.setState({showRelations: false})
     if(this.props.selectedField.name){
       this.props.saveFieldInput();
     }
   }
 
-  handleOpenTableCreator(event){
-    this.props.openTableCreator()
-  }
-
   render() {
-    // create option with default of empty string when viewed
-    let tables = [<option key='empty'> </option>];
-    let fields = [<option key='empty'> </option>];
+    let tables = []
+    let fields = [];
     let tempTableNumList = [];
 
-    // if there is more than one type, render the relation dropdown options in the sidebar
-    if(this.props.tableCount > 1){
-      for(let types in this.props.tables){
-        if(this.props.selectedField.tableNum !== types){
-          tables.push(<option key={types} value={this.props.tables[types].tableID.type}>{this.props.tables[types].type}</option>);
-          tempTableNumList.push(types);
-        }
+    // Generate relation type options 
+    for(let types in this.props.tables){
+      if(this.props.selectedField.tableNum !== types){
+        // tables.push(<option key={types} value={this.props.tables[types].tableID.type}>{this.props.tables[types].type}</option>);
+        tables.push(
+          <MenuItem
+            key={types}
+            value={this.props.tables[types].type} 
+            primaryText={this.props.tables[types].type}
+          />
+        )
+        tempTableNumList.push(types);
       }
-      let tempTableNum = 0;
+    }
+
+    // Generate relation field options
+    if (Object.keys(this.props.tables).length > 0) {
+      
       // iterate through list of types and get type index number matching type in relation selected
-      for(let x = 0; x < tempTableNumList.length; x += 1){
-        if(this.props.tables[tempTableNumList[x]].type === this.props.selectedField.relation.type){
-          tempTableNum = tempTableNumList[x];
+      let tempTableNum = Object.keys(this.props.tables)[0]; // start at first table index
+      for(let i = 0; i < tempTableNumList.length; i += 1){
+        if(this.props.tables[tempTableNumList[i]].type === this.props.selectedField.relation.type){
+          tempTableNum = tempTableNumList[i];
         }
       }
       
-      // list all of the fields for type selected in relation in sidebar
+      //list all of the fields for type selected in relation in sidebar
       for(let field in this.props.tables[tempTableNum].fields){
-        fields.push(<option key={field} value={this.props.tables[tempTableNum].fields[field].name}>{this.props.tables[tempTableNum].fields[field].name}</option>)
+        console.log('fields', field)
+        fields.push(
+          <MenuItem
+          key={field}
+          value={this.props.tables[tempTableNum].fields[field].name} 
+          primaryText={this.props.tables[tempTableNum].fields[field].name}
+          />
+        )
       }
+    }
+        
+    function fieldName(fieldNum, tableNum, tables) {
+      if (fieldNum >= 0) {
+        return (
+        <div>
+          <h2>{tables[tableNum].fields[fieldNum].name} Field</h2>
+          <h4>in {tables[tableNum].type}</h4>
+        </div>
+        )
+      }
+      return (
+        <div>
+          <h2>Add Field</h2>
+          <h4>to {tables[tableNum].type}</h4>
+        </div>
+      )
     }
 
     return (
       <div id='fieldOptions'> 
         { this.props.selectedField.tableNum > -1  &&
-        <div id='options'>
+        <div id='options' style={{width: '250px'}}>
           <FlatButton
             id='back-to-create'
             label="Create Table"
             icon={<KeyboardArrowLeft />}
             onClick={this.handleOpenTableCreator}
           />
-          <form>
+          <form style={{width: '100%'}}>
+          {fieldName(this.props.selectedField.fieldNum, this.props.selectedField.tableNum, this.props.tables)}
+
             <TextField
               hintText="Field Name"
               floatingLabelText="Field Name"
@@ -114,75 +160,97 @@ class TableOptions extends React.Component {
               value={this.props.selectedField.name}
               autoFocus
             />
+
             <TextField
-                hintText="Default Value"
-                floatingLabelText="Default Value"
-                fullWidth={true}
-                id='defaultValueOption'
-                name='defaultValue' 
-                onChange={this.handleChange}
-                value={this.props.selectedField.defaultValue} 
+              hintText="Default Value"
+              floatingLabelText="Default Value"
+              fullWidth={true}
+              id='defaultValueOption'
+              name='defaultValue' 
+              onChange={this.handleChange}
+              value={this.props.selectedField.defaultValue} 
               />
-              <span>Type : 
-                <select 
-                  onChange={this.handleChange} 
-                  id="typeDropDown" 
-                  name='type' 
-                  value={this.props.selectedField.type}
-                >
-                  <option value="String">String</option>
-                  <option value="Number">Number</option>
-                  {/* <option value="Date">Date</option> */}
-                  <option value="Boolean">Boolean</option>
-                  <option value="ID">ID</option>
-                </select>
-              </span>
-              {this.props.database === 'SQL' && (<span> Primary Key :
-                <select onChange={this.handleChange} id="primaryKeyDropDown" name='primaryKey' value={this.props.selectedField.primaryKey}>
-                  <option value={false}>False</option>
-                  <option value={true}>True</option>
-                </select>
-              </span>)}
 
-                 <span>Required : 
-                <select onChange={this.handleChange} id="requiredDropDown" name='required' value={this.props.selectedField.required}>
-                  <option value={false}>False</option>
-                  <option value={true}>True</option>
-                </select>
-              </span>
+            <SelectField
+              floatingLabelText="Type"
+              fullWidth={true}
+              value={this.props.selectedField.type}
+              onChange={this.handleSelectChange.bind(null, 'type')} // we access 'type' as name in handleChange
+            >
+              <MenuItem value='String' primaryText="String" />
+              <MenuItem value='Number' primaryText="Number" />
+              <MenuItem value='Boolean' primaryText="Boolean" />
+              <MenuItem value='ID' primaryText="ID" />
+            </SelectField>
 
-              <span>Unique : 
-                <select onChange={this.handleChange} id="uniqueDropDown" name='unique' value={this.props.selectedField.unique}>
-                  <option value={false}>False</option>
-                  <option value={true}>True</option>
-                </select>
-              </span>
-              
-              <span>Multiple Values : 
-                <select onChange={this.handleChange} id="multipleValuesDropDown" name='multipleValues' value={this.props.selectedField.multipleValues}>
-                  <option value={false}>False</option>
-                  <option value={true}>True</option>
-                </select>
-              </span>
+            {this.props.database === 'SQL' && (
+            <Toggle
+              label="Primary Key"
+              toggled={this.props.selectedField.primaryKey}
+              onToggle={this.handleToggle.bind(null, 'primaryKey')}
+            />
+            )}
+            
+            <Toggle
+              label="Required"
+              toggled={this.props.selectedField.required}
+              onToggle={this.handleToggle.bind(null, 'required')}
+            />
 
-              {this.props.tableCount > 1 && (<span>
-                <p>Relation : </p>
-                <p>Type:
-                  <select onChange={this.handleChange} id="relationTypeDropDown" name='relation.type' value={this.props.selectedField.relation.type}>
-                    {tables}
-                  </select>
-                </p>
-                <p>Field:
-                  <select onChange={this.handleChange} id="relationFieldDropDown" name='relation.field' value={this.props.selectedField.relation.field}>
+            <Toggle
+              label="Unique"
+              toggled={this.props.selectedField.unique}
+              onToggle={this.handleToggle.bind(null, 'unique')}
+            />
+
+            <Toggle
+              label="Multiple Values"
+              toggled={this.props.selectedField.multipleValues}
+              onToggle={this.handleToggle.bind(null, 'multipleValues')}
+            />
+
+             <Toggle
+              label="Relation"
+              toggled={this.props.selectedField.relationSelected}
+              onToggle={this.handleToggle.bind(null, 'relationSelected')}
+            />
+            
+              {this.props.selectedField.relationSelected && (<span>
+                <div className='relation-options'>
+                  <p>Type:</p>
+                  <DropDownMenu
+                    value={this.props.selectedField.relation.type}
+                    style={styles.customWidth}
+                    onChange={this.handleSelectChange.bind(null, 'relation.type')} // access 'relation.type' as name in handleChange
+                    >
+                      {tables}
+                  </DropDownMenu> 
+                </div>
+
+                <div className='relation-options'>
+                  <p>Field:</p>
+                  <DropDownMenu
+                    value={this.props.selectedField.relation.field}
+                    style={styles.customWidth}
+                    onChange={this.handleSelectChange.bind(null, 'relation.field')} // access 'relation.field' as name in handleChange
+                  >
                     {fields}
-                  </select>
-                </p>
-                <p>RefType:
-                  <select onChange={this.handleChange} id="relationRefTypeDropDown" name='relation.refType' value={this.props.selectedField.relation.refType}>
-                    <option value="one to one">one to one</option>
-                    <option value="one to many">one to many</option>
-                  </select>
-                </p>
+                  </DropDownMenu> 
+                </div>
+
+                <div className='relation-options'>
+                  <p>RefType:</p>
+                  <DropDownMenu
+                    value={this.props.selectedField.relation.refType}
+                    style={styles.customWidth}
+                    onChange={this.handleSelectChange.bind(null, 'relation.refType')} // access 'relation.refType' as name in handleChange
+                  >
+                    <MenuItem value='one to one' primaryText="one to one" />
+                    <MenuItem value='one to many' primaryText="one to many" />
+                    <MenuItem value='many to one' primaryText="many to one" />
+                    <MenuItem value='many to many' primaryText="many to many" />
+                  </DropDownMenu> 
+                </div>
               </span>)}
               <RaisedButton
                 secondary={true}

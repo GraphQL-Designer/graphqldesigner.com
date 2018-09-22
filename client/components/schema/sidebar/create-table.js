@@ -14,6 +14,7 @@ import FlatButton from 'material-ui/FlatButton';
 import './sidebar.css';
 
 const mapStateToProps = store => ({
+  tables: store.data.tables,
   tableName: store.data.selectedTable.type,
   tableIDRequested: store.data.selectedTable.idRequested,
   tableID: store.data.selectedTable.tableID,
@@ -39,12 +40,19 @@ class CreateTable extends React.Component {
   }
   
   capitalizeFirstLetter(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
+    
+    if(string){
+      const newString = string.replace(' ', '');
+      // console.log('string: ', string);
+      // console.log('newString: ', newString);
+      return newString.charAt(0).toUpperCase() + newString.slice(1);
+    }
   }
 
   saveTableDataInput(e){
     e.preventDefault();
     this.props.saveTableDataInput()
+    document.getElementById('tableName').value = '';
   }
 
   handleChange(e){
@@ -60,7 +68,12 @@ class CreateTable extends React.Component {
   }
 
   render(){
-
+    function tableName(tableID, tables) {
+      if (tableID >= 0) {
+        return <h2>{tables[tableID].type} Table</h2>
+      }
+      return <h2>Create Table</h2>
+    }
     
     return (
       <div id='newTable' key={this.props.tableID}>
@@ -74,6 +87,8 @@ class CreateTable extends React.Component {
         />}
 
         <form onSubmit={this.saveTableDataInput}>
+          {tableName(this.props.tableID, this.props.tables)}
+
           <TextField
             // hintText="Table Name"
             floatingLabelText="Table Name"
@@ -81,10 +96,9 @@ class CreateTable extends React.Component {
             fullWidth={true}
             autoFocus
             onChange={this.handleChange}
-            // name='type'
-            value={this.props.tableName}
-          />  
-          <h6>(Works with singular naming convention)</h6>
+            value={this.props.tableName || ''}
+          />
+          <h6>(Singular naming convention)</h6>
           <Checkbox
             label="Unique ID"
             onCheck={this.handleClick}
@@ -99,9 +113,6 @@ class CreateTable extends React.Component {
             type='submit'
             />
         </form>
-        <div id='loader-container'>
-          <Loader/>
-        </div>
       </div>
     );
   }

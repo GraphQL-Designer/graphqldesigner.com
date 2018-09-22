@@ -5,7 +5,7 @@
   margin: 0;
   width: 30%;
   min-width: 150px; 
-  max-width: 225px; 
+  max-width: 250px; 
   height: 100%;
   justify-content: flex-start;
   float: right; 
@@ -23,18 +23,7 @@
   margin: 0;
   justify-content: flex-start;
   min-height: 350px; 
-}
-
-#options {
-  margin: 0;
-}
-
-#options span {
-  margin-top: 0;
-}
-
-#options div{
-  width: 100%;
+  position: absolute;
 }
 
 
@@ -54,6 +43,7 @@ select{
 }
 
 #fieldOptions {
+  position: absolute;
   display: flex;
   justify-content: center;
   margin: 0;
@@ -71,4 +61,16 @@ select{
   justify-content: center;
   align-items: center; 
   min-height: 150px; 
+}
+
+.relation-options{
+  font-size: 14px;
+  display: flex;
+  align-items: flex-end; 
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-weight: 600; 
+}
+
+option{
+  background-color:rgb(48,51,59)
 }

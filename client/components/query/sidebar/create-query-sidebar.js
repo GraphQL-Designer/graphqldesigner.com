@@ -69,7 +69,7 @@ class CreateQuerySidebar extends Component {
     for (let property in this.props.tables){
       const queryType = this.props.tables[property].type //name of query type
       graphQLTypeOptions.push(
-        <option value={property}>{queryType}</option> //value is given property so we can access in selectHandler
+        <option key={property} value={property}>{queryType}</option> //value is given property so we can access in selectHandler
       )
     }
 
@@ -86,13 +86,13 @@ class CreateQuerySidebar extends Component {
       for (let property in this.props.tables[selectedTableIndex].fields){
         const fieldName = this.props.tables[selectedTableIndex].fields[property].name
         graphQLSearchOptions.push(
-          <option value={property}>{fieldName}</option> 
+          <option key={property} value={property}>{fieldName}</option> 
         )
       }
     }
 
     return (
-      <div className='sidebar'>
+      <div className='sidebar' >
         <h4>Create Custom Query</h4>
         <form onSubmit={this.submitHandler}> 
           {/* <input type="text"
@@ -111,12 +111,12 @@ class CreateQuerySidebar extends Component {
 
           <br/>
           <select name='graphqlTypes' onChange={this.selectTypeHandler}>
-            <option value='default'>Select Query Type</option> 
+            <option key='types' value='default'>Select Query Type</option> 
             {graphQLTypeOptions}
           </select>
           <br/>
           <select name='searchBy' onChange={this.selectSearchHandler}>
-            <option value='default'>Select How Query Type is Searched</option> 
+            <option key='fields' value='default'>Select How Query Type is Searched</option> 
             {graphQLSearchOptions}
           </select>
           <br/>

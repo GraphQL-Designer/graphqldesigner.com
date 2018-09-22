@@ -2,11 +2,9 @@ import * as types from '../actions/action-types';
 
 const initialState = {
   queryMode: 'create',
-  createTableState: true,
   tables: {},
   database: '',
   tableIndex: 0,
-  tableCount: 0,
   selectedField : {
     name: '',
     type: 'String',
@@ -15,6 +13,7 @@ const initialState = {
     defaultValue: '',
     required: false,
     multipleValues: false,
+    relationSelected: false,
     relation: {
       type: '',
       field: '',
@@ -23,8 +22,6 @@ const initialState = {
     tableNum: -1,
     fieldNum: -1
   },
-  fieldUpdated: 0,
-  selectedTableIndex: '',
   selectedTable: {
     type: '',
     idRequested: false,
@@ -34,36 +31,40 @@ const initialState = {
   }
 };
 
+
+
 const reducers = (state = initialState, action) => {
-  let createTableState = state.createTableState;
-  let tables = state.tables;
-  let tableIndex = state.tableIndex;
   let database = state.database;
-  let tableCount = state.tableCount;
-  let selectedField = state.selectedField;
-  let fieldUpdated = state.fieldUpdated;
-  let selectedTable = state.selectedTable
   let newSelectedField;
   let newSelectedTable;
+  let newTables;
+  let newTable;
   let newState;
-
-  const fieldReset = Object.assign({}, selectedField, 
-    {
-      name: '',
-      type: 'String',
-      primaryKey: false,
-      unique: false,
-      defaultValue: '',
-      required: false,
-      multipleValues: false,
-      relation: {
-        type: '',
-        field: '',
-        refType: ''
-      },
-      fieldNum: -1
-    }
-  )
+  let tableNum;
+  const tableReset = {
+    type: '',
+    idRequested:  false || database === 'MongoDB',
+    fields: {},
+    fieldsIndex: 0,
+    tableID: -1,
+  }
+  const fieldReset = {
+    name: '',
+    type: 'String',
+    primaryKey: false,
+    unique: false,
+    defaultValue: '',
+    required: false,
+    multipleValues: false,
+    relationSelected: false,
+    relation: {
+      type: '',
+      field: '',
+      refType: ''
+    },
+    tableNum: -1,
+    fieldNum: -1
+  }
 
   // action.payload is how you can access the info
   switch(action.type) {
@@ -79,56 +80,55 @@ const reducers = (state = initialState, action) => {
         database, 
         selectedTable: newSelectedTable
       }
+
+    // ------------------------------ Schmea App  ----------------------------//
+
+                  // ----------- Open Table Creator --------------//
     
-
-    // ----------------------------- Schema App --------------------------------//
-
-    // Open Table Creator
     case types.OPEN_TABLE_CREATOR:
-      console.log('opening table', action.payload)
-      createTableState = true
-      selectedField.tableNum = -1
-      selectedTable.tableID = -1
-    return {
-      ...state,
-      createTableState,
-      selectedField,
-      selectedTable
-    }
+      newState = Object.assign({}, state)
+      newState.selectedField = Object.assign({}, fieldReset)
+      newState.selectedTable = Object.assign({}, tableReset) 
+    return newState
 
                     // ------------- Add Table ----------------//
     case types.SAVE_TABLE_DATA_INPUT:
-      let newState;
-      if (state.selectedTable.tableID < 0) {
-        const newTableData = Object.assign({}, state.selectedTable, {tableID: state.tableIndex})
-        const newTables = Object.assign({}, state.tables, {[state.tableIndex]: newTableData})
-        newState = Object.assign({}, state, {
-          tableIndex: state.tableIndex + 1,
-          tableCount: state.tableCount + 1,
-          tables: newTables,
-          selectedTable: {
-            type: '',
-            idRequested: false || state.database === 'MongoDB',
-            fields: {},
-            fieldsIndex: 0,
-            tableID: -1,
-          }
-        })
-      } else {
-        const newTableData = Object.assign({}, state.selectedTable)
-        const newTables = Object.assign({}, state.tables, {[state.selectedTable.tableID]: newTableData})
-        newState = Object.assign({}, state, {
-          tables: newTables,
-          selectedTable: {
-            type: '',
-            idRequested: false || state.database === 'MongoDB',
-            fields: {},
-            fieldsIndex: 0,
-            tableID: -1,
-          }
-        })
+      let newTableData;
+      newTableData = Object.assign({}, state.selectedTable)
+
+      //capitalize first letter and remove whitespace
+      newTableData.type = newTableData.type.replace(/[^\w]/gi, '');
+      newTableData.type = newTableData.type.charAt(0).toUpperCase() + newTableData.type.slice(1)
+
+      // Save a new table
+      if(state.selectedTable.type.length > 0){ // a type name has been provided
+        if (state.selectedTable.tableID < 0) {  // no table selected, aka save new table
+          newTableData.tableID = state.tableIndex
+
+          const newTables = Object.assign({}, state.tables, {[state.tableIndex]: newTableData})
+          newState = Object.assign({}, state, {
+            tableIndex: state.tableIndex + 1,
+            tables: newTables,
+            selectedTable: tableReset
+          })
+        } 
+        // Update table
+        else {
+          const newTables = Object.assign({}, state.tables, {[state.selectedTable.tableID]: newTableData})
+          newState = Object.assign({}, state, {
+            tables: newTables,
+            selectedTable: tableReset
+          })
+        }
+
+        // so long as a table name is provided. 
+        if(newTableData.type !== ''){
+            return newState
+        }
       }
-      return newState
+
+      // return state if user submits empty table name
+      return state;
 
                     // ------------ Change Table Name ----------------//
     case types.HANDLE_TABLE_NAME_CHANGE:
@@ -150,73 +150,121 @@ const reducers = (state = initialState, action) => {
 
                     // ---------- Select Table For Update ------------//
     case types.HANDLE_SELECTED_TABLE:
-      newSelectedTable = state.tables[action.payload]
-      createTableState = true 
-      fieldReset.tableNum = newSelectedTable //reset the field selected, but keep the table selected
+      tableNum = Number(action.payload)
+
+      newSelectedTable = Object.assign({}, state.tables[tableNum])
+      
       return {
         ...state,
         selectedTable: newSelectedTable,
-        createTableState,
-        selectedField: fieldReset //fieldReset is defined above the cases
+        selectedField: fieldReset
+        //selectedField: fieldReset //fieldReset is defined above the cases
       };
 
                     // --------------- Delete Table ----------------//
     case types.DELETE_TABLE:
-      tableCount -= 1;
-      delete tables[action.payload]
+    tableNum = Number(action.payload);
+
+    newTables = Object.assign({}, state.tables);
+    delete newTables[tableNum];
+
+    if (state.selectedField.tableNum === tableNum) {
       return {
         ...state,
-        tables,
-        tableIndex,
-        tableCount,
-      };
+        tables: newTables,
+        selectedTable: tableReset,
+        selectedField: fieldReset
+      }
+    } else {
+      if (state.selectedTable.tableID === tableNum) {
+        return {
+          ...state,
+          tables: newTables,
+          selectedTable: tableReset
+        }
+      } else {
+        return {
+          ...state,
+          tables: newTables,
+        }
+      }
+    }
 
-
-                    // -------------- Add or Update Field ----------------//
+                // ----------- Save Added or Updated Field ----------------//
     case types.SAVE_FIELD_INPUT:
-      const selectedTableIndex = state.selectedField.tableNum;
-      const currentFieldIndex = state.tables[selectedTableIndex].fieldsIndex;
-      let updatedTables = {}
+      let newSelectedFieldName = state.selectedField.name;
 
-      // no field has been selected yet
-      if (state.selectedField.fieldNum < 0) {
-        updatedTables = 
-        Object.assign({}, state.tables, {[selectedTableIndex]:
-          Object.assign({}, state.tables[selectedTableIndex], {fieldsIndex: currentFieldIndex + 1}, {
-            fields: Object.assign({}, state.tables[selectedTableIndex].fields, {[currentFieldIndex]: 
-              Object.assign({}, state.selectedField, {fieldNum: currentFieldIndex})})})})
-      } 
-      // field has been selected
+      // capitalize first letter and remove whitespace
+      newSelectedFieldName = newSelectedFieldName.replace(/[^\w]/gi, '');
+      newSelectedFieldName = newSelectedFieldName.charAt(0).toUpperCase() + newSelectedFieldName.slice(1);
+      
+      if(newSelectedFieldName.length > 0) {
+      tableNum = state.selectedField.tableNum;
+      const currentFieldIndex = state.tables[tableNum].fieldsIndex;
+        // Save new field
+        if (state.selectedField.fieldNum < 0) {
+          newTables = 
+          Object.assign({}, state.tables, {[tableNum]:
+            Object.assign({}, state.tables[tableNum], {fieldsIndex: currentFieldIndex + 1}, {
+              fields: Object.assign({}, state.tables[tableNum].fields, {[currentFieldIndex]: 
+                Object.assign({}, state.selectedField, {fieldNum: currentFieldIndex, name: newSelectedFieldName})})})})
+  
+                newSelectedField = Object.assign({}, fieldReset, {tableNum})
+                return {
+                  ...state,
+                  tables: newTables,
+                  selectedField: newSelectedField 
+                } 
+        } 
+      // Update existing field
       else {
-        updatedTables = 
-        Object.assign({}, state.tables, {[selectedTableIndex]:
-          Object.assign({}, state.tables[selectedTableIndex], {fieldsIndex: currentFieldIndex}, {
-            fields: Object.assign({}, state.tables[selectedTableIndex].fields, {[state.selectedField.fieldNum]: 
-              // Object.assign({}, state.selectedField, {fieldNum: currentFieldIndex})})})})        
-              Object.assign({}, state.selectedField, {fieldNum: state.selectedField.fieldNum})})})})        
-      } 
+        newTables = 
+        Object.assign({}, state.tables, {[tableNum]:
+          Object.assign({}, state.tables[tableNum], {fieldsIndex: currentFieldIndex}, {
+            fields: Object.assign({}, state.tables[tableNum].fields, {[state.selectedField.fieldNum]: 
+              Object.assign({}, state.selectedField, {fieldNum: state.selectedField.fieldNum, name: newSelectedFieldName})})})})  
+              
+              return {
+                ...state,
+                tables: newTables,
+                selectedField: fieldReset
+              } 
+          } 
+      }
+      return state;
+
+                     // -------------- Delete Field ----------------//
+    case types.DELETE_FIELD:
+      tableNum = Number(action.payload[0]);
+      const fieldNum = Number(action.payload[1]);
+      if (state.selectedField.tableNum === tableNum && state.selectedField.fieldNum === fieldNum) {
+
+      newTable = Object.assign({}, state.tables[tableNum])
+      delete newTable.fields[fieldNum];
+      newTables = Object.assign({}, state.tables, {[tableNum]: newTable})
+
       return {
         ...state,
-        tables: updatedTables,
-        selectedField: fieldReset //fieldReset is defined above the cases
-      } 
+        tables: newTables,
+        selectedField: fieldReset
+      }
+    } else {
+      newTable = Object.assign({}, state.tables[tableNum])
+      delete newTable.fields[fieldNum];
+      newTables = Object.assign({}, state.tables, {[tableNum]: newTable})
 
-                          // -------------- Delete Field ----------------//
-    case types.DELETE_FIELD:
-      const tablesIndexSelected = action.payload[0];
-      const fieldIndexSelected = action.payload[1];
-      delete tables[tablesIndexSelected].fields[fieldIndexSelected];
-    return {
-      ...state,
-      tables,
-    };
+      return {
+        ...state,
+        tables: newTables
+      }
+    }
 
                     // ------------ HANDLE FIELD UPDATE ----------------//
     // updates selected field on each data entry
     case types.HANDLE_FIELDS_UPDATE:
       // parse if relations field is selected
       if(action.payload.name.indexOf('.') !== -1){
-        const rel = action.payload.name.split('.'); 
+        const rel = action.payload.name.split('.'); // rel[0] is 'relation' and rel[1] is either 'type', 'field', or 'ref'type'
         newSelectedField = Object.assign({}, state.selectedField, {[rel[0]] :
                             Object.assign({}, state.selectedField[rel[0]], {[rel[1]] : action.payload.value})})
       } else{
@@ -229,7 +277,6 @@ const reducers = (state = initialState, action) => {
       selectedField: newSelectedField
     }  
 
-
                     // ------------ FIELD SELECTED FOR UPDATE ----------------//
 
     // when a user selects a field, it changes selectedField to be an object with the necessary 
@@ -239,36 +286,20 @@ const reducers = (state = initialState, action) => {
       const location = action.payload.location.split(" ")
   
       newSelectedField = Object.assign({}, state.tables[Number(location[0])].fields[Number(location[1])]);
+
     return {
       ...state,
-      tables,
       selectedField: newSelectedField,
-      fieldUpdated
+      selectedTable: tableReset
     }  
                     // ------------ OPEN FIELD CREATOR ----------------//
     // Add Field in Table was clicked to display field options
     case types.ADD_FIELD_CLICKED:
-      createTableState = false; 
-      newSelectedField = {
-        name: '',
-        type: 'String',
-        primaryKey: false,
-        unique: false,
-        defaultValue: '',
-        required: false,
-        multipleValues: false,
-        relation: {
-          type: '',
-          field: '',
-          refType: ''
-        },
-        tableNum: action.payload,
-        fieldNum: -1
-      };
+      newSelectedField = fieldReset
+      newSelectedField.tableNum = Number(action.payload)
 
       return{
         ...state,
-        createTableState,
         selectedField: newSelectedField
       }
 
@@ -276,7 +307,6 @@ const reducers = (state = initialState, action) => {
       // ----------------------------- Query App -------------------------------//
     
     case types.CREATE_QUERY:
-      console.log(action.payload)
 
     default:
       return state;
