@@ -72,7 +72,6 @@ const reducers = (state = initialState, action) => {
     case types.CHOOSE_DATABASE:
       database = action.payload; 
       newSelectedTable = Object.assign({}, state.selectedTable, {idRequested: database === 'MongoDB'})
-      console.log('table reset', tableReset)
 
       return {
         ...state,
