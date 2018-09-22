@@ -85,10 +85,18 @@ const reducers = (state = initialState, action) => {
                   // ----------- Open Table Creator --------------//
     
     case types.OPEN_TABLE_CREATOR:
-      // code to open the table creator
-    return {
+      newState = Object.assign({}, state)
 
-    }
+      // if a field was previously selected
+      if (state.selectedField.tableNum > -1) {
+        newState.selectedField = Object.assign({}, fieldReset)
+      }
+      // table was previously selected
+      else {
+        newState.selectedTable.tableID = Object.assign({}, tableReset) 
+      }
+
+    return newState
 
                     // ------------- Add Table ----------------//
     case types.SAVE_TABLE_DATA_INPUT:
@@ -128,6 +136,7 @@ const reducers = (state = initialState, action) => {
 
       // return state if user submits empty table name
       return state;
+
                     // ------------ Change Table Name ----------------//
     case types.HANDLE_TABLE_NAME_CHANGE:
       newSelectedTable = Object.assign({}, state.selectedTable, {type: action.payload})
