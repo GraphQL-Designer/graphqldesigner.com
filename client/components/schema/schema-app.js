@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { CSSTransition } from 'react-transition-group'
 
 //components
 import Table from './table.js';

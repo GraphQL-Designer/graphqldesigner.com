@@ -14,9 +14,9 @@
     opacity: 0;
 }
 
-.fade-appear.fade-appear-active {
+.fade-enter.fade-enter-active {
     opacity: 1;
-    transition: opacity 1000ms linear;
+    transition: opacity 300ms linear;
 }
 
 .fade-exit {

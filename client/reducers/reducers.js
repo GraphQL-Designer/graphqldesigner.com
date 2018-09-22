@@ -95,11 +95,10 @@ const reducers = (state = initialState, action) => {
         if (state.selectedTable.tableID < 0) {
           newTableData = Object.assign({}, state.selectedTable, {tableID: state.tableIndex})
           
-          //capitalize first letter
-          newTableData.type = newTableData.type.charAt(0).toUpperCase() + newTableData.type.slice(1);
-          //remove white space
-          newTableData.type = newTableData.type.replace(/ /g, '');
-  
+          //capitalize first letter and remove whitespace
+          newTableData.type = newTableData.type.replace(/[^\w]/gi, '');
+          newTableData.type = newTableData.type.charAt(0).toUpperCase() + newTableData.type.slice(1)
+
           const newTables = Object.assign({}, state.tables, {[state.tableIndex]: newTableData})
           newState = Object.assign({}, state, {
             tableIndex: state.tableIndex + 1,
@@ -116,10 +115,9 @@ const reducers = (state = initialState, action) => {
         } else {
           newTableData = Object.assign({}, state.selectedTable)
   
-          //capitalize first letter
-          newTableData.type = newTableData.type.charAt(0).toUpperCase() + newTableData.type.slice(1);
-          //remove white space
-          newTableData.type = newTableData.type.replace(/ /g, '');
+          //capitalize first letter and remove whitespace
+          newTableData.type = newTableData.type.replace(/[^\w]/gi, '');
+          newTableData.type = newTableData.type.charAt(0).toUpperCase() + newTableData.type.slice(1)
   
           const newTables = Object.assign({}, state.tables, {[state.selectedTable.tableID]: newTableData})
           newState = Object.assign({}, state, {
@@ -203,16 +201,21 @@ const reducers = (state = initialState, action) => {
 
     // -------------- Add or Update Field ----------------//
     case types.SAVE_FIELD_INPUT:
+      let newSelectedFieldName = state.selectedField.name;
+      //capitalize first letter and remove whitespace
+      newSelectedFieldName = newSelectedFieldName.replace(/[^\w]/gi, '');
+      newSelectedFieldName = newSelectedFieldName.charAt(0).toUpperCase() + newSelectedFieldName.slice(1);
+
+      if(newSelectedFieldName.length > 0) {
       tableNum = state.selectedField.tableNum;
       const currentFieldIndex = state.tables[tableNum].fieldsIndex;
-
       // no field has been selected yet
       if (state.selectedField.fieldNum < 0) {
         newTables = 
         Object.assign({}, state.tables, {[tableNum]:
           Object.assign({}, state.tables[tableNum], {fieldsIndex: currentFieldIndex + 1}, {
             fields: Object.assign({}, state.tables[tableNum].fields, {[currentFieldIndex]: 
-              Object.assign({}, state.selectedField, {fieldNum: currentFieldIndex})})})})
+              Object.assign({}, state.selectedField, {fieldNum: currentFieldIndex, name: newSelectedFieldName})})})})
 
               newSelectedField = Object.assign({}, fieldReset, {tableNum})
               return {
@@ -227,13 +230,15 @@ const reducers = (state = initialState, action) => {
         Object.assign({}, state.tables, {[tableNum]:
           Object.assign({}, state.tables[tableNum], {fieldsIndex: currentFieldIndex}, {
             fields: Object.assign({}, state.tables[tableNum].fields, {[state.selectedField.fieldNum]: 
-              Object.assign({}, state.selectedField, {fieldNum: state.selectedField.fieldNum})})})})  
+              Object.assign({}, state.selectedField, {fieldNum: state.selectedField.fieldNum, name: newSelectedFieldName})})})})  
               
               return {
                 ...state,
                 tables: newTables
               } 
-      } 
+          } 
+      }
+      return state;
 
     // -------------- Delete Field ----------------//
     case types.DELETE_FIELD:
