@@ -9,3 +9,25 @@
     width: 100%;
     height: 100vh; 
 }
+
+.fade {
+    opacity: 0;
+}
+
+.fade-appear.fade-appear-active {
+    opacity: 1;
+    transition: opacity 1000ms linear;
+}
+
+.fade-exit {
+    opacity: 1;
+}
+
+.fade-exit.fade-exit-active {
+    opacity: 0;
+    transition: opacity 300ms linear;
+}
+
+.fade-exit-done {
+    opacity: 0;
+}

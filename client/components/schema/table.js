@@ -8,16 +8,24 @@ import FlatButton from 'material-ui/FlatButton';
 import Delete from 'material-ui/svg-icons/action/delete'
 import Close from 'material-ui/svg-icons/navigation/close'
 
-const deleteStyle = {
-  minWidth: '25px',
-  position: 'absolute',
-  right: '10px'
+const style = {
+  deleteStyle: {
+    minWidth: '25px',
+    position: 'absolute',
+    right: '10px'
+  },
+  fieldNameStyle: {
+    width: '100%',
+    height: '100%'
+  },
+  idFiled: {
+    width: '100%',
+    justifyContent: 'center',
+    color: 'white',
+    marginTop: '5px',
+    cursor: 'pointer'
+  }
 }
-const fieldNameStyle = {
-  width: '100%',
-  height: '100%'
-}
-
 
 // we use store.data, because of index.js reduce function
 const mapStateToProps = store => ({
@@ -92,7 +100,7 @@ class Table extends Component {
             <FlatButton
               value={`${tableIndex} ${fieldIndex}`}
               onClick={this.handleUpdateField}
-              style={fieldNameStyle}
+              style={style.fieldNameStyle}
             >
             {`${fieldName} - ${fieldType}`}
             </FlatButton>
@@ -117,7 +125,7 @@ class Table extends Component {
               backgroundColor={colors[this.props.tableData.tableID]}
               value={this.props.tableIndex}
               onClick={this.handleSelectedTable}
-              style={fieldNameStyle}
+              style={style.fieldNameStyle}
             >
               {this.props.tableData.type}
             </FlatButton>
@@ -126,15 +134,19 @@ class Table extends Component {
               icon={<Delete />}
               value={this.props.tableIndex}
               onClick={this.handleDeleteTable}
-              style={deleteStyle}
+              style={style.deleteStyle}
             />
           </div>
         </div>
         { this.props.tableData.idRequested && (
-          <div onClick={this.handleSelectedTable}>
-            <div  className='field idField'>
-              <p>id - ID</p>
-            </div>
+          <div>
+            <FlatButton
+              value={this.props.tableIndex}
+              onClick={this.handleSelectedTable}
+              style={style.idFiled}
+            >
+              id - ID
+            </FlatButton>
             <hr className='fieldBreak'/>
           </div>
         )}

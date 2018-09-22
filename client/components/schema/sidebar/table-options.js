@@ -164,7 +164,7 @@ class TableOptions extends React.Component {
 
             <SelectField
               floatingLabelText="Type"
-              fullWidth="true"
+              fullWidth={true}
               value={this.props.selectedField.type}
               onChange={this.handleMaterialChange.bind(null, 'type')} // we access 'type' as name in handleChange
             >

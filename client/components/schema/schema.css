@@ -32,16 +32,6 @@
   position: relative;
 }
 
-.idField {
-  width: 100%;
-  justify-content: center;
-  color: white;
-  font-size: 1em;
-  margin-top: 10px;
-  margin-bottom: -7.5px;
-  cursor: pointer;
-}
-
 .addField {
   justify-content: center;
   height: 50px;
