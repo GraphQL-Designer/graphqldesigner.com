@@ -26,18 +26,6 @@
   position: absolute;
 }
 
-/* #options {
-  margin: 0;
-}
-
-#options span {
-  margin-top: 0;
-} */
-
-/* #options div{
-  width: 100%;
-} */
-
 
 form{
   display: flex;
@@ -85,5 +73,4 @@ select{
 
 option{
   background-color:rgb(48,51,59)
-  
 }
