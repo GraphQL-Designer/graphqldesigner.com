@@ -90,7 +90,7 @@ class CreateTable extends React.Component {
             onChange={this.handleChange}
             value={this.props.tableName || ''}
           />
-          <h6>(Works with singular naming convention)</h6>
+          <h6>(Singular naming convention)</h6>
           <Checkbox
             label="Unique ID"
             onCheck={this.handleClick}
