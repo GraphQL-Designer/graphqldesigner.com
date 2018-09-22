@@ -4,6 +4,7 @@
   width: 100%;
   height: calc(100vh - 95px);
   border: 1px solid black;
+  overflow: hidden;
 }
 
 .table-components-container{
@@ -15,6 +16,10 @@
   width: 100%;
   min-height: 300px;
   overflow: scroll;
+}
+
+#sidebar-container {
+  position: relative;
 }
 
 .table{

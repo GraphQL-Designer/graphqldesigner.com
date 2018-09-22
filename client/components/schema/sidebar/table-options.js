@@ -130,17 +130,36 @@ class TableOptions extends React.Component {
       }
     }
 
+    function fieldName(fieldNum, tableNum, tables) {
+      if (fieldNum >= 0) {
+        return (
+        <div>
+          <h2>{tables[tableNum].fields[fieldNum].name} Field</h2>
+          <h4>in {tables[tableNum].type}</h4>
+        </div>
+        )
+      }
+      return (
+        <div>
+          <h2>Add Field</h2>
+          <h4>to {tables[tableNum].type}</h4>
+        </div>
+      )
+    }
+
     return (
       <div id='fieldOptions'> 
         { this.props.selectedField.tableNum > -1  &&
-        <div id='options'>
+        <div id='options' style={{width: '250px'}}>
           <FlatButton
             id='back-to-create'
             label="Create Table"
             icon={<KeyboardArrowLeft />}
             onClick={this.handleOpenTableCreator}
           />
-          <form>
+          <form style={{width: '100%'}}>
+          {fieldName(this.props.selectedField.fieldNum, this.props.selectedField.tableNum, this.props.tables)}
+
             <TextField
               hintText="Field Name"
               floatingLabelText="Field Name"
