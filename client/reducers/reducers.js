@@ -88,7 +88,7 @@ const reducers = (state = initialState, action) => {
     case types.OPEN_TABLE_CREATOR:
       newState = Object.assign({}, state)
       newState.selectedField = Object.assign({}, fieldReset)
-      newState.selectedTable.tableID = Object.assign({}, tableReset) 
+      newState.selectedTable = Object.assign({}, tableReset) 
     return newState
 
                     // ------------- Add Table ----------------//

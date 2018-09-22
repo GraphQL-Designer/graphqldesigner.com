@@ -14,7 +14,7 @@ import MenuItem from 'material-ui/MenuItem';
 import DropDownMenu from 'material-ui/DropDownMenu';
 const styles = {
   customWidth: {
-    width: 150,
+    width: 200,
   },
 };
 
@@ -220,6 +220,7 @@ class TableOptions extends React.Component {
                   <p>Type:</p>
                   <DropDownMenu
                     value={this.props.selectedField.relation.type}
+                    style={styles.customWidth}
                     onChange={this.handleSelectChange.bind(null, 'relation.type')} // access 'relation.type' as name in handleChange
                     >
                       {tables}
@@ -230,6 +231,7 @@ class TableOptions extends React.Component {
                   <p>Field:</p>
                   <DropDownMenu
                     value={this.props.selectedField.relation.field}
+                    style={styles.customWidth}
                     onChange={this.handleSelectChange.bind(null, 'relation.field')} // access 'relation.field' as name in handleChange
                   >
                     {fields}
@@ -240,6 +242,7 @@ class TableOptions extends React.Component {
                   <p>RefType:</p>
                   <DropDownMenu
                     value={this.props.selectedField.relation.refType}
+                    style={styles.customWidth}
                     onChange={this.handleSelectChange.bind(null, 'relation.refType')} // access 'relation.refType' as name in handleChange
                   >
                     <MenuItem value='one to one' primaryText="one to one" />
