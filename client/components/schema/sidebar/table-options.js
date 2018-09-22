@@ -124,15 +124,15 @@ class TableOptions extends React.Component {
       if (fieldNum >= 0) {
         return (
         <div>
-          <h2>{tables[tableNum].fields[fieldNum].name} Field</h2>
-          <h4>in {tables[tableNum].type}</h4>
+          <h2 className="field-option-header">{tables[tableNum].fields[fieldNum].name} Field</h2>
+          <h4 className="field-option-header">in {tables[tableNum].type}</h4>
         </div>
         )
       }
       return (
         <div>
-          <h2>Add Field</h2>
-          <h4>to {tables[tableNum].type}</h4>
+          <h2 className="field-option-header">Add Field</h2>
+          <h4 className="field-option-header">to Table {tables[tableNum].type}</h4>
         </div>
       )
     }
