@@ -54,7 +54,6 @@ class SchemaApp extends Component {
         <img className='wallpaper' src='./images/graphql_wallpaper.png'/>
         <CSSTransition
           in={this.state.sidebar}
-          appear={true}
           timeout={200}
           classNames='fade'
         >
@@ -62,7 +61,6 @@ class SchemaApp extends Component {
             <CSSTransition
               in={this.props.selectedField.tableNum < 0}
               key='table'
-              appear={true}
               timeout={200}
               classNames='fade'
             >
@@ -72,7 +70,6 @@ class SchemaApp extends Component {
             <CSSTransition
               in={this.props.selectedField.tableNum >= 0}
               key='fields'
-              appear={true}
               timeout={200}
               classNames='fade'
             >
