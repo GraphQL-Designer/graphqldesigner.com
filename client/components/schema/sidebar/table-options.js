@@ -14,8 +14,11 @@ import MenuItem from 'material-ui/MenuItem';
 import DropDownMenu from 'material-ui/DropDownMenu';
 const styles = {
   customWidth: {
-    width: 200,
+    width: 200
   },
+  toggle: {
+    marginTop: '15px'
+  }
 };
 
 const mapStateToProps = store => ({
@@ -188,6 +191,7 @@ class TableOptions extends React.Component {
               label="Primary Key"
               toggled={this.props.selectedField.primaryKey}
               onToggle={this.handleToggle.bind(null, 'primaryKey')}
+              style={styles.toggle}
             />
             )}
             
@@ -195,24 +199,28 @@ class TableOptions extends React.Component {
               label="Required"
               toggled={this.props.selectedField.required}
               onToggle={this.handleToggle.bind(null, 'required')}
+              style={styles.toggle}
             />
 
             <Toggle
               label="Unique"
               toggled={this.props.selectedField.unique}
               onToggle={this.handleToggle.bind(null, 'unique')}
+              style={styles.toggle}
             />
 
             <Toggle
               label="Multiple Values"
               toggled={this.props.selectedField.multipleValues}
               onToggle={this.handleToggle.bind(null, 'multipleValues')}
+              style={styles.toggle}
             />
 
              <Toggle
               label="Relation"
               toggled={this.props.selectedField.relationSelected}
               onToggle={this.handleToggle.bind(null, 'relationSelected')}
+              style={styles.toggle}
             />
             
               {this.props.selectedField.relationSelected && (<span>
@@ -257,8 +265,10 @@ class TableOptions extends React.Component {
                 label={this.props.selectedField.fieldNum > -1 ?'Update Field' : 'Create Field'}
                 type='submit'
                 onClick={this.submitOptions}
+                style={{marginTop: '25px'}}
               />
           </form>
+          <div style={{width: '100%', height: '40px'}}/>
         </div>
         }
       </div>

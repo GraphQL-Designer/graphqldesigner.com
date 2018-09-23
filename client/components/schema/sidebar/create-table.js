@@ -98,8 +98,9 @@ class CreateTable extends React.Component {
             onChange={this.handleChange}
             value={this.props.tableName || ''}
           />
-          <h6>(Singular naming convention)</h6>
+          <h5 style={{textAlign: 'center', marginTop: '-4px'}}>( Singular naming convention )</h5>
           <Checkbox
+            style={{marginTop: '10px'}}
             label="Unique ID"
             onCheck={this.handleClick}
             id='idCheckbox'
@@ -111,6 +112,7 @@ class CreateTable extends React.Component {
             fullWidth={true}
             secondary={true} 
             type='submit'
+            style={{marginTop: '25px'}}
             />
         </form>
       </div>
