@@ -48,7 +48,6 @@ class TableOptions extends React.Component {
       open: false
     }
 
-    // this.showRelations = this.showRelations.bind(this)
     this.submitOptions = this.submitOptions.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleSelectChange = this.handleSelectChange.bind(this);
@@ -60,12 +59,6 @@ class TableOptions extends React.Component {
   handleOpenTableCreator(){
     this.props.openTableCreator()
   }
-
-  // showRelations(event, value){
-  //   console.log(value)
-  //   if (value) this.setState({showRelations: true})
-  //   else this.setState({showRelations: false})
-  // }
 
   handleToggle(name, event, value) {
     this.props.handleChange({name: name, value: value})
@@ -81,7 +74,6 @@ class TableOptions extends React.Component {
 
   submitOptions(event){
     event.preventDefault();
-    // this.setState({showRelations: false})
     if(this.props.selectedField.name){
       this.props.saveFieldInput();
 
