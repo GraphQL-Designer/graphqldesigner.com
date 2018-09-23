@@ -48,7 +48,6 @@ class TableOptions extends React.Component {
       open: false
     }
 
-    // this.showRelations = this.showRelations.bind(this)
     this.submitOptions = this.submitOptions.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleSelectChange = this.handleSelectChange.bind(this);
@@ -60,12 +59,6 @@ class TableOptions extends React.Component {
   handleOpenTableCreator(){
     this.props.openTableCreator()
   }
-
-  // showRelations(event, value){
-  //   console.log(value)
-  //   if (value) this.setState({showRelations: true})
-  //   else this.setState({showRelations: false})
-  // }
 
   handleToggle(name, event, value) {
     this.props.handleChange({name: name, value: value})
@@ -81,7 +74,6 @@ class TableOptions extends React.Component {
 
   submitOptions(event){
     event.preventDefault();
-    // this.setState({showRelations: false})
     if(this.props.selectedField.name){
       this.props.saveFieldInput();
 
@@ -161,7 +153,7 @@ class TableOptions extends React.Component {
       return (
         <div>
           <h2>Add Field</h2>
-          <h4>to {tables[tableNum].type}</h4>
+          <h4>to Table {tables[tableNum].type}</h4>
         </div>
       )
     }
@@ -249,7 +241,7 @@ class TableOptions extends React.Component {
                   <p>Type:</p>
                   <DropDownMenu
                     value={this.props.selectedField.relation.type}
-                    style={styles.customWidth}
+                    style={style.customWidth}
                     onChange={this.handleSelectChange.bind(null, 'relation.type')} // access 'relation.type' as name in handleChange
                     >
                       {tables}
@@ -260,7 +252,7 @@ class TableOptions extends React.Component {
                   <p>Field:</p>
                   <DropDownMenu
                     value={this.props.selectedField.relation.field}
-                    style={styles.customWidth}
+                    style={style.customWidth}
                     onChange={this.handleSelectChange.bind(null, 'relation.field')} // access 'relation.field' as name in handleChange
                   >
                     {fields}
@@ -271,7 +263,7 @@ class TableOptions extends React.Component {
                   <p>RefType:</p>
                   <DropDownMenu
                     value={this.props.selectedField.relation.refType}
-                    style={styles.customWidth}
+                    style={style.customWidth}
                     onChange={this.handleSelectChange.bind(null, 'relation.refType')} // access 'relation.refType' as name in handleChange
                   >
                     <MenuItem value='one to one' primaryText="one to one" />

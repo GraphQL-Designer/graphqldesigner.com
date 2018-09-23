@@ -115,7 +115,7 @@ class CreateTable extends React.Component {
           onClick={this.handleOpenTableCreator}
         />}
 
-        <form onSubmit={this.saveTableDataInput}>
+        <form id='create-table-form' onSubmit={this.saveTableDataInput}>
           {tableName(this.props.tableID, this.props.tables)}
 
           <TextField
