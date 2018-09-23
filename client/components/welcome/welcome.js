@@ -37,7 +37,8 @@ export default class Welcome extends React.Component {
     const styles = {
       border: '1px solid white',
       width: '125px',
-      fontSize: '1.2em'
+      fontSize: '1.2em',
+      color: 'white'
     }
 
     return (

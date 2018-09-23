@@ -1,10 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-<<<<<<< HEAD
-import * as actions from '../../actions/actions.js';
 import { TransitionGroup, CSSTransition } from 'react-transition-group'
-=======
->>>>>>> 17997cae9dbb7cb284d6d22c1ce7b8914bcbbc56
 
 // styling
 import RaisedButton from 'material-ui/RaisedButton';

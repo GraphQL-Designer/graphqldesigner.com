@@ -13,6 +13,7 @@ import Toggle from 'material-ui/Toggle';
 import MenuItem from 'material-ui/MenuItem';
 import DropDownMenu from 'material-ui/DropDownMenu';
 import Snackbar from 'material-ui/Snackbar';
+
 const style = {
   customWidth: {
     width: 200
@@ -212,7 +213,7 @@ class TableOptions extends React.Component {
               label="Primary Key"
               toggled={this.props.selectedField.primaryKey}
               onToggle={this.handleToggle.bind(null, 'primaryKey')}
-              style={styles.toggle}
+              style={style.toggle}
             />
             )}
             
@@ -220,28 +221,28 @@ class TableOptions extends React.Component {
               label="Required"
               toggled={this.props.selectedField.required}
               onToggle={this.handleToggle.bind(null, 'required')}
-              style={styles.toggle}
+              style={style.toggle}
             />
 
             <Toggle
               label="Unique"
               toggled={this.props.selectedField.unique}
               onToggle={this.handleToggle.bind(null, 'unique')}
-              style={styles.toggle}
+              style={style.toggle}
             />
 
             <Toggle
               label="Multiple Values"
               toggled={this.props.selectedField.multipleValues}
               onToggle={this.handleToggle.bind(null, 'multipleValues')}
-              style={styles.toggle}
+              style={style.toggle}
             />
 
              <Toggle
               label="Relation"
               toggled={this.props.selectedField.relationSelected}
               onToggle={this.handleToggle.bind(null, 'relationSelected')}
-              style={styles.toggle}
+              style={style.toggle}
             />
             
               {this.props.selectedField.relationSelected && (<span>

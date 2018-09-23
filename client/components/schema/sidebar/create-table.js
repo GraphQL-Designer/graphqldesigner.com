@@ -144,9 +144,9 @@ class CreateTable extends React.Component {
             style={{marginTop: '25px'}}
             />
         </form>
-        <div id='loader-container'>
+        {/* <div id='loader-container'>
           <Loader/>
-        </div>
+        </div> */}
         <Snackbar
           open={this.state.open}
           message={this.props.inputError.dupTable}
