@@ -12,12 +12,17 @@ import SelectField from 'material-ui/SelectField';
 import Toggle from 'material-ui/Toggle';
 import MenuItem from 'material-ui/MenuItem';
 import DropDownMenu from 'material-ui/DropDownMenu';
-const styles = {
+import Snackbar from 'material-ui/Snackbar';
+const style = {
   customWidth: {
     width: 200
   },
   toggle: {
     marginTop: '15px'
+  },
+  snackBarStyle: {
+    backgroundColor: 'rgb(255,66,128)',
+    color: 'black'
   }
 };
 
@@ -27,7 +32,8 @@ const mapStateToProps = store => ({
   addFieldClicked: store.data.addFieldClicked,
   selectedField: store.data.selectedField,
   updatedField: store.data.fieldUpdated, 
-  tables: store.data.tables
+  tables: store.data.tables,
+  inputError: store.data.inputError
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -40,24 +46,22 @@ const mapDispatchToProps = dispatch => ({
 class TableOptions extends React.Component {
   constructor(props) {
     super(props);
+    this.state={
+      selectedTableIndex : null, 
+      open: false
+    }
 
-    // this.showRelations = this.showRelations.bind(this)
     this.submitOptions = this.submitOptions.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleSelectChange = this.handleSelectChange.bind(this);
-    this.handleToggle = this.handleToggle.bind(this)
-    this.handleOpenTableCreator = this.handleOpenTableCreator.bind(this)
+    this.handleToggle = this.handleToggle.bind(this);
+    this.handleOpenTableCreator = this.handleOpenTableCreator.bind(this);
+    this.handleRequestClose = this.handleRequestClose.bind(this);
   }
 
   handleOpenTableCreator(){
     this.props.openTableCreator()
   }
-
-  // showRelations(event, value){
-  //   console.log(value)
-  //   if (value) this.setState({showRelations: true})
-  //   else this.setState({showRelations: false})
-  // }
 
   handleToggle(name, event, value) {
     this.props.handleChange({name: name, value: value})
@@ -73,13 +77,30 @@ class TableOptions extends React.Component {
 
   submitOptions(event){
     event.preventDefault();
-    // this.setState({showRelations: false})
     if(this.props.selectedField.name){
       this.props.saveFieldInput();
+
+      // check if entered input already exists in the table to trigger snackbar to display error
+      if(this.props.inputError.status !== -1){
+        this.setState({
+          open: true,
+        })
+      } else {
+        this.setState({
+          open: false,
+        })
+      }
     }
   }
 
+  handleRequestClose = () => {
+    this.setState({
+      open: false,
+    })
+  }
+
   render() {
+    console.log('yooo: ', this.props.tables[this.props.selectedField.tableNum]);
     let tables = []
     let fields = [];
     let tempTableNumList = [];
@@ -135,7 +156,7 @@ class TableOptions extends React.Component {
       return (
         <div>
           <h2>Add Field</h2>
-          <h4>to {tables[tableNum].type}</h4>
+          <h4>to Table {tables[tableNum].type}</h4>
         </div>
       )
     }
@@ -228,7 +249,7 @@ class TableOptions extends React.Component {
                   <p>Type:</p>
                   <DropDownMenu
                     value={this.props.selectedField.relation.type}
-                    style={styles.customWidth}
+                    style={style.customWidth}
                     onChange={this.handleSelectChange.bind(null, 'relation.type')} // access 'relation.type' as name in handleChange
                     >
                       {tables}
@@ -239,7 +260,7 @@ class TableOptions extends React.Component {
                   <p>Field:</p>
                   <DropDownMenu
                     value={this.props.selectedField.relation.field}
-                    style={styles.customWidth}
+                    style={style.customWidth}
                     onChange={this.handleSelectChange.bind(null, 'relation.field')} // access 'relation.field' as name in handleChange
                   >
                     {fields}
@@ -250,7 +271,7 @@ class TableOptions extends React.Component {
                   <p>RefType:</p>
                   <DropDownMenu
                     value={this.props.selectedField.relation.refType}
-                    style={styles.customWidth}
+                    style={style.customWidth}
                     onChange={this.handleSelectChange.bind(null, 'relation.refType')} // access 'relation.refType' as name in handleChange
                   >
                     <MenuItem value='one to one' primaryText="one to one" />
@@ -271,6 +292,14 @@ class TableOptions extends React.Component {
           <div style={{width: '100%', height: '40px'}}/>
         </div>
         }
+        <Snackbar
+          open={this.state.open}
+          // message={this.props.inputError.dupField + ' in Table ' + this.props.tables[this.props.selectedField.tableNum].type}
+          message={this.props.inputError.dupField}
+          autoHideDuration={3000}
+          onRequestClose={this.handleRequestClose}
+          bodyStyle={style.snackBarStyle}
+        />
       </div>
     );
   }

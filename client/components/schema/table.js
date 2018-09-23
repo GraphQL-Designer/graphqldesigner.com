@@ -1,13 +1,17 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+<<<<<<< HEAD
 import * as actions from '../../actions/actions.js';
 import { TransitionGroup, CSSTransition } from 'react-transition-group'
+=======
+>>>>>>> 17997cae9dbb7cb284d6d22c1ce7b8914bcbbc56
 
 // styling
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import Delete from 'material-ui/svg-icons/action/delete'
 import Close from 'material-ui/svg-icons/navigation/close'
+import * as actions from '../../actions/actions.js';
 
 const style = {
   deleteStyle: {
@@ -45,6 +49,7 @@ const mapDispatchToProps = dispatch => ({
 class Table extends Component {
   constructor(props) {
     super(props);
+
     this.handleDeleteTable = this.handleDeleteTable.bind(this)
     this.handleDeleteField = this.handleDeleteField.bind(this)
     this.handleAddField    = this.handleAddField.bind(this)
