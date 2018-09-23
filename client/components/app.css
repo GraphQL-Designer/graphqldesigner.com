@@ -1,0 +1,47 @@
+
+
+.app-container{
+  display: flex; 
+  flex-direction: column; 
+  width: 100%;
+  height: 100%; 
+}
+
+.app-header{
+  width: 100%; 
+  text-align: center;
+}
+
+.app-body-container{
+  display: flex; 
+  flex-direction: column; 
+  width: 100%;
+  height: 100%; 
+  /* border: 1px solid black; */
+}
+
+.tabs{
+  width: 100%;
+  /* height: 100%;  */
+}
+
+h1{
+  margin-top: 0 !important;
+}
+
+.loader{
+  margin: 0 auto; 
+}
+
+hr {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+button{
+  margin-top: 5px;
+}
+
+.table div span {
+  margin-top: 5px;
+}

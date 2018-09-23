@@ -17,6 +17,7 @@
   "scripts": {
     "pack": "webpack",
     "dev": "webpack-dev-server",
+    "server": "nodemon server/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {
@@ -27,6 +28,7 @@
     "babelify": "^8.0.0",
     "browserify": "^16.2.2",
     "css-loader": "^1.0.0",
+    "nodemon": "^1.18.4",
     "react": "^16.4.2",
     "react-dom": "^16.5.0",
     "redux-devtools-extension": "^2.13.5",
@@ -37,11 +39,18 @@
     "webpack-dev-server": "^3.1.5"
   },
   "dependencies": {
+    "@material/top-app-bar": "^0.39.3",
     "babel-preset-stage-2": "^6.24.1",
+    "eslint-config-airbnb": "^17.1.0",
+    "express": "^4.16.3",
+    "express-zip": "^2.0.1",
     "material-ui": "^0.20.2",
+    "react-bootstrap": "^0.32.4",
     "react-redux": "^5.0.7",
     "react-router-dom": "^4.3.1",
+    "react-select": "^2.0.0",
     "react-transition-group": "^2.4.0",
-    "redux": "^4.0.0"
+    "redux": "^4.0.0",
+    "zip-local": "^0.3.4"
   }
 }

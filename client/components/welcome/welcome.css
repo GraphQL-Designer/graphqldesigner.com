@@ -1,3 +1,13 @@
+.welcome-container{
+  text-align: center;
+  margin-top: -7vh;
+}
+
+.welcome-box{
+  min-width: 300px;
+  min-height: 400px; 
+}
+
 #icon_graphql{
   max-width: 25%;
   max-height: 5%;
@@ -28,11 +38,15 @@ h3{
   margin-top: 20px;
 }
 
-.dbButton{ 
-  font-size: 25px;
-}
-
-hr{
+.welcome-hr{
   height: 2px;
   background-color: black;
+}
+
+.iconContainer {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
 }

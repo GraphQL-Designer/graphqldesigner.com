@@ -1,0 +1,25 @@
+#navbar{
+  /* background-color: #5f5e5e; */
+  background-color: rgb(50,54,60);
+  /* background-color: rgb(44,48,56); */
+  /* background-color: rgb(38,42,48); */
+  width: 100%;
+  height: 50px; 
+  display: flex; 
+  flex-direction: row; 
+  justify-content: space-between;
+  align-items: center; 
+}
+
+.overlay {
+  z-index: 99;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

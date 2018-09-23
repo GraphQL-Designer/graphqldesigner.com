@@ -1,5 +1,91 @@
 .schema-app-container{
+  display: flex; 
+  flex-direction: row-reverse;
   width: 100%;
-  border: 5px solid black;
-  height: 600px;  
+  height: calc(100vh - 95px);
+  border: 1px solid black;
+  overflow: hidden;
+  position: relative;
+}
+
+.wallpaper {
+  position: absolute;
+  width: 100%;
+}
+
+.table-components-container{
+  display: flex; 
+  background-color: rgb(54, 58, 66);
+  justify-content: flex-start; 
+  align-items: flex-start; 
+  flex-wrap: wrap; 
+  width: 100%;
+  min-height: 300px;
+  overflow: scroll;
+}
+
+#sidebar-container {
+  position: relative;
+  overflow: scroll;
+}
+
+.table {
+  display: flex; 
+  flex-direction: column; 
+  width: 250px; 
+  margin: 40px; 
+  box-shadow: 3px 3px 12.5px black;
+  background-color: rgb(54, 58, 66, 1);
+}
+
+.tableButton {
+  width: 100%;
+  height: 100%;
+}
+
+.field{
+  display: flex; 
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+}
+
+.fieldContainer {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 239px;
+  left: 4px;
+}
+
+.fieldButton {
+  width: 240px;
+  height: 100%;
+  display: flex; 
+  justify-content: space-between;
+  align-items: left;
+  margin-left: 5px;
+}
+
+.delete-button {
+  position: absolute;
+  right: 5px;
+}
+
+.addField {
+  justify-content: center;
+  height: 50px;
+  margin-top: -5px;
+  background-color: rgb(48, 48, 48);
+  color: white;
+  cursor: pointer;
+  text-align: center;
+}
+
+.fieldBreak {
+  width: 100%;
+  height: 1px;
+  border: none;
+  background-color: rgba(200, 200, 200, 0.6);
 }
