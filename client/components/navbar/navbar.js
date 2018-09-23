@@ -61,7 +61,7 @@ class MainNav extends React.Component {
          })
          console.log(err)
         })
-    }, 1500);
+    }, 2500);
   }
 
   

@@ -22,20 +22,21 @@ app.post('/write-files', (req, res) => {
 
     buildDirectories(dateStamp, () => {
 
-        fs.writeFile(path.join(__dirname, `build-files${dateStamp}/readme.md`), createReadMe(), (err) => {
+        fs.writeFile(path.join(__dirname, `../../build-files${dateStamp}/readme.md`), createReadMe(), (err) => {
             if (err) console.log(err)
     
-            fs.writeFile(path.join(__dirname, `build-files${dateStamp}/index.js`), buildExpressServer(), (err) => {
+            fs.writeFile(path.join(__dirname, `../../build-files${dateStamp}/index.js`), buildExpressServer(), (err) => {
                 if (err) console.log(err)
                 
                 buildClientQueries(data.data, dateStamp, () => {
 
                     if (data.database = 'MongoDB') {
                         buildForMongo(data.data, dateStamp, () => {
-                            
-                            zipper.sync.zip(path.join(__dirname, `build-files${dateStamp}`)).compress().save(path.join(__dirname, `graphql${dateStamp}.zip`));
+       
+                            //ZIP main build folder and responds to client
+                            zipper.sync.zip(path.join(__dirname, `../../build-files${dateStamp}`)).compress().save(path.join(__dirname, `../../graphql${dateStamp}.zip`));
 
-                            const file = __dirname + `/graphql${dateStamp}.zip`;
+                            const file = `../graphql${dateStamp}.zip`
                             res.setHeader('Content-Type', 'application/force-download');
                             res.setHeader('Content-disposition', 'filename=graphql.zip');
                             res.download(file, err => {
@@ -43,10 +44,16 @@ app.post('/write-files', (req, res) => {
                                     console.log(err)
                                 } else {
                                     console.log('Download Complete!')
-                                    deleteTempFiles(dateStamp, () => {
 
-                                        console.log('Deleted Temp Files')
-                                    })
+                                    setTimeout(() => {
+                                        deleteTempFiles(data.database, data.data, dateStamp, () => {
+
+                                            deleteTempFolders(dateStamp, () => {
+    
+                                                console.log('Deleted Temp Files')
+                                            })
+                                        }) 
+                                    }, 6000)
                                 }
                             })
                         })
@@ -63,28 +70,28 @@ app.listen(4100, () => {
 
 
 function buildDirectories(dateStamp, cb) {
-    fs.mkdir(path.join(__dirname, `build-files${dateStamp}`), (err) => {
+    fs.mkdir(path.join(__dirname, `../../build-files${dateStamp}`), (err) => {
         if (err) console.log(err)
 
-        fs.mkdir(path.join(__dirname, `build-files${dateStamp}`, 'client'), (err) => {
+        fs.mkdir(path.join(__dirname, `../../build-files${dateStamp}`, 'client'), (err) => {
             if (err) console.log(err)
 
-            fs.mkdir(path.join(__dirname, `build-files${dateStamp}`, 'client', 'graphql'), (err) => {
+            fs.mkdir(path.join(__dirname, `../../build-files${dateStamp}`, 'client', 'graphql'), (err) => {
                 if (err) console.log(err)
 
-                fs.mkdir(path.join(__dirname, `build-files${dateStamp}`, 'client', 'graphql', 'queries'), (err) => {
+                fs.mkdir(path.join(__dirname, `../../build-files${dateStamp}`, 'client', 'graphql', 'queries'), (err) => {
                     if (err) console.log(err)
 
-                    fs.mkdir(path.join(__dirname, `build-files${dateStamp}`, 'client', 'graphql', 'mutations'), (err) => {
+                    fs.mkdir(path.join(__dirname, `../../build-files${dateStamp}`, 'client', 'graphql', 'mutations'), (err) => {
                         if (err) console.log(err)
 
-                        fs.mkdir(path.join(__dirname, `build-files${dateStamp}`, 'server'), (err) => {
+                        fs.mkdir(path.join(__dirname, `../../build-files${dateStamp}`, 'server'), (err) => {
                             if (err) console.log(err)
 
-                            fs.mkdir(path.join(__dirname, `build-files${dateStamp}`, 'server', 'db-Model'), (err) => {
+                            fs.mkdir(path.join(__dirname, `../../build-files${dateStamp}`, 'server', 'db-Model'), (err) => {
                                 if (err) console.log(err)  
 
-                                fs.mkdir(path.join(__dirname, `build-files${dateStamp}`, 'server', 'graphql-schema'), (err) => {
+                                fs.mkdir(path.join(__dirname, `../../build-files${dateStamp}`, 'server', 'graphql-schema'), (err) => {
                                     if (err) console.log(err)  
 
                                     return cb();
@@ -100,10 +107,10 @@ function buildDirectories(dateStamp, cb) {
 
 function buildClientQueries(data, dateStamp, cb) {
     
-    fs.writeFile(path.join(__dirname, `build-files${dateStamp}/client/graphql/queries/index.js`), parseClientQueries(data), (err) => {
+    fs.writeFile(path.join(__dirname, `../../build-files${dateStamp}/client/graphql/queries/index.js`), parseClientQueries(data), (err) => {
         if (err) console.log(err)
 
-        fs.writeFile(path.join(__dirname, `build-files${dateStamp}/client/graphql/mutations/index.js`), parseClientMutations(data), (err) => {
+        fs.writeFile(path.join(__dirname, `../../build-files${dateStamp}/client/graphql/mutations/index.js`), parseClientMutations(data), (err) => {
             if (err) console.log(err)
 
             return cb();
@@ -112,14 +119,14 @@ function buildClientQueries(data, dateStamp, cb) {
 }
 
 function buildForMongo(data, dateStamp, cb) {
-    fs.writeFile(path.join(__dirname, `build-files${dateStamp}/server/graphql-schema/index.js`), parseGraphqlMongoServer(data), (err) => {
+    fs.writeFile(path.join(__dirname, `../../build-files${dateStamp}/server/graphql-schema/index.js`), parseGraphqlMongoServer(data), (err) => {
         if (err) console.log(err)
 
         let indexes = Object.keys(data);
 
         function step(i) {
             if (i < Object.keys(data).length) {
-                fs.writeFileSync(path.join(__dirname, `build-files${dateStamp}/server/db-model/${data[indexes[i]].type.toLowerCase()}.js`), parseMongoschema(data[indexes[i]]), (err) => {
+                fs.writeFileSync(path.join(__dirname, `../../build-files${dateStamp}/server/db-model/${data[indexes[i]].type.toLowerCase()}.js`), parseMongoschema(data[indexes[i]]), (err) => {
                     if (err) console.log(err)
 
                 })
@@ -132,14 +139,84 @@ function buildForMongo(data, dateStamp, cb) {
     })
 }
 
-function deleteTempFiles(dateStamp, cb) {
-    fs.rmdir(path.join(__dirname, `build-files${dateStamp}`), (err) => {
-        if (err) console.log(err)
+function deleteTempFiles(database, data, dateStamp, cb) {
 
-        fs.unlink(path.join(__dirname, `graphql${dateStamp}.zip`), (err) => {
+    fs.unlink(path.join(__dirname, `../../build-files${dateStamp}/readme.md`), (err) => {
+        if (err) console.log(err);
+
+        fs.unlink(path.join(__dirname, `../../build-files${dateStamp}/index.js`), (err) => {
             if (err) console.log(err);
 
-            return cb()
+            fs.unlink(path.join(__dirname, `../../build-files${dateStamp}/client/graphql/queries/index.js`), (err) => {
+                if (err) console.log(err);
+
+                fs.unlink(path.join(__dirname, `../../build-files${dateStamp}/client/graphql/mutations/index.js`), (err) => {
+                    if (err) console.log(err);
+
+                    fs.unlink(path.join(__dirname, `../../build-files${dateStamp}/server/graphql-schema/index.js`), (err) => {
+                        if (err) console.log(err);
+
+                        if (database = 'MongoDB') {
+                                let indexes = Object.keys(data);
+
+                                function step(i) {
+                                    if (i < Object.keys(data).length) {
+                                        fs.unlink(path.join(__dirname, `../../build-files${dateStamp}/server/db-model/${data[indexes[i]].type.toLowerCase()}.js`), (err) => {
+                                            if (err) console.log(err)
+                        
+                                    })
+                                    step(i + 1);
+                                } else {
+                                    fs.unlink(path.join(__dirname, `../../graphql${dateStamp}.zip`), (err) => {
+                                        if (err) console.log(err);
+
+                                    return cb();
+                                    })
+                                }
+                            }
+                            step(0);
+                        }
+                    })
+                })
+            })
         })
     })
 }
+
+function deleteTempFolders(dateStamp, cb) {
+
+    fs.rmdir(path.join(__dirname, `../../build-files${dateStamp}`, 'server', 'graphql-schema'), (err) => {
+        if (err) console.log(err)
+
+        fs.rmdir(path.join(__dirname, `../../build-files${dateStamp}`, 'server', 'db-Model'), (err) => {
+            if (err) console.log(err)
+
+            fs.rmdir(path.join(__dirname, `../../build-files${dateStamp}`, 'server'), (err) => {
+                if (err) console.log(err)
+
+                fs.rmdir(path.join(__dirname, `../../build-files${dateStamp}`, 'client', 'graphql', 'queries'), (err) => {
+                    if (err) console.log(err)
+
+                    fs.rmdir(path.join(__dirname, `../../build-files${dateStamp}`, 'client', 'graphql', 'mutations'), (err) => {
+                        if (err) console.log(err)
+
+                        fs.rmdir(path.join(__dirname, `../../build-files${dateStamp}`, 'client', 'graphql'), (err) => {
+                            if (err) console.log(err)
+
+                            fs.rmdir(path.join(__dirname, `../../build-files${dateStamp}`, 'client'), (err) => {
+                                if (err) console.log(err)  
+
+                                fs.rmdir(path.join(__dirname, `../../build-files${dateStamp}`), (err) => {
+                                    if (err) console.log(err)  
+
+                                    return cb();
+                                })
+                            })
+                        })
+                    })
+                })
+            })
+        })
+    })
+}
+

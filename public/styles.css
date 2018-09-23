@@ -5,23 +5,12 @@
 }
 
 #app{
-    /* margin: 1%; */
     width: 100%;
     height: 100vh; 
 }
 
 .fade {
     opacity: 0;
-}
-
-.fade-appear {
-    z-index: 1;
-    opacity: 0;
-}
-
-.fade-appear.fade-appear-active {
-    opacity: 1;
-    transition: opacity 350ms linear;
 }
 
 .fade-enter {
