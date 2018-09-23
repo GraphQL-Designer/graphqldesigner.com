@@ -35,7 +35,6 @@ class App extends Component {
   }  
 
   handleTabSelect(event){
-    console.log(event.target.innerHTML)
     this.props.chooseApp(event.target.innerHTML)
   }
 
