@@ -225,9 +225,8 @@ const reducers = (state = initialState, action) => {
     case types.SAVE_FIELD_INPUT:
       let newSelectedFieldName = state.selectedField.name;
 
-      // capitalize first letter and remove whitespace
+      // remove whitespace
       newSelectedFieldName = newSelectedFieldName.replace(/[^\w]/gi, '');
-      newSelectedFieldName = newSelectedFieldName.charAt(0).toUpperCase() + newSelectedFieldName.slice(1);
 
       // get list of field indexes, and alert if field name already exists in the table
       const listFieldIndexes = Object.getOwnPropertyNames(state.tables[state.selectedField.tableNum].fields);
