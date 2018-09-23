@@ -205,7 +205,7 @@ class Table extends Component {
             { fields }
           </TransitionGroup>
           <div onClick={this.handleAddField} className='field addField'>
-            <p style={{marginTop: '10px'}}>
+            <p style={{marginTop: '5px'}}>
               ADD FIELD
             </p>
           </div>

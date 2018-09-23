@@ -148,16 +148,16 @@ class TableOptions extends React.Component {
     function fieldName(fieldNum, tableNum, tables) {
       if (fieldNum >= 0) {
         return (
-        <div>
+        <div style={{marginTop: '10px'}}>
           <h2>{tables[tableNum].fields[fieldNum].name} Field</h2>
-          <h4>in {tables[tableNum].type}</h4>
+          <h4 style={{fontWeight: '200', marginTop: '5px'}}>in {tables[tableNum].type}</h4>
         </div>
         )
       }
       return (
-        <div>
+        <div style={{marginTop: '10px'}}>
           <h2>Add Field</h2>
-          <h4>to Table {tables[tableNum].type}</h4>
+          <h4 style={{fontWeight: '200', marginTop: '5px'}}>to {tables[tableNum].type}</h4>
         </div>
       )
     }
