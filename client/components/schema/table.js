@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { TransitionGroup, CSSTransition } from 'react-transition-group'
 
 // styling
 import RaisedButton from 'material-ui/RaisedButton';
@@ -13,10 +14,6 @@ const style = {
     minWidth: '25px',
     position: 'absolute',
     right: '10px'
-  },
-  fieldNameStyle: {
-    width: '100%',
-    height: '100%'
   },
   idFiled: {
     width: '100%',
@@ -85,79 +82,134 @@ class Table extends Component {
 
   
   render() {
-    const fields = []
-    const colors = ['deeppink', 'crimson', 'orangered', 'gold', 'darkcyan', 'dodgerblue', 'darkviolet', 'seagreen', 'darkorange', 'tomato', 'mediumspringgreen', 'purple', 'darkkhaki', 'hotpink', 'firebrick', 'steelblue', 'limegreen', 'sienna', 'darkslategrey', 'goldenrod'];
+    const colors = ['darkcyan', 'dodgerblue', 'crimson', 'orangered', 'darkviolet', 'gold', 'hotpink', 'seagreen', 'darkorange', 'tomato', 'mediumspringgreen', 'purple', 'darkkhaki',  'firebrick', 'steelblue', 'limegreen', 'sienna', 'darkslategrey', 'goldenrod', 'deeppink'];
 
     // will push each individual field to the array 'fields' to be rendered. 
-    for (const property in this.props.tableData.fields){
+    function checkForRelation(relation, tables) {
+        if (relation) {
+          let tableNum;
+          for (let prop in tables) {
+            if (tables[prop].type === relation) {
+              tableNum = prop;
+              break;
+            }
+          }
+          return `${colors[tableNum]}`
+        } else {
+          return 'rgba(0, 0, 0, 0)'
+        }
+    }
+
+    function checkForArray(position, multipleValues) {
+      if (multipleValues) {
+        if (position === 'front') return '[ '
+        if (position === 'back') return ' ]'
+      } else {
+        return ''
+      }
+    }
+
+    function checkForRequired(value) {
+      if (value) {
+        return ' !'
+      } else {
+        return ''
+      }
+    }
+
+    function checkForUnique(value) {
+      if (value) {
+        return ' *'
+      } else {
+        return ''
+      }
+    }
+
+    let fields = []
+    for (let property in this.props.tableData.fields){
+      const tables = this.props.tables;
       const tableIndex = this.props.tableData.fields[property].tableNum;
       const fieldIndex = this.props.tableData.fields[property].fieldNum;
       const fieldName = this.props.tableData.fields[property].name
       const fieldType = this.props.tableData.fields[property].type
+      const relation = this.props.tableData.fields[property].relation.type
+      const multipleValues = this.props.tableData.fields[property].multipleValues
+      const required = this.props.tableData.fields[property].required
+      const unique = this.props.tableData.fields[property].unique
 
       fields.push(
+        <CSSTransition
+        key={property}
+        timeout={100}
+        classNames="fadeScale"
+        >
         <div>
           <div key={property} className='field'>
-            <FlatButton
-              value={`${tableIndex} ${fieldIndex}`}
-              onClick={this.handleUpdateField}
-              style={style.fieldNameStyle}
-            >
-            {`${fieldName} - ${fieldType}`}
-            </FlatButton>
-            <FlatButton
-              className='delete-button'
-              icon={<Close />}
-              value={property}
-              onClick={this.handleDeleteField}
-              style={{minWidth: '25px'}}
-            />
+            <div className='fieldContainer' style={{backgroundColor: `${checkForRelation(relation, tables)}`}}>
+              <FlatButton
+                value={`${tableIndex} ${fieldIndex}`}
+                onClick={this.handleUpdateField}
+                className='fieldButton'
+              >
+              <p style={{fontSize: '1.1em'}}>{fieldName} - {checkForArray('front', multipleValues)}{fieldType}{checkForRequired(required)}{checkForUnique(unique)}{checkForArray('back', multipleValues)}</p>
+              </FlatButton>
+              <FlatButton
+                className='delete-button'
+                icon={<Close />}
+                value={property}
+                onClick={this.handleDeleteField}
+                style={{minWidth: '25px'}}
+              />
+            </div>
           </div>
           <hr className='fieldBreak'/>
-        </div>
+          </div>
+        </CSSTransition>
       )
     }
   
     return (
-      <div className='table' style={{border: `1px solid ${colors[this.props.tableData.tableID]}`}}>
-        <div>
-          <div className='field'>
-            <FlatButton
-              backgroundColor={colors[this.props.tableData.tableID]}
-              value={this.props.tableIndex}
-              onClick={this.handleSelectedTable}
-              style={style.fieldNameStyle}
-            >
-              {this.props.tableData.type}
-            </FlatButton>
-            <FlatButton
-              className='delete-button'
-              icon={<Delete />}
-              value={this.props.tableIndex}
-              onClick={this.handleDeleteTable}
-              style={style.deleteStyle}
-            />
-          </div>
-        </div>
-        { this.props.tableData.idRequested && (
+        <div className='table' style={{border: `1px solid ${colors[this.props.tableData.tableID]}`}}>
           <div>
-            <FlatButton
-              value={this.props.tableIndex}
-              onClick={this.handleSelectedTable}
-              style={style.idFiled}
-            >
-              id - ID
-            </FlatButton>
-            <hr className='fieldBreak'/>
+            <div className='field'>
+              <FlatButton
+                backgroundColor={colors[this.props.tableData.tableID]}
+                value={this.props.tableIndex}
+                onClick={this.handleSelectedTable}
+                className='tableButton'
+              >
+                <h4>{this.props.tableData.type}</h4>
+              </FlatButton>
+              <FlatButton
+                className='delete-button'
+                icon={<Delete />}
+                value={this.props.tableIndex}
+                onClick={this.handleDeleteTable}
+                style={style.deleteStyle}
+              />
+            </div>
           </div>
-        )}
-        {fields}
-        <div onClick={this.handleAddField} className='field addField'>
-          <p style={{marginTop: '10px'}}>
-            ADD FIELD
-          </p>
+          { this.props.tableData.idRequested && (
+            <div>
+              <FlatButton
+                value={this.props.tableIndex}
+                onClick={this.handleSelectedTable}
+                style={style.idFiled}
+              >
+                <p style={{fontSize: '1.1em'}}>id - ID</p>
+              </FlatButton>
+              <hr className='fieldBreak'/>
+            </div>
+          )}
+          <TransitionGroup>
+            { fields }
+          </TransitionGroup>
+          <div onClick={this.handleAddField} className='field addField'>
+            <p style={{marginTop: '5px'}}>
+              ADD FIELD
+            </p>
+          </div>
         </div>
-      </div>  
     )
   }
 }
