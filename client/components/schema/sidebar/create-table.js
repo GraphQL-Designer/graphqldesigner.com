@@ -11,7 +11,6 @@ import RaisedButton from 'material-ui/RaisedButton';
 import Checkbox from 'material-ui/Checkbox';
 import KeyboardArrowLeft from 'material-ui/svg-icons/hardware/keyboard-arrow-left'
 import FlatButton from 'material-ui/FlatButton';
-import Snackbar from 'material-ui/Snackbar';
 import './sidebar.css';
 
 const style = {
@@ -41,16 +40,13 @@ class CreateTable extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      open: false,
-    }
-
     this.saveTableDataInput = this.saveTableDataInput.bind(this);
     this.capitalizeFirstLetter = this.capitalizeFirstLetter.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleClick = this.handleClick.bind(this);
     this.handleOpenTableCreator = this.handleOpenTableCreator.bind(this)
     this.handleRequestClose = this.handleRequestClose.bind(this);
+    this.handleSnackbarUpdate = this.handleSnackBarUpdate.bind(this);
   }
   
   capitalizeFirstLetter(string) {
@@ -63,18 +59,46 @@ class CreateTable extends React.Component {
     }
   }
 
+  handleSnackbarUpdate(){
+
+  }
+
   saveTableDataInput(e){
     e.preventDefault();
-    this.props.saveTableDataInput()
-    document.getElementById('tableName').value = '';
-    if(this.props.inputError.status !== -1){
-      this.setState({
-        open: true,
-      })
-    } else {
-      this.setState({
-        open: false,
-      })
+    let error = false;
+
+    //remove whitespace
+    let name = this.props.selectedTable.type.replace(/[^\w]/gi, '');
+
+    
+    if(name.length > 0) {
+      document.getElementById('tableName').value = name;
+      
+      //capitalize first letter
+      name = name.charAt(0).toUpperCase() + newTableData.type.slice(1);
+
+      //get list of table indexes 
+      const listTableIndexes = Object.getOwnPropertyNames(this.props.tables);
+
+      // remove the selected table from list of tables if updating to prevent snackbar from displaying table error
+      if(this.props.selectedTable.tableID !== -1){
+        listTableIndexes.splice(listTableIndexes.indexOf(String(state.selectedTable.tableID)),1);
+      }
+
+      for(let x = 0; x < listTableIndexes.length; x += 1){
+        if(this.props.tables[listTableIndexes[x]].type === newTableData.type){
+          error = true;
+        }
+      }      
+
+      if(error){
+        this.handleSnackbarUpdate('Error: Table name already exist'); 
+      } else {
+        //save or update table
+        this.props.saveTableDataInput()
+        document.getElementById('tableName').value = '';
+      }
+      
     }
   }
 
@@ -147,13 +171,6 @@ class CreateTable extends React.Component {
         {/* <div id='loader-container'>
           <Loader/>
         </div> */}
-        <Snackbar
-          open={this.state.open}
-          message={this.props.inputError.dupTable}
-          autoHideDuration={3000}
-          onRequestClose={this.handleRequestClose}
-          bodyStyle={style.snackBarStyle}
-        />
       </div>
     );
   }

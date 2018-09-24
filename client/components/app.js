@@ -5,6 +5,7 @@ import * as actions from '../actions/actions.js';
 // Styling 
 import './app.css';
 import {Tabs, Tab} from 'material-ui/Tabs';
+import Snackbar from 'material-ui/Snackbar';
 const tabStyle = {
   backgroundColor: 'rgb(38,42,48)',
   // backgroundColor: 'rgb(50,54,60)',
@@ -31,6 +32,11 @@ const mapDispatchToProps = dispatch => ({
 class App extends Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      open: false,
+    }
+
     this.handleTabSelect = this.handleTabSelect.bind(this)
   }  
 
@@ -56,6 +62,13 @@ class App extends Component {
               </Tab>
             </Tabs>
           </div>
+          <Snackbar
+            open={this.state.open}
+            message={this.props.inputError.dupTable}
+            autoHideDuration={3000}
+            onRequestClose={this.handleRequestClose}
+            // bodyStyle={style.snackBarStyle}
+        />
       </div>
     )
   }

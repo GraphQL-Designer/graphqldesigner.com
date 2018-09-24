@@ -12,7 +12,6 @@ import SelectField from 'material-ui/SelectField';
 import Toggle from 'material-ui/Toggle';
 import MenuItem from 'material-ui/MenuItem';
 import DropDownMenu from 'material-ui/DropDownMenu';
-import Snackbar from 'material-ui/Snackbar';
 
 const style = {
   customWidth: {

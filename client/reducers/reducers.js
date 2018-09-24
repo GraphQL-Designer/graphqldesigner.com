@@ -102,9 +102,9 @@ const reducers = (state = initialState, action) => {
       let newTableData;
       newTableData = Object.assign({}, state.selectedTable)
 
-      //capitalize first letter and remove whitespace
-      newTableData.type = newTableData.type.replace(/[^\w]/gi, '');
-      newTableData.type = newTableData.type.charAt(0).toUpperCase() + newTableData.type.slice(1)
+      // //capitalize first letter and remove whitespace
+      // newTableData.type = newTableData.type.replace(/[^\w]/gi, '');
+      // newTableData.type = newTableData.type.charAt(0).toUpperCase() + newTableData.type.slice(1)
 
       // get list of table indexes, and alert if table name already exists
       if(newTableData.type.length > 0){

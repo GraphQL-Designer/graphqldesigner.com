@@ -5,7 +5,7 @@ import CreateQuerySidebar from './sidebar/create-query-sidebar';
 
 const mapStateToProps = store => ({
   queryName: store.data.queryName,
-  queryField: store.data.graphQLTypeOptions
+  queryField: store.data.graphQLTypeOptions,
   queryType: store.data.graphQLSearchOptions
 })
 
