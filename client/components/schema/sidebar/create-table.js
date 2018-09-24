@@ -60,24 +60,20 @@ class CreateTable extends React.Component {
     e.preventDefault();
     let error = false;
 
-    //remove whitespace
+    //remove whitespace and symbols
     let name = this.props.selectedTable.type.replace(/[^\w]/gi, '');
 
     
     if(name.length > 0) {
-      this.props.tableNameChange(name)
-      // document.getElementById('tableName').value = name;
-      
       //capitalize first letter
-      name = name.charAt(0).toUpperCase() + name.slice(1);
-      this.props.tableNameChange(name)
-      console.log('name: ', name);
+      name = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
+
       //get list of table indexes 
       const listTableIndexes = Object.getOwnPropertyNames(this.props.tables);
 
       // remove the selected table from list of tables if updating to prevent snackbar from displaying table error
       if(this.props.selectedTable.tableID !== -1){
-        listTableIndexes.splice(listTableIndexes.indexOf(String(state.selectedTable.tableID)),1);
+        listTableIndexes.splice(listTableIndexes.indexOf(String(this.props.selectedTable.tableID)),1);
       }
 
       for(let x = 0; x < listTableIndexes.length; x += 1){

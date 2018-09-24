@@ -82,34 +82,26 @@ const reducers = (state = initialState, action) => {
       newTableData = Object.assign({}, state.selectedTable)
 
       // Save a new table
-      if(state.selectedTable.type.length > 0){ // a type name has been provided
-        if (state.selectedTable.tableID < 0) {  // no table selected, aka save new table
-          newTableData.tableID = state.tableIndex
+      if (state.selectedTable.tableID < 0) {  // no table selected, aka save new table
+        newTableData.tableID = state.tableIndex
 
-          const newTables = Object.assign({}, state.tables, {[state.tableIndex]: newTableData})
-          newState = Object.assign({}, state, {
-            tableIndex: state.tableIndex + 1,
-            tables: newTables,
-            selectedTable: tableReset,
-          })
-        } 
-        // Update table
-        else {
-          const newTables = Object.assign({}, state.tables, {[state.selectedTable.tableID]: newTableData})
-          newState = Object.assign({}, state, {
-            tables: newTables,
-            selectedTable: tableReset,
-          })
-        }
-
-        // so long as a table name is provided. 
-        if(newTableData.type !== ''){
-            return newState
-        }
+        const newTables = Object.assign({}, state.tables, {[state.tableIndex]: newTableData})
+        newState = Object.assign({}, state, {
+          tableIndex: state.tableIndex + 1,
+          tables: newTables,
+          selectedTable: tableReset,
+        })
+      } 
+      // Update table
+      else {
+        const newTables = Object.assign({}, state.tables, {[state.selectedTable.tableID]: newTableData})
+        newState = Object.assign({}, state, {
+          tables: newTables,
+          selectedTable: tableReset,
+        })
       }
 
-      // return state if user submits empty table name
-      return state;
+      return newState
 
                     // ------------ Change Table Name ----------------//
     case types.HANDLE_TABLE_NAME_CHANGE:
@@ -175,18 +167,6 @@ const reducers = (state = initialState, action) => {
     case types.SAVE_FIELD_INPUT:
       let newSelectedFieldName = state.selectedField.name;
 
-      // remove whitespace
-      newSelectedFieldName = newSelectedFieldName.replace(/[^\w]/gi, '');
-
-      // get list of field indexes, and alert if field name already exists in the table
-      const listFieldIndexes = Object.getOwnPropertyNames(state.tables[state.selectedField.tableNum].fields);
-      
-      //remove the field from list of fields if updating to prevent snackbar from displaying field error
-      if(state.selectedField.fieldNum !== -1){
-        listFieldIndexes.splice(listFieldIndexes.indexOf(String(state.selectedField.fieldNum)),1);
-      }
-
-      if(newSelectedFieldName.length > 0) {
       tableNum = state.selectedField.tableNum;
       const currentFieldIndex = state.tables[tableNum].fieldsIndex;
       // no field has been selected yet 
@@ -218,8 +198,6 @@ const reducers = (state = initialState, action) => {
                 selectedField: fieldReset
               } 
           } 
-      }
-      return state;
 
                      // -------------- Delete Field ----------------//
     case types.DELETE_FIELD:
