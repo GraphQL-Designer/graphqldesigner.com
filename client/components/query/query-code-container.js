@@ -1,23 +1,40 @@
-import React from 'react'
+import React from 'react';
 import './query.css';
+import { connect } from 'react-redux';
+import CreateQuerySidebar from './sidebar/create-query-sidebar';
 
-const QueryCodeContainer = props => {
-  let test = `
-  test
-    test2
-      test3
-        test4 
-    
-  `
-  '  tkalsdfjlkdasf'
+const mapStateToProps = store => ({
+  queryName: store.data.queryName,
+  queryField: store.data.graphQLTypeOptions
+  queryType: store.data.graphQLSearchOptions
+})
+
+const QueryCodeContainer = () => {
+  const queryBuilder = (`
+  
+ {
+    query type {
+           name  
+           field { 
+            name
+             type {
+               name
+             }
+          }
+     }
+ }
+
+`);
+
+
   return (
-    <div className='query-code-container'>
-      QueryCodeContainer
+    <div className="query-code-container">
+      Query-Code Container
       <pre>
-        {test}
+        {queryBuilder}
       </pre>
     </div>
-  )
+  );
 };
 
-export default QueryCodeContainer
+export default connect(mapStateToProps, null) (QueryCodeContainer);

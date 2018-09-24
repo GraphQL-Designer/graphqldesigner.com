@@ -17,4 +17,3 @@ export const HANDLE_SELECTED_TABLE = 'HANDLE_SELECTED_TABLE'
 
 // Query App
 export const CREATE_QUERY = 'CREATE_QUERY'
-
