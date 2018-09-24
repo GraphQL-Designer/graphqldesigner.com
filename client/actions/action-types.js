@@ -1,5 +1,6 @@
 // Welcome and Intro
 export const CHOOSE_DATABASE = 'CHOOSE_DATABASE';
+export const HANDLE_SNACKBAR_UPDATE = 'HANDLE_SNACKBAR_UPDATE';
 
 // Schema App
 export const OPEN_TABLE_CREATOR = 'OPEN_TABLE_CREATOR'
