@@ -1,6 +1,13 @@
 import React from 'react';
 import './query.css';
-//import CreateQuerySidebar from './sidebar/create-query-sidebar';
+import { connect } from 'react-redux';
+import CreateQuerySidebar from './sidebar/create-query-sidebar';
+
+const mapStateToProps = store => ({
+  queryName: store.data.queryName,
+  queryField: store.data.graphQLTypeOptions
+  queryType: store.data.graphQLSearchOptions
+})
 
 const QueryCodeContainer = () => {
   const queryBuilder = (`
@@ -30,4 +37,4 @@ const QueryCodeContainer = () => {
   );
 };
 
-export default QueryCodeContainer;
+export default connect(mapStateToProps, null) (QueryCodeContainer);
