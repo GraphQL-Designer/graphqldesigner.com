@@ -7,8 +7,10 @@ export const chooseDatabase = (dbName) => ({
   payload: dbName,
 });
 
-
-
+export const handleSnackbarUpdate = (status) => ({
+  type: types.HANDLE_SNACKBAR_UPDATE,
+  payload: status,
+})
 
 // ----------------------------- Schema App --------------------------------//
 

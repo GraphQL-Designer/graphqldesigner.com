@@ -13,27 +13,21 @@ import KeyboardArrowLeft from 'material-ui/svg-icons/hardware/keyboard-arrow-lef
 import FlatButton from 'material-ui/FlatButton';
 import './sidebar.css';
 
-const style = {
-  snackBarStyle: {
-    backgroundColor: 'rgb(255,66,128)',
-    color: 'black'
-  }
-};
-
 const mapStateToProps = store => ({
-  tables: store.data.tables,
-  tableName: store.data.selectedTable.type,
-  tableIDRequested: store.data.selectedTable.idRequested,
-  tableID: store.data.selectedTable.tableID,
-  database: store.data.database,
-  inputError: store.data.inputError
+  tables: store.schema.tables,
+  tableName: store.schema.selectedTable.type,
+  tableIDRequested: store.schema.selectedTable.idRequested,
+  tableID: store.schema.selectedTable.tableID,
+  database: store.general.database,
+  selectedTable: store.schema.selectedTable
 })
 
 const mapDispatchToProps = dispatch => ({
   saveTableDataInput: () => dispatch(actions.saveTableDataInput()),
   tableNameChange: tableName => dispatch(actions.handleTableNameChange(tableName)),
   idSelector: () => dispatch(actions.handleTableID()),
-  openTableCreator: () => dispatch(actions.openTableCreator())
+  openTableCreator: () => dispatch(actions.openTableCreator()),
+  handleSnackbarUpdate: (status) => dispatch(actions.handleSnackbarUpdate(status))
 })
 
 class CreateTable extends React.Component {
@@ -44,9 +38,8 @@ class CreateTable extends React.Component {
     this.capitalizeFirstLetter = this.capitalizeFirstLetter.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleClick = this.handleClick.bind(this);
-    this.handleOpenTableCreator = this.handleOpenTableCreator.bind(this)
-    this.handleRequestClose = this.handleRequestClose.bind(this);
-    this.handleSnackbarUpdate = this.handleSnackBarUpdate.bind(this);
+    this.handleOpenTableCreator = this.handleOpenTableCreator.bind(this);
+    this.handleSnackbarUpdate = this.handleSnackbarUpdate.bind(this);
   }
   
   capitalizeFirstLetter(string) {
@@ -59,8 +52,8 @@ class CreateTable extends React.Component {
     }
   }
 
-  handleSnackbarUpdate(){
-
+  handleSnackbarUpdate(snackBarOn, message){
+    this.props.handleSnackbarUpdate({open: snackBarOn, message})
   }
 
   saveTableDataInput(e){
@@ -72,11 +65,13 @@ class CreateTable extends React.Component {
 
     
     if(name.length > 0) {
-      document.getElementById('tableName').value = name;
+      this.props.tableNameChange(name)
+      // document.getElementById('tableName').value = name;
       
       //capitalize first letter
-      name = name.charAt(0).toUpperCase() + newTableData.type.slice(1);
-
+      name = name.charAt(0).toUpperCase() + name.slice(1);
+      this.props.tableNameChange(name)
+      console.log('name: ', name);
       //get list of table indexes 
       const listTableIndexes = Object.getOwnPropertyNames(this.props.tables);
 
@@ -86,17 +81,18 @@ class CreateTable extends React.Component {
       }
 
       for(let x = 0; x < listTableIndexes.length; x += 1){
-        if(this.props.tables[listTableIndexes[x]].type === newTableData.type){
+        if(this.props.tables[listTableIndexes[x]].type === name){
           error = true;
         }
       }      
 
       if(error){
-        this.handleSnackbarUpdate('Error: Table name already exist'); 
+        this.handleSnackbarUpdate(true, 'Error: Table name already exist'); 
       } else {
         //save or update table
         this.props.saveTableDataInput()
         document.getElementById('tableName').value = '';
+        this.handleSnackbarUpdate(false, '');
       }
       
     }
@@ -112,12 +108,6 @@ class CreateTable extends React.Component {
 
   handleOpenTableCreator(event){
     this.props.openTableCreator()
-  }
-
-  handleRequestClose = () => {
-    this.setState({
-      open: false,
-    })
   }
 
   render(){

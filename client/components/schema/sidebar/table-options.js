@@ -20,20 +20,15 @@ const style = {
   toggle: {
     marginTop: '15px'
   },
-  snackBarStyle: {
-    backgroundColor: 'rgb(255,66,128)',
-    color: 'black'
-  }
 };
 
 const mapStateToProps = store => ({
-  database: store.data.database,
-  tableIndex : store.data.tableIndexSelected,
-  addFieldClicked: store.data.addFieldClicked,
-  selectedField: store.data.selectedField,
-  updatedField: store.data.fieldUpdated, 
-  tables: store.data.tables,
-  inputError: store.data.inputError
+  database: store.general.database,
+  tableIndex : store.schema.tableIndexSelected,
+  addFieldClicked: store.schema.addFieldClicked,
+  selectedField: store.schema.selectedField,
+  updatedField: store.schema.fieldUpdated, 
+  tables: store.schema.tables,
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -79,17 +74,6 @@ class TableOptions extends React.Component {
     event.preventDefault();
     if(this.props.selectedField.name){
       this.props.saveFieldInput();
-
-      // check if entered input already exists in the table to trigger snackbar to display error
-      if(this.props.inputError.status !== -1){
-        this.setState({
-          open: true,
-        })
-      } else {
-        this.setState({
-          open: false,
-        })
-      }
     }
   }
 
@@ -292,14 +276,6 @@ class TableOptions extends React.Component {
           <div style={{width: '100%', height: '40px'}}/>
         </div>
         }
-        <Snackbar
-          open={this.state.open}
-          // message={this.props.inputError.dupField + ' in Table ' + this.props.tables[this.props.selectedField.tableNum].type}
-          message={this.props.inputError.dupField}
-          autoHideDuration={3000}
-          onRequestClose={this.handleRequestClose}
-          bodyStyle={style.snackBarStyle}
-        />
       </div>
     );
   }

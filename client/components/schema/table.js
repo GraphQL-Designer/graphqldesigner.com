@@ -26,11 +26,7 @@ const style = {
 
 // we use store.data, because of index.js reduce function
 const mapStateToProps = store => ({
-  // fieldCount isn't used, but is necessary so the Table component rerenders after a field is deleted
-  fieldCount: store.data.fieldCount,
-  tables: store.data.tables,
-  fieldUpdated: store.data.fieldUpdated,
-  addFieldClicked: store.data.addFieldClicked
+  tables: store.schema.tables,
 });
 
 const mapDispatchToProps = dispatch => ({

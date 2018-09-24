@@ -12,11 +12,9 @@ import './schema.css'
 
 // We use store.data, because of index.js reduce function
 const mapStateToProps = store => ({
-  tables: store.data.tables, 
-  tableIndex: store.data.tableIndex,
-  // Need below to subscribe to store. store.data.tables is an object so never changes
-  tableCount: store.data.tableCount,
-  selectedField: store.data.selectedField
+  tables: store.schema.tables, 
+  tableIndex: store.schema.tableIndex,
+  selectedField: store.schema.selectedField
 });
 
 class SchemaApp extends Component {
