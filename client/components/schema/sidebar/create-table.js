@@ -11,23 +11,14 @@ import RaisedButton from 'material-ui/RaisedButton';
 import Checkbox from 'material-ui/Checkbox';
 import KeyboardArrowLeft from 'material-ui/svg-icons/hardware/keyboard-arrow-left'
 import FlatButton from 'material-ui/FlatButton';
-import Snackbar from 'material-ui/Snackbar';
 import './sidebar.css';
 
-const style = {
-  snackBarStyle: {
-    backgroundColor: 'rgb(255,66,128)',
-    color: 'black'
-  }
-};
-
 const mapStateToProps = store => ({
-  tables: store.data.tables,
-  tableName: store.data.selectedTable.type,
-  tableIDRequested: store.data.selectedTable.idRequested,
-  tableID: store.data.selectedTable.tableID,
-  database: store.data.database,
-  inputError: store.data.inputError
+  tables: store.schema.tables,
+  tableName: store.schema.selectedTable.type,
+  tableIDRequested: store.schema.selectedTable.idRequested,
+  tableID: store.schema.selectedTable.tableID,
+  database: store.general.database,
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -67,15 +58,6 @@ class CreateTable extends React.Component {
     e.preventDefault();
     this.props.saveTableDataInput()
     document.getElementById('tableName').value = '';
-    if(this.props.inputError.status !== -1){
-      this.setState({
-        open: true,
-      })
-    } else {
-      this.setState({
-        open: false,
-      })
-    }
   }
 
   handleChange(e){
@@ -147,13 +129,6 @@ class CreateTable extends React.Component {
         {/* <div id='loader-container'>
           <Loader/>
         </div> */}
-        <Snackbar
-          open={this.state.open}
-          message={this.props.inputError.dupTable}
-          autoHideDuration={3000}
-          onRequestClose={this.handleRequestClose}
-          bodyStyle={style.snackBarStyle}
-        />
       </div>
     );
   }
