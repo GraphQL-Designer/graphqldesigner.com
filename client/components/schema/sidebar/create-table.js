@@ -11,28 +11,19 @@ import RaisedButton from 'material-ui/RaisedButton';
 import Checkbox from 'material-ui/Checkbox';
 import KeyboardArrowLeft from 'material-ui/svg-icons/hardware/keyboard-arrow-left'
 import FlatButton from 'material-ui/FlatButton';
-import Snackbar from 'material-ui/Snackbar';
 import './sidebar.css';
 
-const style = {
-  snackBarStyle: {
-    backgroundColor: 'rgb(255,66,128)',
-    color: 'black'
-  }
-};
-
 const mapStateToProps = store => ({
-  tables: store.data.tables,
-  selectedTable: store.data.selectedTable,
-  tableName: store.data.selectedTable.type,
-  tableID: store.data.selectedTable.tableID,
-  database: store.data.database,
-  inputError: store.data.inputError
+  tables: store.schema.tables,
+  selectedTable: store.schema.selectedTable,
+  tableName: store.schema.selectedTable.type,
+  tableID: store.schema.selectedTable.tableID,
+  database: store.general.database,
 })
 
 const mapDispatchToProps = dispatch => ({
   tablesToMongoFormat: () => dispatch(actions.tablesToMongoFormat()),
-  saveTableDataInput: () => dispatch(actions.saveTableDataInput()),
+  saveTableDataInput: database => dispatch(actions.saveTableDataInput(database)),
   tableNameChange: tableName => dispatch(actions.handleTableNameChange(tableName)),
   idSelector: () => dispatch(actions.handleTableID()),
   openTableCreator: () => dispatch(actions.openTableCreator())
@@ -61,27 +52,28 @@ class CreateTable extends React.Component {
   }
   
   capitalizeFirstLetter(string) {
-    
     if(string){
       const newString = string.replace(' ', '');
       return newString.charAt(0).toUpperCase() + newString.slice(1);
     }
   }
 
-  saveTableDataInput(e){
+  saveTableDataInput(e, name, tables, database){
     e.preventDefault();
-
-    this.props.saveTableDataInput()
-    document.getElementById('tableName').value = '';
-    if(this.props.inputError.status !== -1){
-      this.setState({
-        open: true,
-      })
-    } else {
-      this.setState({
-        open: false,
-      })
+    console.log(name)
+    name = name.replace(/[^\w]/gi, '');
+    name = name.charAt(0).toUpperCase() + name.slice(1)
+    console.log(name)
+    if(name.length > 0){
+      let found = false;
+      for (let prop in tables) {
+        if (tables[prop].type === name) {
+          found = true;
+        }
+      }
+      console.log('name has been used')
     }
+    this.props.saveTableDataInput(database)
   }
 
   handleChange(e){
@@ -135,17 +127,16 @@ class CreateTable extends React.Component {
           onClick={this.handleOpenTableCreator}
         />}
 
-        <form id='create-table-form' onSubmit={this.saveTableDataInput}>
+        <form id='create-table-form' onSubmit={(e) => this.saveTableDataInput(e, this.props.selectedTable.type, this.props.tables, this.props.database)}>
           {tableName(this.props.tableID, this.props.tables)}
 
           <TextField
             // hintText="Table Name"
             floatingLabelText="Table Name"
-            id='tableName'
             fullWidth={true}
             autoFocus
             onChange={this.handleChange}
-            value={this.props.tableName || ''}
+            value={this.props.tableName}
           />
           <h5 style={{textAlign: 'center', marginTop: '-4px'}}>( Singular naming convention )</h5>
           <Checkbox
@@ -167,13 +158,6 @@ class CreateTable extends React.Component {
         {/* <div id='loader-container'>
           <Loader/>
         </div> */}
-        <Snackbar
-          open={this.state.open}
-          message={this.props.inputError.dupTable}
-          autoHideDuration={3000}
-          onRequestClose={this.handleRequestClose}
-          bodyStyle={style.snackBarStyle}
-        />
       </div>
     );
   }

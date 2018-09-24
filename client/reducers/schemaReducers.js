@@ -1,13 +1,6 @@
 import * as types from '../actions/action-types';
 
 const initialState = {
-  database: '',
-  queryMode: 'create',
-  inputError: {
-    status: -1,
-    dupTable: 'Error: Table name already exist',
-    dupField: 'Error: Field name already exist'
-  },
   tableIndex: 0,
   tables: {},
   selectedTable: {
@@ -32,24 +25,23 @@ const initialState = {
   },
   selectedRelation: {
     type: '',
-    field: '',
-    refType: '',
-    tableId: -1,
-    fieldId: -1, 
-  }
+    idRequested: false,
+    fields: {},
+    fieldsIndex: 0,
+    tableID: -1,
+  },
 };
 
 const reducers = (state = initialState, action) => {
-  let database = state.database;
   let newSelectedField;
   let newSelectedTable;
   let newTables;
   let newTable;
   let newState;
   let tableNum;
-  let inputError = state.inputError;
   const tableReset = {
     type: '',
+    idRequested:  false,
     fields: {},
     fieldsIndex: 0,
     tableID: -1,
@@ -98,28 +90,16 @@ const reducers = (state = initialState, action) => {
 
   // action.payload is how you can access the info
   switch(action.type) {
-    // ------------------------------ Welcome  ----------------------------//
 
-    // Choose Database
-    case types.CHOOSE_DATABASE:
-      database = action.payload; 
-      newSelectedTable = Object.assign({}, state.selectedTable, {idRequested: database === 'MongoDB'})
+        // ------------- Format to mongo onload -------------------//
+        case types.TABLES_TO_MONGO_FORMAT:
 
-      return {
-        ...state,
-        database, 
-        selectedTable: newSelectedTable
-      }
+        return {
+          ...state,
+          selectedTable: mongoTable
+        }
 
-    // ------------------------------ Schmea App  ----------------------------//
-    case types.TABLES_TO_MONGO_FORMAT:
-
-    return {
-      ...state,
-      selectedTable: mongoTable
-    }
-
-                  // ----------- Open Table Creator --------------//
+          // ----------- Open Table Creator --------------//
     
     case types.OPEN_TABLE_CREATOR:
       newState = Object.assign({}, state)
@@ -129,67 +109,29 @@ const reducers = (state = initialState, action) => {
 
                     // ------------- Add Table ----------------//
     case types.SAVE_TABLE_DATA_INPUT:
-      let newTableData;
-      newTableData = Object.assign({}, state.selectedTable)
-
-      //capitalize first letter and remove whitespace
-      newTableData.type = newTableData.type.replace(/[^\w]/gi, '');
-      newTableData.type = newTableData.type.charAt(0).toUpperCase() + newTableData.type.slice(1)
-
-      // get list of table indexes, and alert if table name already exists
-      if(newTableData.type.length > 0){
-        const listTableIndexes = Object.getOwnPropertyNames(state.tables);
-
-        // remove the selected from list of tables if updating to prevent snackbar from displaying table error
-        if(state.selectedTable.tableID !== -1){
-          listTableIndexes.splice(listTableIndexes.indexOf(String(state.selectedTable.tableID)),1);
-        }
-
-        for(let x = 0; x < listTableIndexes.length; x += 1){
-          if(state.tables[listTableIndexes[x]].type === newTableData.type){
-            inputError.status = inputError.dupTable;
-            return {
-              ...state,
-              selectedTable: tableReset,
-              inputError
-            } 
-          }
-        }
-      }
-    
-      inputError.status = -1;
-
-      // Save a new table
-      if(state.selectedTable.type.length > 0){ // a type name has been provided
-        if (state.selectedTable.tableID < 0) {  // no table selected, aka save new table
+        if (state.selectedTable.tableID < 0) {
+          //SAVE A NEW TABLE
           newTableData.tableID = state.tableIndex
 
-          const newTables = Object.assign({}, state.tables, {[state.tableIndex]: newTableData})
+          newTables = Object.assign({}, state.tables, {[state.tableIndex]: newTableData})
           newState = Object.assign({}, state, {
             tableIndex: state.tableIndex + 1,
             tables: newTables,
             selectedTable: tableReset,
-            inputError
           })
-        } 
-        // Update table
-        else {
-          const newTables = Object.assign({}, state.tables, {[state.selectedTable.tableID]: newTableData})
+        } else {
+          //UPDATE A SAVED TABLE
+          newTables = Object.assign({}, state.tables, {[state.selectedTable.tableID]: newTableData})
           newState = Object.assign({}, state, {
             tables: newTables,
             selectedTable: tableReset,
-            inputError
           })
         }
-
-        // so long as a table name is provided. 
-        if(newTableData.type !== ''){
-            return newState
-        }
-      }
-
-      // return state if user submits empty table name
-      return state;
+          
+    return {
+      ...state,
+      tables: newTables
+    }
 
                     // ------------ Change Table Name ----------------//
     case types.HANDLE_TABLE_NAME_CHANGE:
@@ -272,22 +214,10 @@ const reducers = (state = initialState, action) => {
         listFieldIndexes.splice(listFieldIndexes.indexOf(String(state.selectedField.fieldNum)),1);
       }
 
-      for(let x = 0; x < listFieldIndexes.length; x += 1){
-        if(state.tables[state.selectedField.tableNum].fields[listFieldIndexes[x]].name === newSelectedFieldName){
-          inputError.status = inputError.dupField;
-          return {
-            ...state,
-            inputError
-          }
-        }
-      }
-
-      inputError.status = -1;
-
       if(newSelectedFieldName.length > 0) {
       tableNum = state.selectedField.tableNum;
       const currentFieldIndex = state.tables[tableNum].fieldsIndex;
-      // no field has been selected yet
+      // no field has been selected yet 
       if (state.selectedField.fieldNum < 0) {
         newTables = 
         Object.assign({}, state.tables, {[tableNum]:
@@ -300,7 +230,6 @@ const reducers = (state = initialState, action) => {
                 ...state,
                 tables: newTables,
                 selectedField: newSelectedField,
-                inputError
               } 
       } 
       // field has been selected
@@ -314,7 +243,6 @@ const reducers = (state = initialState, action) => {
               return {
                 ...state,
                 tables: newTables,
-                inputError,
                 selectedField: fieldReset
               } 
           } 
@@ -390,11 +318,6 @@ const reducers = (state = initialState, action) => {
         ...state,
         selectedField: newSelectedField
       }
-
-
-      // ----------------------------- Query App -------------------------------//
-    
-    case types.CREATE_QUERY:
 
     default:
       return state;

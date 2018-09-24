@@ -11,7 +11,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const mapStateToProps = store => ({
-  tables: store.data.tables,
+  tables: store.schema.tables,
 });
 
 class CreateQuerySidebar extends Component {

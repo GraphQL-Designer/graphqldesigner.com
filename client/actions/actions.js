@@ -20,8 +20,9 @@ export const openTableCreator = () => ({
 });
 
 
-export const saveTableDataInput = () => ({
+export const saveTableDataInput = (database) => ({
   type: types.SAVE_TABLE_DATA_INPUT,
+  payload: database
 });
 
 export const deleteTable = (tableIndex) => ({
@@ -44,9 +45,9 @@ export const addFieldClicked = (tableIndex) => ({
   payload: tableIndex,
 })
 
-export const saveFieldInput = (fieldIndex) => ({
+export const saveFieldInput = (database) => ({
   type: types.SAVE_FIELD_INPUT,
-  payload: fieldIndex,
+  payload: database,
 })
 
 export const handleFieldsUpdate = (field) => ({

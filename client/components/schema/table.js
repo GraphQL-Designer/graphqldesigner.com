@@ -26,11 +26,8 @@ const style = {
 
 // we use store.data, because of index.js reduce function
 const mapStateToProps = store => ({
-  // fieldCount isn't used, but is necessary so the Table component rerenders after a field is deleted
-  fieldCount: store.data.fieldCount,
-  tables: store.data.tables,
-  fieldUpdated: store.data.fieldUpdated,
-  addFieldClicked: store.data.addFieldClicked
+  tables: store.schema.tables,
+  database: store.general.database
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -70,7 +67,7 @@ class Table extends Component {
 
   handleUpdateField(event){
     this.props.handleFieldsSelect({
-      location: event.currentTarget.value,  // need currentTarget because of Material-UI
+      location: event.currentTarget.value,
       submitUpdate: false
     })
   }
@@ -146,23 +143,43 @@ class Table extends Component {
         <div>
           <div key={property} className='field'>
             <div className='fieldContainer' style={{backgroundColor: `${checkForRelation(relation, tables)}`}}>
-              <FlatButton
-                value={`${tableIndex} ${fieldIndex}`}
-                onClick={this.handleUpdateField}
-                className='fieldButton'
-              >
-              <p style={{fontSize: '1.1em'}}>{fieldName} - {checkForArray('front', multipleValues)}{fieldType}{checkForRequired(required)}{checkForUnique(unique)}{checkForArray('back', multipleValues)}</p>
-              </FlatButton>
-              {/* ADD Database her */}
-              { false && 
-              <FlatButton
-                className='delete-button'
-                icon={<Close />}
-                value={property}
-                onClick={ MongoDB !== MongoDB ? this.handleDeleteField() : null }}
-                style={{minWidth: '25px'}}
-              />
-              }
+             { this.props.database === 'MongoDB' && this.props.tableData.fields[property].name === 'id' ? (
+                <FlatButton
+                  value={`${tableIndex} ${fieldIndex}`}
+                  onClick={this.handleUpdateField}
+                  className='fieldButton'
+                  disabled
+                  >
+                    <p style={{fontSize: '1.1em'}}>{fieldName} - {checkForArray('front', multipleValues)}{fieldType}{checkForRequired(required)}{checkForUnique(unique)}{checkForArray('back', multipleValues)}</p>
+                  </FlatButton>
+                ) : (
+                  <FlatButton
+                  value={`${tableIndex} ${fieldIndex}`}
+                  onClick={this.handleUpdateField}
+                  className='fieldButton'
+                  >
+                    <p style={{fontSize: '1.1em'}}>{fieldName} - {checkForArray('front', multipleValues)}{fieldType}{checkForRequired(required)}{checkForUnique(unique)}{checkForArray('back', multipleValues)}</p>
+                  </FlatButton>
+                )}
+
+              { this.props.database === 'MongoDB' && this.props.tableData.fields[property].name === 'id' ? (
+                  <FlatButton
+                  className='delete-button'
+                  icon={<Close />}
+                  value={property}
+                  onClick={this.handleDeleteField}
+                  style={{minWidth: '25px'}}
+                  disabled
+                />
+              ) : (
+                  <FlatButton
+                  className='delete-button'
+                  icon={<Close />}
+                  value={property}
+                  onClick={this.handleDeleteField}
+                  style={{minWidth: '25px'}}
+                />
+              )}
             </div>
           </div>
           <hr className='fieldBreak'/>

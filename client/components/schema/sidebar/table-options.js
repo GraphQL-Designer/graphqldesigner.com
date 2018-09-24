@@ -12,7 +12,6 @@ import SelectField from 'material-ui/SelectField';
 import Toggle from 'material-ui/Toggle';
 import MenuItem from 'material-ui/MenuItem';
 import DropDownMenu from 'material-ui/DropDownMenu';
-import Snackbar from 'material-ui/Snackbar';
 
 const style = {
   customWidth: {
@@ -21,25 +20,20 @@ const style = {
   toggle: {
     marginTop: '15px'
   },
-  snackBarStyle: {
-    backgroundColor: 'rgb(255,66,128)',
-    color: 'black'
-  }
 };
 
 const mapStateToProps = store => ({
-  database: store.data.database,
-  tableIndex : store.data.tableIndexSelected,
-  addFieldClicked: store.data.addFieldClicked,
-  selectedField: store.data.selectedField,
-  updatedField: store.data.fieldUpdated, 
-  tables: store.data.tables,
-  inputError: store.data.inputError
+  database: store.general.database,
+  tableIndex : store.schema.tableIndexSelected,
+  addFieldClicked: store.schema.addFieldClicked,
+  selectedField: store.schema.selectedField,
+  updatedField: store.schema.fieldUpdated, 
+  tables: store.schema.tables,
 })
 
 const mapDispatchToProps = dispatch => ({
   createField: field => dispatch(actions.addField(field)),
-  saveFieldInput: () => dispatch(actions.saveFieldInput()),
+  saveFieldInput: database => dispatch(actions.saveFieldInput(database)),
   handleChange: field => dispatch(actions.handleFieldsUpdate(field)),
   openTableCreator: () => dispatch(actions.openTableCreator())
 })
@@ -76,21 +70,10 @@ class TableOptions extends React.Component {
     this.props.handleChange({name: name, value: value});
   };
 
-  submitOptions(event){
+  submitOptions(event, database){
     event.preventDefault();
     if(this.props.selectedField.name){
-      this.props.saveFieldInput();
-
-      // check if entered input already exists in the table to trigger snackbar to display error
-      if(this.props.inputError.status !== -1){
-        this.setState({
-          open: true,
-        })
-      } else {
-        this.setState({
-          open: false,
-        })
-      }
+      this.props.saveFieldInput(database);
     }
   }
 
@@ -286,21 +269,13 @@ class TableOptions extends React.Component {
                 secondary={true}
                 label={this.props.selectedField.fieldNum > -1 ?'Update Field' : 'Create Field'}
                 type='submit'
-                onClick={this.submitOptions}
+                onClick={(e) => this.submitOptions(e, this.props.database)}
                 style={{marginTop: '25px'}}
               />
           </form>
           <div style={{width: '100%', height: '40px'}}/>
         </div>
         }
-        <Snackbar
-          open={this.state.open}
-          // message={this.props.inputError.dupField + ' in Table ' + this.props.tables[this.props.selectedField.tableNum].type}
-          message={this.props.inputError.dupField}
-          autoHideDuration={3000}
-          onRequestClose={this.handleRequestClose}
-          bodyStyle={style.snackBarStyle}
-        />
       </div>
     );
   }
