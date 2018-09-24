@@ -101,7 +101,7 @@ class TableOptions extends React.Component {
   }
 
   render() {
-    console.log('yooo: ', this.props.tables[this.props.selectedField.tableNum]);
+   // console.log('yooo: ', this.props.tables[this.props.selectedField.tableNum]);
     let tables = []
     let fields = [];
     let tempTableNumList = [];
@@ -134,7 +134,7 @@ class TableOptions extends React.Component {
       
       //list all of the fields for type selected in relation in sidebar
       for(let field in this.props.tables[tempTableNum].fields){
-        console.log('fields', field)
+        //console.log('fields', field)
         fields.push(
           <MenuItem
           key={field}
