@@ -76,4 +76,3 @@ export const createQuery = (query) => ({
   type: types.CREATE_QUERY,
   payload: query
 })
-
