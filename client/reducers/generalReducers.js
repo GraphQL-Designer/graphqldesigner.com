@@ -10,7 +10,6 @@ const initialState = {
 
 const generalReducers = (state = initialState, action) => {
   let database = state.database;
-  let message = state.message;
 
   switch(action.type) {
     case types.CHOOSE_DATABASE:
@@ -27,6 +26,15 @@ const generalReducers = (state = initialState, action) => {
       ...state,
 
     }
+
+    case types.HANDLE_SNACKBAR_UPDATE:
+    const newState = Object.assign({}, {open: action.payload.open, message: action.payload.message})
+
+      return {
+        ...state,
+        message : newState
+      }
+
 
     default:
       return state;
