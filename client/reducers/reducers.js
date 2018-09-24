@@ -1,10 +1,21 @@
 import * as types from '../actions/action-types';
 
 const initialState = {
-  queryMode: 'create',
-  tables: {},
   database: '',
+  queryMode: 'create',
+  inputError: {
+    status: -1,
+    dupTable: 'Error: Table name already exist',
+    dupField: 'Error: Field name already exist'
+  },
   tableIndex: 0,
+  tables: {},
+  selectedTable: {
+    type: '',
+    fields: {},
+    fieldsIndex: 1,
+    tableID: -1,
+  },
   selectedField : {
     name: '',
     type: 'String',
@@ -13,30 +24,20 @@ const initialState = {
     defaultValue: '',
     required: false,
     multipleValues: false,
-    relationSelected: false,
-    relation: {
-      type: '',
-      field: '',
-      refType: ''
-    },
+    relationIndex: 0,
+    relation: {},
+    refrencees: {},
     tableNum: -1,
     fieldNum: -1
   },
-  selectedTable: {
+  selectedRelation: {
     type: '',
-    idRequested: false,
-    fields: {},
-    fieldsIndex: 0,
-    tableID: -1,
-  },
-  inputError: {
-    status: -1,
-    dupTable: 'Error: Table name already exist',
-    dupField: 'Error: Field name already exist'
+    field: '',
+    refType: '',
+    tableId: -1,
+    fieldId: -1, 
   }
 };
-
-
 
 const reducers = (state = initialState, action) => {
   let database = state.database;
@@ -49,7 +50,6 @@ const reducers = (state = initialState, action) => {
   let inputError = state.inputError;
   const tableReset = {
     type: '',
-    idRequested:  false || database === 'MongoDB',
     fields: {},
     fieldsIndex: 0,
     tableID: -1,
@@ -62,7 +62,6 @@ const reducers = (state = initialState, action) => {
     defaultValue: '',
     required: false,
     multipleValues: false,
-    relationSelected: false,
     relation: {
       type: '',
       field: '',
@@ -71,6 +70,31 @@ const reducers = (state = initialState, action) => {
     tableNum: -1,
     fieldNum: -1
   }
+  const relationReset = {
+    type: '',
+    field: '',
+    refType: '',
+    tableId: -1,
+    fieldId: -1
+  }
+  const idDefault = {
+    name: 'id',
+    type: 'ID',
+    primaryKey: false,
+    unique: true,
+    defaultValue: '',
+    required: false,
+    multipleValues: false,
+    relationIndex: 0,
+    relation: {},
+    tableNum: -1,
+    fieldNum: 0
+  }
+  const mongoTable = Object.assign({}, tableReset, {
+    fields: {
+      0: Object.assign({}, idDefault, { tableNum: state.tableIndex })
+    }
+  })
 
   // action.payload is how you can access the info
   switch(action.type) {
@@ -88,6 +112,12 @@ const reducers = (state = initialState, action) => {
       }
 
     // ------------------------------ Schmea App  ----------------------------//
+    case types.TABLES_TO_MONGO_FORMAT:
+
+    return {
+      ...state,
+      selectedTable: mongoTable
+    }
 
                   // ----------- Open Table Creator --------------//
     
@@ -172,11 +202,17 @@ const reducers = (state = initialState, action) => {
 
                     // ------------ Change Table ID ----------------//
     case types.HANDLE_TABLE_ID:
-      newSelectedTable = Object.assign({}, state.selectedTable, {idRequested: !state.selectedTable.idRequested})
+
+      if (state.selectedField.fields[0]) {
+        newSelectedField = Object.assign({}, state.selectedField.fields);
+        delete newSelectedField[0]
+      } else {
+        newSelectedField = Object.assign({}, state.selectedField.fields, { 0: idDefault});
+      }
 
       return {
       ...state,
-      selectedTable: newSelectedTable
+      selectedField: newSelectedField
     }
 
                     // ---------- Select Table For Update ------------//

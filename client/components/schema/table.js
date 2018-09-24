@@ -153,13 +153,16 @@ class Table extends Component {
               >
               <p style={{fontSize: '1.1em'}}>{fieldName} - {checkForArray('front', multipleValues)}{fieldType}{checkForRequired(required)}{checkForUnique(unique)}{checkForArray('back', multipleValues)}</p>
               </FlatButton>
+              {/* ADD Database her */}
+              { false && 
               <FlatButton
                 className='delete-button'
                 icon={<Close />}
                 value={property}
-                onClick={this.handleDeleteField}
+                onClick={ MongoDB !== MongoDB ? this.handleDeleteField() : null }}
                 style={{minWidth: '25px'}}
               />
+              }
             </div>
           </div>
           <hr className='fieldBreak'/>
@@ -189,18 +192,6 @@ class Table extends Component {
               />
             </div>
           </div>
-          { this.props.tableData.idRequested && (
-            <div>
-              <FlatButton
-                value={this.props.tableIndex}
-                onClick={this.handleSelectedTable}
-                style={style.idFiled}
-              >
-                <p style={{fontSize: '1.1em'}}>id - ID</p>
-              </FlatButton>
-              <hr className='fieldBreak'/>
-            </div>
-          )}
           <TransitionGroup>
             { fields }
           </TransitionGroup>

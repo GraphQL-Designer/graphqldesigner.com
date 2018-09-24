@@ -23,14 +23,15 @@ const style = {
 
 const mapStateToProps = store => ({
   tables: store.data.tables,
+  selectedTable: store.data.selectedTable,
   tableName: store.data.selectedTable.type,
-  tableIDRequested: store.data.selectedTable.idRequested,
   tableID: store.data.selectedTable.tableID,
   database: store.data.database,
   inputError: store.data.inputError
 })
 
 const mapDispatchToProps = dispatch => ({
+  tablesToMongoFormat: () => dispatch(actions.tablesToMongoFormat()),
   saveTableDataInput: () => dispatch(actions.saveTableDataInput()),
   tableNameChange: tableName => dispatch(actions.handleTableNameChange(tableName)),
   idSelector: () => dispatch(actions.handleTableID()),
@@ -48,23 +49,28 @@ class CreateTable extends React.Component {
     this.saveTableDataInput = this.saveTableDataInput.bind(this);
     this.capitalizeFirstLetter = this.capitalizeFirstLetter.bind(this);
     this.handleChange = this.handleChange.bind(this);
-    this.handleClick = this.handleClick.bind(this);
+    this.handleCheck = this.handleCheck.bind(this);
     this.handleOpenTableCreator = this.handleOpenTableCreator.bind(this)
     this.handleRequestClose = this.handleRequestClose.bind(this);
+  }
+
+  componentDidMount () {
+    if ('MongoDb') {
+      this.props.tablesToMongoFormat()
+    }
   }
   
   capitalizeFirstLetter(string) {
     
     if(string){
       const newString = string.replace(' ', '');
-      // console.log('string: ', string);
-      // console.log('newString: ', newString);
       return newString.charAt(0).toUpperCase() + newString.slice(1);
     }
   }
 
   saveTableDataInput(e){
     e.preventDefault();
+
     this.props.saveTableDataInput()
     document.getElementById('tableName').value = '';
     if(this.props.inputError.status !== -1){
@@ -82,7 +88,7 @@ class CreateTable extends React.Component {
     this.props.tableNameChange(e.target.value);
   }
 
-  handleClick(){
+  handleCheck(){
     this.props.idSelector()
   }
 
@@ -102,6 +108,20 @@ class CreateTable extends React.Component {
         return <h2>{tables[tableID].type} Table</h2>
       }
       return <h2>Create Table</h2>
+    }
+ 
+    function checkedValue(selectedTable) {
+      console.log(selectedTable)
+      if (selectedTable.fields) {
+        if (selectedTable.fields[0]) {
+          if (selectedTable.fields[0].name) {
+            console.log(true)
+            return true;
+          }
+        }
+      }
+      console.log(false)
+      return false;
     }
     
     return (
@@ -131,9 +151,9 @@ class CreateTable extends React.Component {
           <Checkbox
             style={{marginTop: '10px'}}
             label="Unique ID"
-            onCheck={this.handleClick}
+            onCheck={this.handleCheck}
             id='idCheckbox'
-            checked={this.props.database === 'MongoDB'? true : this.props.tableIDRequested}
+            checked={checkedValue(this.props.selectedTable)}
             disabled={this.props.database === 'MongoDB'}
           />
           <RaisedButton 

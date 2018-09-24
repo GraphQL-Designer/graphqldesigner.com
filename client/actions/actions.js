@@ -11,6 +11,9 @@ export const chooseDatabase = (dbName) => ({
 
 
 // ----------------------------- Schema App --------------------------------//
+export const tablesToMongoFormat = () => ({
+  type: types.TABLES_TO_MONGO_FORMAT
+})
 
 export const openTableCreator = () => ({
   type: types.OPEN_TABLE_CREATOR,
