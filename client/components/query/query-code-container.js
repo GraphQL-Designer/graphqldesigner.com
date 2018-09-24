@@ -4,9 +4,9 @@ import { connect } from 'react-redux';
 import CreateQuerySidebar from './sidebar/create-query-sidebar';
 
 const mapStateToProps = store => ({
-  queryName: store.data.queryName,
-  queryField: store.data.graphQLTypeOptions
-  queryType: store.data.graphQLSearchOptions
+  // queryName: store.query.queryName,
+  // queryField: store.query.graphQLTypeOptions,
+  // queryType: store.query.graphQLSearchOptions
 })
 
 const QueryCodeContainer = () => {

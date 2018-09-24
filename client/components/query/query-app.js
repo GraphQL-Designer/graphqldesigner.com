@@ -8,7 +8,7 @@ import CustomizeQuerySidebar from './sidebar/customize-query-sidebar.js';
 import QueryCodeContainer from './query-code-container.js'
 
 const mapStateToProps = store => ({
-  queryMode: store.data.queryMode
+  queryMode: store.query.queryMode
 });
 
 const mapDispatchToProps = dispatch => ({
