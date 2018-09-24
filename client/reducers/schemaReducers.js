@@ -216,7 +216,7 @@ const reducers = (state = initialState, action) => {
       if(newSelectedFieldName.length > 0) {
       tableNum = state.selectedField.tableNum;
       const currentFieldIndex = state.tables[tableNum].fieldsIndex;
-      // no field has been selected yet
+      // no field has been selected yet 
       if (state.selectedField.fieldNum < 0) {
         newTables = 
         Object.assign({}, state.tables, {[tableNum]:
