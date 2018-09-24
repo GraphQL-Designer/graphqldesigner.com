@@ -6,12 +6,17 @@ import * as actions from '../actions/actions.js';
 import './app.css';
 import {Tabs, Tab} from 'material-ui/Tabs';
 import Snackbar from 'material-ui/Snackbar';
-const tabStyle = {
-  backgroundColor: 'rgb(38,42,48)',
-  // backgroundColor: 'rgb(50,54,60)',
 
-  color: 'white'
-}
+const style = {
+  snackBarStyle: {
+    backgroundColor: 'rgb(255,66,128)',
+    color: 'black'
+  },
+  tabStyle: {
+    backgroundColor: 'rgb(38,42,48)'
+  }
+};
+
 
 // Components
 import MainNav from './navbar/navbar';
@@ -50,13 +55,6 @@ class App extends Component {
     this.props.handleSnackbarUpdate({open: false, message: ''});
   }
 
-  // handleRequestClose = () => {
-  //   console.log(this.props.snackBar.open);
-  //   this.setState({
-  //     open: false,
-  //   })
-  // }
-
   render() {
     return (
       <div className='app-container'>
@@ -64,13 +62,13 @@ class App extends Component {
         <Welcome chooseDatabase={this.props.chooseDatabase}/>
           <div className='app-body-container'>
             <Tabs className='tabs'>
-              <Tab label="Schemas" style={tabStyle}>
+              <Tab label="Schemas" style={style.tabStyle}>
                 <SchemaApp className='schemaTest'/>
               </Tab>
-              <Tab label="Queries" style={tabStyle}>
+              <Tab label="Queries" style={style.tabStyle}>
                 <QueryApp/>
               </Tab>
-              <Tab label="Code" style={tabStyle}>
+              <Tab label="Code" style={style.tabStyle}>
                 <CodeApp/>
               </Tab>
             </Tabs>
@@ -78,9 +76,8 @@ class App extends Component {
             open={this.props.snackBar.open}
             message={this.props.snackBar.message}
             autoHideDuration={3000}
-            // onRequestClose= {function () { self.refs.snackbar.dismiss; }}
             onRequestClose={this.handleRequestClose}
-            // bodyStyle={style.snackBarStyle}
+            bodyStyle={style.snackBarStyle}
           />
           </div>
       </div>
