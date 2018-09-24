@@ -84,23 +84,23 @@ class TableOptions extends React.Component {
   }
 
   render() {
-   // console.log('yooo: ', this.props.tables[this.props.selectedField.tableNum]);
+    console.log('this is relations', this.props.selectedField.relation)
+    console.log('type', this.props.selectedField.relation.type)
     let tables = []
     let fields = [];
     let tempTableNumList = [];
 
     // Generate relation type options 
-    for(let types in this.props.tables){
-      if(this.props.selectedField.tableNum !== types){
-        // tables.push(<option key={types} value={this.props.tables[types].tableID.type}>{this.props.tables[types].type}</option>);
+    for(let type in this.props.tables){
+      if(this.props.selectedField.tableNum !== type){
         tables.push(
           <MenuItem
-            key={types}
-            value={this.props.tables[types].type} 
-            primaryText={this.props.tables[types].type}
+            key={type}
+            value={type} 
+            primaryText={this.props.tables[type].type}
           />
         )
-        tempTableNumList.push(types);
+        tempTableNumList.push(type);
       }
     }
 
@@ -117,11 +117,10 @@ class TableOptions extends React.Component {
       
       //list all of the fields for type selected in relation in sidebar
       for(let field in this.props.tables[tempTableNum].fields){
-        //console.log('fields', field)
         fields.push(
           <MenuItem
           key={field}
-          value={this.props.tables[tempTableNum].fields[field].name} 
+          value={field} 
           primaryText={this.props.tables[tempTableNum].fields[field].name}
           />
         )
@@ -232,9 +231,9 @@ class TableOptions extends React.Component {
                 <div className='relation-options'>
                   <p>Type:</p>
                   <DropDownMenu
-                    value={this.props.selectedField.relation.type}
+                    value={this.props.selectedField.relation.tableIndex}
                     style={style.customWidth}
-                    onChange={this.handleSelectChange.bind(null, 'relation.type')} // access 'relation.type' as name in handleChange
+                    onChange={this.handleSelectChange.bind(null, 'relation.tableIndex')} // access 'relation.type' as name in handleChange
                     >
                       {tables}
                   </DropDownMenu> 
@@ -243,9 +242,9 @@ class TableOptions extends React.Component {
                 <div className='relation-options'>
                   <p>Field:</p>
                   <DropDownMenu
-                    value={this.props.selectedField.relation.field}
+                    value={this.props.selectedField.relation.fieldIndex}
                     style={style.customWidth}
-                    onChange={this.handleSelectChange.bind(null, 'relation.field')} // access 'relation.field' as name in handleChange
+                    onChange={this.handleSelectChange.bind(null, 'relation.fieldIndex')} // access 'relation.field' as name in handleChange
                   >
                     {fields}
                   </DropDownMenu> 

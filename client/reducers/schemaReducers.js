@@ -15,9 +15,12 @@ const initialState = {
     relationSelected: false,
     relation: {
       type: '',
+      tableIndex: -1,
       field: '',
+      fieldIndex: -1,
       refType: ''
     },
+    referencedBy: {},
     tableNum: -1,
     fieldNum: -1
   },
@@ -58,14 +61,22 @@ const reducers = (state = initialState, action) => {
     relationSelected: false,
     relation: {
       type: '',
+      tableIndex: -1,
       field: '',
+      fieldIndex: -1,
       refType: ''
     },
     tableNum: -1,
     fieldNum: -1
   }
+  // const relationReset = {
+  //   type: '',
+  //   tableIndex: -1,
+  //   field: '',
+  //   fieldIndex: -1,
+  //   refType: ''
+  // }
 
-  // action.payload is how you can access the info
   switch(action.type) {
 
                   // ----------- Open Table Creator --------------//
@@ -278,11 +289,23 @@ const reducers = (state = initialState, action) => {
     // updates selected field on each data entry
     case types.HANDLE_FIELDS_UPDATE:
       // parse if relations field is selected
-      if(action.payload.name.indexOf('.') !== -1){
-        const rel = action.payload.name.split('.'); // rel[0] is 'relation' and rel[1] is either 'type', 'field', or 'ref'type'
+      if (action.payload.name.indexOf('.') !== -1) {
+        const rel = action.payload.name.split('.'); // rel[0] is 'relation' and rel[1] is either 'tableIndex', 'fieldIndex', or 'refType'
         newSelectedField = Object.assign({}, state.selectedField, {[rel[0]] :
                             Object.assign({}, state.selectedField[rel[0]], {[rel[1]] : action.payload.value})})
-      } else{
+        // Sets relation type name based on table index
+        if (rel[1] === 'tableIndex') {
+          const tableIndex = action.payload.value
+          newSelectedField.relation.type = state.tables[tableIndex].type
+        }
+        // Sets relation field name based on field index
+        if (rel[1] === 'fieldIndex') {
+          const tableIndex = newSelectedField.relation.tableIndex
+          const fieldIndex = action.payload.value
+          newSelectedField.relation.field = state.tables[tableIndex].fields[fieldIndex].name
+        }
+
+      } else {
         if (action.payload.value === 'true') action.payload.value = true;
         if (action.payload.value === 'false') action.payload.value = false;
         newSelectedField = Object.assign({}, state.selectedField, {[action.payload.name]: action.payload.value})
