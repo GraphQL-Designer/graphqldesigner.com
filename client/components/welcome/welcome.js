@@ -4,9 +4,7 @@ import React from 'react';
 import RaisedButton from 'material-ui/RaisedButton';
 import Dialog from 'material-ui/Dialog';
 import './welcome.css';
-
-
-export default class Welcome extends React.Component {
+class Welcome extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -68,3 +66,5 @@ export default class Welcome extends React.Component {
     );
   }
 }
+
+export default Welcome

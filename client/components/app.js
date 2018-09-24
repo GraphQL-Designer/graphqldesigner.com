@@ -20,7 +20,6 @@ import QueryApp from './query/query-app.js';
 import CodeApp from './code/code-app.js';
 
 const mapStateToProps = store => ({
-  appSelected: store.data.appSelected, //we use store.data, because of index.js reduce function
 });
 
 const mapDispatchToProps = dispatch => ({
