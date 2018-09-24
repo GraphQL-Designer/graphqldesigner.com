@@ -68,7 +68,7 @@ class CreateTable extends React.Component {
       //capitalize first letter
       name = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
 
-      //get list of table indexes 
+      //get list of table indexes //
       const listTableIndexes = Object.getOwnPropertyNames(this.props.tables);
 
       // remove the selected table from list of tables if updating to prevent snackbar from displaying table error
