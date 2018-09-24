@@ -35,7 +35,10 @@ export default class Welcome extends React.Component {
  
   render() {
     const styles = {
-      border: '1px solid white'
+      border: '1px solid white',
+      width: '125px',
+      fontSize: '1.2em',
+      color: 'white'
     }
 
     return (
@@ -57,8 +60,8 @@ export default class Welcome extends React.Component {
           <hr className='welcome-hr'/>
           <h4>Select your database type</h4>
           <div id='buttonsContainer'>
-            <RaisedButton value='test' onClick={this.handleDatabaseClick} style={styles}>MongoDB</RaisedButton>
-            <RaisedButton onClick={this.handleDatabaseClick} style={styles}>SQL</RaisedButton>
+            <RaisedButton value='test' onClick={this.handleDatabaseClick} buttonStyle={styles}>MongoDB</RaisedButton>
+            <RaisedButton onClick={this.handleDatabaseClick} buttonStyle={styles}>SQL</RaisedButton>
           </div>
         </Dialog>
       </div>

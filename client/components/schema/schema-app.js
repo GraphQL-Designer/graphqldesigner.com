@@ -32,30 +32,36 @@ class SchemaApp extends Component {
     let tableComponents = []; 
     let keyNum = 100 //React requires a key to avoid errors. 
     for (let property in this.props.tables){
-      tableComponents.push(<Table
-        key={property} 
-        tableData={this.props.tables[property]}
-        tableIndex={property}
-        fieldCount={this.props.tables[property].fieldCount}
-        />
+      tableComponents.push(
+        <CSSTransition
+        key={property}
+        timeout={100}
+        classNames="fadeScale"
+        >
+          <Table
+            key={property} 
+            tableData={this.props.tables[property]}
+            tableIndex={property}
+            fieldCount={this.props.tables[property].fieldCount}
+          />
+        </CSSTransition>
       )
     }
     
     let sidebar = '';
     return (
       <div className='schema-app-container'>
+        <img className='wallpaper' src='./images/graphql_wallpaper.png'/>
         <CSSTransition
           in={this.state.sidebar}
-          appear={true}
-          timeout={350}
+          timeout={200}
           classNames='fade'
         >
           <div id='sidebar-container'>
             <CSSTransition
               in={this.props.selectedField.tableNum < 0}
               key='table'
-              appear={true}
-              timeout={350}
+              timeout={200}
               classNames='fade'
             >
               <CreateTable/>
@@ -64,18 +70,16 @@ class SchemaApp extends Component {
             <CSSTransition
               in={this.props.selectedField.tableNum >= 0}
               key='fields'
-              appear={true}
-              timeout={350}
+              timeout={200}
               classNames='fade'
             >
               <TableOptions/> 
             </CSSTransition>
           </div>
-            {/* {this.props.selectedField < 0 ? <CreateTable/> : <TableOptions/>} */}
         </CSSTransition>
-        <div className='table-components-container'>
+        <TransitionGroup className='table-components-container'>
           {tableComponents}
-        </div>
+        </TransitionGroup>
       </div>
     )
   }

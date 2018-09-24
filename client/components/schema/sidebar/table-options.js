@@ -13,9 +13,13 @@ import Toggle from 'material-ui/Toggle';
 import MenuItem from 'material-ui/MenuItem';
 import DropDownMenu from 'material-ui/DropDownMenu';
 import Snackbar from 'material-ui/Snackbar';
+
 const style = {
   customWidth: {
-    width: 200,
+    width: 200
+  },
+  toggle: {
+    marginTop: '15px'
   },
   snackBarStyle: {
     backgroundColor: 'rgb(255,66,128)',
@@ -144,16 +148,16 @@ class TableOptions extends React.Component {
     function fieldName(fieldNum, tableNum, tables) {
       if (fieldNum >= 0) {
         return (
-        <div>
+        <div style={{marginTop: '10px'}}>
           <h2>{tables[tableNum].fields[fieldNum].name} Field</h2>
-          <h4>in {tables[tableNum].type}</h4>
+          <h4 style={{fontWeight: '200', marginTop: '5px'}}>in {tables[tableNum].type}</h4>
         </div>
         )
       }
       return (
-        <div>
+        <div style={{marginTop: '10px'}}>
           <h2>Add Field</h2>
-          <h4>to Table {tables[tableNum].type}</h4>
+          <h4 style={{fontWeight: '200', marginTop: '5px'}}>to {tables[tableNum].type}</h4>
         </div>
       )
     }
@@ -209,6 +213,7 @@ class TableOptions extends React.Component {
               label="Primary Key"
               toggled={this.props.selectedField.primaryKey}
               onToggle={this.handleToggle.bind(null, 'primaryKey')}
+              style={style.toggle}
             />
             )}
             
@@ -216,24 +221,28 @@ class TableOptions extends React.Component {
               label="Required"
               toggled={this.props.selectedField.required}
               onToggle={this.handleToggle.bind(null, 'required')}
+              style={style.toggle}
             />
 
             <Toggle
               label="Unique"
               toggled={this.props.selectedField.unique}
               onToggle={this.handleToggle.bind(null, 'unique')}
+              style={style.toggle}
             />
 
             <Toggle
               label="Multiple Values"
               toggled={this.props.selectedField.multipleValues}
               onToggle={this.handleToggle.bind(null, 'multipleValues')}
+              style={style.toggle}
             />
 
              <Toggle
               label="Relation"
               toggled={this.props.selectedField.relationSelected}
               onToggle={this.handleToggle.bind(null, 'relationSelected')}
+              style={style.toggle}
             />
             
               {this.props.selectedField.relationSelected && (<span>
@@ -278,8 +287,10 @@ class TableOptions extends React.Component {
                 label={this.props.selectedField.fieldNum > -1 ?'Update Field' : 'Create Field'}
                 type='submit'
                 onClick={this.submitOptions}
+                style={{marginTop: '25px'}}
               />
           </form>
+          <div style={{width: '100%', height: '40px'}}/>
         </div>
         }
         <Snackbar

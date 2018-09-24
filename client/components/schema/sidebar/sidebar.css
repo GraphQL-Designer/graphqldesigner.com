@@ -60,6 +60,7 @@ select{
   display: flex;
   justify-content: center;
   margin: 0;
+  overflow: scroll;
 }
 
 #back-to-create{
