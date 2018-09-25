@@ -15,15 +15,16 @@ import './sidebar.css';
 
 const mapStateToProps = store => ({
   tables: store.schema.tables,
+  selectedTable: store.schema.selectedTable,
   tableName: store.schema.selectedTable.type,
-  tableIDRequested: store.schema.selectedTable.idRequested,
   tableID: store.schema.selectedTable.tableID,
   database: store.general.database,
   selectedTable: store.schema.selectedTable
 });
 
 const mapDispatchToProps = dispatch => ({
-  saveTableDataInput: () => dispatch(actions.saveTableDataInput()),
+  tablesToMongoFormat: () => dispatch(actions.tablesToMongoFormat()),
+  saveTableDataInput: database => dispatch(actions.saveTableDataInput(database)),
   tableNameChange: tableName => dispatch(actions.handleTableNameChange(tableName)),
   idSelector: () => dispatch(actions.handleTableID()),
   openTableCreator: () => dispatch(actions.openTableCreator()),
@@ -37,13 +38,13 @@ class CreateTable extends React.Component {
     this.saveTableDataInput = this.saveTableDataInput.bind(this);
     this.capitalizeFirstLetter = this.capitalizeFirstLetter.bind(this);
     this.handleChange = this.handleChange.bind(this);
-    this.handleClick = this.handleClick.bind(this);
+    this.handleCheck = this.handleCheck.bind(this);
     this.handleOpenTableCreator = this.handleOpenTableCreator.bind(this);
     this.handleSnackbarUpdate = this.handleSnackbarUpdate.bind(this);
   }
 
   capitalizeFirstLetter(string) {
-    if (string) {
+    if(string) {
       const newString = string.replace(' ', '');
       return newString.charAt(0).toUpperCase() + newString.slice(1);
     }
@@ -53,7 +54,7 @@ class CreateTable extends React.Component {
     this.props.handleSnackbarUpdate(message);
   }
 
-  saveTableDataInput(e) {
+  saveTableDataInput(e){
     e.preventDefault();
     let error = false;
 
@@ -95,8 +96,8 @@ class CreateTable extends React.Component {
     this.props.tableNameChange(e.target.value);
   }
 
-  handleClick() {
-    this.props.idSelector();
+  handleCheck(){
+    this.props.idSelector()
   }
 
   handleOpenTableCreator(event) {
@@ -132,15 +133,15 @@ class CreateTable extends React.Component {
             fullWidth={true}
             autoFocus
             onChange={this.handleChange}
-            value={this.props.tableName || ''}
+            value={this.props.tableName}
           />
           <h5 style={{ textAlign: 'center', marginTop: '-4px' }}>( Singular naming convention )</h5>
           <Checkbox
             style={{ marginTop: '10px' }}
             label="Unique ID"
-            onCheck={this.handleClick}
-            id="idCheckbox"
-            checked={this.props.database === 'MongoDB' ? true : this.props.tableIDRequested}
+            onCheck={this.handleCheck}
+            id='idCheckbox'
+            checked={!!this.props.selectedTable.fields[0]}
             disabled={this.props.database === 'MongoDB'}
           />
           <RaisedButton

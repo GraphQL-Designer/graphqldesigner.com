@@ -33,7 +33,7 @@ const mapStateToProps = store => ({
 
 const mapDispatchToProps = dispatch => ({
   createField: field => dispatch(actions.addField(field)),
-  saveFieldInput: () => dispatch(actions.saveFieldInput()),
+  saveFieldInput: database => dispatch(actions.saveFieldInput(database)),
   handleChange: field => dispatch(actions.handleFieldsUpdate(field)),
   openTableCreator: () => dispatch(actions.openTableCreator()),
   handleSnackbarUpdate: status => dispatch(actions.handleSnackbarUpdate(status))
@@ -114,7 +114,6 @@ class TableOptions extends React.Component {
       this.handleSnackbarUpdate('Please enter a field name (no space, symbols allowed');
     }
   }
-
   render() {
     let tables = [];
     let fields = [];

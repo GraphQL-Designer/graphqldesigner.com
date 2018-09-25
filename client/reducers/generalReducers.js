@@ -1,22 +1,15 @@
 import * as types from '../actions/action-types';
 
 const initialState = {
-  database: '',
-  statusMessage: ''
+  message: {
+    open: false,
+    message: '',
+  },
 };
 
 const generalReducers = (state = initialState, action) => {
-  let database = state.database;
 
-  switch (action.type) {
-    case types.CHOOSE_DATABASE:
-      database = action.payload;
-
-      return {
-        ...state,
-        database
-      };
-
+  switch(action.type) {
     case types.MESSAGE:
       return {
         ...state

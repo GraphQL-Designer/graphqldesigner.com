@@ -27,6 +27,7 @@ const style = {
 // we use store.data, because of index.js reduce function
 const mapStateToProps = store => ({
   tables: store.schema.tables,
+  database: store.schema.database
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -53,11 +54,10 @@ class Table extends Component {
     this.props.deleteTable(event.currentTarget.value); // need currentTarget because of Material-UI
   }
 
-  handleDeleteField(event) {
-    const tableIndex = this.props.tableIndex;
-    const fieldIndex = event.currentTarget.value; // need currentTarget because of Material-UI
-    console.log(tableIndex, fieldIndex);
-    this.props.deleteField([tableIndex, fieldIndex]);
+  handleDeleteField(event){
+    const tableIndex = this.props.tableIndex
+    const fieldIndex = event.currentTarget.value // need currentTarget because of Material-UI
+    this.props.deleteField([tableIndex, fieldIndex])
   }
 
   handleAddField(event) {
@@ -66,9 +66,9 @@ class Table extends Component {
 
   handleUpdateField(event) {
     this.props.handleFieldsSelect({
-      location: event.currentTarget.value, // need currentTarget because of Material-UI
-      submitUpdate: false,
-    });
+      location: event.currentTarget.value,
+      submitUpdate: false
+    })
   }
 
   handleSelectedTable(event) {
@@ -140,20 +140,43 @@ class Table extends Component {
         <div>
           <div key={property} className='field'>
             <div className='fieldContainer' style={{backgroundColor: `${checkForRelation(relation, tables)}`}}>
-              <FlatButton
-                value={`${tableIndex} ${fieldIndex}`}
-                onClick={this.handleUpdateField}
-                className='fieldButton'
-              >
-              <p style={{fontSize: '1.1em'}}>{fieldName} - {checkForArray('front', multipleValues)}{fieldType}{checkForRequired(required)}{checkForUnique(unique)}{checkForArray('back', multipleValues)}</p>
-              </FlatButton>
-              <FlatButton
-                className='delete-button'
-                icon={<Close />}
-                value={property}
-                onClick={this.handleDeleteField}
-                style={{minWidth: '25px'}}
-              />
+             { this.props.database === 'MongoDB' && this.props.tableData.fields[property].name === 'id' ? (
+                <FlatButton
+                  value={`${tableIndex} ${fieldIndex}`}
+                  onClick={this.handleUpdateField}
+                  className='fieldButton'
+                  disabled
+                  >
+                    <p style={{fontSize: '1.1em'}}>{fieldName} - {checkForArray('front', multipleValues)}{fieldType}{checkForRequired(required)}{checkForUnique(unique)}{checkForArray('back', multipleValues)}</p>
+                  </FlatButton>
+                ) : (
+                  <FlatButton
+                  value={`${tableIndex} ${fieldIndex}`}
+                  onClick={this.handleUpdateField}
+                  className='fieldButton'
+                  >
+                    <p style={{fontSize: '1.1em'}}>{fieldName} - {checkForArray('front', multipleValues)}{fieldType}{checkForRequired(required)}{checkForUnique(unique)}{checkForArray('back', multipleValues)}</p>
+                  </FlatButton>
+                )}
+
+              { this.props.database === 'MongoDB' && this.props.tableData.fields[property].name === 'id' ? (
+                  <FlatButton
+                  className='delete-button'
+                  icon={<Close />}
+                  value={property}
+                  onClick={this.handleDeleteField}
+                  style={{minWidth: '25px'}}
+                  disabled
+                />
+              ) : (
+                  <FlatButton
+                  className='delete-button'
+                  icon={<Close />}
+                  value={property}
+                  onClick={this.handleDeleteField}
+                  style={{minWidth: '25px'}}
+                />
+              )}
             </div>
           </div>
           <hr className='fieldBreak'/>
@@ -183,18 +206,6 @@ class Table extends Component {
               />
             </div>
           </div>
-          { this.props.tableData.idRequested && (
-            <div>
-              <FlatButton
-                value={this.props.tableIndex}
-                onClick={this.handleSelectedTable}
-                style={style.idFiled}
-              >
-                <p style={{fontSize: '1.1em'}}>id - ID</p>
-              </FlatButton>
-              <hr className='fieldBreak'/>
-            </div>
-          )}
           <TransitionGroup>
             { fields }
           </TransitionGroup>
