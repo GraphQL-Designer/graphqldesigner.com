@@ -24,8 +24,7 @@ const mapStateToProps = store => ({
 
 const mapDispatchToProps = dispatch => ({
   saveTableDataInput: () => dispatch(actions.saveTableDataInput()),
-  tableNameChange: tableName =>
-    dispatch(actions.handleTableNameChange(tableName)),
+  tableNameChange: tableName => dispatch(actions.handleTableNameChange(tableName)),
   idSelector: () => dispatch(actions.handleTableID()),
   openTableCreator: () => dispatch(actions.openTableCreator()),
   handleSnackbarUpdate: status => dispatch(actions.handleSnackbarUpdate(status))
@@ -70,10 +69,7 @@ class CreateTable extends React.Component {
 
       // remove the selected table from list of tables if updating to prevent snackbar from displaying table error
       if (this.props.selectedTable.tableID !== -1) {
-        listTableIndexes.splice(
-          listTableIndexes.indexOf(String(this.props.selectedTable.tableID)),
-          1
-        );
+        listTableIndexes.splice(listTableIndexes.indexOf(String(this.props.selectedTable.tableID)), 1);
       }
 
       for (let x = 0; x < listTableIndexes.length; x += 1) {
@@ -91,9 +87,7 @@ class CreateTable extends React.Component {
         this.handleSnackbarUpdate('');
       }
     } else {
-      this.handleSnackbarUpdate(
-        'Please enter a table name (no symbols or spaces)'
-      );
+      this.handleSnackbarUpdate('Please enter a table name (no symbols or spaces)');
     }
   }
 
@@ -140,19 +134,13 @@ class CreateTable extends React.Component {
             onChange={this.handleChange}
             value={this.props.tableName || ''}
           />
-          <h5 style={{ textAlign: 'center', marginTop: '-4px' }}>
-            ( Singular naming convention )
-          </h5>
+          <h5 style={{ textAlign: 'center', marginTop: '-4px' }}>( Singular naming convention )</h5>
           <Checkbox
             style={{ marginTop: '10px' }}
             label="Unique ID"
             onCheck={this.handleClick}
             id="idCheckbox"
-            checked={
-              this.props.database === 'MongoDB'
-                ? true
-                : this.props.tableIDRequested
-            }
+            checked={this.props.database === 'MongoDB' ? true : this.props.tableIDRequested}
             disabled={this.props.database === 'MongoDB'}
           />
           <RaisedButton
