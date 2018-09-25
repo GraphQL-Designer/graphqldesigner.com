@@ -8,24 +8,25 @@ import './navbar.css';
 
 // componenets
 import GraphqlLoader from '../loader/index.js';
-
+import Welcome from './../welcome/welcome.js';
 
 const mapStateToProps = store => ({
   tables: store.schema.tables,
-  database: store.general.database,
+  database: store.general.database
 });
 
 const mapDispatchToProps = dispatch => ({
   exportTable: table => dispatch(actions.exportTable(table)),
-  // saveTable: table => dispatch(actions.saveTable(table)) 
-  handleNewProject: () => dispatch(actions.handleNewProject()),
+  // saveTable: table => dispatch(actions.saveTable(table))
+  handleNewProject: reset => dispatch(actions.handleNewProject(reset)),
+  tablesToMongoFormat: () => dispatch({ type: 'TABLES_TO_MONGO_FORMAT' })
 });
 
 class MainNav extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      modal: false,
+      modal: false
     };
 
     this.handleExport = this.handleExport.bind(this);
@@ -34,33 +35,37 @@ class MainNav extends React.Component {
 
   handleExport() {
     this.setState({
-      modal: true,
+      modal: true
     });
-    const data = Object.assign({}, {data: this.props.tables}, {
-      database: 'MongoDB',
-    });
+    const data = Object.assign(
+      {},
+      { data: this.props.tables },
+      {
+        database: 'MongoDB'
+      }
+    );
     setTimeout(() => {
       fetch('http://localhost:4100/write-files', {
         method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify(data)
       })
         .then(res => res.blob())
         .then(blob => URL.createObjectURL(blob))
-        .then((file) => {
-          var element = document.createElement("a");
+        .then(file => {
+          var element = document.createElement('a');
           element.href = file;
-          element.download = "graphql.zip";
+          element.download = 'graphql.zip';
           element.click();
           this.setState({
-            modal: false,
+            modal: false
           });
         })
-        .catch((err) => {
+        .catch(err => {
           this.setState({
-            modal: false,
+            modal: false
           });
           console.log(err);
         });
@@ -68,34 +73,35 @@ class MainNav extends React.Component {
   }
 
   handleNewProject() {
-    this.props.handleNewProject();
+    this.props.handleNewProject(true);
   }
-
 
   render() {
     return (
       <div>
         <nav id="navbar">
           <div id="nav-left">
-            <FlatButton label="New Project" onClick={this.handleNewProject}/>
-            <FlatButton style={{color: '#FF4280'}} label="Export Code" onClick={this.handleExport}/>
+            <FlatButton label="New Project" onClick={this.handleNewProject} />
+            <FlatButton style={{ color: '#FF4280' }} label="Export Code" onClick={this.handleExport} />
           </div>
-          <div id="nav-misd">
-          </div>
-          <div id='nav-right'>
+          <div id="nav-misd" />
+          <div id="nav-right">
             <FlatButton label="Logout" />
           </div>
         </nav>
         {this.state.modal && (
-          <div className='overlay'>
-          <div>
-            <GraphqlLoader />
-            <h2 style={{color: 'white'}}>Creating Your Code!</h2>
-           </div>
+          <div className="overlay">
+            <div>
+              <GraphqlLoader />
+              <h2 style={{ color: 'white' }}>Creating Your Code!</h2>
+            </div>
           </div>
         )}
       </div>
     );
   }
 }
-export default connect(mapStateToProps, mapDispatchToProps)(MainNav);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(MainNav);
