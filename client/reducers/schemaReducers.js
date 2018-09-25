@@ -14,13 +14,13 @@ const initialState = {
     multipleValues: false,
     relationSelected: false,
     relation: {
-      type: '',
+      // type: '',
       tableIndex: -1,
-      field: '',
+      // field: '',
       fieldIndex: -1,
       refType: ''
     },
-    referencedBy: {},
+    refBy: new Set(),
     tableNum: -1,
     fieldNum: -1
   },
@@ -32,8 +32,6 @@ const initialState = {
     tableID: -1,
   },
 };
-
-
 
 const reducers = (state = initialState, action) => {
   // let database = state.database;
@@ -60,12 +58,13 @@ const reducers = (state = initialState, action) => {
     multipleValues: false,
     relationSelected: false,
     relation: {
-      type: '',
+      // type: '',
       tableIndex: -1,
-      field: '',
+      // field: '',
       fieldIndex: -1,
       refType: ''
     },
+    referencedBy: {},
     tableNum: -1,
     fieldNum: -1
   }
@@ -216,18 +215,10 @@ const reducers = (state = initialState, action) => {
       // remove whitespace
       newSelectedFieldName = newSelectedFieldName.replace(/[^\w]/gi, '');
 
-      // get list of field indexes, and alert if field name already exists in the table
-      const listFieldIndexes = Object.getOwnPropertyNames(state.tables[state.selectedField.tableNum].fields);
-      
-      //remove the field from list of fields if updating to prevent snackbar from displaying field error
-      if(state.selectedField.fieldNum !== -1){
-        listFieldIndexes.splice(listFieldIndexes.indexOf(String(state.selectedField.fieldNum)),1);
-      }
-
       if(newSelectedFieldName.length > 0) {
       tableNum = state.selectedField.tableNum;
       const currentFieldIndex = state.tables[tableNum].fieldsIndex;
-      // no field has been selected yet 
+      // Save new field
       if (state.selectedField.fieldNum < 0) {
         newTables = 
         Object.assign({}, state.tables, {[tableNum]:
@@ -242,7 +233,7 @@ const reducers = (state = initialState, action) => {
                 selectedField: newSelectedField,
               } 
       } 
-      // field has been selected
+      // Save updated field
       else {
         newTables = 
         Object.assign({}, state.tables, {[tableNum]:
@@ -293,17 +284,18 @@ const reducers = (state = initialState, action) => {
         const rel = action.payload.name.split('.'); // rel[0] is 'relation' and rel[1] is either 'tableIndex', 'fieldIndex', or 'refType'
         newSelectedField = Object.assign({}, state.selectedField, {[rel[0]] :
                             Object.assign({}, state.selectedField[rel[0]], {[rel[1]] : action.payload.value})})
-        // Sets relation type name based on table index
-        if (rel[1] === 'tableIndex') {
-          const tableIndex = action.payload.value
-          newSelectedField.relation.type = state.tables[tableIndex].type
-        }
-        // Sets relation field name based on field index
-        if (rel[1] === 'fieldIndex') {
-          const tableIndex = newSelectedField.relation.tableIndex
-          const fieldIndex = action.payload.value
-          newSelectedField.relation.field = state.tables[tableIndex].fields[fieldIndex].name
-        }
+      
+        // // Sets relation type name based on table index
+        // if (rel[1] === 'tableIndex') {
+        //   const tableIndex = action.payload.value
+        //   newSelectedField.relation.type = state.tables[tableIndex].type
+        // }
+        // // Sets relation field name based on field index
+        // if (rel[1] === 'fieldIndex') {
+        //   const tableIndex = newSelectedField.relation.tableIndex
+        //   const fieldIndex = action.payload.value
+        //   newSelectedField.relation.field = state.tables[tableIndex].fields[fieldIndex].name
+        // }
 
       } else {
         if (action.payload.value === 'true') action.payload.value = true;
