@@ -19,7 +19,7 @@ const initialState = {
     defaultValue: '',
     required: false,
     multipleValues: false,
-    relationSelected: 0,
+    relationSelected: false,
     relation: {
       // type: '',
       tableIndex: -1,
@@ -58,6 +58,7 @@ const reducers = (state = initialState, action) => {
     defaultValue: '',
     required: false,
     multipleValues: false,
+    relationSelected: false,
     relation: {
       // type: '',
       tableIndex: -1,
@@ -82,6 +83,7 @@ const reducers = (state = initialState, action) => {
     defaultValue: '',
     required: false,
     multipleValues: false,
+    relationSelected: false, 
     relation: {
       type: '',
       field: '',
