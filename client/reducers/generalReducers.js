@@ -11,20 +11,17 @@ const generalReducers = (state = initialState, action) => {
 
   switch(action.type) {
     case types.MESSAGE:
-
       return {
-        ...state,
-
+        ...state
       };
 
     case types.HANDLE_SNACKBAR_UPDATE:
-      const newState = Object.assign({}, {open: action.payload.open, message: action.payload.message});
+      const newState = action.payload;
 
       return {
         ...state,
-        message: newState,
+        statusMessage: newState
       };
-
 
     default:
       return state;
