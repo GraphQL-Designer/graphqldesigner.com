@@ -370,8 +370,11 @@ const reducers = (state = initialState, action) => {
       // parse if relations field is selected
       if (action.payload.name.indexOf('.') !== -1) {
         const rel = action.payload.name.split('.'); // rel[0] is 'relation' and rel[1] is either 'tableIndex', 'fieldIndex', or 'refType'
-        newSelectedField = Object.assign({}, state.selectedField, {[rel[0]] :
-                            Object.assign({}, state.selectedField[rel[0]], {[rel[1]] : action.payload.value})})
+        newSelectedField = Object.assign({}, state.selectedField, {
+          [rel[0]]: Object.assign({}, state.selectedField[rel[0]], {
+            [rel[1]] : action.payload.value}
+          )
+        })
       
         // // Sets relation type name based on table index
         // if (rel[1] === 'tableIndex') {
