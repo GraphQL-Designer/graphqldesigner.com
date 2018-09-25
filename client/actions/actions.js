@@ -13,6 +13,9 @@ export const handleSnackbarUpdate = status => ({
 });
 
 // ----------------------------- Schema App --------------------------------//
+// export const tablesToMongoFormat = () => ({
+//   type: types.TABLES_TO_MONGO_FORMAT
+// })
 
 export const openTableCreator = () => ({
   type: types.OPEN_TABLE_CREATOR,
@@ -20,7 +23,7 @@ export const openTableCreator = () => ({
 
 
 export const saveTableDataInput = () => ({
-  type: types.SAVE_TABLE_DATA_INPUT,
+  type: types.SAVE_TABLE_DATA_INPUT
 });
 
 export const deleteTable = tableIndex => ({
@@ -43,10 +46,10 @@ export const addFieldClicked = tableIndex => ({
   payload: tableIndex,
 });
 
-export const saveFieldInput = fieldIndex => ({
+export const saveFieldInput = (database) => ({
   type: types.SAVE_FIELD_INPUT,
-  payload: fieldIndex,
-});
+  payload: database,
+})
 
 export const handleFieldsUpdate = field => ({
   type: types.HANDLE_FIELDS_UPDATE,
