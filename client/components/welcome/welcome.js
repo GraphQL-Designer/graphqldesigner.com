@@ -58,19 +58,19 @@ class Welcome extends React.Component {
           modal={true}
           open={this.props.projectReset}
           onRequestClose={this.handleClose}
-          className="welcome-container"
-          paperClassName="welcome-box"
+          className='welcome-container'
+          paperClassName='welcome-box'
         >
-          <div id="subheading">Simply create and implement a full stack React GraphQL App.</div>
-          <div className="iconContainer">
-            <img id="icon_graphql" src="./images/graphql.png" />
-            <img id="icon_express" src="./images/express.png" />
-            <img id="icon_react" src="./images/react.png" />
+          <div id='subheading'>Simply create and implement a full stack React GraphQL App.</div>
+          <div className='iconContainer'>
+            <img id='icon_graphql' src='./images/graphql.png' />
+            <img id='icon_express' src='./images/express.png' />
+            <img id='icon_react' src='./images/react.png' />
           </div>
-          <hr className="welcome-hr" />
+          <hr className='welcome-hr' />
           <h4>Select your database type</h4>
-          <div id="buttonsContainer">
-            <RaisedButton value="test" onClick={this.handleDatabaseClick} buttonStyle={styles}>
+          <div id='buttonsContainer'>
+            <RaisedButton value='test' onClick={this.handleDatabaseClick} buttonStyle={styles}>
               MongoDB
             </RaisedButton>
             <RaisedButton onClick={this.handleDatabaseClick} buttonStyle={styles}>

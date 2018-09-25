@@ -8,7 +8,6 @@ import './navbar.css';
 
 // componenets
 import GraphqlLoader from '../loader/index.js';
-import Welcome from './../welcome/welcome.js';
 
 const mapStateToProps = store => ({
   tables: store.schema.tables,
