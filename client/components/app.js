@@ -13,10 +13,10 @@ const style = {
     color: 'black'
   },
   tabStyle: {
-    backgroundColor: 'rgb(38,42,48)'
+    backgroundColor: 'rgb(38,42,48)',
+    color: 'white'
   }
 };
-
 
 // Components
 import MainNav from './navbar/navbar';
