@@ -17,7 +17,6 @@ const style = {
   }
 };
 
-
 // Components
 import MainNav from './navbar/navbar';
 import Welcome from './welcome/welcome.js';
