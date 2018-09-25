@@ -63,11 +63,8 @@ class CreateTable extends React.Component {
 
     if (name.length > 0) {
       // capitalize first letter
-      if (name.length > 1) {
-        name = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
-      } else {
-        name = name.toUpperCase();
-      }
+      name = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
+
       // get list of table indexes
       const listTableIndexes = Object.getOwnPropertyNames(this.props.tables);
 
