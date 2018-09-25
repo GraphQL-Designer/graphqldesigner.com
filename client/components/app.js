@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as actions from '../actions/actions.js';
 
-// Styling 
+// Styling
 import './app.css';
-import {Tabs, Tab} from 'material-ui/Tabs';
+import { Tabs, Tab } from 'material-ui/Tabs';
 import Snackbar from 'material-ui/Snackbar';
 
 const style = {
@@ -13,7 +13,8 @@ const style = {
     color: 'black'
   },
   tabStyle: {
-    backgroundColor: 'rgb(38,42,48)'
+    backgroundColor: 'rgb(38,42,48)',
+    color: 'white'
   }
 };
 
@@ -25,63 +26,66 @@ import QueryApp from './query/query-app.js';
 import CodeApp from './code/code-app.js';
 
 const mapStateToProps = store => ({
-  snackBar: store.general.message
+  snackBar: store.general.statusMessage
 });
 
 const mapDispatchToProps = dispatch => ({
   chooseApp: app => dispatch(actions.chooseApp(app)),
   chooseDatabase: dbName => dispatch(actions.chooseDatabase(dbName)),
-  handleSnackbarUpdate: (status) => dispatch(actions.handleSnackbarUpdate(status))
-})
+  handleSnackbarUpdate: status => dispatch(actions.handleSnackbarUpdate(status))
+});
 
 class App extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      open: false,
-    }
+      open: false
+    };
 
     this.handleTabSelect = this.handleTabSelect.bind(this);
     this.handleRequestClose = this.handleRequestClose.bind(this);
-  }  
+  }
 
-  handleTabSelect(event){
-    this.props.chooseApp(event.target.innerHTML)
+  handleTabSelect(event) {
+    this.props.chooseApp(event.target.innerHTML);
   }
 
   handleRequestClose = () => {
-    this.props.handleSnackbarUpdate({open: false, message: ''});
-  }
+    this.props.handleSnackbarUpdate('');
+  };
 
   render() {
     return (
-      <div className='app-container'>
+      <div className="app-container">
         <MainNav />
-        <Welcome chooseDatabase={this.props.chooseDatabase}/>
-          <div className='app-body-container'>
-            <Tabs className='tabs'>
-              <Tab label="Schemas" style={style.tabStyle}>
-                <SchemaApp className='schemaTest'/>
-              </Tab>
-              <Tab label="Queries" style={style.tabStyle}>
-                <QueryApp/>
-              </Tab>
-              <Tab label="Code" style={style.tabStyle}>
-                <CodeApp/>
-              </Tab>
-            </Tabs>
-            <Snackbar
-            open={this.props.snackBar.open}
-            message={this.props.snackBar.message}
+        <Welcome chooseDatabase={this.props.chooseDatabase} />
+        <div className="app-body-container">
+          <Tabs className="tabs">
+            <Tab label="Schemas" style={style.tabStyle}>
+              <SchemaApp className="schemaTest" />
+            </Tab>
+            <Tab label="Queries" style={style.tabStyle}>
+              <QueryApp />
+            </Tab>
+            <Tab label="Code" style={style.tabStyle}>
+              <CodeApp />
+            </Tab>
+          </Tabs>
+          <Snackbar
+            open={!!this.props.snackBar}
+            message={this.props.snackBar}
             autoHideDuration={3000}
             onRequestClose={this.handleRequestClose}
             bodyStyle={style.snackBarStyle}
           />
-          </div>
+        </div>
       </div>
-    )
+    );
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(App);

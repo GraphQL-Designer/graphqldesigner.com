@@ -2,21 +2,21 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 
-//components
+// components
 import CreateQuerySidebar from './sidebar/create-query-sidebar.js';
 import CustomizeQuerySidebar from './sidebar/customize-query-sidebar.js';
-import QueryCodeContainer from './query-code-container.js'
+import QueryCodeContainer from './query-code-container.js';
 
 const mapStateToProps = store => ({
-  queryMode: store.query.queryMode
+  queryMode: store.query.queryMode,
 });
 
 const mapDispatchToProps = dispatch => ({
-  //deleteTable: tableIndex => dispatch(actions.deleteTable(tableIndex)),
+  // deleteTable: tableIndex => dispatch(actions.deleteTable(tableIndex)),
 });
 
-const QueryApp = props => {
-  let sidebar = ''; 
+const QueryApp = (props) => {
+  let sidebar = '';
   if (props.queryMode === 'create') {
     sidebar = <CreateQuerySidebar/>
   } else {
@@ -28,8 +28,7 @@ const QueryApp = props => {
       <QueryCodeContainer/>
       {sidebar}
     </div>
-  )
+  );
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(QueryApp);
-

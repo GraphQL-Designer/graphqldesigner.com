@@ -2,9 +2,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 import * as actions from '../../../actions/actions.js';
 
-//styles
+// styles
 import './sidebar.css';
-import KeyboardArrowLeft from 'material-ui/svg-icons/hardware/keyboard-arrow-left'
+import KeyboardArrowLeft from 'material-ui/svg-icons/hardware/keyboard-arrow-left';
 import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
@@ -19,33 +19,33 @@ const style = {
   },
   toggle: {
     marginTop: '15px'
-  },
+  }
 };
 
 const mapStateToProps = store => ({
   database: store.general.database,
-  tableIndex : store.schema.tableIndexSelected,
+  tableIndex: store.schema.tableIndexSelected,
   addFieldClicked: store.schema.addFieldClicked,
   selectedField: store.schema.selectedField,
-  updatedField: store.schema.fieldUpdated, 
-  tables: store.schema.tables,
-})
+  updatedField: store.schema.fieldUpdated,
+  tables: store.schema.tables
+});
 
 const mapDispatchToProps = dispatch => ({
   createField: field => dispatch(actions.addField(field)),
-  saveFieldInput: () => dispatch(actions.saveFieldInput()),
+  saveFieldInput: database => dispatch(actions.saveFieldInput(database)),
   handleChange: field => dispatch(actions.handleFieldsUpdate(field)),
   openTableCreator: () => dispatch(actions.openTableCreator()),
-  handleSnackbarUpdate: (status) => dispatch(actions.handleSnackbarUpdate(status))
-})
+  handleSnackbarUpdate: status => dispatch(actions.handleSnackbarUpdate(status))
+});
 
 class TableOptions extends React.Component {
   constructor(props) {
     super(props);
-    this.state={
-      selectedTableIndex : null, 
+    this.state = {
+      selectedTableIndex: null,
       open: false
-    }
+    };
 
     this.submitOptions = this.submitOptions.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -55,90 +55,91 @@ class TableOptions extends React.Component {
     this.handleSnackbarUpdate = this.handleSnackbarUpdate.bind(this);
   }
 
-  handleOpenTableCreator(){
-    this.props.openTableCreator()
+  handleOpenTableCreator() {
+    this.props.openTableCreator();
   }
 
   handleToggle(name, event, value) {
-    this.props.handleChange({name: name, value: value})
-  };
-
-  handleChange (event) {
-    this.props.handleChange({name: event.target.name, value: event.target.value});
-  };
-
-  handleSelectChange (name, event, index, value) {
-    this.props.handleChange({name: name, value: value});
-  };
-
-  handleSnackbarUpdate(snackBarOn, message){
-    this.props.handleSnackbarUpdate({open: snackBarOn, message})
+    this.props.handleChange({ name: name, value: value });
   }
 
-  submitOptions(event){
+  handleChange(event) {
+    this.props.handleChange({
+      name: event.target.name,
+      value: event.target.value
+    });
+  }
+
+  handleSelectChange(name, event, index, value) {
+    this.props.handleChange({ name: name, value: value });
+  }
+
+  handleSnackbarUpdate(message) {
+    this.props.handleSnackbarUpdate(message);
+  }
+
+  submitOptions(event) {
     event.preventDefault();
 
     let error = false;
     let currTableNum = this.props.selectedField.tableNum;
 
-    //remove whitespace and symbols
+    // remove whitespace and symbols
     let fieldName = this.props.selectedField.name.replace(/[^\w]/gi, '');
 
-    if(fieldName.length > 0) {
-      //get list of field indexes 
+    if (fieldName.length > 0) {
+      // get list of field indexes
       const listFieldIndexes = Object.getOwnPropertyNames(this.props.tables[currTableNum].fields);
 
       // remove the selected field from list of tables if updating to prevent snackbar from displaying table error
-      if(this.props.selectedField.fieldNum !== -1){
-        listFieldIndexes.splice(listFieldIndexes.indexOf(String(this.props.selectedField.fieldNum)),1);
+      if (this.props.selectedField.fieldNum !== -1) {
+        listFieldIndexes.splice(listFieldIndexes.indexOf(String(this.props.selectedField.fieldNum)), 1);
       }
 
       // if there are at least 1 field, check if there's duplicate in the list of fields in the table
-      for(let x = 0; x < listFieldIndexes.length; x += 1){
-        if(this.props.tables[currTableNum].fields[listFieldIndexes[x]].name === fieldName){
+      for (let x = 0; x < listFieldIndexes.length; x += 1) {
+        if (this.props.tables[currTableNum].fields[listFieldIndexes[x]].name === fieldName) {
           error = true;
         }
-      }      
+      }
 
-      if(error){
-        this.handleSnackbarUpdate(true, 'Error: Field name already exist'); 
+      if (error) {
+        this.handleSnackbarUpdate('Error: Field name already exist');
       } else {
-        //save or update table
-        this.props.saveFieldInput()
-        this.handleSnackbarUpdate(false, '');
-      }   
-    } else{
-      this.handleSnackbarUpdate(true, 'Please enter a field name (no space, symbols allowed');
+        // save or update table
+        this.props.saveFieldInput();
+        this.handleSnackbarUpdate('');
+      }
+    } else {
+      this.handleSnackbarUpdate('Please enter a field name (no space, symbols allowed');
     }
   }
-
   render() {
-    console.log('this is tables', this.props.tables)
-    let tables = []
+    let tables = [];
     let fields = [];
     let tempTableNumList = [];
 
-    // Generate relation type options 
-    for(let type in this.props.tables){
-      if(this.props.selectedField.tableNum !== type){
+    // Generate relation type options
+    for (let types in this.props.tables) {
+      if (this.props.selectedField.tableNum !== types) {
+        // tables.push(<option key={types} value={this.props.tables[types].tableID.type}>{this.props.tables[types].type}</option>);
         tables.push(
           <MenuItem
-            key={type}
-            value={type} 
-            primaryText={this.props.tables[type].type}
+            key={types}
+            value={this.props.tables[types].type}
+            primaryText={this.props.tables[types].type}
           />
-        )
-        tempTableNumList.push(type);
+        );
+        tempTableNumList.push(types);
       }
     }
 
     // Generate relation field options
     if (Object.keys(this.props.tables).length > 0) {
-      
       // iterate through list of types and get type index number matching type in relation selected
       let tempTableNum = Object.keys(this.props.tables)[0]; // start at first table index
-      for(let i = 0; i < tempTableNumList.length; i += 1){
-        if(this.props.tables[tempTableNumList[i]].type === this.props.selectedField.relation.type){
+      for (let i = 0; i < tempTableNumList.length; i += 1) {
+        if (this.props.tables[tempTableNumList[i]].type === this.props.selectedField.relation.type) {
           tempTableNum = tempTableNumList[i];
         }
       }
@@ -151,102 +152,106 @@ class TableOptions extends React.Component {
           value={field} 
           primaryText={this.props.tables[tempTableNum].fields[field].name}
           />
-        )
+        );
       }
     }
-        
+
     function fieldName(fieldNum, tableNum, tables) {
       if (fieldNum >= 0) {
         return (
-        <div style={{marginTop: '10px'}}>
-          <h2>{tables[tableNum].fields[fieldNum].name} Field</h2>
-          <h4 style={{fontWeight: '200', marginTop: '5px'}}>in {tables[tableNum].type}</h4>
-        </div>
-        )
+          <div style={{ marginTop: '10px' }}>
+            <h2>{tables[tableNum].fields[fieldNum].name} Field</h2>
+            <h4 style={{ fontWeight: '200', marginTop: '5px' }}>in {tables[tableNum].type}</h4>
+          </div>
+        );
       }
       return (
-        <div style={{marginTop: '10px'}}>
+        <div style={{ marginTop: '10px' }}>
           <h2>Add Field</h2>
-          <h4 style={{fontWeight: '200', marginTop: '5px'}}>to {tables[tableNum].type}</h4>
+          <h4 style={{ fontWeight: '200', marginTop: '5px' }}>to {tables[tableNum].type}</h4>
         </div>
-      )
+      );
     }
 
     return (
-      <div id='fieldOptions'> 
-        { this.props.selectedField.tableNum > -1  &&
-        <div id='options' style={{width: '250px'}}>
-          <FlatButton
-            id='back-to-create'
-            label="Create Table"
-            icon={<KeyboardArrowLeft />}
-            onClick={this.handleOpenTableCreator}
-          />
-          <form style={{width: '100%'}}>
-          {fieldName(this.props.selectedField.fieldNum, this.props.selectedField.tableNum, this.props.tables)}
-
-            <TextField
-              hintText="Field Name"
-              floatingLabelText="Field Name"
-              fullWidth={true}
-              name='name' 
-              id='fieldNameOption' 
-              onChange={this.handleChange} 
-              value={this.props.selectedField.name}
-              autoFocus
+      <div id="fieldOptions">
+        {this.props.selectedField.tableNum > -1 && (
+          <div id="options" style={{ width: '250px' }}>
+            <FlatButton
+              id="back-to-create"
+              label="Create Table"
+              icon={<KeyboardArrowLeft />}
+              onClick={this.handleOpenTableCreator}
             />
+            <form style={{ width: '100%' }}>
+              {fieldName(
+                this.props.selectedField.fieldNum,
+                this.props.selectedField.tableNum,
+                this.props.tables
+              )}
 
-            <TextField
-              hintText="Default Value"
-              floatingLabelText="Default Value"
-              fullWidth={true}
-              id='defaultValueOption'
-              name='defaultValue' 
-              onChange={this.handleChange}
-              value={this.props.selectedField.defaultValue} 
+              <TextField
+                hintText="Field Name"
+                floatingLabelText="Field Name"
+                fullWidth={true}
+                name="name"
+                id="fieldNameOption"
+                onChange={this.handleChange}
+                value={this.props.selectedField.name}
+                autoFocus
               />
 
-            <SelectField
-              floatingLabelText="Type"
-              fullWidth={true}
-              value={this.props.selectedField.type}
-              onChange={this.handleSelectChange.bind(null, 'type')} // we access 'type' as name in handleChange
-            >
-              <MenuItem value='String' primaryText="String" />
-              <MenuItem value='Number' primaryText="Number" />
-              <MenuItem value='Boolean' primaryText="Boolean" />
-              <MenuItem value='ID' primaryText="ID" />
-            </SelectField>
+              <TextField
+                hintText="Default Value"
+                floatingLabelText="Default Value"
+                fullWidth={true}
+                id="defaultValueOption"
+                name="defaultValue"
+                onChange={this.handleChange}
+                value={this.props.selectedField.defaultValue}
+              />
 
-            {this.props.database === 'SQL' && (
-            <Toggle
-              label="Primary Key"
-              toggled={this.props.selectedField.primaryKey}
-              onToggle={this.handleToggle.bind(null, 'primaryKey')}
-              style={style.toggle}
-            />
-            )}
-            
-            <Toggle
-              label="Required"
-              toggled={this.props.selectedField.required}
-              onToggle={this.handleToggle.bind(null, 'required')}
-              style={style.toggle}
-            />
+              <SelectField
+                floatingLabelText="Type"
+                fullWidth={true}
+                value={this.props.selectedField.type}
+                onChange={this.handleSelectChange.bind(null, 'type')} // we access 'type' as name in handleChange
+              >
+                <MenuItem value="String" primaryText="String" />
+                <MenuItem value="Number" primaryText="Number" />
+                <MenuItem value="Boolean" primaryText="Boolean" />
+                <MenuItem value="ID" primaryText="ID" />
+              </SelectField>
 
-            <Toggle
-              label="Unique"
-              toggled={this.props.selectedField.unique}
-              onToggle={this.handleToggle.bind(null, 'unique')}
-              style={style.toggle}
-            />
+              {this.props.database === 'SQL' && (
+                <Toggle
+                  label="Primary Key"
+                  toggled={this.props.selectedField.primaryKey}
+                  onToggle={this.handleToggle.bind(null, 'primaryKey')}
+                  style={style.toggle}
+                />
+              )}
 
-            <Toggle
-              label="Multiple Values"
-              toggled={this.props.selectedField.multipleValues}
-              onToggle={this.handleToggle.bind(null, 'multipleValues')}
-              style={style.toggle}
-            />
+              <Toggle
+                label="Required"
+                toggled={this.props.selectedField.required}
+                onToggle={this.handleToggle.bind(null, 'required')}
+                style={style.toggle}
+              />
+
+              <Toggle
+                label="Unique"
+                toggled={this.props.selectedField.unique}
+                onToggle={this.handleToggle.bind(null, 'unique')}
+                style={style.toggle}
+              />
+
+              <Toggle
+                label="Multiple Values"
+                toggled={this.props.selectedField.multipleValues}
+                onToggle={this.handleToggle.bind(null, 'multipleValues')}
+                style={style.toggle}
+              />
 
              <Toggle
               label="Relation"
@@ -294,18 +299,21 @@ class TableOptions extends React.Component {
               </span>)}
               <RaisedButton
                 secondary={true}
-                label={this.props.selectedField.fieldNum > -1 ?'Update Field' : 'Create Field'}
-                type='submit'
+                label={this.props.selectedField.fieldNum > -1 ? 'Update Field' : 'Create Field'}
+                type="submit"
                 onClick={this.submitOptions}
-                style={{marginTop: '25px'}}
+                style={{ marginTop: '25px' }}
               />
-          </form>
-          <div style={{width: '100%', height: '40px'}}/>
-        </div>
-        }
+            </form>
+            <div style={{ width: '100%', height: '40px' }} />
+          </div>
+        )}
       </div>
     );
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(TableOptions);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(TableOptions);
