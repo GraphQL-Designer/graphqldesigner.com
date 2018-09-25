@@ -18,6 +18,7 @@ const mapStateToProps = store => ({
 const mapDispatchToProps = dispatch => ({
   exportTable: table => dispatch(actions.exportTable(table)),
   //saveTable: table => dispatch(actions.saveTable(table)) 
+  handleNewProject: () => dispatch(actions.handleNewProject())
 });
  
 class MainNav extends React.Component {
@@ -26,7 +27,9 @@ class MainNav extends React.Component {
     this.state = {
       modal: false
     }
-    this.handleExport = this.handleExport.bind(this)
+
+    this.handleExport = this.handleExport.bind(this);
+    this.handleNewProject = this.handleNewProject.bind(this);
   }
 
   handleExport(){
@@ -64,13 +67,17 @@ class MainNav extends React.Component {
     }, 2500);
   }
 
+  handleNewProject() {
+    this.props.handleNewProject();
+  }
+
   
   render() {
     return (
       <div>
         <nav id="navbar">
           <div id="nav-left">
-            <FlatButton label="New Project" />
+            <FlatButton label="New Project" onClick={this.handleNewProject}/>
             <FlatButton style={{color: '#FF4280'}} label="Export Code" onClick={this.handleExport}/>
           </div>
           <div id="nav-misd">

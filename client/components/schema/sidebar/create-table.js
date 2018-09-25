@@ -46,8 +46,6 @@ class CreateTable extends React.Component {
     
     if(string){
       const newString = string.replace(' ', '');
-      // console.log('string: ', string);
-      // console.log('newString: ', newString);
       return newString.charAt(0).toUpperCase() + newString.slice(1);
     }
   }
@@ -63,17 +61,14 @@ class CreateTable extends React.Component {
     //remove whitespace and symbols
     let name = this.props.selectedTable.type.replace(/[^\w]/gi, '');
 
-    console.log('name length: ', name.length);
     if(name.length > 0) {
       //capitalize first letter
-      console.log('name: ', name);
       if(name.length > 1){
         name = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
       }
       else {
         name = name.toUpperCase();
       }
-      console.log('name after: ', name);
       //get list of table indexes 
       const listTableIndexes = Object.getOwnPropertyNames(this.props.tables);
 
@@ -95,8 +90,9 @@ class CreateTable extends React.Component {
         this.props.tableNameChange(name)
         this.props.saveTableDataInput()
         this.handleSnackbarUpdate(false, '');
-      }
-      
+      }   
+    } else {
+      this.handleSnackbarUpdate(true, 'Please enter a table name (no symbols or spaces)');
     }
   }
 
