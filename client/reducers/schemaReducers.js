@@ -269,6 +269,14 @@ const reducers = (state = initialState, action) => {
         selectedField: newSelectedField
       }
 
+                   // ------------ New Project ----------------//
+      // User clicked New Project
+      case types.HANDLE_NEW_PROJECT: 
+
+        newState = Object.assign({}, initialState);
+        
+        return newState;
+      
     default:
       return state;
   }

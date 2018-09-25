@@ -72,6 +72,10 @@ export const handleSelectedTable = (tableIndex) => ({
   payload: tableIndex
 })
 
+export const handleNewProject = () => ({
+  type: types.HANDLE_NEW_PROJECT
+})
+
 // ----------------------------- Query App -------------------------------//
 
 export const createQuery = (query) => ({
