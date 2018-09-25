@@ -3,7 +3,7 @@ import * as types from '../actions/action-types';
 const initialState = {
   message: {
     open: false,
-    message: '',
+    statusMessage: '',
   },
 };
 
