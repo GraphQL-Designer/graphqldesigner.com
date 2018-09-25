@@ -134,7 +134,7 @@ class TableOptions extends React.Component {
         tables.push(
           <MenuItem
             key={types}
-            value={this.props.tables[types].type}
+            value={types}
             primaryText={this.props.tables[types].type}
           />
         );
@@ -151,15 +151,14 @@ class TableOptions extends React.Component {
           tempTableNum = tempTableNumList[i];
         }
       }
-
-      // list all of the fields for type selected in relation in sidebar
-      for (let field in this.props.tables[tempTableNum].fields) {
-        // console.log('fields', field)
+      
+      //list all of the fields for type selected in relation in sidebar
+      for(let field in this.props.tables[tempTableNum].fields){
         fields.push(
           <MenuItem
-            key={field}
-            value={this.props.tables[tempTableNum].fields[field].name}
-            primaryText={this.props.tables[tempTableNum].fields[field].name}
+          key={field}
+          value={field} 
+          primaryText={this.props.tables[tempTableNum].fields[field].name}
           />
         );
       }
@@ -262,52 +261,50 @@ class TableOptions extends React.Component {
                 style={style.toggle}
               />
 
-              <Toggle
-                label="Relation"
-                toggled={this.props.selectedField.relationSelected}
-                onToggle={this.handleToggle.bind(null, 'relationSelected')}
-                style={style.toggle}
-              />
-
-              {this.props.selectedField.relationSelected && (
-                <span>
-                  <div className="relation-options">
-                    <p>Type:</p>
-                    <DropDownMenu
-                      value={this.props.selectedField.relation.type}
-                      style={style.customWidth}
-                      onChange={this.handleSelectChange.bind(null, 'relation.type')} // access 'relation.type' as name in handleChange
+             <Toggle
+              label="Relation"
+              toggled={this.props.selectedField.relationSelected}
+              onToggle={this.handleToggle.bind(null, 'relationSelected')}
+              style={style.toggle}
+            />
+            
+              {this.props.selectedField.relationSelected && (<span>
+                <div className='relation-options'>
+                  <p>Type:</p>
+                  <DropDownMenu
+                    value={this.props.selectedField.relation.tableIndex}
+                    style={style.customWidth}
+                    onChange={this.handleSelectChange.bind(null, 'relation.tableIndex')} // access 'relation.type' as name in handleChange
                     >
                       {tables}
-                    </DropDownMenu>
-                  </div>
+                  </DropDownMenu> 
+                </div>
 
-                  <div className="relation-options">
-                    <p>Field:</p>
-                    <DropDownMenu
-                      value={this.props.selectedField.relation.field}
-                      style={style.customWidth}
-                      onChange={this.handleSelectChange.bind(null, 'relation.field')} // access 'relation.field' as name in handleChange
-                    >
-                      {fields}
-                    </DropDownMenu>
-                  </div>
+                <div className='relation-options'>
+                  <p>Field:</p>
+                  <DropDownMenu
+                    value={this.props.selectedField.relation.fieldIndex}
+                    style={style.customWidth}
+                    onChange={this.handleSelectChange.bind(null, 'relation.fieldIndex')} // access 'relation.field' as name in handleChange
+                  >
+                    {fields}
+                  </DropDownMenu> 
+                </div>
 
-                  <div className="relation-options">
-                    <p>RefType:</p>
-                    <DropDownMenu
-                      value={this.props.selectedField.relation.refType}
-                      style={style.customWidth}
-                      onChange={this.handleSelectChange.bind(null, 'relation.refType')} // access 'relation.refType' as name in handleChange
-                    >
-                      <MenuItem value="one to one" primaryText="one to one" />
-                      <MenuItem value="one to many" primaryText="one to many" />
-                      <MenuItem value="many to one" primaryText="many to one" />
-                      <MenuItem value="many to many" primaryText="many to many" />
-                    </DropDownMenu>
-                  </div>
-                </span>
-              )}
+                <div className='relation-options'>
+                  <p>RefType:</p>
+                  <DropDownMenu
+                    value={this.props.selectedField.relation.refType}
+                    style={style.customWidth}
+                    onChange={this.handleSelectChange.bind(null, 'relation.refType')} // access 'relation.refType' as name in handleChange
+                  >
+                    <MenuItem value='one to one' primaryText="one to one" />
+                    <MenuItem value='one to many' primaryText="one to many" />
+                    <MenuItem value='many to one' primaryText="many to one" />
+                    <MenuItem value='many to many' primaryText="many to many" />
+                  </DropDownMenu> 
+                </div>
+              </span>)}
               <RaisedButton
                 secondary={true}
                 label={this.props.selectedField.fieldNum > -1 ? 'Update Field' : 'Create Field'}
