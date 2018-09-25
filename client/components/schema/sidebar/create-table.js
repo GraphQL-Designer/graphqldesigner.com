@@ -63,11 +63,17 @@ class CreateTable extends React.Component {
     //remove whitespace and symbols
     let name = this.props.selectedTable.type.replace(/[^\w]/gi, '');
 
-    
+    console.log('name length: ', name.length);
     if(name.length > 0) {
       //capitalize first letter
-      name = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
-
+      console.log('name: ', name);
+      if(name.length > 1){
+        name = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
+      }
+      else {
+        name = name.toUpperCase();
+      }
+      console.log('name after: ', name);
       //get list of table indexes 
       const listTableIndexes = Object.getOwnPropertyNames(this.props.tables);
 
@@ -85,9 +91,9 @@ class CreateTable extends React.Component {
       if(error){
         this.handleSnackbarUpdate(true, 'Error: Table name already exist'); 
       } else {
-        //save or update table
+        // update table name with uppercase before saving/updating 
+        this.props.tableNameChange(name)
         this.props.saveTableDataInput()
-        document.getElementById('tableName').value = '';
         this.handleSnackbarUpdate(false, '');
       }
       

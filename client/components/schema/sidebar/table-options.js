@@ -107,6 +107,8 @@ class TableOptions extends React.Component {
         this.props.saveFieldInput()
         this.handleSnackbarUpdate(false, '');
       }   
+    } else{
+      this.handleSnackbarUpdate(true, 'Please enter a field name (no space, symbols allowed');
     }
   }
 
