@@ -5,12 +5,17 @@ import * as actions from '../actions/actions.js';
 // Styling 
 import './app.css';
 import {Tabs, Tab} from 'material-ui/Tabs';
-const tabStyle = {
-  backgroundColor: 'rgb(38,42,48)',
-  // backgroundColor: 'rgb(50,54,60)',
+import Snackbar from 'material-ui/Snackbar';
 
-  color: 'white'
-}
+const style = {
+  snackBarStyle: {
+    backgroundColor: 'rgb(255,66,128)',
+    color: 'black'
+  },
+  tabStyle: {
+    backgroundColor: 'rgb(38,42,48)'
+  }
+};
 
 // Components
 import MainNav from './navbar/navbar';
@@ -20,21 +25,33 @@ import QueryApp from './query/query-app.js';
 import CodeApp from './code/code-app.js';
 
 const mapStateToProps = store => ({
+  snackBar: store.general.message
 });
 
 const mapDispatchToProps = dispatch => ({
   chooseApp: app => dispatch(actions.chooseApp(app)),
-  chooseDatabase: dbName => dispatch(actions.chooseDatabase(dbName))
+  chooseDatabase: dbName => dispatch(actions.chooseDatabase(dbName)),
+  handleSnackbarUpdate: (status) => dispatch(actions.handleSnackbarUpdate(status))
 })
 
 class App extends Component {
   constructor(props) {
     super(props);
-    this.handleTabSelect = this.handleTabSelect.bind(this)
+
+    this.state = {
+      open: false,
+    }
+
+    this.handleTabSelect = this.handleTabSelect.bind(this);
+    this.handleRequestClose = this.handleRequestClose.bind(this);
   }  
 
   handleTabSelect(event){
     this.props.chooseApp(event.target.innerHTML)
+  }
+
+  handleRequestClose = () => {
+    this.props.handleSnackbarUpdate({open: false, message: ''});
   }
 
   render() {
@@ -44,16 +61,23 @@ class App extends Component {
         <Welcome chooseDatabase={this.props.chooseDatabase}/>
           <div className='app-body-container'>
             <Tabs className='tabs'>
-              <Tab label="Schemas" style={tabStyle}>
+              <Tab label="Schemas" style={style.tabStyle}>
                 <SchemaApp className='schemaTest'/>
               </Tab>
-              <Tab label="Queries" style={tabStyle}>
+              <Tab label="Queries" style={style.tabStyle}>
                 <QueryApp/>
               </Tab>
-              <Tab label="Code" style={tabStyle}>
+              <Tab label="Code" style={style.tabStyle}>
                 <CodeApp/>
               </Tab>
             </Tabs>
+            <Snackbar
+            open={this.props.snackBar.open}
+            message={this.props.snackBar.message}
+            autoHideDuration={3000}
+            onRequestClose={this.handleRequestClose}
+            bodyStyle={style.snackBarStyle}
+          />
           </div>
       </div>
     )

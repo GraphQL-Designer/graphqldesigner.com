@@ -35,7 +35,8 @@ const mapDispatchToProps = dispatch => ({
   createField: field => dispatch(actions.addField(field)),
   saveFieldInput: () => dispatch(actions.saveFieldInput()),
   handleChange: field => dispatch(actions.handleFieldsUpdate(field)),
-  openTableCreator: () => dispatch(actions.openTableCreator())
+  openTableCreator: () => dispatch(actions.openTableCreator()),
+  handleSnackbarUpdate: (status) => dispatch(actions.handleSnackbarUpdate(status))
 })
 
 class TableOptions extends React.Component {
@@ -51,7 +52,7 @@ class TableOptions extends React.Component {
     this.handleSelectChange = this.handleSelectChange.bind(this);
     this.handleToggle = this.handleToggle.bind(this);
     this.handleOpenTableCreator = this.handleOpenTableCreator.bind(this);
-    this.handleRequestClose = this.handleRequestClose.bind(this);
+    this.handleSnackbarUpdate = this.handleSnackbarUpdate.bind(this);
   }
 
   handleOpenTableCreator(){
@@ -70,22 +71,49 @@ class TableOptions extends React.Component {
     this.props.handleChange({name: name, value: value});
   };
 
+  handleSnackbarUpdate(snackBarOn, message){
+    this.props.handleSnackbarUpdate({open: snackBarOn, message})
+  }
+
   submitOptions(event){
     event.preventDefault();
-    if(this.props.selectedField.name){
-      this.props.saveFieldInput();
+
+    let error = false;
+    let currTableNum = this.props.selectedField.tableNum;
+
+    //remove whitespace and symbols
+    let fieldName = this.props.selectedField.name.replace(/[^\w]/gi, '');
+
+    if(fieldName.length > 0) {
+      //get list of field indexes 
+      const listFieldIndexes = Object.getOwnPropertyNames(this.props.tables[currTableNum].fields);
+
+      // remove the selected field from list of tables if updating to prevent snackbar from displaying table error
+      if(this.props.selectedField.fieldNum !== -1){
+        listFieldIndexes.splice(listFieldIndexes.indexOf(String(this.props.selectedField.fieldNum)),1);
+      }
+
+      // if there are at least 1 field, check if there's duplicate in the list of fields in the table
+      for(let x = 0; x < listFieldIndexes.length; x += 1){
+        if(this.props.tables[currTableNum].fields[listFieldIndexes[x]].name === fieldName){
+          error = true;
+        }
+      }      
+
+      if(error){
+        this.handleSnackbarUpdate(true, 'Error: Field name already exist'); 
+      } else {
+        //save or update table
+        this.props.saveFieldInput()
+        this.handleSnackbarUpdate(false, '');
+      }   
+    } else{
+      this.handleSnackbarUpdate(true, 'Please enter a field name (no space, symbols allowed');
     }
   }
 
-  handleRequestClose = () => {
-    this.setState({
-      open: false,
-    })
-  }
-
   render() {
-    console.log('this is relations', this.props.selectedField.relation)
-    console.log('type', this.props.selectedField.relation.type)
+    console.log('this is tables', this.props.tables)
     let tables = []
     let fields = [];
     let tempTableNumList = [];

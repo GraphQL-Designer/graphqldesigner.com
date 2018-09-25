@@ -64,17 +64,15 @@ const reducers = (state = initialState, action) => {
       fieldIndex: -1,
       refType: ''
     },
-    referencedBy: {},
+    refBy: new Set(),
     tableNum: -1,
     fieldNum: -1
   }
-  // const relationReset = {
-  //   type: '',
-  //   tableIndex: -1,
-  //   field: '',
-  //   fieldIndex: -1,
-  //   refType: ''
-  // }
+  const relationReset = {
+    tableIndex: -1,
+    fieldIndex: -1,
+    refType: ''
+  }
 
   switch(action.type) {
 
@@ -91,62 +89,27 @@ const reducers = (state = initialState, action) => {
       let newTableData;
       newTableData = Object.assign({}, state.selectedTable)
 
-      //capitalize first letter and remove whitespace
-      newTableData.type = newTableData.type.replace(/[^\w]/gi, '');
-      newTableData.type = newTableData.type.charAt(0).toUpperCase() + newTableData.type.slice(1)
-
-      // get list of table indexes, and alert if table name already exists
-      // if(newTableData.type.length > 0){
-      //   const listTableIndexes = Object.getOwnPropertyNames(state.tables);
-
-      //   // remove the selected from list of tables if updating to prevent snackbar from displaying table error
-      //   if(state.selectedTable.tableID !== -1){
-      //     listTableIndexes.splice(listTableIndexes.indexOf(String(state.selectedTable.tableID)),1);
-      //   }
-
-      //   for(let x = 0; x < listTableIndexes.length; x += 1){
-      //     if(state.tables[listTableIndexes[x]].type === newTableData.type){
-      //       inputError.status = inputError.dupTable;
-      //       return {
-      //         ...state,
-      //         selectedTable: tableReset,
-      //         inputError
-      //       } 
-      //     }
-      //   }
-      // }
-    
-      // inputError.status = -1;
-
       // Save a new table
-      if(state.selectedTable.type.length > 0){ // a type name has been provided
-        if (state.selectedTable.tableID < 0) {  // no table selected, aka save new table
-          newTableData.tableID = state.tableIndex
+      if (state.selectedTable.tableID < 0) {  // no table selected, aka save new table
+        newTableData.tableID = state.tableIndex
 
-          const newTables = Object.assign({}, state.tables, {[state.tableIndex]: newTableData})
-          newState = Object.assign({}, state, {
-            tableIndex: state.tableIndex + 1,
-            tables: newTables,
-            selectedTable: tableReset,
-          })
-        } 
-        // Update table
-        else {
-          const newTables = Object.assign({}, state.tables, {[state.selectedTable.tableID]: newTableData})
-          newState = Object.assign({}, state, {
-            tables: newTables,
-            selectedTable: tableReset,
-          })
-        }
-
-        // so long as a table name is provided. 
-        if(newTableData.type !== ''){
-            return newState
-        }
+        const newTables = Object.assign({}, state.tables, {[state.tableIndex]: newTableData})
+        newState = Object.assign({}, state, {
+          tableIndex: state.tableIndex + 1,
+          tables: newTables,
+          selectedTable: tableReset,
+        })
+      } 
+      // Update table
+      else {
+        const newTables = Object.assign({}, state.tables, {[state.selectedTable.tableID]: newTableData})
+        newState = Object.assign({}, state, {
+          tables: newTables,
+          selectedTable: tableReset,
+        })
       }
 
-      // return state if user submits empty table name
-      return state;
+      return newState
 
                     // ------------ Change Table Name ----------------//
     case types.HANDLE_TABLE_NAME_CHANGE:
@@ -210,16 +173,72 @@ const reducers = (state = initialState, action) => {
 
                 // ----------- Save Added or Updated Field ----------------//
     case types.SAVE_FIELD_INPUT:
-      let newSelectedFieldName = state.selectedField.name;
-
-      // remove whitespace
-      newSelectedFieldName = newSelectedFieldName.replace(/[^\w]/gi, '');
-
-      if(newSelectedFieldName.length > 0) {
       tableNum = state.selectedField.tableNum;
+      let newSelectedFieldName = state.selectedField.name;
+      const selectedFieldNum = state.selectedField.fieldNum
       const currentFieldIndex = state.tables[tableNum].fieldsIndex;
+
+      // variables for relations
+      const relationSelected = state.selectedField.relationSelected
+      const newRelatedTableIndex = state.selectedField.relation.tableIndex;
+      const newRelatedFieldIndex = state.selectedField.relation.fieldIndex;
+      let newRelatedRefType = state.selectedField.relation.refType;
+      // flip the RefType so the related ref type is representative of itself. 
+      if (newRelatedRefType === 'one to many') newRelatedRefType = 'many to one'
+      else if (newRelatedRefType === 'many to one') newRelatedRefType = 'one to many'
+      // Below 2 variables depend on if field is new or being updated
+      let newRefInfo;
+      let relationPreviouslySelected;
+      if (selectedFieldNum < 0) {
+        relationPreviouslySelected = false; 
+        newRefInfo = `${tableNum}.${currentFieldIndex}.${newRelatedRefType}`;
+      } else {
+        relationPreviouslySelected = state.tables[tableNum].fields[selectedFieldNum].relationSelected
+        newRefInfo = `${tableNum}.${selectedFieldNum}.${newRelatedRefType}`;
+      }
+
+      // relation selected. New field, or updating field with no previous relation. Add relation
+      if ((selectedFieldNum < 0 || !relationPreviouslySelected) && relationSelected) {
+        console.log('new field, or updating field with no prior relation, add relation to other field')
+        let refBy = state.tables[newRelatedTableIndex].fields[newRelatedFieldIndex].refBy;
+        refBy = new Set(refBy);
+        refBy.add(newRefInfo); 
+        state.tables[newRelatedTableIndex].fields[newRelatedFieldIndex].refBy = refBy
+      } 
+      // field update, update relation to other field if changed
+      else if (selectedFieldNum >= 0) {
+        const prevRelatedTableIndex = state.tables[tableNum].fields[selectedFieldNum].relation.tableIndex
+        const prevRelatedFieldIndex = state.tables[tableNum].fields[selectedFieldNum].relation.fieldIndex
+        const prevRefBy = state.tables[prevRelatedTableIndex].fields[prevRelatedFieldIndex].refBy
+        let newRefBy;
+        // if relation toggled off, then newRefBy is a empty Set.  
+        if (newRelatedFieldIndex < 0) newRefBy = new Set()
+        else newRefBy = state.tables[newRelatedTableIndex].fields[newRelatedFieldIndex].refBy
+
+        // relation changed, update the other fields (delete old if necessary, and add new)
+        if (!newRefBy.has(newRefInfo)) {
+          console.log('new relation')
+          // A previous relation existed, delete it
+          if (relationPreviouslySelected) {
+            let prevRelatedRefType = state.tables[tableNum].fields[selectedFieldNum].relation.refType
+            if (prevRelatedRefType === 'one to many') prevRelatedRefType = 'many to one'
+            else if (prevRelatedRefType === 'many to one') prevRelatedRefType = 'one to many'
+            const prevRefInfo = `${tableNum}.${selectedFieldNum}.${prevRelatedRefType}`;
+            console.log('delete relation', prevRefInfo)
+            prevRefBy.delete(prevRefInfo)
+          }
+          // relation selected, add relation infomation to other field 
+          if (relationSelected) {
+            newRefBy = new Set(newRefBy);
+            newRefBy.add(newRefInfo); 
+            console.log('add relation', newRefInfo)
+            state.tables[newRelatedTableIndex].fields[newRelatedFieldIndex].refBy = newRefBy
+          }
+        }
+      }
+
       // Save new field
-      if (state.selectedField.fieldNum < 0) {
+      if (selectedFieldNum < 0) {
         newTables = 
         Object.assign({}, state.tables, {[tableNum]:
           Object.assign({}, state.tables[tableNum], {fieldsIndex: currentFieldIndex + 1}, {
@@ -233,22 +252,21 @@ const reducers = (state = initialState, action) => {
                 selectedField: newSelectedField,
               } 
       } 
+
       // Save updated field
       else {
         newTables = 
         Object.assign({}, state.tables, {[tableNum]:
           Object.assign({}, state.tables[tableNum], {fieldsIndex: currentFieldIndex}, {
-            fields: Object.assign({}, state.tables[tableNum].fields, {[state.selectedField.fieldNum]: 
-              Object.assign({}, state.selectedField, {fieldNum: state.selectedField.fieldNum, name: newSelectedFieldName})})})})  
-              
+            fields: Object.assign({}, state.tables[tableNum].fields, {[selectedFieldNum]: 
+              Object.assign({}, state.selectedField, {fieldNum: selectedFieldNum, name: newSelectedFieldName})})})})  
+
               return {
                 ...state,
                 tables: newTables,
                 selectedField: fieldReset
               } 
           } 
-      }
-      return state;
 
                      // -------------- Delete Field ----------------//
     case types.DELETE_FIELD:
@@ -301,6 +319,10 @@ const reducers = (state = initialState, action) => {
         if (action.payload.value === 'true') action.payload.value = true;
         if (action.payload.value === 'false') action.payload.value = false;
         newSelectedField = Object.assign({}, state.selectedField, {[action.payload.name]: action.payload.value})
+        // user toggled relation off
+        if (action.payload.name === 'relationSelected' && action.payload.value === false){
+          newSelectedField.relation = Object.assign({}, relationReset)
+        }
       }
     return {
       ...state,
