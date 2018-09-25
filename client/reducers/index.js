@@ -10,9 +10,8 @@ import queryReducers from './queryReducers.js';
 const combinedReducers = combineReducers({
   general: generalReducers,
   schema: schemaReducers,
-  query: queryReducers
+  query: queryReducers,
 });
 
 // make the combined reducers available for import
 export default combinedReducers;
-

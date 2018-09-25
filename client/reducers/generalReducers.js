@@ -4,8 +4,8 @@ const initialState = {
   database: '',
   message: {
     open: false,
-    message: ''
-  }
+    message: '',
+  },
 };
 
 const generalReducers = (state = initialState, action) => {
@@ -13,27 +13,27 @@ const generalReducers = (state = initialState, action) => {
 
   switch(action.type) {
     case types.CHOOSE_DATABASE:
-      database = action.payload; 
+      database = action.payload;
 
       return {
         ...state,
-        database, 
-      }
+        database,
+      };
 
     case types.MESSAGE:
-      
-    return {
-      ...state,
-
-    }
-
-    case types.HANDLE_SNACKBAR_UPDATE:
-    const newState = Object.assign({}, {open: action.payload.open, message: action.payload.message})
 
       return {
         ...state,
-        message : newState
-      }
+
+      };
+
+    case types.HANDLE_SNACKBAR_UPDATE:
+      const newState = Object.assign({}, {open: action.payload.open, message: action.payload.message});
+
+      return {
+        ...state,
+        message: newState,
+      };
 
 
     default:
