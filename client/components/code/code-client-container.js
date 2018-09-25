@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import './code.css';
 
 const CodeClientContainer = props => {
@@ -6,7 +6,7 @@ const CodeClientContainer = props => {
     <div className='code-client-container'>
       <h4>Client</h4>
     </div>
-  )
+  );
 };
 
-export default CodeClientContainer
+export default CodeClientContainer;
