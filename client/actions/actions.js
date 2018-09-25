@@ -7,13 +7,15 @@ export const chooseDatabase = (dbName) => ({
   payload: dbName,
 });
 
-
-
+export const handleSnackbarUpdate = (status) => ({
+  type: types.HANDLE_SNACKBAR_UPDATE,
+  payload: status,
+})
 
 // ----------------------------- Schema App --------------------------------//
-export const tablesToMongoFormat = () => ({
-  type: types.TABLES_TO_MONGO_FORMAT
-})
+// export const tablesToMongoFormat = () => ({
+//   type: types.TABLES_TO_MONGO_FORMAT
+// })
 
 export const openTableCreator = () => ({
   type: types.OPEN_TABLE_CREATOR,

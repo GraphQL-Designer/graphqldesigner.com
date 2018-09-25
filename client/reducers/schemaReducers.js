@@ -18,18 +18,14 @@ const initialState = {
     required: false,
     multipleValues: false,
     relationIndex: 0,
-    relation: {},
-    refrencees: {},
+    relation: {
+      tableIndex: ''
+    },
+    refByIndex: 0, 
+    refBy: {},
     tableNum: -1,
     fieldNum: -1
-  },
-  selectedRelation: {
-    type: '',
-    idRequested: false,
-    fields: {},
-    fieldsIndex: 0,
-    tableID: -1,
-  },
+  }
 };
 
 const reducers = (state = initialState, action) => {
@@ -39,13 +35,16 @@ const reducers = (state = initialState, action) => {
   let newTable;
   let newState;
   let tableNum;
+  let newTableData;
+  let newFields;
+
   const tableReset = {
     type: '',
-    idRequested:  false,
     fields: {},
-    fieldsIndex: 0,
+    fieldsIndex: 1,
     tableID: -1,
   }
+
   const fieldReset = {
     name: '',
     type: 'String',
@@ -59,40 +58,42 @@ const reducers = (state = initialState, action) => {
       field: '',
       refType: ''
     },
+    refByIndex: 0, 
+    refBy: {},
     tableNum: -1,
     fieldNum: -1
   }
-  const relationReset = {
-    type: '',
-    field: '',
-    refType: '',
-    tableId: -1,
-    fieldId: -1
-  }
+
   const idDefault = {
     name: 'id',
     type: 'ID',
-    primaryKey: false,
+    primaryKey:true,
     unique: true,
     defaultValue: '',
     required: false,
     multipleValues: false,
-    relationIndex: 0,
-    relation: {},
+    relation: {
+      type: '',
+      field: '',
+      refType: ''
+    },
+    refByIndex: 0, 
+    refBy: {},
     tableNum: -1,
     fieldNum: 0
   }
+
   const mongoTable = Object.assign({}, tableReset, {
     fields: {
       0: Object.assign({}, idDefault, { tableNum: state.tableIndex })
     }
   })
 
-  // action.payload is how you can access the info
+   // action.payload is how you can access the info
   switch(action.type) {
 
         // ------------- Format to mongo onload -------------------//
-        case types.TABLES_TO_MONGO_FORMAT:
+        case 'TABLES_TO_MONGO_FORMAT':
 
         return {
           ...state,
@@ -111,31 +112,33 @@ const reducers = (state = initialState, action) => {
     case types.SAVE_TABLE_DATA_INPUT:
         if (state.selectedTable.tableID < 0) {
           //SAVE A NEW TABLE
-          newTableData.tableID = state.tableIndex
-
-          newTables = Object.assign({}, state.tables, {[state.tableIndex]: newTableData})
+          newTable = Object.assign({}, state.selectedTable, { tableID: state.tableIndex });
+          if (action.payload === 'MongoDB') newTable.fieldsIndex++;
+          newTables = Object.assign({}, state.tables, { [state.tableIndex]: newTable });
           newState = Object.assign({}, state, {
             tableIndex: state.tableIndex + 1,
             tables: newTables,
-            selectedTable: tableReset,
-          })
+            selectedTable: action.payload === 'MongoDB' ? mongoTable : tableReset
+          });
+          if (action.payload === 'MongoDB') newState.selectedTable.fields[0].tableNum++;
         } else {
           //UPDATE A SAVED TABLE
-          newTables = Object.assign({}, state.tables, {[state.selectedTable.tableID]: newTableData})
+          newTableData = Object.assign({}, state.selectedTable);
+          newTables = Object.assign({}, state.tables, { [state.selectedTable.tableID]: newTableData })
           newState = Object.assign({}, state, {
             tables: newTables,
-            selectedTable: tableReset,
+            selectedTable: action.payload === 'MongoDB' ? mongoTable : tableReset
           })
         }
-          
-    return {
-      ...state,
-      tables: newTables
-    }
+        
+        if (action.payload) {
+
+        }
+    return newState
 
                     // ------------ Change Table Name ----------------//
     case types.HANDLE_TABLE_NAME_CHANGE:
-      newSelectedTable = Object.assign({}, state.selectedTable, {type: action.payload})
+      newSelectedTable = Object.assign({}, state.selectedTable, { type: action.payload })
 
       return {
       ...state,
@@ -144,17 +147,28 @@ const reducers = (state = initialState, action) => {
 
                     // ------------ Change Table ID ----------------//
     case types.HANDLE_TABLE_ID:
+    if (!!state.selectedTable.fields[0]) {
+      newFields = Object.assign({}, state.selectedTable.fields);
+      delete newFields[0]
+      newSelectedTable = Object.assign({}, state.selectedTable, { fields: newFields });
 
-      if (state.selectedField.fields[0]) {
-        newSelectedField = Object.assign({}, state.selectedField.fields);
-        delete newSelectedField[0]
+    } else {
+      newFields = Object.assign({}, state.selectedTable.fields, { 0: idDefault });
+
+      if (state.selectedTable.tableID < 0) {
+        console.log('1', state.tableIndex)
+        newFields[0].tableNum = state.tableIndex;
       } else {
-        newSelectedField = Object.assign({}, state.selectedField.fields, { 0: idDefault});
-      }
+        console.log('2', state.selectedTable.tableID)
+        newFields[0].tableNum = state.selectedTable.tableID;
+      } 
+      console.log(newFields)
+      newSelectedTable = Object.assign({}, state.selectedTable, { fields: newFields });
+    }
 
       return {
       ...state,
-      selectedField: newSelectedField
+      selectedTable: newSelectedTable
     }
 
                     // ---------- Select Table For Update ------------//

@@ -1,15 +1,20 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
 // styling
 import RaisedButton from 'material-ui/RaisedButton';
 import Dialog from 'material-ui/Dialog';
 import './welcome.css';
+
+const mapDispatchToProps = dispatch => ({
+  tablesToMongoFormat: () => dispatch({ type: 'TABLES_TO_MONGO_FORMAT' })
+})
+
 class Welcome extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      open: false,
-      MongoDB: null,
+      open: false
     };
     this.handleClose = this.handleClose.bind(this);
     this.handleDatabaseClick = this.handleDatabaseClick.bind(this);
@@ -18,17 +23,19 @@ class Welcome extends React.Component {
   componentDidMount() {
     setTimeout(() => {
       this.setState({open: true})
-    }, 1000)
+    }, 750)
   }
+  
 
   handleClose() {
     this.setState({open: false});
   };
 
   handleDatabaseClick(event){
-    event.preventDefault(); 
-    this.props.chooseDatabase(event.target.innerHTML)
-    this.setState({open: false});
+    //event.preventDefault(); 
+    this.props.chooseDatabase(event.target.innerHTML);
+    if (event.target.innerHTML === 'MongoDB') this.props.tablesToMongoFormat();
+    this.setState({ open: false });
   }
  
   render() {
@@ -67,4 +74,4 @@ class Welcome extends React.Component {
   }
 }
 
-export default Welcome
+export default connect(null, mapDispatchToProps)(Welcome)
