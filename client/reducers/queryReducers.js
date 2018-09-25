@@ -1,12 +1,11 @@
 import * as types from '../actions/action-types';
 
 const initialState = {
-  queryMode: 'create'
+  queryMode: 'create',
 };
 
 const queryReducers = (state = initialState, action) => {
-
-  switch(action.type) {
+  switch (action.type) {
     default:
       return state;
   }

@@ -1,17 +1,17 @@
 import React, { Component } from 'react';
 
-//components
+// components
 import CodeDBSchemaContainer from './code-dbschema-container.js';
 import CodeClientContainer from './code-client-container.js';
 import CodeServerContainer from './code-server-container.js';
 import DrawerSidebar from './drawer.js'
 
 class CodeApp extends Component {
-  constructor (props){
+  constructor (props) {
     super(props)
   }
 
-  render(){
+  render() {
   
     return (
       <div className='code-app'>
@@ -22,6 +22,6 @@ class CodeApp extends Component {
       </div>
     )
   }
-};
+}
 
 export default CodeApp;

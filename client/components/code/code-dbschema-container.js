@@ -9,4 +9,4 @@ const CodeDBSchemaContainer = props => {
   )
 };
 
-export default CodeDBSchemaContainer
+export default CodeDBSchemaContainer;
