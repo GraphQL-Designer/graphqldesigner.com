@@ -19,7 +19,7 @@ const mapStateToProps = store => ({
   tableIDRequested: store.schema.selectedTable.idRequested,
   tableID: store.schema.selectedTable.tableID,
   database: store.general.database,
-  selectedTable: store.schema.selectedTable,
+  selectedTable: store.schema.selectedTable
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -27,7 +27,7 @@ const mapDispatchToProps = dispatch => ({
   tableNameChange: tableName => dispatch(actions.handleTableNameChange(tableName)),
   idSelector: () => dispatch(actions.handleTableID()),
   openTableCreator: () => dispatch(actions.openTableCreator()),
-  handleSnackbarUpdate: (status) => dispatch(actions.handleSnackbarUpdate(status))
+  handleSnackbarUpdate: status => dispatch(actions.handleSnackbarUpdate(status))
 });
 
 class CreateTable extends React.Component {
@@ -43,14 +43,14 @@ class CreateTable extends React.Component {
   }
 
   capitalizeFirstLetter(string) {
-    if(string) {
+    if (string) {
       const newString = string.replace(' ', '');
       return newString.charAt(0).toUpperCase() + newString.slice(1);
     }
   }
 
-  handleSnackbarUpdate(snackBarOn, message) {
-    this.props.handleSnackbarUpdate({open: snackBarOn, message});
+  handleSnackbarUpdate(message) {
+    this.props.handleSnackbarUpdate(message);
   }
 
   saveTableDataInput(e) {
@@ -60,13 +60,10 @@ class CreateTable extends React.Component {
     // remove whitespace and symbols
     let name = this.props.selectedTable.type.replace(/[^\w]/gi, '');
 
-    if(name.length > 0) {
+    if (name.length > 0) {
       // capitalize first letter
-      if(name.length > 1) {
-        name = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
-      } else {
-        name = name.toUpperCase();
-      }
+      name = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
+
       // get list of table indexes
       const listTableIndexes = Object.getOwnPropertyNames(this.props.tables);
 
@@ -75,22 +72,22 @@ class CreateTable extends React.Component {
         listTableIndexes.splice(listTableIndexes.indexOf(String(this.props.selectedTable.tableID)), 1);
       }
 
-      for(let x = 0; x < listTableIndexes.length; x += 1) {
-        if(this.props.tables[listTableIndexes[x]].type === name) {
+      for (let x = 0; x < listTableIndexes.length; x += 1) {
+        if (this.props.tables[listTableIndexes[x]].type === name) {
           error = true;
         }
       }
 
       if (error) {
-        this.handleSnackbarUpdate(true, 'Error: Table name already exist');
+        this.handleSnackbarUpdate('Error: Table name already exist');
       } else {
         // update table name with uppercase before saving/updating
         this.props.tableNameChange(name);
         this.props.saveTableDataInput();
-        this.handleSnackbarUpdate(false, '');
+        this.handleSnackbarUpdate('');
       }
     } else {
-      this.handleSnackbarUpdate(true, 'Please enter a table name (no symbols or spaces)');
+      this.handleSnackbarUpdate('Please enter a table name (no symbols or spaces)');
     }
   }
 
@@ -115,44 +112,44 @@ class CreateTable extends React.Component {
     }
 
     return (
-      <div id='newTable' key={this.props.tableID}>
+      <div id="newTable" key={this.props.tableID}>
+        {this.props.tableID >= 0 && (
+          <FlatButton
+            id="back-to-create"
+            label="Create Table"
+            icon={<KeyboardArrowLeft />}
+            onClick={this.handleOpenTableCreator}
+          />
+        )}
 
-        {(this.props.tableID >= 0) &&
-        <FlatButton
-          id='back-to-create'
-          label="Create Table"
-          icon={<KeyboardArrowLeft />}
-          onClick={this.handleOpenTableCreator}
-        />}
-
-        <form id='create-table-form' onSubmit={this.saveTableDataInput}>
+        <form id="create-table-form" onSubmit={this.saveTableDataInput}>
           {tableName(this.props.tableID, this.props.tables)}
 
           <TextField
             // hintText="Table Name"
             floatingLabelText="Table Name"
-            id='tableName'
+            id="tableName"
             fullWidth={true}
             autoFocus
             onChange={this.handleChange}
             value={this.props.tableName || ''}
           />
-          <h5 style={{textAlign: 'center', marginTop: '-4px'}}>( Singular naming convention )</h5>
+          <h5 style={{ textAlign: 'center', marginTop: '-4px' }}>( Singular naming convention )</h5>
           <Checkbox
-            style={{marginTop: '10px'}}
+            style={{ marginTop: '10px' }}
             label="Unique ID"
             onCheck={this.handleClick}
-            id='idCheckbox'
-            checked={this.props.database === 'MongoDB'? true : this.props.tableIDRequested}
+            id="idCheckbox"
+            checked={this.props.database === 'MongoDB' ? true : this.props.tableIDRequested}
             disabled={this.props.database === 'MongoDB'}
           />
           <RaisedButton
             label={this.props.tableID >= 0 ? 'Update Table' : 'Create Table'}
             fullWidth={true}
             secondary={true}
-            type='submit'
-            style={{marginTop: '25px'}}
-            />
+            type="submit"
+            style={{ marginTop: '25px' }}
+          />
         </form>
         {/* <div id='loader-container'>
           <Loader/>
@@ -162,4 +159,7 @@ class CreateTable extends React.Component {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(CreateTable);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(CreateTable);
