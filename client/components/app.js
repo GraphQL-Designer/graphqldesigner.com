@@ -73,7 +73,7 @@ class App extends Component {
             </Tab>
           </Tabs>
           <Snackbar
-            open={this.props.snackBar ? true : false}
+            open={!!this.props.snackBar}
             message={this.props.snackBar}
             autoHideDuration={3000}
             onRequestClose={this.handleRequestClose}
