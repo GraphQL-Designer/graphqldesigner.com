@@ -126,7 +126,7 @@ class TableOptions extends React.Component {
         tables.push(
           <MenuItem
             key={types}
-            value={this.props.tables[types].type}
+            value={types}
             primaryText={this.props.tables[types].type}
           />
         );

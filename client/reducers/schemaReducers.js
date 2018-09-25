@@ -88,7 +88,7 @@ const reducers = (state = initialState, action) => {
       refType: ''
     },
     refByIndex: 0,
-    refBy: {},
+    refBy: new Set(),
     tableNum: -1,
     fieldNum: 0
   };
@@ -250,6 +250,8 @@ const reducers = (state = initialState, action) => {
       const newRelatedTableIndex = state.selectedField.relation.tableIndex;
       const newRelatedFieldIndex = state.selectedField.relation.fieldIndex;
       let newRelatedRefType = state.selectedField.relation.refType;
+      console.log('table index', newRelatedTableIndex)
+      console.log('field index', newRelatedFieldIndex)
       // flip the RefType so the related ref type is representative of itself. 
       if (newRelatedRefType === 'one to many') newRelatedRefType = 'many to one'
       else if (newRelatedRefType === 'many to one') newRelatedRefType = 'one to many'
