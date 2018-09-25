@@ -1,33 +1,33 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { TransitionGroup, CSSTransition } from 'react-transition-group'
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
 
 // styling
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
-import Delete from 'material-ui/svg-icons/action/delete'
-import Close from 'material-ui/svg-icons/navigation/close'
+import Delete from 'material-ui/svg-icons/action/delete';
+import Close from 'material-ui/svg-icons/navigation/close';
 import * as actions from '../../actions/actions.js';
 
 const style = {
   deleteStyle: {
     minWidth: '25px',
     position: 'absolute',
-    right: '10px'
+    right: '10px',
   },
   idFiled: {
     width: '100%',
     justifyContent: 'center',
     color: 'white',
     marginTop: '5px',
-    cursor: 'pointer'
-  }
-}
+    cursor: 'pointer',
+  },
+};
 
 // we use store.data, because of index.js reduce function
 const mapStateToProps = store => ({
   tables: store.schema.tables,
-  database: store.general.database
+  database: store.schema.database
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -36,22 +36,22 @@ const mapDispatchToProps = dispatch => ({
   deleteField: fieldName => dispatch(actions.deleteField(fieldName)),
   updateField: fieldIndex => dispatch(actions.updateField(fieldIndex)),
   handleFieldsSelect: field => dispatch(actions.handleFieldsSelect(field)),
-  handleSelectedTable: tableIndex => dispatch(actions.handleSelectedTable(tableIndex))
+  handleSelectedTable: tableIndex => dispatch(actions.handleSelectedTable(tableIndex)),
 });
 
 class Table extends Component {
   constructor(props) {
     super(props);
 
-    this.handleDeleteTable = this.handleDeleteTable.bind(this)
-    this.handleDeleteField = this.handleDeleteField.bind(this)
-    this.handleAddField    = this.handleAddField.bind(this)
-    this.handleUpdateField = this.handleUpdateField.bind(this)
-    this.handleSelectedTable = this.handleSelectedTable.bind(this)
-  } 
+    this.handleDeleteTable = this.handleDeleteTable.bind(this);
+    this.handleDeleteField = this.handleDeleteField.bind(this);
+    this.handleAddField = this.handleAddField.bind(this);
+    this.handleUpdateField = this.handleUpdateField.bind(this);
+    this.handleSelectedTable = this.handleSelectedTable.bind(this);
+  }
 
-  handleDeleteTable(event){
-    this.props.deleteTable(event.currentTarget.value) // need currentTarget because of Material-UI
+  handleDeleteTable(event) {
+    this.props.deleteTable(event.currentTarget.value); // need currentTarget because of Material-UI
   }
 
   handleDeleteField(event){
@@ -60,78 +60,76 @@ class Table extends Component {
     this.props.deleteField([tableIndex, fieldIndex])
   }
 
-  handleAddField(event){
+  handleAddField(event) {
     this.props.addField(this.props.tableIndex);
   }
 
-  handleUpdateField(event){
+  handleUpdateField(event) {
     this.props.handleFieldsSelect({
       location: event.currentTarget.value,
       submitUpdate: false
     })
   }
 
-  handleSelectedTable(event){
+  handleSelectedTable(event) {
     this.props.handleSelectedTable(event.currentTarget.value);
   }
 
-
-  
   render() {
-    const colors = ['darkcyan', 'dodgerblue', 'crimson', 'orangered', 'darkviolet', 'gold', 'hotpink', 'seagreen', 'darkorange', 'tomato', 'mediumspringgreen', 'purple', 'darkkhaki',  'firebrick', 'steelblue', 'limegreen', 'sienna', 'darkslategrey', 'goldenrod', 'deeppink'];
+    const colors = ['darkcyan', 'dodgerblue', 'crimson', 'orangered', 'darkviolet', 'gold', 'hotpink', 'seagreen', 'darkorange', 'tomato', 'mediumspringgreen', 'purple', 'darkkhaki', 'firebrick', 'steelblue', 'limegreen', 'sienna', 'darkslategrey', 'goldenrod', 'deeppink'];
 
-    // will push each individual field to the array 'fields' to be rendered. 
+    // will push each individual field to the array 'fields' to be rendered.
     function checkForRelation(relation, tables) {
-        if (relation) {
-          let tableNum;
-          for (let prop in tables) {
-            if (tables[prop].type === relation) {
-              tableNum = prop;
-              break;
-            }
+      if (relation) {
+        let tableNum;
+        for (let prop in tables) {
+          if (tables[prop].type === relation) {
+            tableNum = prop;
+            break;
           }
-          return `${colors[tableNum]}`
-        } else {
-          return 'rgba(0, 0, 0, 0)'
         }
+        return `${colors[tableNum]}`;
+      } else {
+        return 'rgba(0, 0, 0, 0)';
+      }
     }
 
     function checkForArray(position, multipleValues) {
       if (multipleValues) {
-        if (position === 'front') return '[ '
-        if (position === 'back') return ' ]'
+        if (position === 'front') return '[ ';
+        if (position === 'back') return ' ]';
       } else {
-        return ''
+        return '';
       }
     }
 
     function checkForRequired(value) {
       if (value) {
-        return ' !'
+        return ' !';
       } else {
-        return ''
+        return '';
       }
     }
 
     function checkForUnique(value) {
       if (value) {
-        return ' *'
+        return ' *';
       } else {
-        return ''
+        return '';
       }
     }
 
-    let fields = []
-    for (let property in this.props.tableData.fields){
+    let fields = [];
+    for (let property in this.props.tableData.fields) {
       const tables = this.props.tables;
       const tableIndex = this.props.tableData.fields[property].tableNum;
       const fieldIndex = this.props.tableData.fields[property].fieldNum;
-      const fieldName = this.props.tableData.fields[property].name
-      const fieldType = this.props.tableData.fields[property].type
-      const relation = this.props.tableData.fields[property].relation.type
-      const multipleValues = this.props.tableData.fields[property].multipleValues
-      const required = this.props.tableData.fields[property].required
-      const unique = this.props.tableData.fields[property].unique
+      const fieldName = this.props.tableData.fields[property].name;
+      const fieldType = this.props.tableData.fields[property].type;
+      const relation = this.props.tableData.fields[property].relation.type;
+      const multipleValues = this.props.tableData.fields[property].multipleValues;
+      const required = this.props.tableData.fields[property].required;
+      const unique = this.props.tableData.fields[property].unique;
 
       fields.push(
         <CSSTransition
@@ -183,10 +181,10 @@ class Table extends Component {
           </div>
           <hr className='fieldBreak'/>
           </div>
-        </CSSTransition>
-      )
+        </CSSTransition>,
+      );
     }
-  
+
     return (
         <div className='table' style={{border: `1px solid ${colors[this.props.tableData.tableID]}`}}>
           <div>
@@ -217,7 +215,7 @@ class Table extends Component {
             </p>
           </div>
         </div>
-    )
+    );
   }
 }
 

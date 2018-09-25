@@ -1,39 +1,29 @@
 import * as types from '../actions/action-types';
 
 const initialState = {
-  database: '',
   message: {
     open: false,
-    message: ''
-  }
+    message: '',
+  },
 };
 
 const generalReducers = (state = initialState, action) => {
-  let database = state.database;
 
   switch(action.type) {
-    case types.CHOOSE_DATABASE:
-      database = action.payload; 
+    case types.MESSAGE:
 
       return {
         ...state,
-        database, 
-      }
 
-    case types.MESSAGE:
-      
-    return {
-      ...state,
-
-    }
+      };
 
     case types.HANDLE_SNACKBAR_UPDATE:
-    const newState = Object.assign({}, {open: action.payload.open, message: action.payload.message})
+      const newState = Object.assign({}, {open: action.payload.open, message: action.payload.message});
 
       return {
         ...state,
-        message : newState
-      }
+        message: newState,
+      };
 
 
     default:
