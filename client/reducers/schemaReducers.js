@@ -344,9 +344,9 @@ const reducers = (state = initialState, action) => {
       newSelectedField = Object.assign({}, state.tables[Number(location[0])].fields[Number(location[1])]);
 
       if (state.database === 'MongoDB') {
-        newState.selectedTable = Object.assign({}, mongoTable);
+        newSelectedTable = Object.assign({}, mongoTable);
       } else {
-        newState.selectedTable = Object.assign({}, tableReset);
+        newSelectedTable = Object.assign({}, tableReset);
       }
 
       return {
