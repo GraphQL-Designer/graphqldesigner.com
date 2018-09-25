@@ -2,9 +2,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 import * as actions from '../../../actions/actions.js';
 
-//styles
+// styles
 import './sidebar.css';
-import KeyboardArrowLeft from 'material-ui/svg-icons/hardware/keyboard-arrow-left'
+import KeyboardArrowLeft from 'material-ui/svg-icons/hardware/keyboard-arrow-left';
 import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
@@ -15,37 +15,37 @@ import DropDownMenu from 'material-ui/DropDownMenu';
 
 const style = {
   customWidth: {
-    width: 200
+    width: 200,
   },
   toggle: {
-    marginTop: '15px'
+    marginTop: '15px',
   },
 };
 
 const mapStateToProps = store => ({
   database: store.general.database,
-  tableIndex : store.schema.tableIndexSelected,
+  tableIndex: store.schema.tableIndexSelected,
   addFieldClicked: store.schema.addFieldClicked,
   selectedField: store.schema.selectedField,
-  updatedField: store.schema.fieldUpdated, 
+  updatedField: store.schema.fieldUpdated,
   tables: store.schema.tables,
-})
+});
 
 const mapDispatchToProps = dispatch => ({
   createField: field => dispatch(actions.addField(field)),
   saveFieldInput: () => dispatch(actions.saveFieldInput()),
   handleChange: field => dispatch(actions.handleFieldsUpdate(field)),
   openTableCreator: () => dispatch(actions.openTableCreator()),
-  handleSnackbarUpdate: (status) => dispatch(actions.handleSnackbarUpdate(status))
-})
+  handleSnackbarUpdate: (status) => dispatch(actions.handleSnackbarUpdate(status)),
+});
 
 class TableOptions extends React.Component {
   constructor(props) {
     super(props);
     this.state={
-      selectedTableIndex : null, 
-      open: false
-    }
+      selectedTableIndex: null,
+      open: false,
+    };
 
     this.submitOptions = this.submitOptions.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -55,107 +55,107 @@ class TableOptions extends React.Component {
     this.handleSnackbarUpdate = this.handleSnackbarUpdate.bind(this);
   }
 
-  handleOpenTableCreator(){
-    this.props.openTableCreator()
+  handleOpenTableCreator() {
+    this.props.openTableCreator();
   }
 
   handleToggle(name, event, value) {
-    this.props.handleChange({name: name, value: value})
-  };
-
-  handleChange (event) {
-    this.props.handleChange({name: event.target.name, value: event.target.value});
-  };
-
-  handleSelectChange (name, event, index, value) {
     this.props.handleChange({name: name, value: value});
-  };
-
-  handleSnackbarUpdate(snackBarOn, message){
-    this.props.handleSnackbarUpdate({open: snackBarOn, message})
   }
 
-  submitOptions(event){
+  handleChange(event) {
+    this.props.handleChange({name: event.target.name, value: event.target.value});
+  }
+
+  handleSelectChange(name, event, index, value) {
+    this.props.handleChange({name: name, value: value});
+  }
+
+  handleSnackbarUpdate(snackBarOn, message) {
+    this.props.handleSnackbarUpdate({open: snackBarOn, message});
+  }
+
+  submitOptions(event) {
     event.preventDefault();
 
     let error = false;
     let currTableNum = this.props.selectedField.tableNum;
 
-    //remove whitespace and symbols
+    // remove whitespace and symbols
     let fieldName = this.props.selectedField.name.replace(/[^\w]/gi, '');
 
-    if(fieldName.length > 0) {
-      //get list of field indexes 
+    if (fieldName.length > 0) {
+      // get list of field indexes
       const listFieldIndexes = Object.getOwnPropertyNames(this.props.tables[currTableNum].fields);
 
       // remove the selected field from list of tables if updating to prevent snackbar from displaying table error
-      if(this.props.selectedField.fieldNum !== -1){
-        listFieldIndexes.splice(listFieldIndexes.indexOf(String(this.props.selectedField.fieldNum)),1);
+      if (this.props.selectedField.fieldNum !== -1) {
+        listFieldIndexes.splice(listFieldIndexes.indexOf(String(this.props.selectedField.fieldNum)), 1);
       }
 
       // if there are at least 1 field, check if there's duplicate in the list of fields in the table
-      for(let x = 0; x < listFieldIndexes.length; x += 1){
-        if(this.props.tables[currTableNum].fields[listFieldIndexes[x]].name === fieldName){
+      for (let x = 0; x < listFieldIndexes.length; x += 1) {
+        if (this.props.tables[currTableNum].fields[listFieldIndexes[x]].name === fieldName) {
           error = true;
         }
-      }      
+      }
 
-      if(error){
-        this.handleSnackbarUpdate(true, 'Error: Field name already exist'); 
+      if(error) {
+        this.handleSnackbarUpdate(true, 'Error: Field name already exist');
       } else {
-        //save or update table
-        this.props.saveFieldInput()
+        // save or update table
+        this.props.saveFieldInput();
         this.handleSnackbarUpdate(false, '');
-      }   
-    } else{
+      }
+    } else {
       this.handleSnackbarUpdate(true, 'Please enter a field name (no space, symbols allowed');
     }
   }
 
   render() {
-    let tables = []
+    let tables = [];
     let fields = [];
     let tempTableNumList = [];
 
-    // Generate relation type options 
-    for(let types in this.props.tables){
-      if(this.props.selectedField.tableNum !== types){
+    // Generate relation type options
+    for (let types in this.props.tables) {
+      if (this.props.selectedField.tableNum !== types) {
         // tables.push(<option key={types} value={this.props.tables[types].tableID.type}>{this.props.tables[types].type}</option>);
         tables.push(
           <MenuItem
             key={types}
-            value={this.props.tables[types].type} 
+            value={this.props.tables[types].type}
             primaryText={this.props.tables[types].type}
-          />
-        )
+          />,
+        );
         tempTableNumList.push(types);
       }
     }
 
     // Generate relation field options
     if (Object.keys(this.props.tables).length > 0) {
-      
+
       // iterate through list of types and get type index number matching type in relation selected
       let tempTableNum = Object.keys(this.props.tables)[0]; // start at first table index
-      for(let i = 0; i < tempTableNumList.length; i += 1){
-        if(this.props.tables[tempTableNumList[i]].type === this.props.selectedField.relation.type){
+      for (let i = 0; i < tempTableNumList.length; i += 1) {
+        if (this.props.tables[tempTableNumList[i]].type === this.props.selectedField.relation.type) {
           tempTableNum = tempTableNumList[i];
         }
       }
-      
-      //list all of the fields for type selected in relation in sidebar
-      for(let field in this.props.tables[tempTableNum].fields){
-        //console.log('fields', field)
+
+      // list all of the fields for type selected in relation in sidebar
+      for (let field in this.props.tables[tempTableNum].fields) {
+        // console.log('fields', field)
         fields.push(
           <MenuItem
           key={field}
-          value={this.props.tables[tempTableNum].fields[field].name} 
+          value={this.props.tables[tempTableNum].fields[field].name}
           primaryText={this.props.tables[tempTableNum].fields[field].name}
-          />
-        )
+          />,
+        );
       }
     }
-        
+
     function fieldName(fieldNum, tableNum, tables) {
       if (fieldNum >= 0) {
         return (
@@ -163,18 +163,18 @@ class TableOptions extends React.Component {
           <h2>{tables[tableNum].fields[fieldNum].name} Field</h2>
           <h4 style={{fontWeight: '200', marginTop: '5px'}}>in {tables[tableNum].type}</h4>
         </div>
-        )
+        );
       }
       return (
         <div style={{marginTop: '10px'}}>
           <h2>Add Field</h2>
           <h4 style={{fontWeight: '200', marginTop: '5px'}}>to {tables[tableNum].type}</h4>
         </div>
-      )
+      );
     }
 
     return (
-      <div id='fieldOptions'> 
+      <div id='fieldOptions'>
         { this.props.selectedField.tableNum > -1  &&
         <div id='options' style={{width: '250px'}}>
           <FlatButton
@@ -190,9 +190,9 @@ class TableOptions extends React.Component {
               hintText="Field Name"
               floatingLabelText="Field Name"
               fullWidth={true}
-              name='name' 
-              id='fieldNameOption' 
-              onChange={this.handleChange} 
+              name='name'
+              id='fieldNameOption'
+              onChange={this.handleChange}
               value={this.props.selectedField.name}
               autoFocus
             />
@@ -202,9 +202,9 @@ class TableOptions extends React.Component {
               floatingLabelText="Default Value"
               fullWidth={true}
               id='defaultValueOption'
-              name='defaultValue' 
+              name='defaultValue'
               onChange={this.handleChange}
-              value={this.props.selectedField.defaultValue} 
+              value={this.props.selectedField.defaultValue}
               />
 
             <SelectField
@@ -227,7 +227,7 @@ class TableOptions extends React.Component {
               style={style.toggle}
             />
             )}
-            
+
             <Toggle
               label="Required"
               toggled={this.props.selectedField.required}
@@ -255,7 +255,7 @@ class TableOptions extends React.Component {
               onToggle={this.handleToggle.bind(null, 'relationSelected')}
               style={style.toggle}
             />
-            
+
               {this.props.selectedField.relationSelected && (<span>
                 <div className='relation-options'>
                   <p>Type:</p>
@@ -265,7 +265,7 @@ class TableOptions extends React.Component {
                     onChange={this.handleSelectChange.bind(null, 'relation.type')} // access 'relation.type' as name in handleChange
                     >
                       {tables}
-                  </DropDownMenu> 
+                  </DropDownMenu>
                 </div>
 
                 <div className='relation-options'>
@@ -276,7 +276,7 @@ class TableOptions extends React.Component {
                     onChange={this.handleSelectChange.bind(null, 'relation.field')} // access 'relation.field' as name in handleChange
                   >
                     {fields}
-                  </DropDownMenu> 
+                  </DropDownMenu>
                 </div>
 
                 <div className='relation-options'>
@@ -290,7 +290,7 @@ class TableOptions extends React.Component {
                     <MenuItem value='one to many' primaryText="one to many" />
                     <MenuItem value='many to one' primaryText="many to one" />
                     <MenuItem value='many to many' primaryText="many to many" />
-                  </DropDownMenu> 
+                  </DropDownMenu>
                 </div>
               </span>)}
               <RaisedButton
