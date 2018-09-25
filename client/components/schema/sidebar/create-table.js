@@ -18,7 +18,7 @@ const mapStateToProps = store => ({
   selectedTable: store.schema.selectedTable,
   tableName: store.schema.selectedTable.type,
   tableID: store.schema.selectedTable.tableID,
-  database: store.general.database,
+  database: store.schema.database,
   selectedTable: store.schema.selectedTable
 });
 
@@ -44,7 +44,7 @@ class CreateTable extends React.Component {
   }
 
   capitalizeFirstLetter(string) {
-    if(string) {
+    if (string) {
       const newString = string.replace(' ', '');
       return newString.charAt(0).toUpperCase() + newString.slice(1);
     }
@@ -54,7 +54,7 @@ class CreateTable extends React.Component {
     this.props.handleSnackbarUpdate(message);
   }
 
-  saveTableDataInput(e){
+  saveTableDataInput(e) {
     e.preventDefault();
     let error = false;
 
@@ -96,7 +96,7 @@ class CreateTable extends React.Component {
     this.props.tableNameChange(e.target.value);
   }
 
-  handleCheck(){
+  handleCheck() {
     this.props.idSelector()
   }
 
