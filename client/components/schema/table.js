@@ -80,22 +80,6 @@ class Table extends Component {
                     'purple', 'darkkhaki', 'firebrick', 'steelblue', 'limegreen', 'sienna', 
                     'darkslategrey', 'goldenrod', 'deeppink'];
 
-    // will push each individual field to the array 'fields' to be rendered.
-    function checkForRelation(relation, tables) {
-      if (relation) {
-        let tableNum;
-        for (let prop in tables) {
-          if (tables[prop].type === relation) {
-            tableNum = prop;
-            break;
-          }
-        }
-        return `${colors[tableNum]}`;
-      } else {
-        return 'rgba(0, 0, 0, 0)';
-      }
-    }
-
     function checkForArray(position, multipleValues) {
       if (multipleValues) {
         if (position === 'front') return '[ ';
@@ -123,12 +107,11 @@ class Table extends Component {
 
     let fields = [];
     for (let property in this.props.tableData.fields) {
-      const tables = this.props.tables;
       const tableIndex = this.props.tableData.fields[property].tableNum;
       const fieldIndex = this.props.tableData.fields[property].fieldNum;
       const fieldName = this.props.tableData.fields[property].name;
       const fieldType = this.props.tableData.fields[property].type;
-      const relation = this.props.tableData.fields[property].relation.type;
+      const relation = this.props.tableData.fields[property].relation.tableIndex;
       const multipleValues = this.props.tableData.fields[property].multipleValues;
       const required = this.props.tableData.fields[property].required;
       const unique = this.props.tableData.fields[property].unique;
@@ -141,7 +124,7 @@ class Table extends Component {
         >
         <div>
           <div key={property} className='field'>
-            <div className='fieldContainer' style={{backgroundColor: `${checkForRelation(relation, tables)}`}}>
+            <div className='fieldContainer' style={{backgroundColor: `${colors[relation]}`}}>
              { this.props.database === 'MongoDB' && this.props.tableData.fields[property].name === 'id' ? (
                 <FlatButton
                   value={`${tableIndex} ${fieldIndex}`}
