@@ -108,7 +108,7 @@ class TableOptions extends React.Component {
       } else {
         //check if Type, Field, and RefType are selected if Relation is toggled
         if (this.props.selectedField.relationSelected) {
-          if (!this.props.selectedField.relation.type || !this.props.selectedField.relation.field || !this.props.selectedField.relation.refType) {
+          if (this.props.selectedField.relation.tableIndex === -1 || this.props.selectedField.relation.fieldIndex === -1 || !this.props.selectedField.relation.refType) {
             return this.handleSnackbarUpdate('Please fill out Type, Field, and RefType in Relation');
           }
         }
@@ -128,23 +128,23 @@ class TableOptions extends React.Component {
 
     // Generate relation type options
     for (let types in this.props.tables) {
-        tables.push(
-          <MenuItem
-            key={types}
-            value={types}
-            primaryText={this.props.tables[types].type}
-          />
-        )
+      tables.push(
+        <MenuItem
+          key={types}
+          value={types}
+          primaryText={this.props.tables[types].type}
+        />
+      )
     }
 
     const selectedTableIndex = this.props.selectedField.relation.tableIndex
-    if (selectedTableIndex >= 0){
-      for(let field in this.props.tables[selectedTableIndex].fields){
+    if (selectedTableIndex >= 0) {
+      for (let field in this.props.tables[selectedTableIndex].fields) {
         fields.push(
           <MenuItem
-          key={field}
-          value={field} 
-          primaryText={this.props.tables[selectedTableIndex].fields[field].name}
+            key={field}
+            value={field}
+            primaryText={this.props.tables[selectedTableIndex].fields[field].name}
           />
         );
       }
@@ -247,13 +247,13 @@ class TableOptions extends React.Component {
                 style={style.toggle}
               />
 
-             <Toggle
-              label="Relation"
-              toggled={this.props.selectedField.relationSelected}
-              onToggle={this.handleToggle.bind(null, 'relationSelected')}
-              style={style.toggle}
-            />
-            
+              <Toggle
+                label="Relation"
+                toggled={this.props.selectedField.relationSelected}
+                onToggle={this.handleToggle.bind(null, 'relationSelected')}
+                style={style.toggle}
+              />
+
               {this.props.selectedField.relationSelected && (<span>
                 <div className='relation-options'>
                   <p>Type:</p>
@@ -261,9 +261,9 @@ class TableOptions extends React.Component {
                     value={this.props.selectedField.relation.tableIndex}
                     style={style.customWidth}
                     onChange={this.handleSelectChange.bind(null, 'relation.tableIndex')} // access 'relation.type' as name in handleChange
-                    >
-                      {tables}
-                  </DropDownMenu> 
+                  >
+                    {tables}
+                  </DropDownMenu>
                 </div>
 
                 <div className='relation-options'>
@@ -274,7 +274,7 @@ class TableOptions extends React.Component {
                     onChange={this.handleSelectChange.bind(null, 'relation.fieldIndex')} // access 'relation.field' as name in handleChange
                   >
                     {fields}
-                  </DropDownMenu> 
+                  </DropDownMenu>
                 </div>
 
                 <div className='relation-options'>
@@ -288,7 +288,7 @@ class TableOptions extends React.Component {
                     <MenuItem value='one to many' primaryText="one to many" />
                     <MenuItem value='many to one' primaryText="many to one" />
                     <MenuItem value='many to many' primaryText="many to many" />
-                  </DropDownMenu> 
+                  </DropDownMenu>
                 </div>
               </span>)}
               <RaisedButton
