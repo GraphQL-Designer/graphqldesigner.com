@@ -337,6 +337,32 @@ const reducers = (state = initialState, action) => {
     case types.DELETE_FIELD:
       tableNum = Number(action.payload[0]);
       const fieldNum = Number(action.payload[1]);
+      
+      // Deleted field has relation. Delete reference in related field
+      if (state.tables[tableNum].fields[fieldNum].relationSelected) {
+        const relatedTableIndex = state.tables[tableNum].fields[fieldNum].relation.tableIndex
+        const relatedFieldIndex = state.tables[tableNum].fields[fieldNum].relation.fieldIndex
+        let relatedRefType = state.tables[tableNum].fields[fieldNum].relation.refType
+        if (relatedRefType === 'one to many') relatedRefType = 'many to one'
+        else if (relatedRefType === 'many to one') relatedRefType = 'one to many'
+        let refInfo = `${tableNum}.${fieldNum}.${relatedRefType}`
+        const deletedRefBy = state.tables[relatedTableIndex].fields[relatedFieldIndex].refBy
+        deletedRefBy.delete(refInfo)
+      }
+
+      // Deleted field is being referenced by another field. Delete other field's relation
+      const refBy = state.tables[tableNum].fields[fieldNum].refBy
+      if (refBy.size > 0) {
+        refBy.forEach((value) => {
+          const refInfo = value.split('.')
+          const relatedTableIndex = refInfo[0]
+          const relatedFieldIndex = refInfo[1]
+          const relatedField = state.tables[relatedTableIndex].fields[relatedFieldIndex]
+          relatedField.relationSelected = false;
+          relatedField.relation = relationReset
+        })
+      }
+
       newTable = Object.assign({}, state.tables[tableNum]);
       delete newTable.fields[fieldNum];
       newTables = Object.assign({}, state.tables, { [tableNum]: newTable });
