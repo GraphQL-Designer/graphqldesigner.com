@@ -6,7 +6,7 @@ function parseClientQueries(data) {
         query += buildClientQueryAll(data[prop])
         exportNames.push(`queryEvery${data[prop].type}`)
 
-        if (data[prop].idRequested) {
+        if (!!data[prop].fields[0]) {
         query += buildClientQueryById(data[prop])
         exportNames.push(`query${data[prop].type}ById `)
         }
@@ -27,13 +27,7 @@ function parseClientQueries(data) {
 function buildClientQueryAll(data) {
     let string = `const queryEvery${data.type} = gql\`\n\t{\n\t\t${data.type.toLowerCase()}s {\n`;
 
-    let firstLoop = true;
     for (let prop in data.fields) {
-        if (firstLoop) {
-            if (data.idRequested) string += `\t\t\tid\n`;
-        }
-        firstLoop = false;
-
         string += `\t\t\t${data.fields[prop].name}\n`;
     };
 
@@ -43,13 +37,7 @@ function buildClientQueryAll(data) {
 function buildClientQueryById(data) {
     let string = `const query${data.type}ById = gql\`\n\tquery($id: ID) {\n\t\t${data.type.toLowerCase()}(id: $id) {\n`;
 
-    let firstLoop = true;
     for (let prop in data.fields) {
-        if (firstLoop) {
-            if (data.idRequested) string += `\t\t\tid\n`;
-        }
-        firstLoop = false;
-
         string += `\t\t\t${data.fields[prop].name}\n`;
     };
 

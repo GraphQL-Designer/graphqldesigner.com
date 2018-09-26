@@ -26,13 +26,15 @@ function buildMutationsParams(data) {
 
     let firstLoop = true;
     for (let prop in data.fields) {
-        if (!firstLoop) query += ', ';
-        firstLoop = false
-
-        if (data.fields[prop].allowNulls) {
-            query += `$${data.fields[prop].name}: ${data.fields[prop].type}`
-        } else {
-            query += `$${data.fields[prop].name}: ${data.fields[prop].type}!`
+        if (prop !== '0') {
+            if (!firstLoop) query += ', ';
+            firstLoop = false
+    
+            if (!data.fields[prop].required) {
+                query += `$${data.fields[prop].name}: ${data.fields[prop].type}`
+            } else {
+                query += `$${data.fields[prop].name}: ${data.fields[prop].type}!`
+            }
         }
     }
     return query += ") {\n\t\t"
@@ -43,10 +45,12 @@ function buildTypeParamas(data) {
 
     let firstLoop = true;
     for (let prop in data.fields) {
-        if (!firstLoop) query += ', ';
-        firstLoop = false
-
-        query += `${data.fields[prop].name}: $${data.fields[prop].name}`
+        if (prop !== '0') {
+            if (!firstLoop) query += ', ';
+            firstLoop = false
+    
+            query += `${data.fields[prop].name}: $${data.fields[prop].name}`
+        }
     }
     return query += ') {\n'
 }
@@ -54,11 +58,7 @@ function buildTypeParamas(data) {
 function buildReturnValues(data) {
     let query = ""
 
-    let firstLoop = true;
     for (let prop in data.fields) {
-        if (firstLoop) {
-            if (data.idRequested) query += `\t\t\tid\n`
-        }
         firstLoop = false;
 
         query += `\t\t\t${data.fields[prop].name}\n`
