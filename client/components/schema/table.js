@@ -104,7 +104,7 @@ class Table extends Component {
     }
 
     const fields = [];
-    for (const property in this.props.tableData.fields) {
+    for (let property in this.props.tableData.fields) {
       const tableIndex = this.props.tableData.fields[property].tableNum;
       const fieldIndex = this.props.tableData.fields[property].fieldNum;
       const fieldName = this.props.tableData.fields[property].name;
