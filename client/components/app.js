@@ -9,8 +9,10 @@ import Snackbar from 'material-ui/Snackbar';
 
 const style = {
   snackBarStyle: {
-    backgroundColor: 'rgb(255,66,128)',
-    color: 'black'
+    backgroundColor: 'rgb(255,66,128)'
+  },
+  snackBarFont: {
+    color: 'white'
   },
   tabStyle: {
     backgroundColor: 'rgb(38,42,48)',
@@ -78,6 +80,7 @@ class App extends Component {
             autoHideDuration={3000}
             onRequestClose={this.handleRequestClose}
             bodyStyle={style.snackBarStyle}
+            contentStyle={style.snackBarFont}
           />
         </div>
       </div>
