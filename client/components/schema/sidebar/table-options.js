@@ -117,40 +117,26 @@ class TableOptions extends React.Component {
   render() {
     let tables = [];
     let fields = [];
-    let tempTableNumList = [];
 
     // Generate relation type options
     for (let types in this.props.tables) {
-      if (this.props.selectedField.tableNum !== types) {
-        // tables.push(<option key={types} value={this.props.tables[types].tableID.type}>{this.props.tables[types].type}</option>);
         tables.push(
           <MenuItem
             key={types}
             value={types}
             primaryText={this.props.tables[types].type}
           />
-        );
-        tempTableNumList.push(types);
-      }
+        )
     }
 
-    // Generate relation field options
-    if (Object.keys(this.props.tables).length > 0) {
-      // iterate through list of types and get type index number matching type in relation selected
-      let tempTableNum = Object.keys(this.props.tables)[0]; // start at first table index
-      for (let i = 0; i < tempTableNumList.length; i += 1) {
-        if (this.props.tables[tempTableNumList[i]].type === this.props.selectedField.relation.type) {
-          tempTableNum = tempTableNumList[i];
-        }
-      }
-      
-      //list all of the fields for type selected in relation in sidebar
-      for(let field in this.props.tables[tempTableNum].fields){
+    const selectedTableIndex = this.props.selectedField.relation.tableIndex
+    if (selectedTableIndex >= 0){
+      for(let field in this.props.tables[selectedTableIndex].fields){
         fields.push(
           <MenuItem
           key={field}
           value={field} 
-          primaryText={this.props.tables[tempTableNum].fields[field].name}
+          primaryText={this.props.tables[selectedTableIndex].fields[field].name}
           />
         );
       }
