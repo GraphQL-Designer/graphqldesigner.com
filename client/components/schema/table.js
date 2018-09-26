@@ -115,12 +115,17 @@ class Table extends Component {
       const multipleValues = this.props.tableData.fields[property].multipleValues;
       const required = this.props.tableData.fields[property].required;
       const unique = this.props.tableData.fields[property].unique;
-      let buttonDisabled = false
+
       // if MongoDB is selected, the ID field is no longer clickable
+      let buttonDisabled = false
       if(this.props.database === 'MongoDB' && this.props.tableData.fields[property].name === 'id') {
         buttonDisabled = true; 
       }
-
+      // button color is clear unless there is a relation
+      let buttonColor = 'rgba(0,0,0,0)'
+      if (relation >= 0) {
+        buttonColor = colors[relation]
+      }
 
       fields.push(
         <CSSTransition
@@ -130,7 +135,7 @@ class Table extends Component {
         >
         <div>
           <div key={property} className='field'>
-            <div className='fieldContainer' style={{backgroundColor: `${colors[relation]}`}}>
+            <div className='fieldContainer' style={{backgroundColor: `${buttonColor}`}}>
               <FlatButton
                 value={`${tableIndex} ${fieldIndex}`}
                 onClick={this.handleUpdateField}
