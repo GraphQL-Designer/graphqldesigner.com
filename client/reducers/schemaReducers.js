@@ -341,26 +341,25 @@ const reducers = (state = initialState, action) => {
     case types.DELETE_FIELD:
       tableNum = Number(action.payload[0]);
       const fieldNum = Number(action.payload[1]);
+      console.log('tablenum', tableNum)
+      console.log('fieldNum', fieldNum)
+      console.log('selected field tablenum', state.selectedField.tableNum)
+      console.log('selected field fieldnum', state.selectedField.fieldNum)
+      newTable = Object.assign({}, state.tables[tableNum]);
+      delete newTable.fields[fieldNum];
+      newTables = Object.assign({}, state.tables, { [tableNum]: newTable });
+      newSelectedField = state.selectedField
+
       if (state.selectedField.tableNum === tableNum && state.selectedField.fieldNum === fieldNum) {
-        newTable = Object.assign({}, state.tables[tableNum]);
-        delete newTable.fields[fieldNum];
-        newTables = Object.assign({}, state.tables, { [tableNum]: newTable });
-
-        return {
-          ...state,
-          tables: newTables,
-          selectedField: fieldReset
-        };
-      } else {
-        newTable = Object.assign({}, state.tables[tableNum]);
-        delete newTable.fields[fieldNum];
-        newTables = Object.assign({}, state.tables, { [tableNum]: newTable });
-
-        return {
-          ...state,
-          tables: newTables
-        };
+        newSelectedField = fieldReset
+        console.log('in the if')
       }
+
+      return {
+        ...state,
+        tables: newTables,
+        selectedField: newSelectedField
+      };
 
     // ------------ HANDLE FIELD UPDATE ----------------//
     // updates selected field on each data entry
