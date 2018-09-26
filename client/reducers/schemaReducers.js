@@ -9,7 +9,7 @@ const initialState = {
     type: '',
     fields: {},
     fieldsIndex: 1,
-    tableID: -1
+    tableID: -1,
   },
   selectedField: {
     name: '',
@@ -23,12 +23,12 @@ const initialState = {
     relation: {
       tableIndex: -1,
       fieldIndex: -1,
-      refType: ''
+      refType: '',
     },
     refBy: new Set(),
     tableNum: -1,
-    fieldNum: -1
-  }
+    fieldNum: -1,
+  },
 };
 
 const reducers = (state = initialState, action) => {
@@ -46,7 +46,7 @@ const reducers = (state = initialState, action) => {
     type: '',
     fields: {},
     fieldsIndex: 1,
-    tableID: -1
+    tableID: -1,
   };
 
   const fieldReset = {
@@ -61,16 +61,16 @@ const reducers = (state = initialState, action) => {
     relation: {
       tableIndex: -1,
       fieldIndex: -1,
-      refType: ''
+      refType: '',
     },
     refBy: new Set(),
     tableNum: -1,
-    fieldNum: -1
+    fieldNum: -1,
   }
   const relationReset = {
     tableIndex: -1,
     fieldIndex: -1,
-    refType: ''
+    refType: '',
   }
   const idDefault = {
     name: 'id',
@@ -80,22 +80,22 @@ const reducers = (state = initialState, action) => {
     defaultValue: '',
     required: false,
     multipleValues: false,
-    relationSelected: false, 
+    relationSelected: false,
     relation: {
       type: '',
       field: '',
-      refType: ''
+      refType: '',
     },
     refByIndex: 0,
     refBy: new Set(),
     tableNum: -1,
-    fieldNum: 0
+    fieldNum: 0,
   };
 
   const mongoTable = Object.assign({}, tableReset, {
     fields: {
-      0: Object.assign({}, idDefault, { tableNum: state.tableIndex })
-    }
+      0: Object.assign({}, idDefault, { tableNum: state.tableIndex }),
+    },
   });
 
   // action.payload is how you can access the info
@@ -105,17 +105,17 @@ const reducers = (state = initialState, action) => {
 
       return {
         ...state,
-        database
+        database,
       };
 
     // --------------------------- Format to Mongo Onload -------------------------------//
     case 'TABLES_TO_MONGO_FORMAT':
       return {
         ...state,
-        selectedTable: mongoTable
+        selectedTable: mongoTable,
       };
 
-    // ----------------------------- Open Table Creator ---------------------------------//
+      // ----------------------------- Open Table Creator ---------------------------------//
 
     case types.OPEN_TABLE_CREATOR:
       newSelectedField = Object.assign({}, fieldReset);
@@ -128,7 +128,7 @@ const reducers = (state = initialState, action) => {
       return {
         ...state,
         selectedTable: newSelectedTable,
-        selectedField: newSelectedField
+        selectedField: newSelectedField,
       };
 
     // ------------------------------- Add Table ------------------------------------//
@@ -140,7 +140,7 @@ const reducers = (state = initialState, action) => {
         newState = Object.assign({}, state, {
           tableIndex: state.tableIndex + 1,
           tables: newTables,
-          selectedTable: state.database === 'MongoDB' ? mongoTable : tableReset
+          selectedTable: state.database === 'MongoDB' ? mongoTable : tableReset,
         });
 
         if (state.database === 'MongoDB') newState.selectedTable.fields[0].tableNum++;
@@ -150,7 +150,7 @@ const reducers = (state = initialState, action) => {
         newTables = Object.assign({}, state.tables, { [state.selectedTable.tableID]: newTableData });
         newState = Object.assign({}, state, {
           tables: newTables,
-          selectedTable: state.database === 'MongoDB' ? mongoTable : tableReset
+          selectedTable: state.database === 'MongoDB' ? mongoTable : tableReset,
         });
       }
 
@@ -164,7 +164,7 @@ const reducers = (state = initialState, action) => {
 
       return {
         ...state,
-        selectedTable: newSelectedTable
+        selectedTable: newSelectedTable,
       };
 
     // ----------------------------- Change Table ID ---------------------------------//
@@ -186,7 +186,7 @@ const reducers = (state = initialState, action) => {
 
       return {
         ...state,
-        selectedTable: newSelectedTable
+        selectedTable: newSelectedTable,
       };
 
     // -------------------------- Select Table For Update -----------------------------//
@@ -198,7 +198,7 @@ const reducers = (state = initialState, action) => {
       return {
         ...state,
         selectedTable: newSelectedTable,
-        selectedField: fieldReset
+        selectedField: fieldReset,
         // selectedField: fieldReset //fieldReset is defined above the cases
       };
 
@@ -232,7 +232,7 @@ const reducers = (state = initialState, action) => {
           })
         }
       }
-      
+
       newTables = Object.assign({}, state.tables);
       delete newTables[tableNum];
 
@@ -247,19 +247,19 @@ const reducers = (state = initialState, action) => {
           ...state,
           tables: newTables,
           selectedTable: newSelectedTable,
-          selectedField: fieldReset
+          selectedField: fieldReset,
         };
       } else {
         if (state.selectedTable.tableID === tableNum) {
           return {
             ...state,
             tables: newTables,
-            selectedTable: newSelectedTable
+            selectedTable: newSelectedTable,
           };
         } else {
           return {
             ...state,
-            tables: newTables
+            tables: newTables,
           };
         }
       }
@@ -276,14 +276,14 @@ const reducers = (state = initialState, action) => {
       const newRelatedTableIndex = state.selectedField.relation.tableIndex;
       const newRelatedFieldIndex = state.selectedField.relation.fieldIndex;
       let newRelatedRefType = state.selectedField.relation.refType;
-      // flip the RefType so the related ref type is representative of itself. 
+      // flip the RefType so the related ref type is representative of itself.
       if (newRelatedRefType === 'one to many') newRelatedRefType = 'many to one'
       else if (newRelatedRefType === 'many to one') newRelatedRefType = 'one to many'
       // Below 2 variables depend on if field is new or being updated
       let newRefInfo;
       let relationPreviouslySelected;
       if (selectedFieldNum < 0) {
-        relationPreviouslySelected = false; 
+        relationPreviouslySelected = false;
         newRefInfo = `${tableNum}.${currentFieldIndex}.${newRelatedRefType}`;
       } else {
         relationPreviouslySelected = state.tables[tableNum].fields[selectedFieldNum].relationSelected
@@ -295,16 +295,16 @@ const reducers = (state = initialState, action) => {
         console.log('new field, or updating field with no prior relation, add relation to other field')
         refBy = state.tables[newRelatedTableIndex].fields[newRelatedFieldIndex].refBy;
         refBy = new Set(refBy);
-        refBy.add(newRefInfo); 
+        refBy.add(newRefInfo);
         state.tables[newRelatedTableIndex].fields[newRelatedFieldIndex].refBy = refBy
-      } 
+      }
       // field update, update relation to other field if changed
       else if (selectedFieldNum >= 0) {
         const prevRelatedTableIndex = state.tables[tableNum].fields[selectedFieldNum].relation.tableIndex
         const prevRelatedFieldIndex = state.tables[tableNum].fields[selectedFieldNum].relation.fieldIndex
         const prevRefBy = state.tables[prevRelatedTableIndex].fields[prevRelatedFieldIndex].refBy
         let newRefBy;
-        // if relation toggled off, then newRefBy is a empty Set.  
+        // if relation toggled off, then newRefBy is a empty Set.
         if (newRelatedFieldIndex < 0) newRefBy = new Set()
         else newRefBy = state.tables[newRelatedTableIndex].fields[newRelatedFieldIndex].refBy
 
@@ -320,10 +320,10 @@ const reducers = (state = initialState, action) => {
             console.log('delete relation', prevRefInfo)
             prevRefBy.delete(prevRefInfo)
           }
-          // relation selected, add relation infomation to other field 
+          // relation selected, add relation infomation to other field
           if (relationSelected) {
             newRefBy = new Set(newRefBy);
-            newRefBy.add(newRefInfo); 
+            newRefBy.add(newRefInfo);
             console.log('add relation', newRefInfo)
             state.tables[newRelatedTableIndex].fields[newRelatedFieldIndex].refBy = newRefBy
           }
@@ -332,40 +332,40 @@ const reducers = (state = initialState, action) => {
 
       // Save new field
       if (selectedFieldNum < 0) {
-        newTables = 
+        newTables =
         Object.assign({}, state.tables, {[tableNum]:
           Object.assign({}, state.tables[tableNum], {fieldsIndex: currentFieldIndex + 1}, {
-            fields: Object.assign({}, state.tables[tableNum].fields, {[currentFieldIndex]: 
+            fields: Object.assign({}, state.tables[tableNum].fields, {[currentFieldIndex]:
               Object.assign({}, state.selectedField, {fieldNum: currentFieldIndex, name: newSelectedFieldName})})})})
 
-              newSelectedField = Object.assign({}, fieldReset, {tableNum})
-              return {
-                ...state,
-                tables: newTables,
-                selectedField: newSelectedField,
-              } 
-      } 
+        newSelectedField = Object.assign({}, fieldReset, {tableNum})
+        return {
+          ...state,
+          tables: newTables,
+          selectedField: newSelectedField,
+        }
+      }
 
       // Save updated field
       else {
-        newTables = 
+        newTables =
         Object.assign({}, state.tables, {[tableNum]:
           Object.assign({}, state.tables[tableNum], {fieldsIndex: currentFieldIndex}, {
-            fields: Object.assign({}, state.tables[tableNum].fields, {[selectedFieldNum]: 
-              Object.assign({}, state.selectedField, {fieldNum: selectedFieldNum, name: newSelectedFieldName})})})})  
+            fields: Object.assign({}, state.tables[tableNum].fields, {[selectedFieldNum]:
+              Object.assign({}, state.selectedField, {fieldNum: selectedFieldNum, name: newSelectedFieldName})})})})
 
-              return {
-                ...state,
-                tables: newTables,
-                selectedField: fieldReset
-              } 
-          } 
+        return {
+          ...state,
+          tables: newTables,
+          selectedField: fieldReset,
+        }
+      }
 
     // ----------------------------- Delete Field -----------------------------------//
     case types.DELETE_FIELD:
       tableNum = Number(action.payload[0]);
       const fieldNum = Number(action.payload[1]);
-      
+
       // Deleted field has relation. Delete reference in related field
       if (state.tables[tableNum].fields[fieldNum].relationSelected) {
         const relatedTableIndex = state.tables[tableNum].fields[fieldNum].relation.tableIndex
@@ -395,7 +395,7 @@ const reducers = (state = initialState, action) => {
       delete newTable.fields[fieldNum];
       newTables = Object.assign({}, state.tables, { [tableNum]: newTable });
       newSelectedField = state.selectedField
-      
+
       // if you are deleting the field currently selected, reset selectedField
       if (state.selectedField.tableNum === tableNum && state.selectedField.fieldNum === fieldNum) {
         newSelectedField = fieldReset
@@ -404,10 +404,10 @@ const reducers = (state = initialState, action) => {
       return {
         ...state,
         tables: newTables,
-        selectedField: newSelectedField
+        selectedField: newSelectedField,
       };
 
-    // -------------------------------- HANDLE FIELD UPDATE ---------------------------------//
+      // -------------------------------- HANDLE FIELD UPDATE ---------------------------------//
 
     // updates selected field on each data entry
     case types.HANDLE_FIELDS_UPDATE:
@@ -416,10 +416,10 @@ const reducers = (state = initialState, action) => {
         const rel = action.payload.name.split('.'); // rel[0] is 'relation' and rel[1] is either 'tableIndex', 'fieldIndex', or 'refType'
         newSelectedField = Object.assign({}, state.selectedField, {
           [rel[0]]: Object.assign({}, state.selectedField[rel[0]], {
-            [rel[1]] : action.payload.value}
-          )
+            [rel[1]] : action.payload.value},
+          ),
         })
-      
+
         // // Sets relation type name based on table index
         // if (rel[1] === 'tableIndex') {
         //   const tableIndex = action.payload.value
@@ -435,9 +435,9 @@ const reducers = (state = initialState, action) => {
       } else {
         if (action.payload.value === 'true') action.payload.value = true;
         if (action.payload.value === 'false') action.payload.value = false;
-        newSelectedField = Object.assign({}, state.selectedField, 
-          {[action.payload.name]: action.payload.value
-        })
+        newSelectedField = Object.assign({}, state.selectedField,
+          {[action.payload.name]: action.payload.value,
+          })
         // user toggled relation off
         if (action.payload.name === 'relationSelected' && action.payload.value === false){
           newSelectedField.relation = Object.assign({}, relationReset)
@@ -445,10 +445,10 @@ const reducers = (state = initialState, action) => {
       }
       return {
         ...state,
-        selectedField: newSelectedField
+        selectedField: newSelectedField,
       };
 
-    // --------------------------- FIELD SELECTED FOR UPDATE -------------------------------//
+      // --------------------------- FIELD SELECTED FOR UPDATE -------------------------------//
 
     // when a user selects a field, it changes selectedField to be an object with the necessary
     // info from the selected table and field.
@@ -467,10 +467,10 @@ const reducers = (state = initialState, action) => {
       return {
         ...state,
         selectedTable: newSelectedTable,
-        selectedField: newSelectedField
+        selectedField: newSelectedField,
       };
-    
-    // ----------------------------- OPEN FIELD CREATOR ----------------------------------//
+
+      // ----------------------------- OPEN FIELD CREATOR ----------------------------------//
 
     // Add Field in Table was clicked to display field options
     case types.ADD_FIELD_CLICKED:
@@ -479,10 +479,10 @@ const reducers = (state = initialState, action) => {
 
       return {
         ...state,
-        selectedField: newSelectedField
+        selectedField: newSelectedField,
       };
 
-    // ---------------------------------- New Project -------------------------------------//
+      // ---------------------------------- New Project -------------------------------------//
 
     // User clicked New Project
     case types.HANDLE_NEW_PROJECT:
