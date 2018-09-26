@@ -115,6 +115,12 @@ class Table extends Component {
       const multipleValues = this.props.tableData.fields[property].multipleValues;
       const required = this.props.tableData.fields[property].required;
       const unique = this.props.tableData.fields[property].unique;
+      let buttonDisabled = false
+      // if MongoDB is selected, the ID field is no longer clickable
+      if(this.props.database === 'MongoDB') {
+        buttonDisabled = true; 
+      }
+
 
       fields.push(
         <CSSTransition
@@ -125,43 +131,22 @@ class Table extends Component {
         <div>
           <div key={property} className='field'>
             <div className='fieldContainer' style={{backgroundColor: `${colors[relation]}`}}>
-             { this.props.database === 'MongoDB' && this.props.tableData.fields[property].name === 'id' ? (
-                <FlatButton
-                  value={`${tableIndex} ${fieldIndex}`}
-                  onClick={this.handleUpdateField}
-                  className='fieldButton'
-                  disabled
-                  >
-                    <p style={{fontSize: '1.1em'}}>{fieldName} - {checkForArray('front', multipleValues)}{fieldType}{checkForRequired(required)}{checkForUnique(unique)}{checkForArray('back', multipleValues)}</p>
-                  </FlatButton>
-                ) : (
-                  <FlatButton
-                  value={`${tableIndex} ${fieldIndex}`}
-                  onClick={this.handleUpdateField}
-                  className='fieldButton'
-                  >
-                    <p style={{fontSize: '1.1em'}}>{fieldName} - {checkForArray('front', multipleValues)}{fieldType}{checkForRequired(required)}{checkForUnique(unique)}{checkForArray('back', multipleValues)}</p>
-                  </FlatButton>
-                )}
-
-              { this.props.database === 'MongoDB' && this.props.tableData.fields[property].name === 'id' ? (
-                  <FlatButton
-                  className='delete-button'
-                  icon={<Close />}
-                  value={property}
-                  onClick={this.handleDeleteField}
-                  style={{minWidth: '25px'}}
-                  disabled
-                />
-              ) : (
-                  <FlatButton
-                  className='delete-button'
-                  icon={<Close />}
-                  value={property}
-                  onClick={this.handleDeleteField}
-                  style={{minWidth: '25px'}}
-                />
-              )}
+              <FlatButton
+                value={`${tableIndex} ${fieldIndex}`}
+                onClick={this.handleUpdateField}
+                className='fieldButton'
+                disabled={buttonDisabled}
+                >
+                  <p style={{fontSize: '1.1em'}}>{fieldName} - {checkForArray('front', multipleValues)}{fieldType}{checkForRequired(required)}{checkForUnique(unique)}{checkForArray('back', multipleValues)}</p>
+              </FlatButton>
+              <FlatButton
+                className='delete-button'
+                icon={<Close />}
+                value={property}
+                onClick={this.handleDeleteField}
+                style={{minWidth: '25px'}}
+                disabled={buttonDisabled}
+              />
             </div>
           </div>
           <hr className='fieldBreak'/>
