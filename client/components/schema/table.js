@@ -117,7 +117,7 @@ class Table extends Component {
       const unique = this.props.tableData.fields[property].unique;
       let buttonDisabled = false
       // if MongoDB is selected, the ID field is no longer clickable
-      if(this.props.database === 'MongoDB') {
+      if(this.props.database === 'MongoDB' && this.props.tableData.fields[property].name === 'id') {
         buttonDisabled = true; 
       }
 
