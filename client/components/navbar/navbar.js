@@ -1,9 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import FlatButton from 'material-ui/FlatButton';
 import * as actions from '../../actions/actions.js';
 
 // styling
-import FlatButton from 'material-ui/FlatButton';
 import './navbar.css';
 
 // componenets
@@ -11,21 +11,21 @@ import GraphqlLoader from '../loader/index.js';
 
 const mapStateToProps = store => ({
   tables: store.schema.tables,
-  database: store.general.database
+  database: store.general.database,
 });
 
 const mapDispatchToProps = dispatch => ({
   exportTable: table => dispatch(actions.exportTable(table)),
   // saveTable: table => dispatch(actions.saveTable(table))
   handleNewProject: reset => dispatch(actions.handleNewProject(reset)),
-  tablesToMongoFormat: () => dispatch({ type: 'TABLES_TO_MONGO_FORMAT' })
+  tablesToMongoFormat: () => dispatch({ type: 'TABLES_TO_MONGO_FORMAT' }),
 });
 
 class MainNav extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      modal: false
+      modal: false,
     };
 
     this.handleExport = this.handleExport.bind(this);
@@ -34,37 +34,37 @@ class MainNav extends React.Component {
 
   handleExport() {
     this.setState({
-      modal: true
+      modal: true,
     });
     const data = Object.assign(
       {},
       { data: this.props.tables },
       {
-        database: 'MongoDB'
-      }
+        database: 'MongoDB',
+      },
     );
     setTimeout(() => {
       fetch('http://localhost:4100/write-files', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify(data),
       })
         .then(res => res.blob())
         .then(blob => URL.createObjectURL(blob))
-        .then(file => {
-          var element = document.createElement('a');
+        .then((file) => {
+          let element = document.createElement('a');
           element.href = file;
           element.download = 'graphql.zip';
           element.click();
           this.setState({
-            modal: false
+            modal: false,
           });
         })
-        .catch(err => {
+        .catch((err) => {
           this.setState({
-            modal: false
+            modal: false,
           });
           console.log(err);
         });
@@ -102,5 +102,5 @@ class MainNav extends React.Component {
 }
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(MainNav);

@@ -18,7 +18,7 @@ function createSchemaField(data) {
     let query = `${data.name}: ${checkForArray('start')}{\n\t\ttype: ${data.type},\n\t\tunique: ${data.unique},\n\t\trequired: ${data.required}`;
 
     if (data.defaultValue) {
-        query += `,\n\t\tdefault: "${data.defaultValue}"`
+        query += `,\n\t\tdefault: "${data.defaultValue}"`;
     }
 
     return query += `\n\t}${checkForArray('end')}`

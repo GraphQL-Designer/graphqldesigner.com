@@ -26,7 +26,7 @@ const style = {
 // we use store.data, because of index.js reduce function
 const mapStateToProps = store => ({
   tables: store.schema.tables,
-  database: store.schema.database
+  database: store.schema.database,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -53,10 +53,10 @@ class Table extends Component {
     this.props.deleteTable(event.currentTarget.value); // need currentTarget because of Material-UI
   }
 
-  handleDeleteField(event){
-    const tableIndex = this.props.tableIndex
-    const fieldIndex = event.currentTarget.value // need currentTarget because of Material-UI
-    this.props.deleteField([tableIndex, fieldIndex])
+  handleDeleteField(event) {
+    const tableIndex = this.props.tableIndex;
+    const fieldIndex = event.currentTarget.value; // need currentTarget because of Material-UI
+    this.props.deleteField([tableIndex, fieldIndex]);
   }
 
   handleAddField(event) {
@@ -66,8 +66,8 @@ class Table extends Component {
   handleUpdateField(event) {
     this.props.handleFieldsSelect({
       location: event.currentTarget.value,
-      submitUpdate: false
-    })
+      submitUpdate: false,
+    });
   }
 
   handleSelectedTable(event) {
@@ -75,10 +75,10 @@ class Table extends Component {
   }
 
   render() {
-    const colors = ['darkcyan', 'dodgerblue', 'crimson', 'orangered', 'darkviolet', 
-                    'gold', 'hotpink', 'seagreen', 'darkorange', 'tomato', 'mediumspringgreen',
-                    'purple', 'darkkhaki', 'firebrick', 'steelblue', 'limegreen', 'sienna', 
-                    'darkslategrey', 'goldenrod', 'deeppink'];
+    const colors = ['darkcyan', 'dodgerblue', 'crimson', 'orangered', 'darkviolet',
+      'gold', 'hotpink', 'seagreen', 'darkorange', 'tomato', 'mediumspringgreen',
+      'purple', 'darkkhaki', 'firebrick', 'steelblue', 'limegreen', 'sienna',
+      'darkslategrey', 'goldenrod', 'deeppink'];
 
     function checkForArray(position, multipleValues) {
       if (multipleValues) {
@@ -92,21 +92,19 @@ class Table extends Component {
     function checkForRequired(value) {
       if (value) {
         return ' !';
-      } else {
-        return '';
       }
+      return '';
     }
 
     function checkForUnique(value) {
       if (value) {
         return ' *';
-      } else {
-        return '';
       }
+      return '';
     }
 
-    let fields = [];
-    for (let property in this.props.tableData.fields) {
+    const fields = [];
+    for (const property in this.props.tableData.fields) {
       const tableIndex = this.props.tableData.fields[property].tableNum;
       const fieldIndex = this.props.tableData.fields[property].fieldNum;
       const fieldName = this.props.tableData.fields[property].name;
@@ -117,79 +115,89 @@ class Table extends Component {
       const unique = this.props.tableData.fields[property].unique;
 
       // if MongoDB is selected, the ID field is no longer clickable
-      let buttonDisabled = false
-      if(this.props.database === 'MongoDB' && this.props.tableData.fields[property].name === 'id') {
-        buttonDisabled = true; 
+      let buttonDisabled = false;
+      if (this.props.database === 'MongoDB' && this.props.tableData.fields[property].name === 'id') {
+        buttonDisabled = true;
       }
       // button color is clear unless there is a relation
-      let buttonColor = 'rgba(0,0,0,0)'
+      let buttonColor = 'rgba(0,0,0,0)';
       if (relation >= 0) {
-        buttonColor = colors[relation]
+        buttonColor = colors[relation];
       }
 
       fields.push(
         <CSSTransition
-        key={property}
-        timeout={100}
-        classNames="fadeScale"
+          key={property}
+          timeout={100}
+          classNames="fadeScale"
         >
-        <div>
-          <div key={property} className='field'>
-            <div className='fieldContainer' style={{backgroundColor: `${buttonColor}`}}>
-              <FlatButton
-                value={`${tableIndex} ${fieldIndex}`}
-                onClick={this.handleUpdateField}
-                className='fieldButton'
-                disabled={buttonDisabled}
+          <div>
+            <div key={property} className="field">
+              <div className="fieldContainer" style={{ backgroundColor: `${buttonColor}` }}>
+                <FlatButton
+                  value={`${tableIndex} ${fieldIndex}`}
+                  onClick={this.handleUpdateField}
+                  className="fieldButton"
+                  disabled={buttonDisabled}
                 >
-                  <p style={{fontSize: '1.1em'}}>{fieldName} - {checkForArray('front', multipleValues)}{fieldType}{checkForRequired(required)}{checkForUnique(unique)}{checkForArray('back', multipleValues)}</p>
-              </FlatButton>
-              <FlatButton
-                className='delete-button'
-                icon={<Close />}
-                value={property}
-                onClick={this.handleDeleteField}
-                style={{minWidth: '25px'}}
-                disabled={buttonDisabled}
-              />
+                  <p style={{ fontSize: '1.1em' }}>
+                  {fieldName}
+                  {' '}
+-
+                  {' '}
+                  {checkForArray('front', multipleValues)}
+                  {fieldType}
+                  {checkForRequired(required)}
+                  {checkForUnique(unique)}
+                  {checkForArray('back', multipleValues)}
+                </p>
+                </FlatButton>
+                <FlatButton
+                  className="delete-button"
+                  icon={<Close />}
+                  value={property}
+                  onClick={this.handleDeleteField}
+                  style={{ minWidth: '25px' }}
+                  disabled={buttonDisabled}
+                />
+              </div>
             </div>
-          </div>
-          <hr className='fieldBreak'/>
+            <hr className="fieldBreak" />
           </div>
         </CSSTransition>,
       );
     }
 
     return (
-        <div className='table' style={{border: `1px solid ${colors[this.props.tableData.tableID]}`}}>
-          <div>
-            <div className='field'>
-              <FlatButton
-                backgroundColor={colors[this.props.tableData.tableID]}
-                value={this.props.tableIndex}
-                onClick={this.handleSelectedTable}
-                className='tableButton'
-              >
-                <h4>{this.props.tableData.type}</h4>
-              </FlatButton>
-              <FlatButton
-                className='delete-button'
-                icon={<Delete />}
-                value={this.props.tableIndex}
-                onClick={this.handleDeleteTable}
-                style={style.deleteStyle}
-              />
-            </div>
-          </div>
-          <TransitionGroup>
-            { fields }
-          </TransitionGroup>
-          <div onClick={this.handleAddField} className='field addField'>
-            <p style={{marginTop: '5px'}}>
-              ADD FIELD
-            </p>
+      <div className="table" style={{ border: `1px solid ${colors[this.props.tableData.tableID]}` }}>
+        <div>
+          <div className="field">
+            <FlatButton
+              backgroundColor={colors[this.props.tableData.tableID]}
+              value={this.props.tableIndex}
+              onClick={this.handleSelectedTable}
+              className="tableButton"
+            >
+              <h4>{this.props.tableData.type}</h4>
+            </FlatButton>
+            <FlatButton
+              className="delete-button"
+              icon={<Delete />}
+              value={this.props.tableIndex}
+              onClick={this.handleDeleteTable}
+              style={style.deleteStyle}
+            />
           </div>
         </div>
+        <TransitionGroup>
+          { fields }
+        </TransitionGroup>
+        <div onClick={this.handleAddField} className="field addField">
+          <p style={{ marginTop: '5px' }}>
+              ADD FIELD
+          </p>
+        </div>
+      </div>
     );
   }
 }
