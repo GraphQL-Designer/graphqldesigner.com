@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 
 // styling
-import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import Delete from 'material-ui/svg-icons/action/delete';
 import Close from 'material-ui/svg-icons/navigation/close';
@@ -76,7 +75,10 @@ class Table extends Component {
   }
 
   render() {
-    const colors = ['darkcyan', 'dodgerblue', 'crimson', 'orangered', 'darkviolet', 'gold', 'hotpink', 'seagreen', 'darkorange', 'tomato', 'mediumspringgreen', 'purple', 'darkkhaki', 'firebrick', 'steelblue', 'limegreen', 'sienna', 'darkslategrey', 'goldenrod', 'deeppink'];
+    const colors = ['darkcyan', 'dodgerblue', 'crimson', 'orangered', 'darkviolet', 
+                    'gold', 'hotpink', 'seagreen', 'darkorange', 'tomato', 'mediumspringgreen',
+                    'purple', 'darkkhaki', 'firebrick', 'steelblue', 'limegreen', 'sienna', 
+                    'darkslategrey', 'goldenrod', 'deeppink'];
 
     // will push each individual field to the array 'fields' to be rendered.
     function checkForRelation(relation, tables) {
