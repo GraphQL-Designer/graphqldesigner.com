@@ -11,7 +11,7 @@ import GraphqlLoader from '../loader/index.js';
 
 const mapStateToProps = store => ({
   tables: store.schema.tables,
-  database: store.general.database,
+  database: store.schema.database,
 });
 
 const mapDispatchToProps = dispatch => ({
