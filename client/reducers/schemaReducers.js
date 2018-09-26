@@ -21,9 +21,7 @@ const initialState = {
     multipleValues: false,
     relationSelected: false,
     relation: {
-      // type: '',
       tableIndex: -1,
-      // field: '',
       fieldIndex: -1,
       refType: ''
     },
@@ -60,9 +58,7 @@ const reducers = (state = initialState, action) => {
     multipleValues: false,
     relationSelected: false,
     relation: {
-      // type: '',
       tableIndex: -1,
-      // field: '',
       fieldIndex: -1,
       refType: ''
     },
@@ -111,14 +107,14 @@ const reducers = (state = initialState, action) => {
         database
       };
 
-    // ------------- Format to mongo onload -------------------//
+    // --------------------------- Format to Mongo Onload -------------------------------//
     case 'TABLES_TO_MONGO_FORMAT':
       return {
         ...state,
         selectedTable: mongoTable
       };
 
-    // ----------- Open Table Creator --------------//
+    // ----------------------------- Open Table Creator ---------------------------------//
 
     case types.OPEN_TABLE_CREATOR:
       newSelectedField = Object.assign({}, fieldReset);
@@ -134,10 +130,10 @@ const reducers = (state = initialState, action) => {
         selectedField: newSelectedField
       };
 
-    // ------------- Add Table ----------------//
+    // ------------------------------- Add Table ------------------------------------//
     case types.SAVE_TABLE_DATA_INPUT:
       if (state.selectedTable.tableID < 0) {
-        //SAVE A NEW TABLE
+        // SAVE A NEW TABLE
         newTable = Object.assign({}, state.selectedTable, { tableID: state.tableIndex });
         newTables = Object.assign({}, state.tables, { [state.tableIndex]: newTable });
         newState = Object.assign({}, state, {
@@ -148,7 +144,7 @@ const reducers = (state = initialState, action) => {
 
         if (state.database === 'MongoDB') newState.selectedTable.fields[0].tableNum++;
       } else {
-        //UPDATE A SAVED TABLE
+        // UPDATE A SAVED TABLE
         newTableData = Object.assign({}, state.selectedTable);
         newTables = Object.assign({}, state.tables, { [state.selectedTable.tableID]: newTableData });
         newState = Object.assign({}, state, {
@@ -161,7 +157,7 @@ const reducers = (state = initialState, action) => {
       }
       return newState;
 
-    // ------------ Change Table Name ----------------//
+    // ---------------------------- Change Table Name -----------------------------------//
     case types.HANDLE_TABLE_NAME_CHANGE:
       newSelectedTable = Object.assign({}, state.selectedTable, { type: action.payload });
 
@@ -170,7 +166,7 @@ const reducers = (state = initialState, action) => {
         selectedTable: newSelectedTable
       };
 
-    // ------------ Change Table ID ----------------//
+    // ----------------------------- Change Table ID ---------------------------------//
     case types.HANDLE_TABLE_ID:
       if (!!state.selectedTable.fields[0]) {
         newFields = Object.assign({}, state.selectedTable.fields);
@@ -192,7 +188,7 @@ const reducers = (state = initialState, action) => {
         selectedTable: newSelectedTable
       };
 
-    // ---------- Select Table For Update ------------//
+    // -------------------------- Select Table For Update -----------------------------//
     case types.HANDLE_SELECTED_TABLE:
       tableNum = Number(action.payload);
 
@@ -205,7 +201,7 @@ const reducers = (state = initialState, action) => {
         // selectedField: fieldReset //fieldReset is defined above the cases
       };
 
-    // --------------- Delete Table ----------------//
+    // -------------------------------- Delete Table -------------------------------//
     case types.DELETE_TABLE:
       tableNum = Number(action.payload);
 
@@ -240,7 +236,7 @@ const reducers = (state = initialState, action) => {
         }
       }
 
-    // ----------- Save Added or Updated Field ----------------//
+    // ------------------------- Save Added or Updated Field ---------------------------//
     case types.SAVE_FIELD_INPUT:
       tableNum = state.selectedField.tableNum;
       let newSelectedFieldName = state.selectedField.name;
@@ -337,22 +333,18 @@ const reducers = (state = initialState, action) => {
               } 
           } 
 
-                     // -------------- Delete Field ----------------//
+    // ----------------------------- Delete Field -----------------------------------//
     case types.DELETE_FIELD:
       tableNum = Number(action.payload[0]);
       const fieldNum = Number(action.payload[1]);
-      console.log('tablenum', tableNum)
-      console.log('fieldNum', fieldNum)
-      console.log('selected field tablenum', state.selectedField.tableNum)
-      console.log('selected field fieldnum', state.selectedField.fieldNum)
       newTable = Object.assign({}, state.tables[tableNum]);
       delete newTable.fields[fieldNum];
       newTables = Object.assign({}, state.tables, { [tableNum]: newTable });
       newSelectedField = state.selectedField
-
+      
+      // if you are deleting the field currently selected, reset selectedField
       if (state.selectedField.tableNum === tableNum && state.selectedField.fieldNum === fieldNum) {
         newSelectedField = fieldReset
-        console.log('in the if')
       }
 
       return {
@@ -361,7 +353,8 @@ const reducers = (state = initialState, action) => {
         selectedField: newSelectedField
       };
 
-    // ------------ HANDLE FIELD UPDATE ----------------//
+    // -------------------------------- HANDLE FIELD UPDATE ---------------------------------//
+
     // updates selected field on each data entry
     case types.HANDLE_FIELDS_UPDATE:
       // parse if relations field is selected
@@ -401,7 +394,7 @@ const reducers = (state = initialState, action) => {
         selectedField: newSelectedField
       };
 
-    // ------------ FIELD SELECTED FOR UPDATE ----------------//
+    // --------------------------- FIELD SELECTED FOR UPDATE -------------------------------//
 
     // when a user selects a field, it changes selectedField to be an object with the necessary
     // info from the selected table and field.
@@ -422,7 +415,9 @@ const reducers = (state = initialState, action) => {
         selectedTable: newSelectedTable,
         selectedField: newSelectedField
       };
-    // ------------ OPEN FIELD CREATOR ----------------//
+    
+    // ----------------------------- OPEN FIELD CREATOR ----------------------------------//
+
     // Add Field in Table was clicked to display field options
     case types.ADD_FIELD_CLICKED:
       newSelectedField = fieldReset;
@@ -433,7 +428,8 @@ const reducers = (state = initialState, action) => {
         selectedField: newSelectedField
       };
 
-    // ------------ New Project ----------------//
+    // ---------------------------------- New Project -------------------------------------//
+
     // User clicked New Project
     case types.HANDLE_NEW_PROJECT:
       newState = Object.assign({}, initialState, { projectReset: action.payload });
