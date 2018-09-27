@@ -105,11 +105,11 @@ class TableOptions extends React.Component {
 
       if (error) {
         this.handleSnackbarUpdate('Error: Field name already exist');
-      } 
+      }
       // check relation conditions
       else {
         if (this.props.selectedField.relationSelected) {
-        // check if Type, Field, and RefType are selected if Relation is toggled
+          // check if Type, Field, and RefType are selected if Relation is toggled
           if (this.props.selectedField.relation.tableIndex === -1 || this.props.selectedField.relation.fieldIndex === -1 || !this.props.selectedField.relation.refType) {
             return this.handleSnackbarUpdate('Please fill out Type, Field, and RefType in Relation');
           }
@@ -128,6 +128,10 @@ class TableOptions extends React.Component {
           }
         }
         // save or update table
+        this.props.handleChange({
+          name: 'name',
+          value: fieldName
+        });
         this.props.saveFieldInput();
       }
     } else {
