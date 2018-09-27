@@ -24,7 +24,7 @@ const style = {
 
 const mapStateToProps = store => ({
   database: store.general.database,
-  tableIndex: store.schema.tableIndexSelected,
+  // tableIndex: store.schema.tableIndexSelected,
   addFieldClicked: store.schema.addFieldClicked,
   selectedField: store.schema.selectedField,
   updatedField: store.schema.fieldUpdated,
@@ -115,19 +115,6 @@ class TableOptions extends React.Component {
           if (this.props.selectedField.relation.tableIndex === -1 || this.props.selectedField.relation.fieldIndex === -1 || !this.props.selectedField.relation.refType) {
             return this.handleSnackbarUpdate('Please fill out Type, Field, and RefType in Relation');
           }
-          // field is being updated, check if relation field already has relation to selected field
-          else if (selectedFieldIndex >= 0) {
-            const relatedTableIndex = this.props.selectedField.relation.tableIndex
-            const relatedFieldIndex = this.props.selectedField.relation.fieldIndex
-            const selectedRefBy = this.props.tables[currTableNum].fields[selectedFieldIndex].refBy
-            const refTypes = ['one to one', 'one to many', 'many to one', 'many to many']
-            for (let i = 0; i < refTypes.length; i += 1) {
-              const refInfo = `${relatedTableIndex}.${relatedFieldIndex}.${refTypes[i]}`
-              if (selectedRefBy.has(refInfo)) {
-                return this.handleSnackbarUpdate('Cannot create relation to field that is already related to this field being updated');
-              }
-            }
-          }
         }
         // update state if field name was modified to take out spaces and symbols. 
         if (originalFieldName !== newFieldName) {
@@ -162,8 +149,25 @@ class TableOptions extends React.Component {
     const selectedTableIndex = this.props.selectedField.relation.tableIndex
     if (selectedTableIndex >= 0) {
       for (let field in this.props.tables[selectedTableIndex].fields) {
-        //only push to fields if multiple values for the field in the type is false
-        if (!this.props.tables[selectedTableIndex].fields[field].multipleValues) {
+        // check if field has a relation to selected field, if so, don't push
+        let noRelationExists = true; 
+        const tableIndex = this.props.selectedField.tableNum
+        let fieldIndex = this.props.selectedField.fieldNum
+        if (fieldIndex >= 0) {
+          const refBy = this.props.tables[tableIndex].fields[fieldIndex].refBy
+          if (refBy.size > 0) {
+            const refTypes = ['one to one', 'one to many', 'many to one', 'many to many']
+            for (let i = 0; i < refTypes.length; i += 1) {
+              const refInfo = `${selectedTableIndex}.${field}.${refTypes[i]}`
+              if (refBy.has(refInfo)) {
+                noRelationExists = false; 
+              }
+            }
+          }
+        }
+        // only push to fields if multiple values is false for the field,
+        // and no relation exists to selected field
+        if (!this.props.tables[selectedTableIndex].fields[field].multipleValues && noRelationExists) {
           fields.push(
             <MenuItem
               key={field}

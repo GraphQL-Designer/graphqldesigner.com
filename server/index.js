@@ -18,7 +18,7 @@ app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, '../public')));
 
 app.post('/write-files', (req, res) => {
-  const data = req.body; // data is state.tables from schemaReducer
+  const data = req.body; // data.data is state.tables from schemaReducer. See Navbar component
   const dateStamp = Date.now();
 
   buildDirectories(dateStamp, () => {
@@ -29,7 +29,7 @@ app.post('/write-files', (req, res) => {
         if (err) console.log(err);
 
         buildClientQueries(data.data, dateStamp, () => {
-          if (data.database = 'MongoDB') {
+          if (data.database === 'MongoDB') {
             buildForMongo(data.data, dateStamp, () => {
               // ZIP main build folder and responds to client
               zipper.sync.zip(path.join(__dirname, `../../build-files${dateStamp}`)).compress().save(path.join(__dirname, `../../graphql${dateStamp}.zip`));
