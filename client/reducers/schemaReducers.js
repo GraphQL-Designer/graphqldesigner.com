@@ -304,7 +304,6 @@ const reducers = (state = initialState, action) => {
       else if (selectedFieldNum >= 0) {
         const prevRelatedTableIndex = state.tables[tableNum].fields[selectedFieldNum].relation.tableIndex
         const prevRelatedFieldIndex = state.tables[tableNum].fields[selectedFieldNum].relation.fieldIndex
-        let prevRefBy = state.tables[prevRelatedTableIndex].fields[prevRelatedFieldIndex].refBy
         let newRefBy;
         // if relation toggled off, then newRefBy is a empty Set.
         if (newRelatedFieldIndex < 0) newRefBy = new Set()
@@ -315,6 +314,7 @@ const reducers = (state = initialState, action) => {
           console.log('new relation')
           // A previous relation existed, delete it
           if (relationPreviouslySelected) {
+            let prevRefBy = state.tables[prevRelatedTableIndex].fields[prevRelatedFieldIndex].refBy
             let prevRelatedRefType = state.tables[tableNum].fields[selectedFieldNum].relation.refType
             if (prevRelatedRefType === 'one to many') prevRelatedRefType = 'many to one'
             else if (prevRelatedRefType === 'many to one') prevRelatedRefType = 'one to many'
