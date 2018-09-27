@@ -18,7 +18,7 @@ const style = {
     width: 200
   },
   toggle: {
-    marginTop: '15px'
+    marginTop: '5px'
   }
 };
 
@@ -89,11 +89,11 @@ class TableOptions extends React.Component {
 
     if (fieldName.length > 0) {
       // get list of field indexes
-      const listFieldIndexes = Object.getOwnPropertyNames(this.props.tables[currTableNum].fields);
-
+      const listFieldIndexes = Object.keys(this.props.tables[currTableNum].fields);
+      const selectedFieldIndex = this.props.selectedField.fieldNum
       // remove the selected field from list of tables if updating to prevent snackbar from displaying table error
-      if (this.props.selectedField.fieldNum !== -1) {
-        listFieldIndexes.splice(listFieldIndexes.indexOf(String(this.props.selectedField.fieldNum)), 1);
+      if (selectedFieldIndex !== -1) {
+        listFieldIndexes.splice(listFieldIndexes.indexOf(String(selectedFieldIndex)), 1);
       }
 
       // if there are at least 1 field, check if there's duplicate in the list of fields in the table
@@ -105,18 +105,30 @@ class TableOptions extends React.Component {
 
       if (error) {
         this.handleSnackbarUpdate('Error: Field name already exist');
-      } else {
-        //check if Type, Field, and RefType are selected if Relation is toggled
+      } 
+      // check relation conditions
+      else {
         if (this.props.selectedField.relationSelected) {
+        // check if Type, Field, and RefType are selected if Relation is toggled
           if (this.props.selectedField.relation.tableIndex === -1 || this.props.selectedField.relation.fieldIndex === -1 || !this.props.selectedField.relation.refType) {
             return this.handleSnackbarUpdate('Please fill out Type, Field, and RefType in Relation');
           }
+          // field is being updated, check if relation field already has relation to selected field
+          else if (selectedFieldIndex >= 0) {
+            const relatedTableIndex = this.props.selectedField.relation.tableIndex
+            const relatedFieldIndex = this.props.selectedField.relation.fieldIndex
+            const selectedRefBy = this.props.tables[currTableNum].fields[selectedFieldIndex].refBy
+            const refTypes = ['one to one', 'one to many', 'many to one', 'many to many']
+            for (let i = 0; i < refTypes.length; i += 1) {
+              const refInfo = `${relatedTableIndex}.${relatedFieldIndex}.${refTypes[i]}`
+              if (selectedRefBy.has(refInfo)) {
+                return this.handleSnackbarUpdate('Cannot create relation to field that is already related to this field being updated');
+              }
+            }
+          }
         }
-
         // save or update table
         this.props.saveFieldInput();
-        this.handleSnackbarUpdate('');
-
       }
     } else {
       this.handleSnackbarUpdate('Please enter a field name (no space, symbols allowed');
@@ -152,18 +164,18 @@ class TableOptions extends React.Component {
     }
 
     function fieldName(fieldNum, tableNum, tables) {
+      // Header text if adding a new field
+      let h2Text = 'Add Field'
+      let h4Text = `in ${tables[tableNum].type}`
+      // Header text if updating a field
       if (fieldNum >= 0) {
-        return (
-          <div style={{ marginTop: '10px' }}>
-            <h2>{tables[tableNum].fields[fieldNum].name} Field</h2>
-            <h4 style={{ fontWeight: '200', marginTop: '5px' }}>in {tables[tableNum].type}</h4>
-          </div>
-        );
+        h2Text = `Update ${tables[tableNum].fields[fieldNum].name}`
+        h4Text = `in ${tables[tableNum].type}`
       }
       return (
         <div style={{ marginTop: '10px' }}>
-          <h2>Add Field</h2>
-          <h4 style={{ fontWeight: '200', marginTop: '5px' }}>to {tables[tableNum].type}</h4>
+          <h2>{h2Text}</h2>
+          <h4 style={{ fontWeight: '200', marginTop: '5px' }}>{h4Text}</h4>
         </div>
       );
     }
