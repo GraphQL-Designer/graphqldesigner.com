@@ -91,7 +91,8 @@ class TableOptions extends React.Component {
     if (newFieldName.length > 0) {
       // get list of field indexes
       const listFieldIndexes = Object.keys(this.props.tables[currTableNum].fields);
-      const selectedFieldIndex = this.props.selectedField.fieldNum
+      const selectedFieldIndex = this.props.selectedField.fieldNum;
+
       // remove the selected field from list of tables if updating to prevent snackbar from displaying table error
       if (selectedFieldIndex !== -1) {
         listFieldIndexes.splice(listFieldIndexes.indexOf(String(selectedFieldIndex)), 1);
@@ -161,13 +162,16 @@ class TableOptions extends React.Component {
     const selectedTableIndex = this.props.selectedField.relation.tableIndex
     if (selectedTableIndex >= 0) {
       for (let field in this.props.tables[selectedTableIndex].fields) {
-        fields.push(
-          <MenuItem
-            key={field}
-            value={field}
-            primaryText={this.props.tables[selectedTableIndex].fields[field].name}
-          />
-        );
+        //only push to fields if multiple values for the field in the type is false
+        if (!this.props.tables[selectedTableIndex].fields[field].multipleValues) {
+          fields.push(
+            <MenuItem
+              key={field}
+              value={field}
+              primaryText={this.props.tables[selectedTableIndex].fields[field].name}
+            />
+          );
+        }
       }
     }
 
@@ -266,7 +270,7 @@ class TableOptions extends React.Component {
                 toggled={this.props.selectedField.multipleValues && !this.props.selectedField.relationSelected}
                 onToggle={this.handleToggle.bind(null, 'multipleValues')}
                 style={style.toggle}
-                disabled={this.props.selectedField.relationSelected}
+                disabled={this.props.selectedField.relationSelected || this.props.selectedField.refBy.size > 0}
               />
 
               <Toggle
