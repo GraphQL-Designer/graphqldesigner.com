@@ -192,7 +192,6 @@ class TableOptions extends React.Component {
       );
     }
 
-    console.log('refBy: ', this.props.selectedField.refBy)
     return (
       <div id="fieldOptions">
         {this.props.selectedField.tableNum > -1 && (
