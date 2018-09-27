@@ -18,7 +18,7 @@ app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, '../public')));
 
 app.post('/write-files', (req, res) => {
-  const data = req.body;
+  const data = req.body; // data is state.tables from schemaReducer
   const dateStamp = Date.now();
 
   buildDirectories(dateStamp, () => {

@@ -85,9 +85,10 @@ class TableOptions extends React.Component {
     let currTableNum = this.props.selectedField.tableNum;
 
     // remove whitespace and symbols
-    let fieldName = this.props.selectedField.name.replace(/[^\w]/gi, '');
+    const originalFieldName = this.props.selectedField.name;
+    const newFieldName = this.props.selectedField.name.replace(/[^\w]/gi, '');
 
-    if (fieldName.length > 0) {
+    if (newFieldName.length > 0) {
       // get list of field indexes
       const listFieldIndexes = Object.keys(this.props.tables[currTableNum].fields);
       const selectedFieldIndex = this.props.selectedField.fieldNum
@@ -98,7 +99,7 @@ class TableOptions extends React.Component {
 
       // if there are at least 1 field, check if there's duplicate in the list of fields in the table
       for (let x = 0; x < listFieldIndexes.length; x += 1) {
-        if (this.props.tables[currTableNum].fields[listFieldIndexes[x]].name === fieldName) {
+        if (this.props.tables[currTableNum].fields[listFieldIndexes[x]].name === newFieldName) {
           error = true;
         }
       }
@@ -127,15 +128,19 @@ class TableOptions extends React.Component {
             }
           }
         }
+        // update state if field name was modified to take out spaces and symbols. 
+        if (originalFieldName !== newFieldName) {
+          this.handleSnackbarUpdate('Spaces or symbols were removed from field name');
+          this.props.handleChange({
+            name: 'name',
+            value: newFieldName
+          });
+        }
         // save or update table
-        this.props.handleChange({
-          name: 'name',
-          value: fieldName
-        });
         this.props.saveFieldInput();
       }
     } else {
-      this.handleSnackbarUpdate('Please enter a field name (no space, symbols allowed');
+      this.handleSnackbarUpdate('Please enter a field name (no space, symbols allowed)');
     }
   }
   render() {
