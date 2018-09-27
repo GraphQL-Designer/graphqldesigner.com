@@ -139,7 +139,6 @@ class TableOptions extends React.Component {
     }
   }
   render() {
-    console.log('tables', this.props.tables)
     let tables = [];
     let fields = [];
 
@@ -259,19 +258,21 @@ class TableOptions extends React.Component {
 
               <Toggle
                 label="Multiple Values"
-                toggled={this.props.selectedField.multipleValues}
+                toggled={this.props.selectedField.multipleValues && !this.props.selectedField.relationSelected}
                 onToggle={this.handleToggle.bind(null, 'multipleValues')}
                 style={style.toggle}
+                disabled={this.props.selectedField.relationSelected}
               />
 
               <Toggle
                 label="Relation"
-                toggled={this.props.selectedField.relationSelected}
+                toggled={this.props.selectedField.relationSelected && !this.props.selectedField.multipleValues}
                 onToggle={this.handleToggle.bind(null, 'relationSelected')}
                 style={style.toggle}
+                disabled={this.props.selectedField.multipleValues}
               />
 
-              {this.props.selectedField.relationSelected && (<span>
+              {this.props.selectedField.relationSelected && !this.props.selectedField.multipleValues && (<span>
                 <div className='relation-options'>
                   <p>Type:</p>
                   <DropDownMenu
