@@ -1,6 +1,6 @@
 // Welcome and Intro
-export const CHOOSE_DATABASE = 'CHOOSE_DATABASE';
 export const HANDLE_SNACKBAR_UPDATE = 'HANDLE_SNACKBAR_UPDATE';
+export const CHOOSE_DATABASE = 'CHOOSE_DATABASE';
 
 // Schema App
 //export const TABLES_TO_MONGO_FORMAT = 'TABLES_TO_MONGO_FORMAT'

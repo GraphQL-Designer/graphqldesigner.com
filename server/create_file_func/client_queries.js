@@ -2,6 +2,7 @@ function parseClientQueries(data) {
   let query = "import { gql } from \'apollo-boost\';\n\n";
   const exportNames = [];
 
+  // data is state.tables from schemaReducer
   for (let prop in data) {
       query += buildClientQueryAll(data[prop])
       exportNames.push(`queryEvery${data[prop].type}`)

@@ -15,8 +15,6 @@ const mapStateToProps = store => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  exportTable: table => dispatch(actions.exportTable(table)),
-  // saveTable: table => dispatch(actions.saveTable(table))
   handleNewProject: reset => dispatch(actions.handleNewProject(reset)),
   tablesToMongoFormat: () => dispatch({ type: 'TABLES_TO_MONGO_FORMAT' }),
 });
