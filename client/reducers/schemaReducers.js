@@ -319,6 +319,7 @@ const reducers = (state = initialState, action) => {
             const prevRefInfo = `${tableNum}.${selectedFieldNum}.${prevRelatedRefType}`;
             console.log('delete relation', prevRefInfo)
             prevRefBy.delete(prevRefInfo)
+            state.tables[prevRelatedTableIndex].fields[prevRelatedFieldIndex].refBy = prevRefBy
           }
           // relation selected, add relation infomation to other field
           if (relationSelected) {

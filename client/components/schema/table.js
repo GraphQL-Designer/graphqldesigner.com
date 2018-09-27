@@ -152,7 +152,7 @@ class Table extends Component {
           <div>
             <div key={property} className="field">
               <div className="fieldContainer1" style={{ backgroundColor: `${buttonColor}` }}>
-                <div className="fieldContainer2" style={{ backgroundImage: `${refColor}` }}>
+                <div className="fieldContainer2" style={{ background: `${refColor}` }}>
                   <FlatButton
                     value={`${tableIndex} ${fieldIndex}`}
                     onClick={this.handleUpdateField}
