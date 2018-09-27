@@ -126,7 +126,7 @@ class Table extends Component {
         buttonColor = colors[relation];
       }
 
-      let refColor = 'transparent';
+      let refColor = 'rgba(0,0,0,0)';
       if (refBy.size > 0) {
         const transparent = ', transparent'
         let gradient = `linear-gradient(-45deg${transparent.repeat(25)}`
@@ -137,11 +137,7 @@ class Table extends Component {
       
         gradient += ', #363A42, transparent, transparent)'
         refColor = gradient;
-        console.log('refColor', refColor)
-      } else {
-        refColor = 'transparent';
-        console.log('refColor', refColor)
-      }
+      } 
 
       fields.push(
         <CSSTransition
@@ -152,7 +148,7 @@ class Table extends Component {
           <div>
             <div key={property} className="field">
               <div className="fieldContainer1" style={{ backgroundColor: `${buttonColor}` }}>
-                <div className="fieldContainer2" style={{ backgroundImage: `${refColor}` }}>
+                <div className="fieldContainer2" style={{ background: `${refColor}` }}>
                   <FlatButton
                     value={`${tableIndex} ${fieldIndex}`}
                     onClick={this.handleUpdateField}

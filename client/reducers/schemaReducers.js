@@ -216,8 +216,10 @@ const reducers = (state = initialState, action) => {
           if (relatedRefType === 'one to many') relatedRefType = 'many to one'
           else if (relatedRefType === 'many to one') relatedRefType = 'one to many'
           let refInfo = `${tableNum}.${fieldNum}.${relatedRefType}`
-          const deletedRefBy = state.tables[relatedTableIndex].fields[relatedFieldIndex].refBy
+          let deletedRefBy = state.tables[relatedTableIndex].fields[relatedFieldIndex].refBy
+          deletedRefBy = new Set(deletedRefBy)
           deletedRefBy.delete(refInfo)
+          state.tables[relatedTableIndex].fields[relatedFieldIndex].refBy = deletedRefBy
         }
         // Deleted field is being referenced by another field. Delete other field's relation
         refBy = state.tables[tableNum].fields[fieldNum].refBy
@@ -302,7 +304,7 @@ const reducers = (state = initialState, action) => {
       else if (selectedFieldNum >= 0) {
         const prevRelatedTableIndex = state.tables[tableNum].fields[selectedFieldNum].relation.tableIndex
         const prevRelatedFieldIndex = state.tables[tableNum].fields[selectedFieldNum].relation.fieldIndex
-        const prevRefBy = state.tables[prevRelatedTableIndex].fields[prevRelatedFieldIndex].refBy
+        let prevRefBy = state.tables[prevRelatedTableIndex].fields[prevRelatedFieldIndex].refBy
         let newRefBy;
         // if relation toggled off, then newRefBy is a empty Set.
         if (newRelatedFieldIndex < 0) newRefBy = new Set()
@@ -318,7 +320,9 @@ const reducers = (state = initialState, action) => {
             else if (prevRelatedRefType === 'many to one') prevRelatedRefType = 'one to many'
             const prevRefInfo = `${tableNum}.${selectedFieldNum}.${prevRelatedRefType}`;
             console.log('delete relation', prevRefInfo)
+            prevRefBy = new Set(prevRefBy)
             prevRefBy.delete(prevRefInfo)
+            state.tables[prevRelatedTableIndex].fields[prevRelatedFieldIndex].refBy = prevRefBy
           }
           // relation selected, add relation infomation to other field
           if (relationSelected) {
@@ -374,8 +378,10 @@ const reducers = (state = initialState, action) => {
         if (relatedRefType === 'one to many') relatedRefType = 'many to one'
         else if (relatedRefType === 'many to one') relatedRefType = 'one to many'
         let refInfo = `${tableNum}.${fieldNum}.${relatedRefType}`
-        const deletedRefBy = state.tables[relatedTableIndex].fields[relatedFieldIndex].refBy
+        let deletedRefBy = state.tables[relatedTableIndex].fields[relatedFieldIndex].refBy
+        deletedRefBy = new Set(deletedRefBy)
         deletedRefBy.delete(refInfo)
+        state.tables[relatedTableIndex].fields[relatedFieldIndex].refBy = deletedRefBy
       }
 
       // Deleted field is being referenced by another field. Delete other field's relation
