@@ -29,15 +29,29 @@ function buildMutationsParams(data) {
         if (prop !== '0') {
             if (!firstLoop) query += ', ';
             firstLoop = false
-    
-            if (!data.fields[prop].required) {
-                query += `$${data.fields[prop].name}: ${data.fields[prop].type}`
-            } else {
-                query += `$${data.fields[prop].name}: ${data.fields[prop].type}!`
-            }
+
+            query += `$${data.fields[prop].name}: ${checkForMultipleValues(data.fields[prop].multipleValues, 'front')}${data.fields[prop].type}${checkForMultipleValues(data.fields[prop].multipleValues, 'back')}${checkForRequired(data.fields[prop].required)}`;
         }
     }
     return query += ") {\n\t\t"
+}
+
+function checkForMultipleValues(multipleValues, position) {
+    if (multipleValues) {
+        if (position === 'front') {
+            return '['
+        } else {
+            return ']'
+        }
+    }
+    return ''
+}
+
+function checkForRequired(required) {
+    if (required) {
+        return '!'
+    }
+    return ''
 }
 
 function buildTypeParamas(data) {

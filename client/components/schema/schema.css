@@ -51,13 +51,19 @@
   position: relative;
 }
 
-.fieldContainer {
+.fieldContainer1 {
+  position: relative;
+  display: flex;
+  width: 239px;
+  left: 4px;
+}
+
+.fieldContainer2 {
   position: relative;
   display: flex;
   justify-content: space-between;
   align-items: center;
   width: 239px;
-  left: 4px;
 }
 
 .fieldButton {

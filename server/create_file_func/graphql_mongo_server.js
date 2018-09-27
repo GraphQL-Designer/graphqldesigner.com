@@ -19,7 +19,7 @@ const {
 
     //BUILD TYPE SCHEMA
     for (let prop in data) {
-        query += buildGraphqlTypeSchema(data[prop]);
+        query += buildGraphqlTypeSchema(data[prop], data);
     }
 
     //BUILD ROOT QUERY
@@ -54,30 +54,44 @@ function buildDbModelRequirePaths(data) {
     return `const ${data.type} = require('../db-model/${data.type.toLowerCase()}.js');\n`
 }
 
-function buildGraphqlTypeSchema(data) {
-    let query = `const ${data.type}Type = new GraphQLObjectType({\n\tname: '${data.type}',\n\tfields: () => ({\n`
-
-    if (data.idRequested) query += '\t\tid: { type: GraphQLID }'
+function buildGraphqlTypeSchema(table, data) {
+    let query = `const ${table.type}Type = new GraphQLObjectType({\n\tname: '${table.type}',\n\tfields: () => ({`
 
     let firstLoop = true;
-    for (let prop in data.fields) {
-        if (!firstLoop || data.idRequested) query += ',\n';
-        firstLoop = false
+    for (let prop in table.fields) {
+        if (!firstLoop) query+= ',';
+        firstLoop = false;
 
-        if (data.fields[prop].relation.type) {
-            query += `\t\t${data.fields[prop].name}: { type: ${dataTypeToGraphqlType(data.fields[prop].type)} },\n` 
+        query += `\n\t\t${table.fields[prop].name}: { type: ${checkForMultipleValues(table.fields[prop].multipleValues, 'front')}${tableTypeToGraphqlType(table.fields[prop].type)}${checkForMultipleValues(table.fields[prop].multipleValues, 'back')} }`
 
-            query += createSubQuery(data.fields[prop])
-        } else {
-            query += `\t\t${data.fields[prop].name}: { type: ${dataTypeToGraphqlType(data.fields[prop].type)} }` 
+        if (table.fields[prop].relation.tableIndex > -1) {
+            query += createSubQuery(table.fields[prop], data)
+        }
+
+        const refBy = table.fields[prop].refBy
+        if (refBy.size) {
+
+            refBy.forEach(value => {
+                const parsedValue = value.split('.');
+                const field = {
+                    name: table.fields[prop].name,
+                    relation: {
+                        tableIndex: parsedValue[0],
+                        fieldIndex: parsedValue[1],
+                        refType: parsedValue[2]
+                    }
+                };
+                query += createSubQuery(field, data);
+            })
         }
     }
-
     return query += '\n\t})\n});\n\n'
 }
 
-function dataTypeToGraphqlType(type) {
+function tableTypeToGraphqlType(type) {
    switch (type) {
+        case 'ID':
+            return 'GraphQLID';
         case 'String':
             return 'GraphQLString';
         case 'Number':
@@ -91,42 +105,56 @@ function dataTypeToGraphqlType(type) {
     }
 }
 
-function createSubQuery(field) {
-    function createSubQueryName(data) {
-        switch (data.relation.refType) {
-            case 'one to one':
-                return `${data.relation.type.toLowerCase()}`
-            case 'one to many':
-                return `${data.relation.type.toLowerCase()}s`
-            default:
-                return `${data.relation.type.toLowerCase()}s`
-        }
-    }
+function createSubQuery(field, data) {
+    const refTypeName = data[field.relation.tableIndex].type;
+    const refFieldName = data[field.relation.tableIndex].fields[field.relation.fieldIndex].name;
+    const refFieldType = data[field.relation.tableIndex].fields[field.relation.fieldIndex].type;
 
-    const query = `\t\t${createSubQueryName(field)}: {\n\t\t\ttype: ${field.relation.type}Type,\n\t\t\tresolve(parent) {\n\t\t\t\treturn ${field.relation.type}.${findDbSearchMethod(field.relation)}(${createSearchObject(field)});\n\t\t\t}\n\t\t}`
+    const query = `,\n\t\t${createSubQueryName(refTypeName)}: {\n\t\t\ttype: ${refTypeName}Type,\n\t\t\tresolve(parent, args) {\n\t\t\t\treturn ${refTypeName}.${findDbSearchMethod(refFieldName, refFieldType, field.relation.refType)}(${createSearchObject(refFieldName, refFieldType, field)});\n\t\t\t}\n\t\t}`
 
     return query
+
+    function createSubQueryName(tableIndex, data) {
+        switch (field.relation.refType) {
+            case 'one to one':
+                return `${refTypeName.toLowerCase()}`
+            case 'one to many':
+                return `${refTypeName.toLowerCase()}s`
+            case 'many to one':
+                return `${refTypeName.toLowerCase()}`
+            case 'many to many':
+                return `${refTypeName.toLowerCase()}s`
+            default:
+                return `${refTypeName.toLowerCase()}s`
+        }
+    }
 }
 
-function findDbSearchMethod(relation) {
-    if (relation.field === 'id' && relation.refType === 'one to one' || relation.refType === 'many to one') return 'findById';
-    switch (relation.refType) {
+function findDbSearchMethod(refFieldName, refFieldType, refType) {
+    if (refFieldName === 'id' || refFieldType === 'ID') return 'findById';
+    switch (refType) {
         case 'one to one':
             return 'findOne';
         case 'one to many':
+            return 'find';
+        case 'many to one':
+            return 'find';
+        case 'many to many':
             return 'find';
         default:
             return 'find'
     }
 }
 
-function createSearchObject(field) {
-    if (field.relation.field === 'id' && field.relation.refType === 'one to one') {
+function createSearchObject(refFieldName, refFieldType, field) {
+    const refType = field.relation.refType;
+
+    if (refFieldName === 'id' || refFieldType === 'ID') {
         return `parent.${field.name}`
-    } else if (field.refType === 'one to one') {
-        return `{ ${field.relation.field}: parent. }`
+    } else if (refType === 'one to one') {
+        return `{ ${refFieldName}: parent.${field.name} }`
     } else {
-        return `{ ${field.relation.field}: parent.${field.relation.field} }`
+        return `{ ${refFieldName}: parent.${field.name} }`
     }
 }
 
@@ -135,7 +163,7 @@ function buildGraphqlRootQury(data) {
 
     query += createFindAllRootQuery(data);
 
-    if (data.idRequested) {
+    if (!!data.fields[0]) {
         query += createFindByIdQuery(data);
     }
     return query
@@ -169,15 +197,32 @@ function buildGraphqlMutationQury(data) {
     return query
 
     function buildMutationArgType(field) {
-        let query = '{ type: '
+        let query = `{ type: ${checkForRequired(field.required, 'front')}${checkForMultipleValues(field.multipleValues, 'front')}${tableTypeToGraphqlType(field.type)}${checkForMultipleValues(field.multipleValues, 'back')}${checkForRequired(field.required, 'back')} }`
 
-        if (field.required) {
-            query += `new GraphQLNonNull(${dataTypeToGraphqlType(field.type)}) }`
-        } else {
-            query += `${dataTypeToGraphqlType(field.type)} }`
-        }
         return query
     }
+}
+
+function checkForRequired(required, position) {
+    if (required) {
+        if (position === 'front') {
+            return 'new GraphQLNonNull('
+        } else {
+            return ')'
+        }
+    }
+    return ''
+}
+
+function checkForMultipleValues(multipleValues, position) {
+    if (multipleValues) {
+        if (position === 'front') {
+            return 'new GraphQLList('
+        } else {
+            return ')'
+        }
+    }
+    return ''
 }
 
 module.exports = parseGraphqlMongoServer;
