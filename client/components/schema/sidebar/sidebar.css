@@ -17,10 +17,7 @@ h1,h2,h3,h4,h5,h6,p{
   display: flex;
   flex-direction: column;
   margin: 0;
-  width: 30%;
-  min-width: 170px; 
-  max-width: 250px; 
-  /* height: 100%; */
+  width: 300px; 
   height: calc(100vh - 100px);
 
   justify-content: flex-start;

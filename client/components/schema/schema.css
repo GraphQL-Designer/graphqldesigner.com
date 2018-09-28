@@ -2,8 +2,11 @@
   display: flex; 
   flex-direction: row-reverse;
   width: 100%;
+  /* min-height: calc(100vh - 100px); */
   height: calc(100vh - 98px);
+
   border: 1px solid black;
+  /* overflow: auto; */
   position: relative;
 }
 
@@ -22,7 +25,9 @@
   width: 100%;
   position: relative;
   height: auto; 
-  overflow: auto;
+  /* min-height: 300px; */
+  overflow-y: auto;
+  overflow-x: hidden; 
 }
 
 #sidebar-container {
