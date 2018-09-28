@@ -8,10 +8,12 @@ import './sidebar.css';
 
 const mapDispatchToProps = dispatch => ({
   createQuery: query => dispatch(actions.createQuery(query)),
+  handleQueryChange: field => dispatch(actions.handleQueryChange(field))
 });
 
 const mapStateToProps = store => ({
   tables: store.schema.tables,
+  selectedQuery: store.query.selectedQuery
 });
 
 class CreateQuerySidebar extends Component {
@@ -26,6 +28,7 @@ class CreateQuerySidebar extends Component {
     this.selectTypeHandler = this.selectTypeHandler.bind(this);
     this.selectSearchHandler = this.selectSearchHandler.bind(this);
     this.submitHandler = this.submitHandler.bind(this);
+    this.handleQueryChange = this.handleQueryChange.bind(this);
   }
 
   // when a user types into the input for Query Name
@@ -37,11 +40,19 @@ class CreateQuerySidebar extends Component {
   selectTypeHandler(event) {
     // if the default select is picked, change state to default values.
     if (event.target.value === 'default') {
-      this.setState({ selectedTableIndex: null });
+      // this.setState({ selectedTableIndex: null });
+      this.props.handleQueryChange({
+        name: 'tableIndex',
+        value: -1
+      })
     }
     // Otherwise, user selected specific query type
     else {
-      this.setState({ selectedTableIndex: event.target.value });
+      // this.setState({ selectedTableIndex: event.target.value });
+      this.props.handleQueryChange({
+        name: event.target.name,
+        value: event.target.value
+      })
     }
   }
 
@@ -49,12 +60,27 @@ class CreateQuerySidebar extends Component {
   selectSearchHandler(event) {
     // user selected to search for all of a type
     if (event.target.value === 'every') {
-      this.setState({ querySearchFor: 'every' });
+      // this.setState({ querySearchFor: 'every' });
+      this.props.handleQueryChange({
+        name: 'querySearchFor',
+        value: 'every'
+      })
     }
     // Otherwise, user selected a particular field to search for
     else {
-      this.setState({ querySearchFor: event.target.value });
+      // this.setState({ querySearchFor: event.target.value });
+      this.props.handleQueryChange({
+        name: event.target.name,
+        value: event.target.value
+      })
     }
+  }
+
+  handleQueryChange(event) {
+    this.props.handleQueryChange({
+      name: event.target.name,
+      value: event.target.value
+    })
   }
 
   submitHandler(event) {
@@ -66,6 +92,8 @@ class CreateQuerySidebar extends Component {
   render() {
     // Dynamically set the GraphQL types that can be selected based on Schema setup
     const graphQLTypeOptions = [];
+    const tableIndex = Number(this.props.selectedQuery.tableIndex);
+    console.log(tableIndex);
     for (const property in this.props.tables) {
       const queryType = this.props.tables[property].type; // name of query type
       graphQLTypeOptions.push(
@@ -75,20 +103,20 @@ class CreateQuerySidebar extends Component {
 
     // Dynamically set the GraphQL search options to be selected based on selected GraphQL Type
     const graphQLSearchOptions = [];
-    const selectedTableIndex = this.state.selectedTableIndex;
-    if (selectedTableIndex) {
+    // const selectedTableIndex = this.state.selectedTableIndex;
+    if (tableIndex > -1) {
       // Allow user to search for all of a type
       graphQLSearchOptions.push(
-        <option value="Every">
+        <option key={'temp'} value="Every">
           Every
           {' '}
-          {this.props.tables[selectedTableIndex].type}
+          {this.props.tables[tableIndex].type}
         </option>,
       );
-
+        console.log('yay: ', this.props.tables[tableIndex]);
       // push all the fields of the selected type into graphQLSearchOptions
-      for (const property in this.props.tables[selectedTableIndex].fields) {
-        const fieldName = this.props.tables[selectedTableIndex].fields[property].name;
+      for (const property in this.props.tables[tableIndex].fields) {
+        const fieldName = this.props.tables[tableIndex].fields[property].name;
         graphQLSearchOptions.push(
           <option key={property} value={property}>{fieldName}</option>,
         );
@@ -96,7 +124,7 @@ class CreateQuerySidebar extends Component {
    }
 
     return (
-      <div class="sidebar-container">
+      <div className="sidebar-container">
         <h4>Create Custom Query</h4>
         <form onSubmit={this.submitHandler}>
           {/* <input type="text"
@@ -106,20 +134,21 @@ class CreateQuerySidebar extends Component {
             autoFocus
             /> */}
           <TextField
+            name='queryName'
             hintText="Query Name"
             floatingLabelText="Query Name"
-            value={this.state.queryName}
-            onChange={this.handleChange}
+            value={this.props.selectedQuery.queryName}
+            onChange={this.handleQueryChange}
             autoFocus
           />
 
           <br />
-          <select name="graphqlTypes" onChange={this.selectTypeHandler}>
+          <select name="tableIndex" onChange={this.selectTypeHandler}>
             <option key="types" value="default">Select Query Type</option>
             {graphQLTypeOptions}
           </select>
           <br />
-          <select name="searchBy" onChange={this.selectSearchHandler}>
+          <select name="fieldIndex" onChange={this.selectSearchHandler}>
             <option key="fields" value="default">Select How Query Type is Searched</option>
             {graphQLSearchOptions}
           </select>

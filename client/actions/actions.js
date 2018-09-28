@@ -85,3 +85,12 @@ export const createQuery = query => ({
   type: types.CREATE_QUERY,
   payload: query
 });
+
+export const openCreateQuery = () => ({
+  type: types.OPEN_CREATE_QUERY
+})
+
+export const handleQueryChange = (field) => ({
+  type: types.HANDLE_QUERY_CHANGE,
+  payload: field
+})
