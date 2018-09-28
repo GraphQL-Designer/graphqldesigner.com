@@ -7,31 +7,67 @@ const mapStateToProps = store => ({
   // queryName: store.query.queryName,
   // queryField: store.query.graphQLTypeOptions,
   // queryType: store.query.graphQLSearchOptions
+  tables: store.schema.tables
 })
 
-const QueryCodeContainer = () => {
-  const queryBuilder = (`
+const QueryCodeContainer = (props) => {
+  const enter = `
+  `
+  const tab = `  `
+  let query = `import { gql } from 'apollo-boost';${enter}${enter}`
+
+  function parseClientQueries(tables) {
+    const exportNames = [];
   
- {
-    query type {
-           name  
-           field { 
-            name
-             type {
-               name
-             }
-          }
-     }
- }
+    // tables is state.tables from schemaReducer
+    for (let tableId in tables) {
+        query += buildClientQueryAll(tables[tableId])
+        exportNames.push(`queryEvery${tables[tableId].type}`)
+  
+        if (!!tables[tableId].fields[0]) {
+        query += buildClientQueryById(tables[tableId])
+        exportNames.push(`query${tables[tableId].type}ById `)
+        }
+    }
+  
+    let endString = `export {`
+    exportNames.forEach((name, i) => {
+        if (i) {
+        endString += `, ${name}`
+        } else {
+            endString += ` ${name}`
+        }
+    })
+  
+    return query += endString + `};`;
+  }
+  
+  function buildClientQueryAll(table) {
+    let string = `const queryEvery${table.type} = gql\`${enter}${tab}{${enter}${tab}${tab}${table.type.toLowerCase()}s {${enter}`;
+  
+    for (let fieldId in table.fields) {
+        string += `${tab}${tab}${tab}${table.fields[fieldId].name}${enter}`;
+    };
+  
+    return string += `${tab}${tab}}${enter}${tab}}${enter}\`${enter}${enter}`;
+  }
+  
+  function buildClientQueryById(tables) {
+    let string = `const query${tables.type}ById = gql\`${enter}${tab}query($id: ID) {${enter}${tab}${tab}${tables.type.toLowerCase()}(id: $id) {${enter}`;
+  
+    for (let prop in tables.fields) {
+        string += `${tab}${tab}${tab}${tables.fields[prop].name}${enter}`;
+    };
+  
+    return string += `${tab}${tab}}${enter}${tab}}${enter}\`${enter}${enter}`;
+  }
 
-`);
-
+  parseClientQueries(props.tables)
 
   return (
-    <div className="query-code-container">
-      Query-Code Container
+    <div id="query-code-container">
       <pre>
-        {queryBuilder}
+        {query}
       </pre>
     </div>
   );

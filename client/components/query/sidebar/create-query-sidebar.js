@@ -96,7 +96,7 @@ class CreateQuerySidebar extends Component {
    }
 
     return (
-      <div className="sidebar">
+      <div class="sidebar-container">
         <h4>Create Custom Query</h4>
         <form onSubmit={this.submitHandler}>
           {/* <input type="text"

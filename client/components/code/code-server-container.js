@@ -3,7 +3,7 @@ import './code.css';
 
 const CodeServerContainer = props => {
   return (
-    <div className='code-server-container'>
+    <div className='code-container-middle'>
       <h4>Server</h4>
     </div>
   )

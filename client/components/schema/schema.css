@@ -2,9 +2,11 @@
   display: flex; 
   flex-direction: row-reverse;
   width: 100%;
-  height: calc(100vh - 95px);
+  /* min-height: calc(100vh - 100px); */
+  height: calc(100vh - 98px);
+
   border: 1px solid black;
-  overflow: hidden;
+  /* overflow: auto; */
   position: relative;
 }
 
@@ -21,13 +23,16 @@
   align-items: flex-start; 
   flex-wrap: wrap; 
   width: 100%;
-  min-height: 300px;
-  overflow: scroll;
+  position: relative;
+  height: auto; 
+  /* min-height: 300px; */
+  overflow-y: auto;
+  overflow-x: hidden; 
 }
 
 #sidebar-container {
   position: relative;
-  overflow: scroll;
+  overflow: auto;
 }
 
 .table {

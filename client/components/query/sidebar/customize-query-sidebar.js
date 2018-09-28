@@ -4,7 +4,7 @@ import './sidebar.css';
 
 const CustomizeQuerySidebar = props => {
   return (
-    <div className='sidebar'>
+    <div class='sidebar-container'>
       <h4>QuerySidebar</h4>
     </div>
   )

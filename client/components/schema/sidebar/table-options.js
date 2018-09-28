@@ -24,7 +24,7 @@ const style = {
 
 const mapStateToProps = store => ({
   database: store.general.database,
-  tableIndex: store.schema.tableIndexSelected,
+  // tableIndex: store.schema.tableIndexSelected,
   addFieldClicked: store.schema.addFieldClicked,
   selectedField: store.schema.selectedField,
   updatedField: store.schema.fieldUpdated,
@@ -85,12 +85,14 @@ class TableOptions extends React.Component {
     let currTableNum = this.props.selectedField.tableNum;
 
     // remove whitespace and symbols
-    let fieldName = this.props.selectedField.name.replace(/[^\w]/gi, '');
+    const originalFieldName = this.props.selectedField.name;
+    const newFieldName = this.props.selectedField.name.replace(/[^\w]/gi, '');
 
-    if (fieldName.length > 0) {
+    if (newFieldName.length > 0) {
       // get list of field indexes
       const listFieldIndexes = Object.keys(this.props.tables[currTableNum].fields);
-      const selectedFieldIndex = this.props.selectedField.fieldNum
+      const selectedFieldIndex = this.props.selectedField.fieldNum;
+
       // remove the selected field from list of tables if updating to prevent snackbar from displaying table error
       if (selectedFieldIndex !== -1) {
         listFieldIndexes.splice(listFieldIndexes.indexOf(String(selectedFieldIndex)), 1);
@@ -98,44 +100,38 @@ class TableOptions extends React.Component {
 
       // if there are at least 1 field, check if there's duplicate in the list of fields in the table
       for (let x = 0; x < listFieldIndexes.length; x += 1) {
-        if (this.props.tables[currTableNum].fields[listFieldIndexes[x]].name === fieldName) {
+        if (this.props.tables[currTableNum].fields[listFieldIndexes[x]].name === newFieldName) {
           error = true;
         }
       }
 
       if (error) {
         this.handleSnackbarUpdate('Error: Field name already exist');
-      } 
+      }
       // check relation conditions
       else {
         if (this.props.selectedField.relationSelected) {
-        // check if Type, Field, and RefType are selected if Relation is toggled
+          // check if Type, Field, and RefType are selected if Relation is toggled
           if (this.props.selectedField.relation.tableIndex === -1 || this.props.selectedField.relation.fieldIndex === -1 || !this.props.selectedField.relation.refType) {
             return this.handleSnackbarUpdate('Please fill out Type, Field, and RefType in Relation');
           }
-          // field is being updated, check if relation field already has relation to selected field
-          else if (selectedFieldIndex >= 0) {
-            const relatedTableIndex = this.props.selectedField.relation.tableIndex
-            const relatedFieldIndex = this.props.selectedField.relation.fieldIndex
-            const selectedRefBy = this.props.tables[currTableNum].fields[selectedFieldIndex].refBy
-            const refTypes = ['one to one', 'one to many', 'many to one', 'many to many']
-            for (let i = 0; i < refTypes.length; i += 1) {
-              const refInfo = `${relatedTableIndex}.${relatedFieldIndex}.${refTypes[i]}`
-              if (selectedRefBy.has(refInfo)) {
-                return this.handleSnackbarUpdate('Cannot create relation to field that is already related to this field being updated');
-              }
-            }
-          }
+        }
+        // update state if field name was modified to take out spaces and symbols. 
+        if (originalFieldName !== newFieldName) {
+          this.handleSnackbarUpdate('Spaces or symbols were removed from field name');
+          this.props.handleChange({
+            name: 'name',
+            value: newFieldName
+          });
         }
         // save or update table
         this.props.saveFieldInput();
       }
     } else {
-      this.handleSnackbarUpdate('Please enter a field name (no space, symbols allowed');
+      this.handleSnackbarUpdate('Please enter a field name (no space, symbols allowed)');
     }
   }
   render() {
-    console.log('tables', this.props.tables)
     let tables = [];
     let fields = [];
 
@@ -153,13 +149,33 @@ class TableOptions extends React.Component {
     const selectedTableIndex = this.props.selectedField.relation.tableIndex
     if (selectedTableIndex >= 0) {
       for (let field in this.props.tables[selectedTableIndex].fields) {
-        fields.push(
-          <MenuItem
-            key={field}
-            value={field}
-            primaryText={this.props.tables[selectedTableIndex].fields[field].name}
-          />
-        );
+        // check if field has a relation to selected field, if so, don't push
+        let noRelationExists = true; 
+        const tableIndex = this.props.selectedField.tableNum
+        let fieldIndex = this.props.selectedField.fieldNum
+        if (fieldIndex >= 0) {
+          const refBy = this.props.tables[tableIndex].fields[fieldIndex].refBy
+          if (refBy.size > 0) {
+            const refTypes = ['one to one', 'one to many', 'many to one', 'many to many']
+            for (let i = 0; i < refTypes.length; i += 1) {
+              const refInfo = `${selectedTableIndex}.${field}.${refTypes[i]}`
+              if (refBy.has(refInfo)) {
+                noRelationExists = false; 
+              }
+            }
+          }
+        }
+        // only push to fields if multiple values is false for the field,
+        // and no relation exists to selected field
+        if (!this.props.tables[selectedTableIndex].fields[field].multipleValues && noRelationExists) {
+          fields.push(
+            <MenuItem
+              key={field}
+              value={field}
+              primaryText={this.props.tables[selectedTableIndex].fields[field].name}
+            />
+          );
+        }
       }
     }
 
@@ -255,19 +271,21 @@ class TableOptions extends React.Component {
 
               <Toggle
                 label="Multiple Values"
-                toggled={this.props.selectedField.multipleValues}
+                toggled={this.props.selectedField.multipleValues && !this.props.selectedField.relationSelected}
                 onToggle={this.handleToggle.bind(null, 'multipleValues')}
                 style={style.toggle}
+                disabled={this.props.selectedField.relationSelected || this.props.selectedField.refBy.size > 0}
               />
 
               <Toggle
                 label="Relation"
-                toggled={this.props.selectedField.relationSelected}
+                toggled={this.props.selectedField.relationSelected && !this.props.selectedField.multipleValues}
                 onToggle={this.handleToggle.bind(null, 'relationSelected')}
                 style={style.toggle}
+                disabled={this.props.selectedField.multipleValues}
               />
 
-              {this.props.selectedField.relationSelected && (<span>
+              {this.props.selectedField.relationSelected && !this.props.selectedField.multipleValues && (<span>
                 <div className='relation-options'>
                   <p>Type:</p>
                   <DropDownMenu

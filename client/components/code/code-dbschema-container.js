@@ -3,7 +3,7 @@ import './code.css';
 
 const CodeDBSchemaContainer = props => {
   return (
-    <div className='code-db-schema-container'>
+    <div className='code-container-side'>
       <h4>DB Schema</h4>
     </div>
   )

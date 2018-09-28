@@ -13,13 +13,13 @@ h1,h2,h3,h4,h5,h6,p{
 
 #sidebar-container{
   background-color:  rgb(44,48,56);
+  position: fixed; 
   display: flex;
   flex-direction: column;
   margin: 0;
-  width: 30%;
-  min-width: 150px; 
-  max-width: 250px; 
-  height: 100%;
+  width: 300px; 
+  height: calc(100vh - 100px);
+
   justify-content: flex-start;
   float: right; 
 }
@@ -60,7 +60,7 @@ select{
   display: flex;
   justify-content: center;
   margin: 0;
-  overflow: scroll;
+  overflow: auto;
 }
 
 #back-to-create{
