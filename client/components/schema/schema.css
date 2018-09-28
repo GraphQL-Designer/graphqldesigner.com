@@ -2,9 +2,8 @@
   display: flex; 
   flex-direction: row-reverse;
   width: 100%;
-  height: calc(100vh - 95px);
+  height: calc(100vh - 98px);
   border: 1px solid black;
-  overflow: hidden;
   position: relative;
 }
 
@@ -21,13 +20,14 @@
   align-items: flex-start; 
   flex-wrap: wrap; 
   width: 100%;
-  min-height: 300px;
-  overflow: scroll;
+  position: relative;
+  height: auto; 
+  overflow: auto;
 }
 
 #sidebar-container {
   position: relative;
-  overflow: scroll;
+  overflow: auto;
 }
 
 .table {

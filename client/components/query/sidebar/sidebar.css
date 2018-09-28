@@ -1,6 +1,7 @@
-.sidebar{
-  width: 50%;
-  border: 1px solid black; 
+.sidebar-container{
   color: white;
-  background-color: #5f5e5e;
+  width: 20%; 
+  min-width: 170px; 
+  max-width: 250px; 
+  background-color:  rgb(44,48,56);
 }

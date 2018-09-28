@@ -49,7 +49,6 @@ class SchemaApp extends Component {
     let sidebar = '';
     return (
       <div className='schema-app-container'>
-        <img className='wallpaper' src='./images/graphql_wallpaper.png'/>
         <CSSTransition
           in={this.state.sidebar}
           timeout={200}
@@ -76,6 +75,7 @@ class SchemaApp extends Component {
           </div>
         </CSSTransition>
         <TransitionGroup className='table-components-container'>
+          <img className='wallpaper' src='./images/graphql_wallpaper.png'/>
           {tableComponents}
         </TransitionGroup>
       </div>
