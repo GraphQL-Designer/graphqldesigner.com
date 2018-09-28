@@ -65,7 +65,7 @@ const QueryCodeContainer = (props) => {
   parseClientQueries(props.tables)
 
   return (
-    <div className="query-code-container">
+    <div id="query-code-container">
       <pre>
         {query}
       </pre>

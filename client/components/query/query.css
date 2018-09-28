@@ -1,18 +1,30 @@
 
-.query-app {
+#query-app {
   width: 100%;
   /* height: 100%;  */
-  height: 65vh; 
-  border: 1px solid blue; 
+  height: calc(100vh - 100px);
   display: flex;
   flex-direction: row; 
   padding: 0;
   margin: 0; 
+  overflow: hidden;
 }
 
-.query-code-container {
-  border: 1px solid green;
-  width: 50%;
+#query-code-container {
+  width: 40%;
+  background-color: rgb(54, 58, 66);
+}
+
+#customized-query-container {
+  width: 40%;
+  background-color: rgb(54, 58, 66);
+}
+
+#sidebar-container {
+  width: 20%; 
+  min-width: 170px; 
+  max-width: 250px; 
+  background-color:  rgb(44,48,56);
 }
 
 pre{
