@@ -15,8 +15,9 @@ class CodeApp extends Component {
     return (
       <div className='code-app'>
         <CodeDBSchemaContainer/>
-        <CodeClientContainer/>
         <CodeServerContainer/>
+        <CodeClientContainer/>
+        <img className='wallpaper' src='./images/graphql_wallpaper.png'/>
       </div>
     )
   }

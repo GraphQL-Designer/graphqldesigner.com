@@ -2,49 +2,31 @@
 .code-app {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  position: relative; 
   width: 100%;
-  /* height: 100%;  */
-  height: 65vh; 
-  border: 1px solid blue; 
+  height: calc(100vh - 100px);
   padding: 0;
   margin: 0; 
+  text-align: left; 
+  color: white;
 }
 
-.code-db-schema-container {
-  display: flex;
-  border: 1px solid green;
-  margin: 0;
-  width: 100%;
+.code-container-side{
+  width: 33.33%; 
+  background-color: rgb(54, 58, 66);
+  padding: 10px; 
 }
 
-.code-client-container {
-  border: 1px solid orange;
-  display: flex;
-  margin: 0;
-  width: 100%;
+.code-container-middle{
+  width: 33.33%; 
+  background-color: rgb(54, 58, 66);
+  border-left: 10px solid rgb(44,48,56);
+  border-right: 10px solid rgb(44,48,56);
+  padding: 10px; 
 }
 
-.code-server-container {
-  border: 1px solid purple;
-  display: flex;
-  margin: 0;
-  width: 100%;
-}
-
-.drawer-container{
+.wallpaper {
+  position: absolute;
+  width: 90vw;
   height: 100%;
-}
-
-.drawer{
-  top: initial !important;
-  position: absolute !important;
-  /* display: none !important */
-}
-
-.drawer-closed{
-  display: none !important;
-  top: initial !important;
-  position: absolute !important;
-
 }

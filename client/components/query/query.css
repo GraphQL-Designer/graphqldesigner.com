@@ -11,20 +11,18 @@
 }
 
 #query-code-container {
+  color: white; 
   width: 40%;
   background-color: rgb(54, 58, 66);
+  border-right: 10px solid  rgb(44,48,56);
+  padding: 10px; 
 }
 
 #customized-query-container {
+  color: white; 
   width: 40%;
   background-color: rgb(54, 58, 66);
-}
-
-#sidebar-container {
-  width: 20%; 
-  min-width: 170px; 
-  max-width: 250px; 
-  background-color:  rgb(44,48,56);
+  padding: 10px; 
 }
 
 pre{
