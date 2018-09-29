@@ -4,9 +4,7 @@ import './code.css';
 
 
 const mapStateToProps = store => ({
-  // queryName: store.query.queryName,
-  // queryField: store.query.graphQLTypeOptions,
-  // queryType: store.query.graphQLSearchOptions
+
   tables: store.schema.tables,
 });
 
@@ -33,9 +31,6 @@ const CodeDBSchemaContainer = (props) => {
     }
     schema += `${enter}});${enter}${enter}module.exports = mongoose.model("${table.type}",${table.type}Schema);${enter}${enter}`;
 
-    // if (Object.keys(table).length > 0) {
-    // console.log('what is table', tables);
-    // }
     return schema;
   }
   function createSchemaField(table) {
@@ -66,7 +61,7 @@ const CodeDBSchemaContainer = (props) => {
   for (const tableId in props.tables) {
     parseMongoschema(props.tables[tableId]);
   }
-  const schemas = [];
+  // const schemas = [];
   // for (let schema in props.tables[tableId]){
   // schemas.push(
   return (
