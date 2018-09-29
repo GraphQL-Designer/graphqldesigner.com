@@ -15,22 +15,23 @@ const CodeDBSchemaContainer = (props) => {
   `;
   const tab = '  ';
 
-  let schema = `const mongoose = require('mongoose');${enter}const Schema = mongoose.Schema;`;
+  let schema = `${tab}const mongoose = require('mongoose');${enter}const Schema = mongoose.Schema;${enter}${enter}`;
 
 
   function parseMongoschema(table) {
     if (!table) return;
 
-
+    const startLine = `const ${table.type.toLowerCase()}Schema = new Schema({${enter}${tab}${tab}${tab}`;
+    schema += startLine;
     let firstLoop = true;
     for (const fieldId in table.fields) {
       if (fieldId !== '0') {
-        if (!firstLoop) schema += '`,${enter}${tab}`';
+        if (!firstLoop) schema += `,${enter}${tab}${tab}${tab}`;
         firstLoop = false;
         schema += createSchemaField(table.fields[fieldId]);
       }
     }
-    schema += `${enter}});${enter}${enter}module.exports = mongoose.model("${table.type}",${table.type}Schema);`;
+    schema += `${enter}});${enter}${enter}module.exports = mongoose.model("${table.type}",${table.type}Schema);${enter}${enter}`;
 
     // if (Object.keys(table).length > 0) {
     // console.log('what is table', tables);
@@ -38,14 +39,14 @@ const CodeDBSchemaContainer = (props) => {
     return schema;
   }
   function createSchemaField(table) {
-    let schema = `${table.name}: ${checkForArray('start')}{${enter}${tab}${tab}type: ${checkDataType(table.type)},${enter}${tab}${tab}unique: ${table.unique},${enter}${tab}${tab}required: ${table.required}`;
+    let schema = `${table.name}: ${checkForArray('start')}{${enter}${tab}${tab}${tab}${tab}${tab}type: ${checkDataType(table.type)},${enter}${tab}${tab}${tab}${tab}${tab}unique: ${table.unique},${enter}${tab}${tab}${tab}${tab}${tab}required: ${table.required}`;
 
 
     if (table.defaultValue) {
-      schema += `,\n\t\tdefault: "${table.defaultValue}"`;
+      schema += `,${enter}${tab}${tab}${tab}${tab}${tab}default: "${table.defaultValue}"`;
     }
 
-    return schema += `\n\t}${checkForArray('end')}`;
+    return schema += `${enter}${tab}${tab}${tab}}${checkForArray('end')}`;
 
     function checkForArray(position) {
       if (table.multipleValues) {
@@ -62,9 +63,12 @@ const CodeDBSchemaContainer = (props) => {
       return type;
     }
   }
-
-  parseMongoschema(props.tables[0]);
-
+  for (const tableId in props.tables) {
+    parseMongoschema(props.tables[tableId]);
+  }
+  const schemas = [];
+  // for (let schema in props.tables[tableId]){
+  // schemas.push(
   return (
     <div className="code-container-side">
       <pre>
