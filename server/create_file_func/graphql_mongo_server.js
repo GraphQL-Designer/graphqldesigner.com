@@ -119,13 +119,19 @@ function createSubQuery(field, data) {
             case 'one to one':
                 return `${refTypeName.toLowerCase()}`
             case 'one to many':
-                return `${refTypeName.toLowerCase()}s`
+                return `every${toTitleCase(refTypeName)}`
             case 'many to one':
                 return `${refTypeName.toLowerCase()}`
             case 'many to many':
-                return `${refTypeName.toLowerCase()}s`
+                return `every${toTitleCase(refTypeName)}`
             default:
-                return `${refTypeName.toLowerCase()}s`
+                return `every${toTitleCase(refTypeName)}`
+
+        }
+        function toTitleCase(refTypeName) {
+            let name = refTypeName[0].toUpperCase()
+            name += refTypeName.slice(1).toLowerCase()
+            return name
         }
     }
 }
