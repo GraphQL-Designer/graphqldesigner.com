@@ -13,7 +13,7 @@ const CodeDBSchemaContainer = (props) => {
   `;
   const tab = '  ';
 
-  let schema = `${tab}const mongoose = require('mongoose');${enter}const Schema = mongoose.Schema;${enter}${enter}`;
+  let schema = `const mongoose = require('mongoose');${enter}const Schema = mongoose.Schema;${enter}${enter}`;
 
 
   function parseMongoschema(table) {
