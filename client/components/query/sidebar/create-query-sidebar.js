@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
+// styles
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import { List, ListItem } from 'material-ui/List';
@@ -8,9 +9,9 @@ import SelectField from 'material-ui/SelectField';
 import DropDownMenu from 'material-ui/DropDownMenu';
 import MenuItem from 'material-ui/MenuItem';
 import Paper from 'material-ui/Paper';
+import { Toggle } from 'material-ui';
 import * as actions from '../../../actions/actions.js';
 import './sidebar.css';
-import { Toggle } from 'material-ui';
 
 const style = {
   customWidth: {
@@ -39,14 +40,14 @@ const style = {
 
 const mapDispatchToProps = dispatch => ({
   createQuery: query => dispatch(actions.createQuery(query)),
-  handleSubQueryChange: field => dispatch(actions.handleSubQueryChange(field)),
-  handleNewQueryChange: field => dispatch(actions.handleNewQueryChange(field))
+  handleNewQueryChange: field => dispatch(actions.handleNewQueryChange(field)),
+  handleSubQueryChange: field => dispatch(actions.handleSubQueryChange(field))
 });
 
 const mapStateToProps = store => ({
   tables: store.schema.tables,
-  subQuery: store.query.subQuery,
-  newQuery: store.query.newQuery
+  newQuery: store.query.newQuery,
+  subQuery: store.query.subQuery
 });
 
 class CreateQuerySidebar extends Component {
@@ -57,15 +58,16 @@ class CreateQuerySidebar extends Component {
       queryName: '',
       selectedTableIndex: null,
     };
-    this.handleChange = this.handleChange.bind(this);
-    this.selectTypeHandler = this.selectTypeHandler.bind(this);
-    this.selectSearchHandler = this.selectSearchHandler.bind(this);
-    this.submitHandler = this.submitHandler.bind(this);
+
+    // this.selectTypeHandler = this.selectTypeHandler.bind(this);
+    // this.selectSearchHandler = this.selectSearchHandler.bind(this);
+    this.handleNewQueryChange = this.handleNewQueryChange.bind(this);
     this.handleSubQueryChange = this.handleSubQueryChange.bind(this);
+    this.submitHandler = this.submitHandler.bind(this);
   }
 
   // when a user types into the input for Query Name
-  handleChange(event) {
+  handleNewQueryChange(event) {
     // this.setState({ queryName: event.target.value });
     this.props.handleNewQueryChange({
       name: event.target.name,
@@ -73,45 +75,45 @@ class CreateQuerySidebar extends Component {
     })
   }
 
-  // user selects a query type
-  selectTypeHandler(event) {
-    // if the default select is picked, change state to default values.
-    if (event.target.value === 'default') {
-      // this.setState({ selectedTableIndex: null });
-      this.props.handleSubQueryChange({
-        name: 'tableIndex',
-        value: -1
-      })
-    }
-    // Otherwise, user selected specific query type
-    else {
-      // this.setState({ selectedTableIndex: event.target.value });
-      this.props.handleSubQueryChange({
-        name: event.target.name,
-        value: event.target.value
-      })
-    }
-  }
+  // // user selects a query type
+  // selectTypeHandler(event) {
+  //   // if the default select is picked, change state to default values.
+  //   if (event.target.value === 'default') {
+  //     // this.setState({ selectedTableIndex: null });
+  //     this.props.handleSubQueryChange({
+  //       name: 'tableIndex',
+  //       value: -1
+  //     })
+  //   }
+  //   // Otherwise, user selected specific query type
+  //   else {
+  //     // this.setState({ selectedTableIndex: event.target.value });
+  //     this.props.handleSubQueryChange({
+  //       name: event.target.name,
+  //       value: event.target.value
+  //     })
+  //   }
+  // }
 
-  // user selects how to search the particular type
-  selectSearchHandler(event) {
-    // user selected to search for all of a type
-    if (event.target.value === 'every') {
-      // this.setState({ querySearchFor: 'every' });
-      this.props.handleQueryChange({
-        name: 'querySearchFor',
-        value: 'every'
-      })
-    }
-    // Otherwise, user selected a particular field to search for
-    else {
-      // this.setState({ querySearchFor: event.target.value });
-      this.props.handleQueryChange({
-        name: event.target.name,
-        value: event.target.value
-      })
-    }
-  }
+  // // user selects how to search the particular type
+  // selectSearchHandler(event) {
+  //   // user selected to search for all of a type
+  //   if (event.target.value === 'every') {
+  //     // this.setState({ querySearchFor: 'every' });
+  //     this.props.handleQueryChange({
+  //       name: 'querySearchFor',
+  //       value: 'every'
+  //     })
+  //   }
+  //   // Otherwise, user selected a particular field to search for
+  //   else {
+  //     // this.setState({ querySearchFor: event.target.value });
+  //     this.props.handleQueryChange({
+  //       name: event.target.name,
+  //       value: event.target.value
+  //     })
+  //   }
+  // }
 
   ///rename function since it dispatches handleNewQueryChange
   handleSubQueryChange(name, event, index, value) {
@@ -131,7 +133,7 @@ class CreateQuerySidebar extends Component {
     // Dynamically set the GraphQL types that can be selected based on Schema setup
     const graphQLTypeOptions = [];
     const tableIndex = Number(this.props.newQuery.tableIndex);
-    console.log(tableIndex);
+    
     for (const property in this.props.tables) {
       const queryType = this.props.tables[property].type; // name of query type
       graphQLTypeOptions.push(
@@ -187,12 +189,12 @@ class CreateQuerySidebar extends Component {
         value={this.props.tableIndex}
         primaryText={'id'}
       >
-        <Toggle
+        {/* <Toggle
           label='idToggle'
           toggled={this.props.newQuery.returnFields.id}
           onToggle={this.handleToggle.bind(null, 'id')}
           style={style.toggle}
-        />
+        /> */}
       </ListItem>
     )
     fieldList.push(
@@ -222,7 +224,7 @@ class CreateQuerySidebar extends Component {
             hintText="Query Name"
             floatingLabelText="Query Name"
             value={this.props.newQuery.name}
-            onChange={this.handleChange}
+            onChange={this.handleNewQueryChange}
             autoFocus
           />
           <div className='typeFieldInput'>
@@ -248,8 +250,6 @@ class CreateQuerySidebar extends Component {
           </div>
 
             <Paper zDepth={3} style={style.paper}>
-              {/* <List style={style.list}> */}
-              {/* <p>SubQuery</p> */}
               <List>
                 {fieldList}
               </List>
