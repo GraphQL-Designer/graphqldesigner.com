@@ -4,3 +4,8 @@
   min-width: 170px; 
   background-color:  rgb(44,48,56);
 }
+
+.typeFieldInput {
+  display: flex;
+  align-items: flex-end;
+}

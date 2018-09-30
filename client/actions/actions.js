@@ -90,7 +90,12 @@ export const openCreateQuery = () => ({
   type: types.OPEN_CREATE_QUERY
 })
 
-export const handleQueryChange = (field) => ({
-  type: types.HANDLE_QUERY_CHANGE,
+export const handleSubQueryChange = field => ({
+  type: types.HANDLE_SUBQUERY_CHANGE,
+  payload: field
+})
+
+export const handleNewQueryChange = field => ({
+  type: types.HANDLE_NEW_QUERY_CHANGE,
   payload: field
 })

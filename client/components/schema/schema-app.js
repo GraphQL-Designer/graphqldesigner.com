@@ -75,7 +75,7 @@ class SchemaApp extends Component {
           </div>
         </CSSTransition>
         <TransitionGroup className='table-components-container'>
-          <img className='wallpaper' src='./images/graphql_wallpaper.png'/>
+          {/* <img className='wallpaper' src='../../../public/images/graphql_wallpaper.png'/> */}
           {tableComponents}
         </TransitionGroup>
       </div>

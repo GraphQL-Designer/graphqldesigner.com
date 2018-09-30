@@ -2,10 +2,21 @@ import * as types from '../actions/action-types';
 
 const initialState = {
   queryMode: 'create',
-  selectedQuery: {
+  queriesIndex: 0,
+  subQueryIndex: 0,
+  queries: {},
+  newQuery: {
+    name: '',
+    tableIndex: -1,
+    fieldIndex: -1,
+    returnFields: {},
+    subQueries: []
+  },
+  subQuery: {
     queryName: '',
     tableIndex: -1,
-    fieldIndex: -1
+    fieldIndex: -1,
+    returnFields: {}
   }
 };
 
@@ -36,16 +47,23 @@ const queryReducers = (state = initialState, action) => {
         queryMode: 'create',
         selectedQuery: customQueryReset
       }
+    
+    case types.HANDLE_NEW_QUERY_CHANGE:
+      const tempNewQuery = Object.assign({}, state.newQuery, 
+        {[action.payload.name]: action.payload.value})
+      
+      return{
+        ...state,
+        newQuery: tempNewQuery
+      }
 
-    case types.HANDLE_QUERY_CHANGE:
-      console.log('changing');
-
-      const newSelectedQuery = Object.assign({}, state.selectedQuery,
+    case types.HANDLE_SUBQUERY_CHANGE:
+      const newSelectedQuery = Object.assign({}, state.subQuery,
         {[action.payload.name]: action.payload.value})
 
       return {
         ...state,
-        selectedQuery: newSelectedQuery
+        subQuery: newSelectedQuery
       }
 
     default:
