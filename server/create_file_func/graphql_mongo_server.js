@@ -108,26 +108,30 @@ function createSubQuery(field, data) {
   const refTypeName = data[field.relation.tableIndex].type;
   const refFieldName = data[field.relation.tableIndex].fields[field.relation.fieldIndex].name;
   const refFieldType = data[field.relation.tableIndex].fields[field.relation.fieldIndex].type;
-
-  const query = `,\n\t\t${createSubQueryName(refTypeName)}: {\n\t\t\ttype: ${refTypeName}Type,\n\t\t\tresolve(parent, args) {\n\t\t\t\treturn ${refTypeName}.${findDbSearchMethod(refFieldName, refFieldType, field.relation.refType)}(${createSearchObject(refFieldName, refFieldType, field)});\n\t\t\t}\n\t\t}`;
-
-  return query;
-
+  const query = `,\n\t\t${createSubQueryName(refTypeName)}: {\n\t\t\ttype: ${refTypeName}Type,\n\t\t\tresolve(parent, args) {\n\t\t\t\treturn ${refTypeName}.${findDbSearchMethod(refFieldName, refFieldType, field.relation.refType)}(${createSearchObject(refFieldName, refFieldType, field)});\n\t\t\t}\n\t\t}`
+  return query
+  
   function createSubQueryName(tableIndex, data) {
     switch (field.relation.refType) {
       case 'one to one':
-        return `${refTypeName.toLowerCase()}`;
+        return `${refTypeName.toLowerCase()}`
       case 'one to many':
-        return `${refTypeName.toLowerCase()}s`;
+        return `every${toTitleCase(refTypeName)}`
       case 'many to one':
-        return `${refTypeName.toLowerCase()}`;
+        return `${refTypeName.toLowerCase()}`
       case 'many to many':
-        return `${refTypeName.toLowerCase()}s`;
+        return `every${toTitleCase(refTypeName)}`
       default:
-        return `${refTypeName.toLowerCase()}s`;
+        return `every${toTitleCase(refTypeName)}`
+      }
+    function toTitleCase(refTypeName) {
+      let name = refTypeName[0].toUpperCase()
+      name += refTypeName.slice(1).toLowerCase()
+      return name
     }
   }
 }
+
 
 function findDbSearchMethod(refFieldName, refFieldType, refType) {
   if (refFieldName === 'id' || refFieldType === 'ID') return 'findById';
@@ -150,7 +154,7 @@ function createSearchObject(refFieldName, refFieldType, field) {
 
   if (refFieldName === 'id' || refFieldType === 'ID') {
     return `parent.${field.name}`;
-  } if (refType === 'one to one') {
+  } else if (refType === 'one to one') {
     return `{ ${refFieldName}: parent.${field.name} }`;
   } else {
     return `{ ${refFieldName}: parent.${field.name} }`;
@@ -162,7 +166,7 @@ function buildGraphqlRootQury(data) {
 
   query += createFindAllRootQuery(data);
 
-  if (data.fields[0]) {
+  if (!!data.fields[0]) {
     query += createFindByIdQuery(data);
   }
   return query;

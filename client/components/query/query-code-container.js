@@ -24,7 +24,7 @@ const QueryCodeContainer = (props) => {
       query += buildClientQueryAll(tables[tableId]);
       exportNames.push(`queryEvery${tables[tableId].type}`);
 
-      if (tables[tableId].fields[0]) {
+      if (!!tables[tableId].fields[0]) {
         query += buildClientQueryById(tables[tableId]);
         exportNames.push(`query${tables[tableId].type}ById `);
       }
