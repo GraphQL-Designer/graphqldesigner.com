@@ -3,7 +3,7 @@
   display: flex;
   flex-direction: row;
   position: relative; 
-  width: 100%;
+  width: 100vw;
   height: calc(100vh - 100px);
   padding: 0;
   margin: 0; 
@@ -15,6 +15,7 @@
   width: 33.33%; 
   background-color: rgb(54, 58, 66);
   padding: 10px; 
+  overflow: auto;
 }
 
 .code-container-middle{
@@ -23,6 +24,7 @@
   border-left: 10px solid rgb(44,48,56);
   border-right: 10px solid rgb(44,48,56);
   padding: 10px; 
+  overflow: auto;
 }
 
 .wallpaper {
