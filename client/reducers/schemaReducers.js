@@ -82,8 +82,8 @@ const reducers = (state = initialState, action) => {
     multipleValues: false,
     relationSelected: false,
     relation: {
-      type: '',
-      field: '',
+      tableIndex: -1,
+      fieldIndex: -1,
       refType: '',
     },
     refByIndex: 0,
