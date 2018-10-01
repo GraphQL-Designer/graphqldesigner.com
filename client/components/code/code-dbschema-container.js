@@ -30,7 +30,7 @@ const CodeDBSchemaContainer = (props) => {
         schema += createSchemaField(table.fields[fieldId]);
       }
     }
-    schema += `${enter}});${enter}${enter}module.exports = mongoose.model("${table.type}",${table.type}Schema);${enter}${enter}`;
+    schema += `${enter}});${enter}${enter}module.exports = mongoose.model("${table.type}",${table.type}Schema)`;
 
     return schema;
   }
@@ -42,7 +42,7 @@ const CodeDBSchemaContainer = (props) => {
       schema += `,${enter}${tab}${tab}default: "${table.defaultValue}"`;
     }
 
-    return schema += `${enter}${tab}${tab}${checkForArray('end')}`;
+    return schema += `${enter}${tab}}${checkForArray('end')}`;
 
     function checkForArray(position) {
       if (table.multipleValues) {
@@ -69,13 +69,11 @@ const CodeDBSchemaContainer = (props) => {
   }
 
   return (
-    <div className="code-container-side">
+    <div id="code-container-database">
       <h4 className='codeHeader'>Database Schemas</h4>
       <hr/>
-      {/* <pre>
-        {schema}
-      </pre> */}
       {schemaCode}
+      <pre id='column-filler-for-scroll'></pre>
     </div>
   );
 };

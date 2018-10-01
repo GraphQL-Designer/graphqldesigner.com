@@ -14,6 +14,7 @@ class CodeApp extends Component {
   
     return (
       <div className='code-app'>
+        <div className='wallpaper'></div>
         <CodeDBSchemaContainer/>
         <CodeServerContainer/>
         <CodeClientContainer/>
