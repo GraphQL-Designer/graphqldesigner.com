@@ -55,36 +55,37 @@ function buildDbModelRequirePaths(data) {
 }
 
 function buildGraphqlTypeSchema(table, data) {
-  let query = `const ${table.type}Type = new GraphQLObjectType({\n\tname: '${table.type}',\n\tfields: () => ({`;
+    let query = `const ${table.type}Type = new GraphQLObjectType({\n\tname: '${table.type}',\n\tfields: () => ({`
 
-  let firstLoop = true;
-  for (const prop in table.fields) {
-    if (!firstLoop) query += ',';
-    firstLoop = false;
+    let firstLoop = true;
+    for (let prop in table.fields) {
+        if (!firstLoop) query+= ',';
+        firstLoop = false;
 
-    query += `\n\t\t${table.fields[prop].name}: { type: ${checkForMultipleValues(table.fields[prop].multipleValues, 'front')}${tableTypeToGraphqlType(table.fields[prop].type)}${checkForMultipleValues(table.fields[prop].multipleValues, 'back')} }`;
+        query += `\n\t\t${table.fields[prop].name}: { type: ${checkForMultipleValues(table.fields[prop].multipleValues, 'front')}${tableTypeToGraphqlType(table.fields[prop].type)}${checkForMultipleValues(table.fields[prop].multipleValues, 'back')} }`
 
-    if (table.fields[prop].relation.tableIndex > -1) {
-      query += createSubQuery(table.fields[prop], data);
+        if (table.fields[prop].relation.tableIndex > -1) {
+            query += createSubQuery(table.fields[prop], data)
+        }
+
+        const refBy = table.fields[prop].refBy;
+        if (refBy.length) {
+
+            refBy.forEach(value => {
+                const parsedValue = value.split('.');
+                const field = {
+                    name: table.fields[prop].name,
+                    relation: {
+                        tableIndex: parsedValue[0],
+                        fieldIndex: parsedValue[1],
+                        refType: parsedValue[2]
+                    }
+                };
+                query += createSubQuery(field, data);
+            })
+        }
     }
-
-    const refBy = table.fields[prop].refBy;
-    if (refBy.size) {
-      refBy.forEach((value) => {
-        const parsedValue = value.split('.');
-        const field = {
-          name: table.fields[prop].name,
-          relation: {
-            tableIndex: parsedValue[0],
-            fieldIndex: parsedValue[1],
-            refType: parsedValue[2],
-          },
-        };
-        query += createSubQuery(field, data);
-      });
-    }
-  }
-  return query += '\n\t})\n});\n\n';
+    return query += '\n\t})\n});\n\n';
 }
 
 function tableTypeToGraphqlType(type) {
