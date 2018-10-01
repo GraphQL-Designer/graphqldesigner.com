@@ -41,6 +41,22 @@ class MainNav extends React.Component {
         database: 'MongoDB',
       },
     );
+
+    // JSON.stringify doesn't work with Sets. Change Sets to arrays for export
+    // const tables = this.props.tables; 
+    // for (let tableId in tables) {
+    //   for (let fieldId in tables[tableId].fields) {
+    //     const refBy = tables[tableId].fields[field].refBy
+    //     if (refBy.size > 0) {
+    //       const refByArray = []
+    //       refBy.forEach(ele => {
+    //         refByArray.push(ele);
+    //       })
+    //     }
+    //   }
+    // }
+
+
     setTimeout(() => {
       fetch('/write-files', {
         method: 'POST',
