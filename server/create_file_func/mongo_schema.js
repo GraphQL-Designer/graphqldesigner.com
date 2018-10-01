@@ -1,19 +1,18 @@
-function parseMongoschema(data) {
-  let query = `const mongoose = require('mongoose');\nconst Schema = mongoose.Schema;\n\nconst ${data.type.toLowerCase()}Schema = new Schema({\n\t`;
+function parseMongoschema(data, cb) {
+    let query = `const mongoose = require('mongoose');\nconst Schema = mongoose.Schema;\n\nconst ${data.type.toLowerCase()}Schema = new Schema({\n\t`
 
-  let firstLoop = true;
-  for (const prop in data.fields) {
-    if (prop !== '0') {
-      if (!firstLoop) query += ',\n\t';
-      firstLoop = false;
-
-      query += createSchemaField(data.fields[prop]);
+    let firstLoop = true;
+    for (let prop in data.fields) {
+        if (prop !== '0') {
+            if (!firstLoop) query += ',\n\t'
+            firstLoop = false
+    
+            query += createSchemaField(data.fields[prop]);
+        }
     }
-  }
-
   query += `\n});\n\nmodule.exports = mongoose.model("${data.type}", ${data.type.toLowerCase()}Schema);`;
 
-  return query;
+  return cb(query);
 }
 
 function createSchemaField(data) {
