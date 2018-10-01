@@ -34,8 +34,9 @@
   display: flex;
   flex-direction: column;
   margin: 0;
-  width: 300px; 
+  width: 250px; 
   justify-content: flex-start;
+  flex-shrink: 0; 
 }
 
 .table {

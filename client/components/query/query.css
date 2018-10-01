@@ -11,7 +11,7 @@ h1,h2,h3,h4,h5,h6,p{
   flex-direction: row; 
   padding: 0;
   margin: 0; 
-  overflow: hidden;
+  overflow: auto; 
 }
 
 .wallpaper {
@@ -22,17 +22,20 @@ h1,h2,h3,h4,h5,h6,p{
 
 #query-code-container {
   color: white; 
-  width: 40%;
+  width: 50%;
   background-color: rgb(54, 58, 66);
   border-right: 10px solid  rgb(44,48,56);
   padding: 10px; 
+  overflow: auto; 
+
 }
 
 #customized-query-container {
   color: white; 
-  width: 40%;
+  width: 50%;
   background-color: rgb(54, 58, 66);
   padding: 10px; 
+  overflow: auto; 
 }
 
 pre{
