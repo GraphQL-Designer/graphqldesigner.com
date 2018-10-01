@@ -187,7 +187,7 @@ class Table extends Component {
     return (
       <div className="table" style={{ border: `1px solid ${colors[this.props.tableData.tableID]}` }}>
         <div>
-          <div className="field">
+          <div className="type">
             <FlatButton
               backgroundColor={colors[this.props.tableData.tableID]}
               value={this.props.tableIndex}
@@ -208,8 +208,8 @@ class Table extends Component {
         <TransitionGroup>
           { fields }
         </TransitionGroup>
-        <div onClick={this.handleAddField} className="field addField">
-          <p style={{ marginTop: '5px' }}>
+        <div onClick={this.handleAddField} className="addField">
+          <p style={{ marginTop: '10px' }}>
               ADD FIELD
           </p>
         </div>
