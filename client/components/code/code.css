@@ -1,10 +1,24 @@
+h1,h2,h3,h4,h5,h6,p{
+  font-family: "Roboto", sans-serif
+}
+
+.codeHeader{
+  text-align: center;
+}
+
+hr {
+  color: white; 
+  background: white; 
+}
 
 .code-app {
   display: flex;
   flex-direction: row;
   position: relative; 
-  width: 100%;
-  height: calc(100vh - 100px);
+  width: 100vw;
+  height: calc(100vh - 98px);
+  min-height: 450px;
+  /* min-width: 750px;  */
   padding: 0;
   margin: 0; 
   text-align: left; 
@@ -15,6 +29,7 @@
   width: 33.33%; 
   background-color: rgb(54, 58, 66);
   padding: 10px; 
+  overflow: auto;
 }
 
 .code-container-middle{
@@ -23,6 +38,7 @@
   border-left: 10px solid rgb(44,48,56);
   border-right: 10px solid rgb(44,48,56);
   padding: 10px; 
+  overflow: auto;
 }
 
 .wallpaper {

@@ -11,19 +11,6 @@ h1,h2,h3,h4,h5,h6,p{
   margin-bottom: 10px; 
 }
 
-#sidebar-container{
-  background-color:  rgb(44,48,56);
-  position: fixed; 
-  display: flex;
-  flex-direction: column;
-  margin: 0;
-  width: 300px; 
-  height: calc(100vh - 100px);
-
-  justify-content: flex-start;
-  float: right; 
-}
-
 #tableName{
   display: flex;
 }
@@ -39,14 +26,24 @@ h1,h2,h3,h4,h5,h6,p{
   position: absolute;
 }
 
+#fieldOptions {
+  /* position: absolute; */
+  display: flex;
+  justify-content: center;
+  margin: 0;
+  width: auto; 
+  height: auto; 
+  overflow-y: auto; 
+}
+
 
 form{
-  display: flex;
-  flex-direction: column;
-  width: auto;
+  display: flex; 
+  flex-direction: column; 
   padding: 0px 10px;
   min-height: 200px; 
   color: white; 
+  overflow-y: auto; 
 }
 
 select{
@@ -55,27 +52,21 @@ select{
   appearance: none;
 }
 
-#fieldOptions {
-  position: absolute;
-  display: flex;
-  justify-content: center;
-  margin: 0;
-  overflow: auto;
-}
+
 
 #back-to-create{
   text-align: left !important;
   width: 100%; 
 }
 
-#loader-container{
+/* #loader-container{
   height: 100%;
   width: 100%; 
   display: flex;
   justify-content: center;
   align-items: center; 
   min-height: 150px; 
-}
+} */
 
 .relation-options{
   font-size: 14px;
@@ -83,8 +74,4 @@ select{
   align-items: flex-end; 
   font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
   font-weight: 600; 
-}
-
-option{
-  background-color:rgb(48,51,59)
 }

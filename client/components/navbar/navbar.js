@@ -84,7 +84,7 @@ class MainNav extends React.Component {
           </div>
           <div id="nav-misd" />
           <div id="nav-right">
-            <FlatButton label="Logout" />
+            {/* <FlatButton label="Logout" /> */}
           </div>
         </nav>
         {this.state.modal && (

@@ -15,11 +15,11 @@ import DropDownMenu from 'material-ui/DropDownMenu';
 
 const style = {
   customWidth: {
-    width: 200
+    width: 200,
   },
   toggle: {
-    marginTop: '5px'
-  }
+    marginTop: '5px',
+  },
 };
 
 const mapStateToProps = store => ({
@@ -28,7 +28,7 @@ const mapStateToProps = store => ({
   addFieldClicked: store.schema.addFieldClicked,
   selectedField: store.schema.selectedField,
   updatedField: store.schema.fieldUpdated,
-  tables: store.schema.tables
+  tables: store.schema.tables,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -36,7 +36,7 @@ const mapDispatchToProps = dispatch => ({
   saveFieldInput: database => dispatch(actions.saveFieldInput(database)),
   handleChange: field => dispatch(actions.handleFieldsUpdate(field)),
   openTableCreator: () => dispatch(actions.openTableCreator()),
-  handleSnackbarUpdate: status => dispatch(actions.handleSnackbarUpdate(status))
+  handleSnackbarUpdate: status => dispatch(actions.handleSnackbarUpdate(status)),
 });
 
 class TableOptions extends React.Component {
@@ -44,7 +44,7 @@ class TableOptions extends React.Component {
     super(props);
     this.state = {
       selectedTableIndex: null,
-      open: false
+      open: false,
     };
 
     this.submitOptions = this.submitOptions.bind(this);
@@ -66,7 +66,7 @@ class TableOptions extends React.Component {
   handleChange(event) {
     this.props.handleChange({
       name: event.target.name,
-      value: event.target.value
+      value: event.target.value,
     });
   }
 
@@ -121,7 +121,7 @@ class TableOptions extends React.Component {
           this.handleSnackbarUpdate('Spaces or symbols were removed from field name');
           this.props.handleChange({
             name: 'name',
-            value: newFieldName
+            value: newFieldName,
           });
         }
         // save or update table
@@ -132,6 +132,7 @@ class TableOptions extends React.Component {
     }
   }
   render() {
+    console.log('tables', this.props.tables)
     let tables = [];
     let fields = [];
 
@@ -142,7 +143,7 @@ class TableOptions extends React.Component {
           key={types}
           value={types}
           primaryText={this.props.tables[types].type}
-        />
+        />,
       )
     }
 
@@ -173,7 +174,7 @@ class TableOptions extends React.Component {
               key={field}
               value={field}
               primaryText={this.props.tables[selectedTableIndex].fields[field].name}
-            />
+            />,
           );
         }
       }
@@ -210,7 +211,7 @@ class TableOptions extends React.Component {
               {fieldName(
                 this.props.selectedField.fieldNum,
                 this.props.selectedField.tableNum,
-                this.props.tables
+                this.props.tables,
               )}
 
               <TextField
@@ -330,7 +331,7 @@ class TableOptions extends React.Component {
                 style={{ marginTop: '25px' }}
               />
             </form>
-            <div style={{ width: '100%', height: '40px' }} />
+            {/* <div style={{ width: '100%', height: '40px' }} /> */}
           </div>
         )}
       </div>
@@ -340,5 +341,5 @@ class TableOptions extends React.Component {
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(TableOptions);
