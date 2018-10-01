@@ -68,8 +68,8 @@ function buildGraphqlTypeSchema(table, data) {
             query += createSubQuery(table.fields[prop], data)
         }
 
-        const refBy = table.fields[prop].refBy
-        if (refBy.size) {
+        const refBy = table.fields[prop].refBy;
+        if (refBy.length) {
 
             refBy.forEach(value => {
                 const parsedValue = value.split('.');
