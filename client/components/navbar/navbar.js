@@ -56,7 +56,8 @@ class MainNav extends React.Component {
         changedTables.push(Object.assign({}, tables[tableId], { 'fields': fields }))
       }
     }
-    const data = Object.assign({}, tables, changedTables, { 'database': 'MongoDB'})
+    const tableData = Object.assign({}, tables, changedTables)
+    const data = Object.assign({}, { 'data': tableData }, { 'database': 'MongoDB'})
 
     setTimeout(() => {
       fetch('/write-files', {
