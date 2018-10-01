@@ -42,7 +42,6 @@ class MainNav extends React.Component {
       },
     );
     setTimeout(() => {
-      console.log('DATA', JSON.stringify(data), data)
       fetch('/write-files', {
         method: 'POST',
         headers: {

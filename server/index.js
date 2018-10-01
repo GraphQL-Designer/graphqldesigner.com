@@ -72,6 +72,7 @@ function buildDirectories(dateStamp, cb) {
   fs.mkdirSync(path.join(PATH, `build-files${dateStamp}`, 'client', 'graphql'));
   fs.mkdirSync(path.join(PATH, `build-files${dateStamp}`, 'client', 'graphql', 'queries'));
   fs.mkdirSync(path.join(PATH, `build-files${dateStamp}`, 'client', 'graphql', 'mutations'));
+  fs.mkdirSync(path.join(PATH, `build-files${dateStamp}`, 'server'));
   fs.mkdirSync(path.join(PATH, `build-files${dateStamp}`, 'server', 'db-model'));
   fs.mkdirSync(path.join(PATH, `build-files${dateStamp}`, 'server', 'graphql-schema'));
   return cb();
@@ -99,6 +100,7 @@ function deleteTempFiles(database, data, dateStamp, cb) {
   fs.unlinkSync(path.join(PATH, `build-files${dateStamp}/readme.md`));
   fs.unlinkSync(path.join(PATH, `build-files${dateStamp}/index.js`));
   fs.unlinkSync(path.join(PATH, `build-files${dateStamp}/client/graphql/queries/index.js`));
+  fs.unlinkSync(path.join(PATH, `build-files${dateStamp}/client/graphql/mutations/index.js`));
   fs.unlinkSync(path.join(PATH, `build-files${dateStamp}/server/graphql-schema/index.js`));
 
   if (database = 'MongoDB') {
