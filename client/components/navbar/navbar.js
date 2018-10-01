@@ -34,28 +34,29 @@ class MainNav extends React.Component {
     this.setState({
       modal: true,
     });
-    const data = Object.assign(
-      {},
-      { data: this.props.tables },
-      {
-        database: 'MongoDB',
-      },
-    );
 
     // JSON.stringify doesn't work with Sets. Change Sets to arrays for export
-    // const tables = this.props.tables; 
-    // for (let tableId in tables) {
-    //   for (let fieldId in tables[tableId].fields) {
-    //     const refBy = tables[tableId].fields[field].refBy
-    //     if (refBy.size > 0) {
-    //       const refByArray = []
-    //       refBy.forEach(ele => {
-    //         refByArray.push(ele);
-    //       })
-    //     }
-    //   }
-    // }
-
+    const tables = this.props.tables; 
+    const changedTables = []
+    for (let tableId in tables) {
+      const changedFields = []
+      for (let fieldId in tables[tableId].fields) {
+        const field = tables[tableId].fields[fieldId];
+        const refBy = field.refBy
+        if (refBy.size > 0) {
+          const refByArray = []
+          refBy.forEach(ele => {
+            refByArray.push(ele);
+          })
+          changedFields.push(Object.assign({}, field, { 'refBy': refByArray }))
+        }
+      }
+      if (changedFields.length > 0) {
+        const fields = Object.assign({}, tables[tableId].fields, changedFields)
+        changedTables.push(Object.assign({}, tables[tableId], { 'fields': fields }))
+      }
+    }
+    const data = Object.assign({}, tables, changedTables, { 'database': 'MongoDB'})
 
     setTimeout(() => {
       fetch('/write-files', {
