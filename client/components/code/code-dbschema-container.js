@@ -14,18 +14,18 @@ const CodeDBSchemaContainer = (props) => {
   `;
   const tab = '  ';
 
-  let schema = `${tab}const mongoose = require('mongoose');${enter}const Schema = mongoose.Schema;${enter}${enter}`;
-
+  let schemaCode = [];
 
   function parseMongoschema(table) {
     if (!table) return;
+    let schema = `${tab}const mongoose = require('mongoose');${enter}const Schema = mongoose.Schema;${enter}${enter}`;
 
-    const startLine = `const ${table.type.toLowerCase()}Schema = new Schema({${enter}${tab}${tab}${tab}`;
+    const startLine = `const ${table.type.toLowerCase()}Schema = new Schema({${enter}${tab}`;
     schema += startLine;
     let firstLoop = true;
     for (const fieldId in table.fields) {
       if (fieldId !== '0') {
-        if (!firstLoop) schema += `,${enter}${tab}${tab}${tab}`;
+        if (!firstLoop) schema += `,${enter}${tab}${tab}`;
         firstLoop = false;
         schema += createSchemaField(table.fields[fieldId]);
       }
@@ -35,14 +35,14 @@ const CodeDBSchemaContainer = (props) => {
     return schema;
   }
   function createSchemaField(table) {
-    let schema = `${table.name}: ${checkForArray('start')}{${enter}${tab}${tab}${tab}${tab}${tab}type: ${checkDataType(table.type)},${enter}${tab}${tab}${tab}${tab}${tab}unique: ${table.unique},${enter}${tab}${tab}${tab}${tab}${tab}required: ${table.required}`;
+    let schema = `${table.name}: ${checkForArray('start')}{${enter}${tab}${tab}type: ${checkDataType(table.type)},${enter}${tab}${tab}unique: ${table.unique},${enter}${tab}${tab}required: ${table.required}`;
 
 
     if (table.defaultValue) {
-      schema += `,${enter}${tab}${tab}${tab}${tab}${tab}default: "${table.defaultValue}"`;
+      schema += `,${enter}${tab}${tab}default: "${table.defaultValue}"`;
     }
 
-    return schema += `${enter}${tab}${tab}${tab}}${checkForArray('end')}`;
+    return schema += `${enter}${tab}${tab}${checkForArray('end')}`;
 
     function checkForArray(position) {
       if (table.multipleValues) {
@@ -60,18 +60,22 @@ const CodeDBSchemaContainer = (props) => {
     }
   }
   for (const tableId in props.tables) {
-    parseMongoschema(props.tables[tableId]);
+    schemaCode.push(
+      <pre>
+        {parseMongoschema(props.tables[tableId])};
+        <hr/>
+      </pre>
+    )
   }
-  // const schemas = [];
-  // for (let schema in props.tables[tableId]){
-  // schemas.push(
+
   return (
     <div className="code-container-side">
       <h4 className='codeHeader'>Database Schemas</h4>
       <hr/>
-      <pre>
+      {/* <pre>
         {schema}
-      </pre>
+      </pre> */}
+      {schemaCode}
     </div>
   );
 };

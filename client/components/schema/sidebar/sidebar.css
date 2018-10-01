@@ -22,7 +22,7 @@ h1,h2,h3,h4,h5,h6,p{
   height: 100%; 
   margin: 0;
   justify-content: flex-start;
-  min-height: 350px; 
+  /* min-height: 350px;  */
   position: absolute;
 }
 
