@@ -244,6 +244,8 @@ const CodeServerContainer = (props) => {
 
   return (
     <div className="code-container-middle">
+      <h4 className='codeHeader'>GraphQl Types, Root Queries, and Mutations</h4>
+      <hr/>
       <pre>
         {code}
       </pre>

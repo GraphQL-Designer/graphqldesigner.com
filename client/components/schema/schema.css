@@ -2,11 +2,10 @@
   display: flex; 
   flex-direction: row-reverse;
   width: 100%;
-  /* min-height: calc(100vh - 100px); */
+  min-width: 750px; 
+  min-height: 450px;
   height: calc(100vh - 98px);
-
   border: 1px solid black;
-  /* overflow: auto; */
   position: relative;
 }
 
@@ -25,14 +24,18 @@
   width: 100%;
   position: relative;
   height: auto; 
-  /* min-height: 300px; */
   overflow-y: auto;
   overflow-x: hidden; 
 }
 
 #sidebar-container {
   position: relative;
-  overflow: auto;
+  background-color:  rgb(44,48,56);
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  width: 300px; 
+  justify-content: flex-start;
 }
 
 .table {
