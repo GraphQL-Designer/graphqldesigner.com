@@ -6,7 +6,7 @@ h1,h2,h3,h4,h5,h6,p{
   width: 100%;
   height: calc(100vh - 98px);
   min-height: 450px;
-  min-width: 750px; 
+  /* min-width: 750px;  */
   display: flex;
   flex-direction: row; 
   padding: 0;

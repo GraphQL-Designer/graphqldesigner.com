@@ -18,7 +18,7 @@ hr {
   width: 100vw;
   height: calc(100vh - 98px);
   min-height: 450px;
-  min-width: 750px; 
+  /* min-width: 750px;  */
   padding: 0;
   margin: 0; 
   text-align: left; 

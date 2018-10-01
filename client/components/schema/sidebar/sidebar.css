@@ -26,6 +26,16 @@ h1,h2,h3,h4,h5,h6,p{
   position: absolute;
 }
 
+#fieldOptions {
+  /* position: absolute; */
+  display: flex;
+  justify-content: center;
+  margin: 0;
+  width: auto; 
+  height: auto; 
+  overflow-y: auto; 
+}
+
 
 form{
   display: flex; 
@@ -42,15 +52,7 @@ select{
   appearance: none;
 }
 
-#fieldOptions {
-  /* position: absolute; */
-  display: flex;
-  justify-content: center;
-  margin: 0;
-  width: auto; 
-  height: auto; 
-  overflow-y: auto; 
-}
+
 
 #back-to-create{
   text-align: left !important;
