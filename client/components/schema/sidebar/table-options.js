@@ -331,7 +331,7 @@ class TableOptions extends React.Component {
                 style={{ marginTop: '25px' }}
               />
             </form>
-            <div style={{ width: '100%', height: '40px' }} />
+            {/* <div style={{ width: '100%', height: '40px' }} /> */}
           </div>
         )}
       </div>

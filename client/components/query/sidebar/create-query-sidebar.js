@@ -225,6 +225,7 @@ class CreateQuerySidebar extends Component {
             floatingLabelText="Query Name"
             value={this.props.newQuery.name}
             onChange={this.handleNewQueryChange}
+            fullWidth={true}
             autoFocus
           />
           <div className='typeFieldInput'>

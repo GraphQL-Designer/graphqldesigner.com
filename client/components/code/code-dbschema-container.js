@@ -1,10 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
+
+// Styling
 import './code.css';
 
 
 const mapStateToProps = store => ({
-
   tables: store.schema.tables,
 });
 
@@ -66,6 +67,8 @@ const CodeDBSchemaContainer = (props) => {
   // schemas.push(
   return (
     <div className="code-container-side">
+      <h4 className='codeHeader'>Database Schemas</h4>
+      <hr/>
       <pre>
         {schema}
       </pre>

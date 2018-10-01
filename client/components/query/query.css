@@ -1,13 +1,17 @@
+h1,h2,h3,h4,h5,h6,p{
+  font-family: "Roboto", sans-serif
+}
 
 #query-app {
   width: 100%;
-  /* height: 100%;  */
-  height: calc(100vh - 100px);
+  height: calc(100vh - 98px);
+  min-height: 450px;
+  /* min-width: 750px;  */
   display: flex;
   flex-direction: row; 
   padding: 0;
   margin: 0; 
-  overflow: hidden;
+  overflow: auto; 
 }
 
 .wallpaper {
@@ -18,17 +22,20 @@
 
 #query-code-container {
   color: white; 
-  width: 40%;
+  width: 50%;
   background-color: rgb(54, 58, 66);
   border-right: 10px solid  rgb(44,48,56);
   padding: 10px; 
+  overflow: auto; 
+
 }
 
 #customized-query-container {
   color: white; 
-  width: 40%;
+  width: 50%;
   background-color: rgb(54, 58, 66);
   padding: 10px; 
+  overflow: auto; 
 }
 
 pre{
