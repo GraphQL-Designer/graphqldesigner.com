@@ -60,7 +60,7 @@ const mapStateToProps = store => ({
 const mapDispatchToProps = dispatch => ({
   createQuery: query => dispatch(actions.createQuery(query)),
   handleNewQueryChange: field => dispatch(actions.handleNewQueryChange(field)),
-  createReturnFields: returnFields => dispatch(actions.createReturnFields(returnFields)),
+  // createReturnFields: returnFields => dispatch(actions.createReturnFields(returnFields)),
   handleReturnValues: returnValues => dispatch(actions.handleReturnValues(returnValues)),
   handleSubQuerySelector: tableFieldIndexes => dispatch(actions.handleSubQuerySelector(tableFieldIndexes)),
   handleNewQueryName: name => dispatch(actions.handleNewQueryName(name)),
@@ -74,7 +74,6 @@ class CreateQuerySidebar extends Component {
     this.state = {
       querySearchFor: null,
       queryName: '',
-      selectedTableIndex: null,
     };
 
     // this.selectTypeHandler = this.selectTypeHandler.bind(this);
@@ -83,7 +82,7 @@ class CreateQuerySidebar extends Component {
     this.handleNewQueryChange = this.handleNewQueryChange.bind(this);
     this.submitHandler = this.submitHandler.bind(this);
     this.handleToggle = this.handleToggle.bind(this);
-    this.createReturnFields = this.createReturnFields.bind(this);
+    // this.createReturnFields = this.createReturnFields.bind(this);
     this.submitSubQueryHandler = this.submitSubQueryHandler.bind(this);
   }
 
@@ -96,8 +95,8 @@ class CreateQuerySidebar extends Component {
     })
   }
 
-  handleToggle(subQueryIndex, fieldIndex, tableIndex) {
-    this.props.handleReturnValues({ subQueryIndex, fieldIndex, tableIndex });
+  handleToggle(subQueryIndex, fieldId, tableId) {
+    this.props.handleReturnValues({ subQueryIndex, fieldId, tableId });
   }
 
   ///rename function since it dispatches handleNewQueryChange
@@ -108,21 +107,19 @@ class CreateQuerySidebar extends Component {
     })
   }
 
-  createReturnFields(tableIndex, fieldIndex){
-    this.props.createReturnFields({
-      index: fieldIndex,
-      name: this.props.tables[tableIndex].fields[fieldIndex].name,
-      value: false,
-    });
-  }
+  // createReturnFields(tableId, fieldId){
+  //   this.props.createReturnFields({
+  //     index: fieldId,
+  //     name: this.props.tables[tableId].fields[fieldId].name,
+  //     value: false,
+  //   });
+  // }
 
   submitHandler(event) {
     event.preventDefault();
-    if(this.props.newQuery.name.length > 0 && this.props.newQuery.tableIndex > -1 && this.props.newQuery.fieldIndex > -1){
+    if(this.props.newQuery.name.length > 0 && this.props.newQuery.tableId > -1 && this.props.newQuery.fieldId > -1){
       this.props.createQuery(this.props.newQuery);
     }
-    // this.props.createQuery(this.state);
-
   }
 
   submitSubQueryHandler(event){
@@ -130,18 +127,18 @@ class CreateQuerySidebar extends Component {
     this.props.submitSubQueryHandler(this.props.subQuery)
   }
 
-  handleSubQuerySelector(tableIndex, fieldIndex) {
-    this.props.handleSubQuerySelector({tableIndex, fieldIndex})
+  handleSubQuerySelector(tableId, fieldId) {
+    this.props.handleSubQuerySelector({tableId, fieldId})
   }
 
-  handleNewSubQueryToggle(fieldIndex, tableIndex) {
-    this.props.handleNewSubQueryToggle({ fieldIndex, tableIndex });
+  handleNewSubQueryToggle(fieldId, tableId) {
+    this.props.handleNewSubQueryToggle({ fieldId, tableId });
   }
 
   render() {
     // Dynamically set the GraphQL types that can be selected based on Schema setup
     const graphQLTypeOptions = [];
-    const tableIndex = Number(this.props.newQuery.tableIndex);
+    const tableId = Number(this.props.newQuery.tableId);
     
     for (const property in this.props.tables) {
       const queryType = this.props.tables[property].type; // name of query type
@@ -157,11 +154,11 @@ class CreateQuerySidebar extends Component {
 
     // Dynamically set the GraphQL search options to be selected based on selected GraphQL Type
     const graphQLSearchOptions = [];
-    // const selectedTableIndex = this.state.selectedTableIndex;
-    if (tableIndex > -1) {
+    // const selectedtableId = this.state.selectedtableId;
+    if (tableId > -1) {
       // push all the fields of the selected type into graphQLSearchOptions
-      for (const property in this.props.tables[tableIndex].fields) {
-        const fieldName = this.props.tables[tableIndex].fields[property].name;
+      for (const property in this.props.tables[tableId].fields) {
+        const fieldName = this.props.tables[tableId].fields[property].name;
         graphQLSearchOptions.push(
           <MenuItem key={property} value={property} primaryText={fieldName} disabled={this.props.subQueryIndex > -1}/>,
         );
@@ -171,15 +168,15 @@ class CreateQuerySidebar extends Component {
    // Dynamically retrieve and display field options & relations for selected field 
   const fieldList = [];
   let tempCounter = 0;
-  const fieldIndex = Number(this.props.newQuery.fieldIndex);
-  if(fieldIndex > -1){
-    for (const property in this.props.tables[tableIndex].fields) {
-      const fieldName = this.props.tables[tableIndex].fields[property].name;
+  const fieldId = Number(this.props.newQuery.fieldId);
+  if(fieldId > -1){
+    for (const property in this.props.tables[tableId].fields) {
+      const fieldName = this.props.tables[tableId].fields[property].name;
       fieldList.push(
         <Toggle
           key={property}
           label={fieldName}
-          onToggle={this.handleToggle.bind(this, this.props.subQueryIndex, property, tableIndex)}
+          onToggle={this.handleToggle.bind(this, this.props.subQueryIndex, property, tableId)}
           style={style.toggle}
         />,
       )
@@ -189,24 +186,24 @@ class CreateQuerySidebar extends Component {
   let subQueryList = [];
   let listSubqueries = [];
 
-  //if fieldIndex has relations, render the relations
+  //if fieldId has relations, render the relations
   let temp = [];
-  if(this.props.newQuery.tableIndex > -1 && this.props.newQuery.fieldIndex > -1){
+  if(this.props.newQuery.tableId > -1 && this.props.newQuery.fieldId > -1){
     if(this.props.subQueryIndex < 0){
-      for(const fieldID in this.props.tables[tableIndex].fields){
-        let field = this.props.tables[tableIndex].fields[fieldID];
-        if(field.relation.tableIndex !== -1){
+      for(const fieldID in this.props.tables[tableId].fields){
+        let field = this.props.tables[tableId].fields[fieldID];
+        if(field.relation.tableId !== -1){
           temp.push(field.relation)
         }
         if(field.refBy.size){
           field.refBy.forEach(ref => {
             const refSplit = ref.split('.');
-            const refTableIndex = refSplit[0];
-            const refFieldIndex = refSplit[1];
+            const refTableId = refSplit[0];
+            const refFieldId = refSplit[1];
             const refRefType = refSplit[2];
             temp.push({
-              tableIndex : refTableIndex,
-              fieldIndex: refFieldIndex,
+              tableId : refTableId,
+              fieldId: refFieldId,
               refType: refRefType,
             })
           })
@@ -215,16 +212,16 @@ class CreateQuerySidebar extends Component {
     }
 
     temp.forEach((el, i) => {
-      const tableName = this.props.tables[el.tableIndex].type;
-      const fieldName = this.props.tables[el.tableIndex].fields[el.fieldIndex].name;
+      const tableName = this.props.tables[el.tableId].type;
+      const fieldName = this.props.tables[el.tableId].fields[el.fieldId].name;
       subQueryList.push(
-        <MenuItem key={i} value={`${el.tableIndex}.${el.fieldIndex}`} primaryText={`${tableName} - ${fieldName}`} onClick={this.handleSubQuerySelector.bind(this, el.tableIndex, el.fieldIndex)} style={style.menuItem}/>,
+        <MenuItem key={i} value={`${el.tableId}.${el.fieldId}`} primaryText={`${tableName} - ${fieldName}`} onClick={this.handleSubQuerySelector.bind(this, el.tableId, el.fieldId)} style={style.menuItem}/>,
       )
     })
 
-    if(this.props.subQuery.tableIndex > -1){
-      for(const fieldID in this.props.tables[this.props.subQuery.tableIndex].fields){
-        let field = this.props.tables[this.props.subQuery.tableIndex].fields[fieldID];
+    if(this.props.subQuery.tableId > -1){
+      for(const fieldID in this.props.tables[this.props.subQuery.tableId].fields){
+        let field = this.props.tables[this.props.subQuery.tableId].fields[fieldID];
           listSubqueries.push(
             <Toggle
               key={fieldID}
@@ -253,9 +250,9 @@ class CreateQuerySidebar extends Component {
           <div className='typeFieldInput'>
             <p>Type: </p>
             <DropDownMenu 
-              value={this.props.newQuery.tableIndex}
+              value={this.props.newQuery.tableId}
               style={style.customWidth}
-              onChange={this.handleNewQueryChange.bind(null, 'tableIndex')}
+              onChange={this.handleNewQueryChange.bind(null, 'tableId')}
             >
               {graphQLTypeOptions}
             </DropDownMenu>
@@ -263,14 +260,14 @@ class CreateQuerySidebar extends Component {
           <div className='typeFieldInput'>
             <p>Field: </p>
             <DropDownMenu
-              value={this.props.newQuery.fieldIndex}
+              value={this.props.newQuery.fieldId}
               style={style.customWidth}
-              onChange={this.handleNewQueryChange.bind(null, 'fieldIndex')}
+              onChange={this.handleNewQueryChange.bind(null, 'fieldId')}
             >
               {graphQLSearchOptions}
             </DropDownMenu>
           </div>
-            {this.props.newQuery.tableIndex > -1 && this.props.newQuery.fieldIndex > -1 &&
+            {this.props.newQuery.tableId > -1 && this.props.newQuery.fieldId > -1 &&
               <div style={style.paper}>
                 <h4 style={{margin: '5px'}}>Return Values:</h4>
                 <List>
@@ -278,20 +275,20 @@ class CreateQuerySidebar extends Component {
                 </List>
               </div>
             }
-            {this.props.newQuery.tableIndex > -1 && this.props.newQuery.fieldIndex > -1 &&
+            {this.props.newQuery.tableId > -1 && this.props.newQuery.fieldId > -1 &&
               <div style={style.paper}>
                 <h4 style={{margin: '5px'}}>Create Subquery:</h4>
                 <div className='flexRow'>
                   <p style={{marginLeft: '10px'}}>By: </p>
                   <DropDownMenu 
-                    value={`${this.props.subQuery.tableIndex}.${this.props.subQuery.fieldIndex}`}
+                    value={`${this.props.subQuery.tableId}.${this.props.subQuery.fieldId}`}
                     style={style.customWidth}
                   >
                     {subQueryList}
                   </DropDownMenu>
                 </div>
                 <div style={{height: '10px', width: '100%'}} />
-               {this.props.subQuery.tableIndex > -1 && (
+               {this.props.subQuery.tableId > -1 && (
                   <div>
                       {listSubqueries}
                       <div style={{height: '10px', width: '100%'}} />
