@@ -34,20 +34,22 @@ const queryReducers = (state = initialState, action) => {
   let newReturnQuery;
   let newSubQuery;
   let tempNewQuery;
+  let newQueriesIndex;
 
   switch (action.type) {
     case types.CREATE_QUERY: 
-      console.log(action.payload);
-      const newQuery = Object.assign({}, action.payload)
+      // const newQuery = Object.assign({}, action.payload)
+      newReturnQuery = Object.assign({}, state.queries, {[state.queriesIndex]: action.payload});
+      newQueriesIndex = state.queriesIndex + 1;
       
       return{
         ...state,
+        queriesIndex: newQueriesIndex,
         queryMode: 'customQuery',
-        selectedQuery: newQuery
+        queries: newReturnQuery
       }
     
     case types.OPEN_CREATE_QUERY:
-      console.log('going back to query');
 
       return {
         ...state,
@@ -109,7 +111,6 @@ const queryReducers = (state = initialState, action) => {
         
 
         case types.HANDLE_SUBQUERY_SELECTOR:
-        console.log('hereeeeee : ', action.payload);
         newSubQuery = Object.assign({}, state.subQuery, {
           tableIndex: action.payload.tableIndex,
           fieldIndex: action.payload.fieldIndex
@@ -120,7 +121,6 @@ const queryReducers = (state = initialState, action) => {
           }
         
         case types.HANDLE_NEW_SUBQUERY_TOGGLE:
-        console.log(action.payload.tableIndex, action.payload.fieldIndex)
           if(!!state.subQuery.returnFields[action.payload.fieldIndex]){
             newReturnFields = Object.assign({}, state.subQuery.returnFields)
             delete newReturnFields[action.payload.fieldIndex];
@@ -133,7 +133,6 @@ const queryReducers = (state = initialState, action) => {
               }})
             newSubQuery = Object.assign({}, state.subQuery, {returnFields: newReturnFields})
           }
-          console.log('newsubquery', newSubQuery)
           return {
             ...state,
             subQuery: newSubQuery

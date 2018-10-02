@@ -118,6 +118,9 @@ class CreateQuerySidebar extends Component {
 
   submitHandler(event) {
     event.preventDefault();
+    if(this.props.newQuery.name.length > 0 && this.props.newQuery.tableIndex > -1 && this.props.newQuery.fieldIndex > -1){
+      this.props.createQuery(this.props.newQuery);
+    }
     // this.props.createQuery(this.state);
 
   }
@@ -214,7 +217,6 @@ class CreateQuerySidebar extends Component {
     temp.forEach((el, i) => {
       const tableName = this.props.tables[el.tableIndex].type;
       const fieldName = this.props.tables[el.tableIndex].fields[el.fieldIndex].name;
-      console.log('input', `${el.tableIndex}.${el.fieldIndex}`)
       subQueryList.push(
         <MenuItem key={i} value={`${el.tableIndex}.${el.fieldIndex}`} primaryText={`${tableName} - ${fieldName}`} onClick={this.handleSubQuerySelector.bind(this, el.tableIndex, el.fieldIndex)} style={style.menuItem}/>,
       )
@@ -238,7 +240,7 @@ class CreateQuerySidebar extends Component {
     return (
       <div className="sidebar-container">
         <h2 style={{margin: '10px'}}>Create Query</h2>
-        <form onSubmit={this.submitHandler} style={{marginTop: '-15px'}}>
+        <form style={{marginTop: '-15px'}}>
           <TextField
             name='name'
             hintText="Query Name"
@@ -310,6 +312,7 @@ class CreateQuerySidebar extends Component {
             fullWidth
             secondary
             type="submit"
+            onClick={this.submitHandler}
           />
         </form>
       </div>
