@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 
 // components
 import CodeDBSchemaContainer from './code-dbschema-container.js';
+import CodeSqlDBSchemaContainer from './code-sqlschema-container.js';
 import CodeClientContainer from './code-client-container.js';
 import CodeServerContainer from './code-server-container.js';
 
@@ -14,7 +15,9 @@ class CodeApp extends Component {
   
     return (
       <div className='code-app'>
+        <div className='wallpaper'></div>
         <CodeDBSchemaContainer/>
+        {/*<CodeSqlDBSchemaContainer/>*/}
         <CodeServerContainer/>
         <CodeClientContainer/>
       </div>

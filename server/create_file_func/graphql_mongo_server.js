@@ -105,6 +105,12 @@ function tableTypeToGraphqlType(type) {
   }
 }
 
+function toTitleCase(refTypeName) {
+  let name = refTypeName[0].toUpperCase()
+  name += refTypeName.slice(1).toLowerCase()
+  return name
+}
+
 function createSubQuery(field, data) {
   const refTypeName = data[field.relation.tableIndex].type;
   const refFieldName = data[field.relation.tableIndex].fields[field.relation.fieldIndex].name;
@@ -117,19 +123,14 @@ function createSubQuery(field, data) {
       case 'one to one':
         return `${refTypeName.toLowerCase()}`
       case 'one to many':
-        return `every${toTitleCase(refTypeName)}`
+        return `everyRelated${toTitleCase(refTypeName)}`
       case 'many to one':
         return `${refTypeName.toLowerCase()}`
       case 'many to many':
-        return `every${toTitleCase(refTypeName)}`
+        return `everyRelated${toTitleCase(refTypeName)}`
       default:
-        return `every${toTitleCase(refTypeName)}`
+        return `everyRelated${toTitleCase(refTypeName)}`
       }
-    function toTitleCase(refTypeName) {
-      let name = refTypeName[0].toUpperCase()
-      name += refTypeName.slice(1).toLowerCase()
-      return name
-    }
   }
 }
 
@@ -174,7 +175,7 @@ function buildGraphqlRootQury(data) {
 }
 
 function createFindAllRootQuery(data) {
-  const query = `\t\t${data.type.toLowerCase()}s: {\n\t\t\ttype: new GraphQLList(${data.type}Type),\n\t\t\tresolve() {\n\t\t\t\treturn ${data.type}.find({});\n\t\t\t}\n\t\t}`;
+  const query = `\t\tevery${toTitleCase(data.type)}s: {\n\t\t\ttype: new GraphQLList(${data.type}Type),\n\t\t\tresolve() {\n\t\t\t\treturn ${data.type}.find({});\n\t\t\t}\n\t\t}`;
 
   return query;
 }

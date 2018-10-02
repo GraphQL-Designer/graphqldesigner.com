@@ -18,11 +18,11 @@ const mapDispatchToProps = dispatch => ({
 
 const QueryApp = (props) => {
   let sidebar = '';
-  if (props.queryMode === 'create') {
+  // if (props.queryMode === 'create') {
     sidebar = <CreateQuerySidebar/>
-  } else {
-    sidebar = <CustomizeQuerySidebar/>
-  }
+  // } else {
+  //   sidebar = <CustomizeQuerySidebar/>
+  // }
 
   return (
     <div id='query-app'>

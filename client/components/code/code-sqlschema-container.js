@@ -9,18 +9,18 @@ const mapStateToProps = store => ({
   tables: store.schema.tables,
 });
 
-const CodeDBSchemaContainer = (props) => {
+const CodeSqlDBSchemaContainer = (props) => {
   const enter = `
   `;
   const tab = '  ';
 
   let schemaCode = [];
 
-  function parseMongoschema(table) {
+  function parseSqlSchema(table) {
     if (!table) return;
-    let schema = `${tab}const mongoose = require('mongoose');${enter}const Schema = mongoose.Schema;${enter}${enter}`;
+    let schema = `${tab}const sequelize = require('sequelize');${enter}${enter}`;
 
-    const startLine = `const ${table.type.toLowerCase()}Schema = new Schema({${enter}${tab}`;
+    const startLine = `const ${table.type}= sequelize.define("${table.type}", {${enter}${tab}`;
     schema += startLine;
     let firstLoop = true;
     for (const fieldId in table.fields) {
@@ -30,7 +30,7 @@ const CodeDBSchemaContainer = (props) => {
         schema += createSchemaField(table.fields[fieldId]);
       }
     }
-    schema += `${enter}});${enter}${enter}module.exports = mongoose.model("${table.type}",${table.type}Schema)`;
+    schema += `${enter}});${enter}${enter}module.exports = sequelize.model("${table.type}",${table.type}DataTypes);${enter}${enter}`;
 
     return schema;
   }
@@ -42,7 +42,7 @@ const CodeDBSchemaContainer = (props) => {
       schema += `,${enter}${tab}${tab}default: "${table.defaultValue}"`;
     }
 
-    return schema += `${enter}${tab}}${checkForArray('end')}`;
+    return schema += `${enter}${tab}${tab}${checkForArray('end')}`;
 
     function checkForArray(position) {
       if (table.multipleValues) {
@@ -62,19 +62,21 @@ const CodeDBSchemaContainer = (props) => {
   for (const tableId in props.tables) {
     schemaCode.push(
       <pre>
-        {parseMongoschema(props.tables[tableId])};
+        {parseSqlSchema(props.tables[tableId])};
         <hr/>
       </pre>
     )
   }
 
   return (
-    <div id="code-container-database">
+    <div className="code-container-side">
       <h4 className='codeHeader'>Database Schemas</h4>
       <hr/>
+      {/* <pre>
+        {schema}
+      </pre> */}
       {schemaCode}
-      <pre id='column-filler-for-scroll'></pre>
     </div>
   );
 };
-export default connect(mapStateToProps, null)(CodeDBSchemaContainer);
+export default connect(mapStateToProps, null)(CodeSqlDBSchemaContainer);

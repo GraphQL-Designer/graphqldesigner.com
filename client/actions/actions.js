@@ -90,12 +90,33 @@ export const openCreateQuery = () => ({
   type: types.OPEN_CREATE_QUERY
 })
 
-export const handleSubQueryChange = field => ({
-  type: types.HANDLE_SUBQUERY_CHANGE,
+export const handleNewQueryChange = field => ({
+  type: types.HANDLE_NEW_QUERY_CHANGE,
   payload: field
 })
 
-export const handleNewQueryChange = field => ({
-  type: types.HANDLE_NEW_QUERY_CHANGE,
+
+export const createReturnFields = returnFields => ({
+  type: types.CREATE_RETURN_FIELDS,
+  payload: returnFields
+})
+
+export const handleReturnValues = returnValues => ({
+  type: types.HANDLE_RETURN_VALUES,
+  payload: returnValues
+})
+
+export const handleSubQuerySelector = tableFieldIndexes => ({
+  type: types.HANDLE_SUBQUERY_SELECTOR,
+  payload: tableFieldIndexes
+})
+
+export const handleNewQueryName = name => ({
+  type: types.HANDLE_NEW_QUERY_NAME,
+  payload: name
+})
+
+export const handleNewSubQueryToggle = field => ({
+  type: types.HANDLE_NEW_SUBQUERY_TOGGLE,
   payload: field
 })

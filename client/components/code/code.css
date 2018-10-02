@@ -11,6 +11,22 @@ hr {
   background: white; 
 }
 
+pre {
+  opacity: 0.8; 
+}
+
+#column-filler-for-scroll {
+  height: 100%; 
+}
+
+.wallpaper{
+  width: calc(100vw - 250px);
+  height: calc(100vh - 98px); 
+  background-image: url("/public/images/graphql_wallpaper.png");
+  background-repeat: no-repeat; 
+  background-size: 100% 100%; 
+}
+
 .code-app {
   display: flex;
   flex-direction: row;
@@ -23,26 +39,29 @@ hr {
   margin: 0; 
   text-align: left; 
   color: white;
+  background-color: rgb(54, 58, 66);
 }
 
-.code-container-side{
+#code-container-client{
   width: 33.33%; 
-  background-color: rgb(54, 58, 66);
   padding: 10px; 
   overflow: auto;
+  border-left: 5px solid rgb(44,48,56);
 }
 
-.code-container-middle{
+#code-container-database{
+  display: flex;
+  flex-direction: column; 
   width: 33.33%; 
-  background-color: rgb(54, 58, 66);
-  border-left: 10px solid rgb(44,48,56);
-  border-right: 10px solid rgb(44,48,56);
   padding: 10px; 
   overflow: auto;
+  border-right: 5px solid rgb(44,48,56);
 }
 
-.wallpaper {
-  position: absolute;
-  width: 90vw;
-  height: 100%;
+#code-container-server{
+  width: 33.33%; 
+  padding: 10px; 
+  overflow: auto;
+  border-right: 5px solid rgb(44,48,56);
+  border-left: 5px solid rgb(44,48,56);
 }
