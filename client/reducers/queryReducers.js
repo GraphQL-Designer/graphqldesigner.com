@@ -21,11 +21,18 @@ const initialState = {
 };
 
 const queryReducers = (state = initialState, action) => {
-
-  const customQueryReset = {
-    queryName: '',
+  const newQueryReset = {
+    name: '',
     tableIndex: -1,
-    fieldIndex: -1
+    fieldIndex: -1,
+    returnFields: {},
+    subQueries: []
+  }
+
+  const customSubQueryReset = {
+    tableIndex: -1,
+    fieldIndex: -1,
+    returnFields: {}
   }
 
   let subQueryIndex = state.subQueryIndex;
@@ -34,24 +41,23 @@ const queryReducers = (state = initialState, action) => {
   let newSubQuery;
   let tempNewQuery;
   let newSubQueries;
+  let newQueriesIndex;
 
   switch (action.type) {
     case types.CREATE_QUERY: 
-      const newQuery = Object.assign({}, action.payload)
+      newReturnQuery = Object.assign({}, state.queries, {[state.queriesIndex]: state.newQuery});
+      newQueriesIndex = state.queriesIndex + 1;
       
       return{
         ...state,
         queriesIndex: newQueriesIndex,
-        queryMode: 'customQuery',
-        selectedQuery: newQuery
+        queries: newReturnQuery
       }
     
     case types.OPEN_CREATE_QUERY:
 
       return {
         ...state,
-        queryMode: 'create',
-        selectedQuery: customQueryReset
       }
     
     // User inputs name for new customized query
@@ -166,7 +172,7 @@ const queryReducers = (state = initialState, action) => {
         ...state,
         subQueryIndex : newSubQueryIndex,
         newQuery: newReturnQuery,
-        subQuery: customQueryReset
+        subQuery: customSubQueryReset
       }
 
         
