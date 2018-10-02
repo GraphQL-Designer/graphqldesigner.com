@@ -27,16 +27,18 @@ const CodeClientContainer = (props) => {
 
       if (!!tables[tableId].fields[0]) {
         query += buildClientQueryById(tables[tableId]);
-        exportNames.push(`query${tables[tableId].type}ById `);
+        exportNames.push(`query${tables[tableId].type}ById`);
       }
     }
 
     let endString = 'export {';
     exportNames.forEach((name, i) => {
-      if (i) {
-        endString += `, ${name}`;
+      if (i === 0) {
+        endString += `${name},${enter}`;
+      } else if (i < exportNames.length - 1) {
+        endString += `${tab}${name},${enter}`;
       } else {
-        endString += ` ${name}`;
+        endString += tab + name + enter;
       }
     });
 
@@ -66,7 +68,9 @@ const CodeClientContainer = (props) => {
   parseClientQueries(props.tables);
 
   return (
-    <div className="code-container-side">
+    <div id="code-container-client">
+      <h4 className='codeHeader'>Client Queries</h4>
+      <hr/>
       <pre>
         {query}
       </pre>

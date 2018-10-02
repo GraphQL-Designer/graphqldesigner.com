@@ -34,15 +34,33 @@ class MainNav extends React.Component {
     this.setState({
       modal: true,
     });
-    const data = Object.assign(
-      {},
-      { data: this.props.tables },
-      {
-        database: 'MongoDB',
-      },
-    );
+
+    // JSON.stringify doesn't work with Sets. Change Sets to arrays for export
+    const tables = this.props.tables; 
+    const changedTables = []
+    for (let tableId in tables) {
+      const changedFields = []
+      for (let fieldId in tables[tableId].fields) {
+        const field = tables[tableId].fields[fieldId];
+        const refBy = field.refBy
+        if (refBy.size > 0) {
+          const refByArray = []
+          refBy.forEach(ele => {
+            refByArray.push(ele);
+          })
+          changedFields.push(Object.assign({}, field, { 'refBy': refByArray }))
+        }
+      }
+      if (changedFields.length > 0) {
+        const fields = Object.assign({}, tables[tableId].fields, changedFields)
+        changedTables.push(Object.assign({}, tables[tableId], { 'fields': fields }))
+      }
+    }
+    const tableData = Object.assign({}, tables, changedTables)
+    const data = Object.assign({}, { 'data': tableData }, { 'database': 'MongoDB'})
+
     setTimeout(() => {
-      fetch('http://localhost:4100/write-files', {
+      fetch('/write-files', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -83,7 +101,7 @@ class MainNav extends React.Component {
           </div>
           <div id="nav-misd" />
           <div id="nav-right">
-            <FlatButton label="Logout" />
+            {/* <FlatButton label="Logout" /> */}
           </div>
         </nav>
         {this.state.modal && (

@@ -118,6 +118,12 @@ const CodeServerContainer = (props) => {
     }
   }
 
+  function toTitleCase(refTypeName) {
+    let name = refTypeName[0].toUpperCase()
+    name += refTypeName.slice(1).toLowerCase()
+    return name
+  }
+
   function createSubQuery(field, data) {
     const refTypeName = data[field.relation.tableIndex].type;
     const refFieldName = data[field.relation.tableIndex].fields[field.relation.fieldIndex].name;
@@ -132,19 +138,14 @@ const CodeServerContainer = (props) => {
         case 'one to one':
           return `${refTypeName.toLowerCase()}`
         case 'one to many':
-          return `every${toTitleCase(refTypeName)}`
+          return `everyRelated${toTitleCase(refTypeName)}`
         case 'many to one':
           return `${refTypeName.toLowerCase()}`
         case 'many to many':
-          return `every${toTitleCase(refTypeName)}`
+          return `everyRelated${toTitleCase(refTypeName)}`
         default:
-          return `every${toTitleCase(refTypeName)}`
+          return `everyRelated${toTitleCase(refTypeName)}`
         }
-      function toTitleCase(refTypeName) {
-        let name = refTypeName[0].toUpperCase()
-        name += refTypeName.slice(1).toLowerCase()
-        return name
-      }
     }
   }
 
@@ -187,7 +188,7 @@ const CodeServerContainer = (props) => {
   }
 
   function createFindAllRootQuery(data) {
-    const query = `${tab}${tab}${data.type.toLowerCase()}s: {${enter}${tab}${tab}${tab}type: new GraphQLList(${data.type}Type),${enter}${tab}${tab}${tab}resolve() {${enter}${tab}${tab}${tab}${tab}return ${data.type}.find({});${enter}${tab}${tab}${tab}}${enter}${tab}${tab}}`;
+    const query = `${tab}${tab}every${toTitleCase(data.type)}: {${enter}${tab}${tab}${tab}type: new GraphQLList(${data.type}Type),${enter}${tab}${tab}${tab}resolve() {${enter}${tab}${tab}${tab}${tab}return ${data.type}.find({});${enter}${tab}${tab}${tab}}${enter}${tab}${tab}}`;
 
     return query;
   }
@@ -243,7 +244,9 @@ const CodeServerContainer = (props) => {
   const code = parseGraphqlMongoServer(props.tables);
 
   return (
-    <div className="code-container-middle">
+    <div id="code-container-server">
+      <h4 className='codeHeader'>GraphQl Types, Root Queries, and Mutations</h4>
+      <hr/>
       <pre>
         {code}
       </pre>

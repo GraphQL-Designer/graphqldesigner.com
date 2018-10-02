@@ -29,7 +29,7 @@ const QueryApp = (props) => {
       <QueryCodeContainer/>
       <CustomizeQueryContainer/>
       {sidebar}
-      <img className='wallpaper' src='./images/graphql_wallpaper.png'/>
+      {/* <img className='wallpaper' src='./images/graphql_wallpaper.png'/> */}
     </div>
   );
 };

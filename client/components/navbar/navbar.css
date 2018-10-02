@@ -1,6 +1,7 @@
 #navbar{
   background-color: rgb(50,54,60);
   width: 100%;
+  /* min-width: 750px;  */
   height: 50px; 
   display: flex; 
   flex-direction: row; 

@@ -21,6 +21,7 @@
 
 .tabs{
   width: 100%;
+  /* min-width: 750px;  */
 }
 
 h1{

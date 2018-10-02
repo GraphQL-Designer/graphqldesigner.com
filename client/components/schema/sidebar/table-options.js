@@ -23,7 +23,7 @@ const style = {
 };
 
 const mapStateToProps = store => ({
-  database: store.general.database,
+  database: store.schema.database,
   // tableIndex: store.schema.tableIndexSelected,
   addFieldClicked: store.schema.addFieldClicked,
   selectedField: store.schema.selectedField,
@@ -224,16 +224,6 @@ class TableOptions extends React.Component {
                 autoFocus
               />
 
-              <TextField
-                hintText="Default Value"
-                floatingLabelText="Default Value"
-                fullWidth={true}
-                id="defaultValueOption"
-                name="defaultValue"
-                onChange={this.handleChange}
-                value={this.props.selectedField.defaultValue}
-              />
-
               <SelectField
                 floatingLabelText="Type"
                 fullWidth={true}
@@ -245,6 +235,16 @@ class TableOptions extends React.Component {
                 <MenuItem value="Boolean" primaryText="Boolean" />
                 <MenuItem value="ID" primaryText="ID" />
               </SelectField>
+
+              <TextField
+                hintText="Default Value"
+                floatingLabelText="Default Value"
+                fullWidth={true}
+                id="defaultValueOption"
+                name="defaultValue"
+                onChange={this.handleChange}
+                value={this.props.selectedField.defaultValue}
+              />
 
               {this.props.database === 'SQL' && (
                 <Toggle
@@ -269,6 +269,7 @@ class TableOptions extends React.Component {
                 style={style.toggle}
               />
 
+              {this.props.database === 'MongoDB' && (
               <Toggle
                 label="Multiple Values"
                 toggled={this.props.selectedField.multipleValues && !this.props.selectedField.relationSelected}
@@ -276,6 +277,7 @@ class TableOptions extends React.Component {
                 style={style.toggle}
                 disabled={this.props.selectedField.relationSelected || this.props.selectedField.refBy.size > 0}
               />
+              )}
 
               <Toggle
                 label="Relation"
@@ -330,7 +332,7 @@ class TableOptions extends React.Component {
                 style={{ marginTop: '25px' }}
               />
             </form>
-            <div style={{ width: '100%', height: '40px' }} />
+            {/* <div style={{ width: '100%', height: '40px' }} /> */}
           </div>
         )}
       </div>
