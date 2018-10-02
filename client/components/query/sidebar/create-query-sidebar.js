@@ -127,7 +127,8 @@ class CreateQuerySidebar extends Component {
 
   submitSubQueryHandler(event){
     event.preventDefault();
-    this.props.submitSubQueryHandler(this.props.subQuery)
+    this.props.submitSubQueryHandler(this.props.subQuery);
+    // this.props.handleSubQuerySelector({tableIndex: this.props.subQuery.tableIndex, fieldIndex: this.props.subQuery.fieldIndex})
   }
 
   handleSubQuerySelector(tableIndex, fieldIndex) {
@@ -196,6 +197,28 @@ class CreateQuerySidebar extends Component {
       for(const fieldID in this.props.tables[tableIndex].fields){
         let field = this.props.tables[tableIndex].fields[fieldID];
         if(field.relation.tableIndex !== -1){
+          temp.push(field.relation)
+        }
+        if(field.refBy.size){
+          field.refBy.forEach(ref => {
+            const refSplit = ref.split('.');
+            const refTableIndex = refSplit[0];
+            const refFieldIndex = refSplit[1];
+            const refRefType = refSplit[2];
+            temp.push({
+              tableIndex : refTableIndex,
+              fieldIndex: refFieldIndex,
+              refType: refRefType,
+            })
+          })
+        }
+      }
+    } else {
+      const newSubQueryTableIndex = this.props.newQuery.subQueries[this.props.subQueryIndex].tableIndex;
+      const newSubQueryFieldIndex = this.props.newQuery.subQueries[this.props.subQueryIndex].fieldIndex;
+      for(const fieldID in this.props.tables[newSubQueryTableIndex].fields){
+        let field = this.props.tables[newSubQueryTableIndex].fields[fieldID];
+        if(Number(field.relation.tableIndex) !== -1){
           temp.push(field.relation)
         }
         if(field.refBy.size){
