@@ -99,7 +99,11 @@ const queryReducers = (state = initialState, action) => {
             newReturnQuery =Object.assign({}, state.newQuery);
             newReturnQuery.subQueries[Number(subQueryIndex)].returnFields = newReturnFields;
           } else {
-            newReturnQuery = Object.assign({}, state.newQuery, {})
+            newReturnFields = Object.assign({}, state.newQuery.subQueries[subQueryIndex].returnFields)
+            newReturnFields[returnFieldsIndex] = { fieldIndex, tableIndex }
+
+            newReturnQuery =Object.assign({}, state.newQuery);
+            newReturnQuery.subQueries[Number(subQueryIndex)].returnFields = newReturnFields;
           }
 
           return {

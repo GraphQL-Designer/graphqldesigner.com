@@ -179,7 +179,7 @@ class CreateQuerySidebar extends Component {
         <Toggle
           key={property}
           label={fieldName}
-          onToggle={this.handleToggle.bind(this, this.props.subQueryIndex, property, tableIndex)}
+          onToggle={this.handleToggle.bind(this, -1, property, tableIndex)}
           style={style.toggle}
         />,
       )
@@ -284,7 +284,7 @@ class CreateQuerySidebar extends Component {
                 <List style={{backgroundColor: 'rgb(54, 58, 66)'}}>
                 {this.props.newQuery.subQueries.map((query, i) => (
                   <SubQuery key={i} tableIndex={query.tableIndex} fieldIndex={query.fieldIndex} 
-                  newQuery={this.props.newQuery} tables={this.props.tables} subQueryIndex={this.props.subQueryIndex} onToggle={this.handleToggle.bind(this, this.props.subQueryIndex, query.fieldIndex, query.tableIndex)}/>
+                  newQuery={this.props.newQuery} tables={this.props.tables} subQueryIndex={this.props.subQueryIndex} onToggle={this.handleToggle.bind(this, i, query.fieldIndex, query.tableIndex)}/>
                 ))}
                 </List>
               </div>
