@@ -37,7 +37,7 @@ class CustomizeQuerySidebar extends React.Component{
         
   
         <div className='buttons-container'>
-          <h4>QuerySidebar</h4>
+          {/* <h4>QuerySidebar</h4>
           <FlatButton
             id="back-to-query"
             label="Back"
@@ -50,7 +50,7 @@ class CustomizeQuerySidebar extends React.Component{
             secondary
             type="submit"
             onClick={this.submitCustomQuery}
-          />
+          /> */}
         </div>
   
       </div>
