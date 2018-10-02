@@ -34,18 +34,18 @@ const CodeDBSchemaContainer = (props) => {
 
     return schema;
   }
-  function createSchemaField(table) {
-    let schema = `${table.name}: ${checkForArray('start')}{${enter}${tab}${tab}type: ${checkDataType(table.type)},${enter}${tab}${tab}unique: ${table.unique},${enter}${tab}${tab}required: ${table.required}`;
+  function createSchemaField(field) {
+    let schema = `${field.name}: ${checkForArray('start')}{${enter}${tab}${tab}type: ${checkDataType(field.type)},${enter}${tab}${tab}unique: ${field.unique},${enter}${tab}${tab}required: ${field.required}`;
 
 
-    if (table.defaultValue) {
-      schema += `,${enter}${tab}${tab}default: "${table.defaultValue}"`;
+    if (field.defaultValue) {
+      schema += `,${enter}${tab}${tab}default: "${field.defaultValue}"`;
     }
 
     return schema += `${enter}${tab}}${checkForArray('end')}`;
 
     function checkForArray(position) {
-      if (table.multipleValues) {
+      if (field.multipleValues) {
         if (position === 'start') return '[';
         if (position === 'end') return ']';
       }

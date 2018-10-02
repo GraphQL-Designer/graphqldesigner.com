@@ -486,6 +486,7 @@ const reducers = (state = initialState, action) => {
       return {
         ...state,
         selectedField: newSelectedField,
+        selectedTable: tableReset
       };
 
       // ---------------------------------- New Project -------------------------------------//
