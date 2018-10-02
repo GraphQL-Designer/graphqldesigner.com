@@ -74,7 +74,7 @@
 .fieldContainer1 {
   position: relative;
   display: flex;
-  width: 239px;
+  width: 96%;
   left: 5px;
 }
 
@@ -83,7 +83,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 239px;
+  width: 96%;
 }
 
 .fieldButton {
