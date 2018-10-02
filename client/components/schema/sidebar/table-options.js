@@ -132,7 +132,6 @@ class TableOptions extends React.Component {
     }
   }
   render() {
-    console.log('tables', this.props.tables)
     let tables = [];
     let fields = [];
 

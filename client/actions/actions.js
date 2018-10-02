@@ -99,3 +99,19 @@ export const handleNewQueryChange = field => ({
   type: types.HANDLE_NEW_QUERY_CHANGE,
   payload: field
 })
+
+export const handleSubquerySelected = field => ({
+  type: types.HANDLE_SUBQUERY_SELECTED,
+  payload: field
+})
+
+export const createReturnFields = returnFields => ({
+  type: types.CREATE_RETURN_FIELDS,
+  payload: returnFields
+})
+
+export const handleReturnValues = returnValues => ({
+  type: types.HANDLE_RETURN_VALUES,
+  payload: returnValues
+})
+
