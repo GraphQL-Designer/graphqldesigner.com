@@ -40,6 +40,8 @@ const queryReducers = (state = initialState, action) => {
   let newReturnQuery;
   let newSubQuery;
   let tempNewQuery;
+  let newSubQueries;
+  let newQueriesIndex;
 
   switch (action.type) {
     // Submit new customized query
@@ -53,6 +55,12 @@ const queryReducers = (state = initialState, action) => {
         queries: newReturnQuery,
         newQuery: newQueryReset,
         subQueries: subQueryReset
+      }
+    
+    case types.OPEN_CREATE_QUERY:
+
+      return {
+        ...state,
       }
     
     // User inputs name for new customized query
