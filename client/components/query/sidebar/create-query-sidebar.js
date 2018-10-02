@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import SubQuery from './subquery'
 
 // styles
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
-import { List, ListItem } from 'material-ui/List';
+import { List } from 'material-ui/List';
 import SelectField from 'material-ui/SelectField';
 import DropDownMenu from 'material-ui/DropDownMenu';
 import MenuItem from 'material-ui/MenuItem';
@@ -95,8 +96,8 @@ class CreateQuerySidebar extends Component {
     })
   }
 
-  handleToggle(subQueryIndex, fieldId, tableId) {
-    this.props.handleReturnValues({ subQueryIndex, fieldId, tableId });
+  handleToggle(subQueryIndex, fieldId, tableId, returnFieldsIndex) {
+    this.props.handleReturnValues({ subQueryIndex, fieldId, tableId, returnFieldsIndex });
   }
 
   ///rename function since it dispatches handleNewQueryChange
@@ -120,6 +121,7 @@ class CreateQuerySidebar extends Component {
     if(this.props.newQuery.name.length > 0 && this.props.newQuery.tableId > -1 && this.props.newQuery.fieldId > -1){
       this.props.createQuery(this.props.newQuery);
     }
+    // this.props.createQuery(this.state);
   }
 
   submitSubQueryHandler(event){
@@ -190,20 +192,20 @@ class CreateQuerySidebar extends Component {
   let temp = [];
   if(this.props.newQuery.tableId > -1 && this.props.newQuery.fieldId > -1){
     if(this.props.subQueryIndex < 0){
-      for(const fieldID in this.props.tables[tableId].fields){
-        let field = this.props.tables[tableId].fields[fieldID];
+      for(const fieldId in this.props.tables[tableId].fields){
+        let field = this.props.tables[tableId].fields[fieldId];
         if(field.relation.tableId !== -1){
           temp.push(field.relation)
         }
         if(field.refBy.size){
           field.refBy.forEach(ref => {
             const refSplit = ref.split('.');
-            const refTableId = refSplit[0];
-            const refFieldId = refSplit[1];
+            const reftableId = refSplit[0];
+            const reffieldId = refSplit[1];
             const refRefType = refSplit[2];
             temp.push({
-              tableId : refTableId,
-              fieldId: refFieldId,
+              tableIndex : reftableId,
+              fieldIndex: reffieldId,
               refType: refRefType,
             })
           })
@@ -212,23 +214,24 @@ class CreateQuerySidebar extends Component {
     }
 
     temp.forEach((el, i) => {
-      const tableName = this.props.tables[el.tableId].type;
-      const fieldName = this.props.tables[el.tableId].fields[el.fieldId].name;
+      console.log('this is el', el); 
+      const tableName = this.props.tables[el.tableIndex].type;
+      const fieldName = this.props.tables[el.tableIndex].fields[el.fieldIndex].name;
       subQueryList.push(
-        <MenuItem key={i} value={`${el.tableId}.${el.fieldId}`} primaryText={`${tableName} - ${fieldName}`} onClick={this.handleSubQuerySelector.bind(this, el.tableId, el.fieldId)} style={style.menuItem}/>,
+        <MenuItem key={i} value={`${el.tableIndex}.${el.fieldIndex}`} primaryText={`${tableName} - ${fieldName}`} onClick={this.handleSubQuerySelector.bind(this, el.tableIndex, el.fieldIndex)} style={style.menuItem}/>,
       )
     })
 
     if(this.props.subQuery.tableId > -1){
-      for(const fieldID in this.props.tables[this.props.subQuery.tableId].fields){
-        let field = this.props.tables[this.props.subQuery.tableId].fields[fieldID];
+      for(const fieldId in this.props.tables[this.props.subQuery.tableId].fields){
+        let field = this.props.tables[this.props.subQuery.tableId].fields[fieldId];
           listSubqueries.push(
             <Toggle
-              key={fieldID}
+              key={fieldId}
               label={field.name}
               onToggle={this.handleNewSubQueryToggle.bind(this, field.fieldNum, field.tableNum)}
               style={style.toggle}
-            />,
+            /> 
         )
       }
     }
@@ -275,6 +278,17 @@ class CreateQuerySidebar extends Component {
                 </List>
               </div>
             }
+            {this.props.newQuery.subQueries.length > 0 && (
+              <div style={{ marginTop: '10px'}}>
+                <h4 style={{marginLeft: '5px'}}>Sub Queries:</h4>
+                <List style={{backgroundColor: 'rgb(54, 58, 66)'}}>
+                {this.props.newQuery.subQueries.map((query, i) => (
+                  <SubQuery key={i} tableId={query.tableId} fieldId={query.fieldId} 
+                  newQuery={this.props.newQuery} tables={this.props.tables} subQueryIndex={this.props.subQueryIndex} onToggle={this.handleToggle.bind(this, this.props.subQueryIndex, query.fieldId, query.tableId)}/>
+                ))}
+                </List>
+              </div>
+            )}
             {this.props.newQuery.tableId > -1 && this.props.newQuery.fieldId > -1 &&
               <div style={style.paper}>
                 <h4 style={{margin: '5px'}}>Create Subquery:</h4>
