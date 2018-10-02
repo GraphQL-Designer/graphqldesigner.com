@@ -64,7 +64,8 @@ const mapDispatchToProps = dispatch => ({
   handleReturnValues: returnValues => dispatch(actions.handleReturnValues(returnValues)),
   handleSubQuerySelector: tableFieldIndexes => dispatch(actions.handleSubQuerySelector(tableFieldIndexes)),
   handleNewQueryName: name => dispatch(actions.handleNewQueryName(name)),
-  handleNewSubQueryToggle: field => dispatch(actions.handleNewSubQueryToggle(field))
+  handleNewSubQueryToggle: field => dispatch(actions.handleNewSubQueryToggle(field)),
+  submitSubQueryHandler: subQuery => dispatch(actions.submitSubQueryHandler(subQuery))
 });
 
 class CreateQuerySidebar extends Component {
@@ -83,6 +84,7 @@ class CreateQuerySidebar extends Component {
     this.submitHandler = this.submitHandler.bind(this);
     this.handleToggle = this.handleToggle.bind(this);
     this.createReturnFields = this.createReturnFields.bind(this);
+    this.submitSubQueryHandler = this.submitSubQueryHandler.bind(this);
   }
 
   // when a user types into the input for Query Name
@@ -120,12 +122,16 @@ class CreateQuerySidebar extends Component {
 
   }
 
-  handleSubQuerySelector(tableIndex, fieldIndex, refType) {
-    this.props.handleSubQuerySelector({tableIndex, fieldIndex, refType})
+  submitSubQueryHandler(event){
+    event.preventDefault();
+    this.props.submitSubQueryHandler(this.props.subQuery)
+  }
+
+  handleSubQuerySelector(tableIndex, fieldIndex) {
+    this.props.handleSubQuerySelector({tableIndex, fieldIndex})
   }
 
   handleNewSubQueryToggle(fieldIndex, tableIndex) {
-    console.log('here', fieldIndex, tableIndex)
     this.props.handleNewSubQueryToggle({ fieldIndex, tableIndex });
   }
 
@@ -141,6 +147,7 @@ class CreateQuerySidebar extends Component {
           key={property}
           value={property}
           primaryText={queryType}
+          disabled={this.props.subQueryIndex > -1}
         />
       );
     }
@@ -149,19 +156,11 @@ class CreateQuerySidebar extends Component {
     const graphQLSearchOptions = [];
     // const selectedTableIndex = this.state.selectedTableIndex;
     if (tableIndex > -1) {
-      // Allow user to search for all of a type
-      graphQLSearchOptions.push(
-        <option key={'temp'} value="Every">
-          Every
-          {' '}
-          {this.props.tables[tableIndex].type}
-        </option>,
-      );
       // push all the fields of the selected type into graphQLSearchOptions
       for (const property in this.props.tables[tableIndex].fields) {
         const fieldName = this.props.tables[tableIndex].fields[property].name;
         graphQLSearchOptions.push(
-          <MenuItem key={property} value={property} primaryText={fieldName} />,
+          <MenuItem key={property} value={property} primaryText={fieldName} disabled={this.props.subQueryIndex > -1}/>,
         );
       }
    }
@@ -292,9 +291,16 @@ class CreateQuerySidebar extends Component {
                 <div style={{height: '10px', width: '100%'}} />
                {this.props.subQuery.tableIndex > -1 && (
                   <div>
-                    {listSubqueries}
-                    <div style={{height: '10px', width: '100%'}} />
-                  </div>  
+                      {listSubqueries}
+                      <div style={{height: '10px', width: '100%'}} />
+                      <RaisedButton
+                        label="Create SubQuery"
+                        fullWidth
+                        secondary
+                        type="submit"
+                        onClick={this.submitSubQueryHandler}
+                      />  
+                  </div>
                 )}
               </div>  
             }
