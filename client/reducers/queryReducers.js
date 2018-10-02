@@ -41,6 +41,7 @@ const queryReducers = (state = initialState, action) => {
       
       return{
         ...state,
+        queriesIndex: newQueriesIndex,
         queryMode: 'customQuery',
         selectedQuery: newQuery
       }
@@ -53,6 +54,7 @@ const queryReducers = (state = initialState, action) => {
         selectedQuery: customQueryReset
       }
     
+    // User inputs name for new customized query
     case types.HANDLE_NEW_QUERY_NAME:
       tempNewQuery = Object.assign({}, state.newQuery, 
         {name: action.payload.value})
@@ -62,17 +64,17 @@ const queryReducers = (state = initialState, action) => {
         newQuery: tempNewQuery
       }
       
-      case types.CREATE_RETURN_FIELDS:
+    case types.CREATE_RETURN_FIELDS:
       newReturnFields = Object.assign({}, state.newQuery.returnFields, )
       
       
       Object.assign({}, state.newQuery, {returnFields : 
         Object.assign({}, state.newQuery.returnFields[action.payload.index], {name: action.payload.name, value: action.payload.value})})
         
-        return{
-          ...state,
-          newQuery: newReturnFields
-        }
+      return{
+        ...state,
+        newQuery: newReturnFields
+      }
         
         case types.HANDLE_RETURN_VALUES:
         let { subQueryIndex, fieldIndex, tableIndex, returnFieldsIndex } = action.payload;
@@ -106,15 +108,22 @@ const queryReducers = (state = initialState, action) => {
           }
         }
 
-        case types.HANDLE_NEW_QUERY_CHANGE:
-          tempNewQuery = Object.assign({}, state.newQuery, 
-            {[action.payload.name]: action.payload.value})
-          
-          return{
-            ...state,
-            newQuery: tempNewQuery
-          }
-        
+    // User selects type or field for customized query
+    case types.HANDLE_NEW_QUERY_CHANGE:
+      if (action.payload.name === 'tableIndex') {
+        const fieldIndex = {'fieldIndex': -1}; // reset field since a new table was selected
+        const tableIndex = {[action.payload.name]: action.payload.value}
+        tempNewQuery = Object.assign({}, state.newQuery, tableIndex, fieldIndex)
+      } else {
+        tempNewQuery = Object.assign({}, state.newQuery, 
+          {[action.payload.name]: action.payload.value})
+      }
+      
+      return{
+        ...state,
+        newQuery: tempNewQuery
+      }
+    
 
         case types.HANDLE_SUBQUERY_SELECTOR:
         newSubQuery = Object.assign({}, state.subQuery, {
@@ -144,21 +153,21 @@ const queryReducers = (state = initialState, action) => {
             subQuery: newSubQuery
           }
 
-        case types.SUBMIT_SUBQUERY_HANDLER:
-          let newSubQueryIndex = state.subQueryIndex;
-          newSubQueryIndex += 1;
+    case types.SUBMIT_SUBQUERY_HANDLER:
+      let newSubQueryIndex = state.subQueryIndex;
+      newSubQueryIndex += 1;
 
-          newSubQuery = Object.assign({}, state.subQuery)
-          newReturnQuery = Object.assign({}, state.newQuery)
+      newSubQuery = Object.assign({}, state.subQuery)
+      newReturnQuery = Object.assign({}, state.newQuery)
 
-          newReturnQuery.subQueries.push(newSubQuery);
+      newReturnQuery.subQueries.push(newSubQuery);
 
-          return {
-            ...state,
-            subQueryIndex : newSubQueryIndex,
-            newQuery: newReturnQuery,
-            subQuery: customQueryReset
-          }
+      return {
+        ...state,
+        subQueryIndex : newSubQueryIndex,
+        newQuery: newReturnQuery,
+        subQuery: customQueryReset
+      }
 
         
         default:
@@ -167,4 +176,3 @@ const queryReducers = (state = initialState, action) => {
     };
     
     export default queryReducers;
-    

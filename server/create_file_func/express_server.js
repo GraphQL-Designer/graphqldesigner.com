@@ -1,6 +1,6 @@
 function buildExpressServer(data) {
-    let query =
-`const express = require('express');
+  const query = `
+const express = require('express');
 const graphqlHTTP = require('express-graphql');
 const mongoose = require('mongoose');
 const GQLSchema = require('./graphql-schema');
@@ -19,9 +19,8 @@ app.use('/graphql', graphqlHTTP({
 app.listen(4000, () => {
     console.log('Listening on 4000')
 });
-`
-  
-    return query
+`;
+  return query;
 }
-  
+
 module.exports = buildExpressServer;

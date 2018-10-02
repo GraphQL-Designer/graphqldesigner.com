@@ -16,24 +16,24 @@ import './sidebar.css';
 const style = {
   customWidth: {
     marginTop: '-7px',
-    width: '100%'
+    width: '100%',
   },
   toggle: {
     marginTop: '5px',
     marginLeft: '5%',
-    width: '90%'
+    width: '90%',
   },
   list: {
     fontSize: '14px',
     maxHeight: '45px', 
     padding: '0',
     display: 'flex',
-    flexDirection: 'vertical'
+    flexDirection: 'vertical',
   },
   listItem: {
     fontSize: '14px',
     maxHeight: '20px', 
-    padding: '0px'
+    padding: '0px',
   },
   paper: {
     // maxHeight: '250px',
@@ -43,11 +43,11 @@ const style = {
     // overflow: 'scroll'
   },
   menuItem: {
-    width: '100%'
+    width: '100%',
   },
   button: {
-    marginTop: '25px'
-  }
+    marginTop: '25px',
+  },
 };
 
 const mapStateToProps = store => ({
@@ -55,7 +55,7 @@ const mapStateToProps = store => ({
   newQuery: store.query.newQuery,
   subQuery: store.query.subQuery,
   newSubQuerySelected: store.query.newSubQuerySelected,
-  subQueryIndex: store.query.subQueryIndex
+  subQueryIndex: store.query.subQueryIndex,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -66,7 +66,7 @@ const mapDispatchToProps = dispatch => ({
   handleSubQuerySelector: tableFieldIndexes => dispatch(actions.handleSubQuerySelector(tableFieldIndexes)),
   handleNewQueryName: name => dispatch(actions.handleNewQueryName(name)),
   handleNewSubQueryToggle: field => dispatch(actions.handleNewSubQueryToggle(field)),
-  submitSubQueryHandler: subQuery => dispatch(actions.submitSubQueryHandler(subQuery))
+  submitSubQueryHandler: subQuery => dispatch(actions.submitSubQueryHandler(subQuery)),
 });
 
 class CreateQuerySidebar extends Component {
@@ -93,7 +93,7 @@ class CreateQuerySidebar extends Component {
     // this.setState({ queryName: event.target.value });
     this.props.handleNewQueryName({
       name: event.target.name,
-      value: event.target.value
+      value: event.target.value,
     })
   }
 
@@ -105,7 +105,7 @@ class CreateQuerySidebar extends Component {
   handleNewQueryChange(name, event, index, value) {
     this.props.handleNewQueryChange({
       name: name,
-      value: value
+      value: value,
     })
   }
 
@@ -113,12 +113,15 @@ class CreateQuerySidebar extends Component {
     this.props.createReturnFields({
       index: fieldIndex,
       name: this.props.tables[tableIndex].fields[fieldIndex].name,
-      value: false
+      value: false,
     });
   }
 
   submitHandler(event) {
     event.preventDefault();
+    if(this.props.newQuery.name.length > 0 && this.props.newQuery.tableIndex > -1 && this.props.newQuery.fieldIndex > -1){
+      this.props.createQuery(this.props.newQuery);
+    }
     // this.props.createQuery(this.state);
   }
 
@@ -148,7 +151,7 @@ class CreateQuerySidebar extends Component {
           value={property}
           primaryText={queryType}
           disabled={this.props.subQueryIndex > -1}
-        />
+        />,
       );
     }
 
@@ -178,7 +181,7 @@ class CreateQuerySidebar extends Component {
           label={fieldName}
           onToggle={this.handleToggle.bind(this, this.props.subQueryIndex, property, tableIndex)}
           style={style.toggle}
-        />
+        />,
       )
     }
   }
@@ -204,7 +207,7 @@ class CreateQuerySidebar extends Component {
             temp.push({
               tableIndex : refTableIndex,
               fieldIndex: refFieldIndex,
-              refType: refRefType
+              refType: refRefType,
             })
           })
         }
@@ -237,7 +240,7 @@ class CreateQuerySidebar extends Component {
     return (
       <div className="sidebar-container">
         <h2 style={{margin: '10px'}}>Create Query</h2>
-        <form onSubmit={this.submitHandler} style={{marginTop: '-15px'}}>
+        <form style={{marginTop: '-15px'}}>
           <TextField
             name='name'
             hintText="Query Name"
@@ -320,6 +323,7 @@ class CreateQuerySidebar extends Component {
             fullWidth
             secondary
             type="submit"
+            onClick={this.submitHandler}
           />
         </form>
       </div>

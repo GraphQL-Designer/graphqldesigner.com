@@ -1,6 +1,6 @@
 function createPackageJson(data) {
-  let query = 
-  `"dependencies": {
+  const query = `
+  "dependencies": {
     "apollo-boost": "^0.1.15",
     "express": "^4.16.3",
     "express-graphql": "^0.6.12",
@@ -11,9 +11,9 @@ function createPackageJson(data) {
   "devDependencies": {
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
-  }`
+  }`;
 
-  return query
+  return query;
 }
 
 module.exports = createPackageJson;
