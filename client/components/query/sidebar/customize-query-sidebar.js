@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import * as actions from '../../../actions/actions.js'
+import * as actions from '../../../actions/actions.js';
 
 import RaisedButton from 'material-ui/RaisedButton';
 import KeyboardArrowLeft from 'material-ui/svg-icons/hardware/keyboard-arrow-left';
@@ -15,7 +15,7 @@ const mapDispatchToProps = dispatch => ({
   openCreateQuery: () => dispatch(actions.openCreateQuery())
 });
 
-class CustomizeQuerySidebar extends React.Component{
+class CustomizeQuerySidebar extends React.Component {
   constructor(props) {
     super(props);
 
@@ -54,8 +54,8 @@ class CustomizeQuerySidebar extends React.Component{
         </div>
   
       </div>
-    )
+    );
   }
-};
+}
 
 export default connect(mapStateToProps, mapDispatchToProps)(CustomizeQuerySidebar);

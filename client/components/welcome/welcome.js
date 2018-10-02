@@ -8,19 +8,19 @@ import Dialog from 'material-ui/Dialog';
 import './welcome.css';
 
 const mapStatetoProps = store => ({
-  projectReset: store.schema.projectReset
+  projectReset: store.schema.projectReset,
 });
 
 const mapDispatchToProps = dispatch => ({
   tablesToMongoFormat: () => dispatch({ type: 'TABLES_TO_MONGO_FORMAT' }),
-  handleNewProject: reset => dispatch(actions.handleNewProject(reset))
+  handleNewProject: reset => dispatch(actions.handleNewProject(reset)),
 });
 
 class Welcome extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      open: false
+      open: false,
     };
     this.handleClose = this.handleClose.bind(this);
     this.handleDatabaseClick = this.handleDatabaseClick.bind(this);
@@ -37,7 +37,7 @@ class Welcome extends React.Component {
   }
 
   handleDatabaseClick(event) {
-    //event.preventDefault();
+    // event.preventDefault();
     this.props.handleNewProject(false);
     this.props.chooseDatabase(event.target.innerHTML);
     if (event.target.innerHTML === 'MongoDB') this.props.tablesToMongoFormat();
@@ -48,7 +48,7 @@ class Welcome extends React.Component {
       border: '1px solid white',
       width: '125px',
       fontSize: '1.2em',
-      color: 'white'
+      color: 'white',
     };
 
     return (
@@ -85,5 +85,5 @@ class Welcome extends React.Component {
 
 export default connect(
   mapStatetoProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(Welcome);
