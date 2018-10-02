@@ -271,11 +271,11 @@ const CustomizedQueryContainer = (props) => {
   
     let endString = 'export {'
     exportNames.forEach((name, i) => {
-        if (i) {
-        endString += `, ${name}`
-        } else {
-            endString += ` ${name}`
-        }
+      if (i) {
+      endString += `, ${name}`
+      } else {
+        endString += ` ${name}`
+      }
     })
   
     return queryString += endString + '};';
