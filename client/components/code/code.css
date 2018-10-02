@@ -12,11 +12,13 @@ hr {
 }
 
 pre {
-  opacity: 0.8; 
+  opacity: 0.8;
+  width: 100%;  
 }
 
 #column-filler-for-scroll {
   height: 100%; 
+  width: 100%; 
 }
 
 .wallpaper{

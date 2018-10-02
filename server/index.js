@@ -7,10 +7,10 @@ const PORT = process.env.PORT || 4100;
 let PATH;
 
 if (process.env.MODE === 'prod') {
-  PATH = '/tmp/'
+  PATH = '/tmp/';
 } else {
   PATH = path.join(__dirname, '../../');
-};
+}
 
 const app = express();
 
@@ -21,7 +21,7 @@ const parseClientMutations = require('./create_file_func/client_mutations');
 const parseGraphqlMongoServer = require('./create_file_func/graphql_mongo_server');
 const parseMongoschema = require('./create_file_func/mongo_schema');
 
-app.use(bodyParser.json());;
+app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, '../public')));
 
 app.post('/write-files', (req, res) => {
@@ -76,13 +76,13 @@ function buildDirectories(dateStamp, cb) {
   fs.mkdirSync(path.join(PATH, `build-files${dateStamp}`, 'server', 'db-model'));
   fs.mkdirSync(path.join(PATH, `build-files${dateStamp}`, 'server', 'graphql-schema'));
   return cb();
-};
+}
 
 function buildClientQueries(data, dateStamp, cb) {
   fs.writeFileSync(path.join(PATH, `build-files${dateStamp}/client/graphql/queries/index.js`), parseClientQueries(data));
   fs.writeFileSync(path.join(PATH, `build-files${dateStamp}/client/graphql/mutations/index.js`), parseClientMutations(data));
   return cb();
-};
+}
 
 function buildForMongo(data, dateStamp, cb) {
   fs.writeFileSync(path.join(PATH, `build-files${dateStamp}/server/graphql-schema/index.js`), parseGraphqlMongoServer(data));
@@ -94,7 +94,7 @@ function buildForMongo(data, dateStamp, cb) {
       });
     });
   return cb();
-};
+}
 
 function deleteTempFiles(database, data, dateStamp, cb) {
   fs.unlinkSync(path.join(PATH, `build-files${dateStamp}/readme.md`));
@@ -118,8 +118,8 @@ function deleteTempFiles(database, data, dateStamp, cb) {
       }
     }
     step(0);
-  };
-};
+  }
+}
 
 function deleteTempFolders(dateStamp, cb) {
   fs.rmdirSync(path.join(PATH, `build-files${dateStamp}`, 'server', 'graphql-schema'));
@@ -131,4 +131,4 @@ function deleteTempFolders(dateStamp, cb) {
   fs.rmdirSync(path.join(PATH, `build-files${dateStamp}`, 'client'));
   fs.rmdirSync(path.join(PATH, `build-files${dateStamp}`));
   return cb();
-};
+}
