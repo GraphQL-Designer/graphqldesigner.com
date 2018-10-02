@@ -13,7 +13,6 @@ const initialState = {
     subQueries: []
   },
   subQuery: {
-    queryName: '',
     tableIndex: -1,
     fieldIndex: -1,
     returnFields: {}
