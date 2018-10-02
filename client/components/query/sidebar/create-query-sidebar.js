@@ -8,17 +8,19 @@ import { List, ListItem } from 'material-ui/List';
 import SelectField from 'material-ui/SelectField';
 import DropDownMenu from 'material-ui/DropDownMenu';
 import MenuItem from 'material-ui/MenuItem';
-import Paper from 'material-ui/Paper';
 import { Toggle } from 'material-ui';
 import * as actions from '../../../actions/actions.js';
 import './sidebar.css';
 
 const style = {
   customWidth: {
-    width: 200
+    marginTop: '-7px',
+    width: '100%'
   },
   toggle: {
-    marginTop: '5px'
+    marginTop: '5px',
+    marginLeft: '5%',
+    width: '90%'
   },
   list: {
     fontSize: '14px',
@@ -32,13 +34,19 @@ const style = {
     maxHeight: '20px', 
     padding: '0px'
   },
-  paper : {
-    // display: 'flex',
-    maxHeight: '100px'
+  paper: {
+    // maxHeight: '250px',
+    marginTop: '25px',
+    marginBottom: '5px',
+    backgroundColor: 'rgb(54, 58, 66)',
+    // overflow: 'scroll'
   },
-  toggle: {
-    marginTop: '5px',
+  menuItem: {
+    width: '100%'
   },
+  button: {
+    marginTop: '25px'
+  }
 };
 
 const mapStateToProps = store => ({
@@ -129,7 +137,6 @@ class CreateQuerySidebar extends Component {
     for (const property in this.props.tables) {
       const queryType = this.props.tables[property].type; // name of query type
       graphQLTypeOptions.push(
-        // <option key={property} value={property}>{queryType}</option>, // value is given property so we can access in selectHandler
         <MenuItem
           key={property}
           value={property}
@@ -154,7 +161,6 @@ class CreateQuerySidebar extends Component {
       for (const property in this.props.tables[tableIndex].fields) {
         const fieldName = this.props.tables[tableIndex].fields[property].name;
         graphQLSearchOptions.push(
-          // <option key={property} value={property}>{fieldName}</option>,
           <MenuItem key={property} value={property} primaryText={fieldName} />,
         );
       }
@@ -165,14 +171,12 @@ class CreateQuerySidebar extends Component {
   let tempCounter = 0;
   const fieldIndex = Number(this.props.newQuery.fieldIndex);
   if(fieldIndex > -1){
-    console.log('yo: ', this.props.tables, tableIndex)
     for (const property in this.props.tables[tableIndex].fields) {
       const fieldName = this.props.tables[tableIndex].fields[property].name;
       fieldList.push(
         <Toggle
           key={property}
           label={fieldName}
-          // toggled={this.props.newQuery.returnFields[property].value}
           onToggle={this.handleToggle.bind(this, this.props.subQueryIndex, property, tableIndex)}
           style={style.toggle}
         />
@@ -212,10 +216,9 @@ class CreateQuerySidebar extends Component {
       const tableName = this.props.tables[el.tableIndex].type;
       const fieldName = this.props.tables[el.tableIndex].fields[el.fieldIndex].name;
       subQueryList.push(
-        <MenuItem key={i} value={`${tableName}.${fieldName}.${el.refType}`} primaryText={`${tableName} - ${fieldName}`} onClick={this.handleSubQuerySelector.bind(this, el.tableIndex, el.fieldIndex)}/>,
+        <MenuItem key={i} value={`${tableName}.${fieldName}.${el.refType}`} primaryText={`${tableName} - ${fieldName}`} onClick={this.handleSubQuerySelector.bind(this, el.tableIndex, el.fieldIndex)} style={style.menuItem}/>,
       )
     })
-    // this.state.tables[tableIndex].fields)
 
     if(this.props.subQuery.tableIndex > -1){
       for(const fieldID in this.props.tables[this.props.subQuery.tableIndex].fields){
@@ -224,7 +227,6 @@ class CreateQuerySidebar extends Component {
             <Toggle
               key={fieldID}
               label={field.name}
-              // toggled={this.props.newQuery.returnFields[property].value}
               onToggle={this.handleNewSubQueryToggle.bind(this, field.fieldNum, field.tableNum)}
               style={style.toggle}
             />
@@ -235,8 +237,8 @@ class CreateQuerySidebar extends Component {
   
     return (
       <div className="sidebar-container">
-        <h4>Create Custom Query</h4>
-        <form onSubmit={this.submitHandler}>
+        <h2 style={{margin: '10px'}}>Create Query</h2>
+        <form onSubmit={this.submitHandler} style={{marginTop: '-15px'}}>
           <TextField
             name='name'
             hintText="Query Name"
@@ -256,7 +258,6 @@ class CreateQuerySidebar extends Component {
               {graphQLTypeOptions}
             </DropDownMenu>
           </div>
-          <br />
           <div className='typeFieldInput'>
             <p>Field: </p>
             <DropDownMenu
@@ -267,35 +268,37 @@ class CreateQuerySidebar extends Component {
               {graphQLSearchOptions}
             </DropDownMenu>
           </div>
-            <br />
             {this.props.newQuery.tableIndex > -1 && this.props.newQuery.fieldIndex > -1 &&
-              <Paper zDepth={3} style={style.paper}>
-                <p>Return Values:</p>
+              <div style={style.paper}>
+                <h4 style={{margin: '5px'}}>Return Values:</h4>
                 <List>
                   {fieldList}
                 </List>
-              </Paper>
+              </div>
             }
             {this.props.newQuery.tableIndex > -1 && this.props.newQuery.fieldIndex > -1 &&
-              <Paper zDepth={3} style={style.paper}>
-              <br />
-                <p>Subquery:</p>
-                <DropDownMenu 
-                  value={this.props.newQuery.tableIndex}
-                  style={style.customWidth}
-                >
-                  {subQueryList}
-                </DropDownMenu>
-
-                {this.props.subQuery.tableIndex > -1 && (
+              <div style={style.paper}>
+                <h4 style={{margin: '5px'}}>Create Subquery:</h4>
+                <div className='flexRow'>
+                  <p style={{marginLeft: '10px'}}>By: </p>
+                  <DropDownMenu 
+                    value={this.props.newQuery.tableIndex}
+                    style={style.customWidth}
+                  >
+                    {subQueryList}
+                  </DropDownMenu>
+                </div>
+                <div style={{height: '10px', width: '100%'}} />
+               {this.props.subQuery.tableIndex > -1 && (
                   <div>
                     {listSubqueries}
-                  </div>
+                    <div style={{height: '10px', width: '100%'}} />
+                  </div>  
                 )}
-              </Paper>  
+              </div>  
             }
-          <br />
           <RaisedButton
+            style={style.button}
             label="Create Query"
             fullWidth
             secondary
