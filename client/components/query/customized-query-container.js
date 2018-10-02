@@ -133,41 +133,41 @@ const customizedQueries = {
   queries: {
     0: {
       name: 'AuthorByName',
-      tableId: 0, // Author
-      fieldId: 1, // name (this is the field that is searched by)
+      tableIndex: 0, // Author
+      fieldIndex: 1, // name (this is the field that is searched by)
       returnFields: {
         1: {
-          tableId: 0, // Author
-          fieldId: 1, // name
+          tableIndex: 0, // Author
+          fieldIndex: 1, // name
         },
       },
       subQueries: [{
-        tableId: 1, // Book. Will need to display everyBook since one to many relationship
-        fieldId: 3, // authorid
+        tableIndex: 1, // Book. Will need to display everyBook since one to many relationship
+        fieldIndex: 3, // authorid
         refType: 'one to many',
         returnFields: {
           1: { // name
-            tableId: 1, // Book
-            fieldId: 1, // name
+            tableIndex: 1, // Book
+            fieldIndex: 1, // name
           },
           2: { // genre
-            tableId: 1, // Book
-            fieldId: 2, // genre
+            tableIndex: 1, // Book
+            fieldIndex: 2, // genre
           }, 
         },
       }, 
       {
-        tableId: 0, // Author
-        fieldId: 0, // id
+        tableIndex: 0, // Author
+        fieldIndex: 0, // id
         refType: 'many to one',
         returnFields: {
           1: { // name
-            tableId: 0, // Author
-            fieldId: 1, // name
+            tableIndex: 0, // Author
+            fieldIndex: 1, // name
           },
           2: { // age
-            tableId: 0, // Author
-            fieldId: 2, // age
+            tableIndex: 0, // Author
+            fieldIndex: 2, // age
           }, 
         },
         
@@ -175,30 +175,30 @@ const customizedQueries = {
     },
     1: {
       name: 'BookByGenre',
-      tableId: 1, // Book
-      fieldId: 2, // Genre (this is the field that is searched by)
+      tableIndex: 1, // Book
+      fieldIndex: 2, // Genre (this is the field that is searched by)
       returnFields: {
         0: { // id
-          tableId: 1, // Book
-          fieldId: 0, // id
+          tableIndex: 1, // Book
+          fieldIndex: 0, // id
         },
         1: {  // name
-          tableId: 1, // Book
-          fieldId: 1, // name
+          tableIndex: 1, // Book
+          fieldIndex: 1, // name
         },
       },
       subQueries: [{
-        tableId: 0, // Author
-        fieldId: 0, // id
+        tableIndex: 0, // Author
+        fieldIndex: 0, // id
         refType: 'many to one',
         returnFields: {
           1: { // name
-            tableId: 0, // Author
-            fieldId: 1, // name
+            tableIndex: 0, // Author
+            fieldIndex: 1, // name
           },
           2: { // age
-            tableId: 0, // Author
-            fieldId: 2, // age
+            tableIndex: 0, // Author
+            fieldIndex: 2, // age
           }, 
         },
         
@@ -206,30 +206,30 @@ const customizedQueries = {
     },
     2: {
       name: 'EveryBook',
-      tableId: 1, // Book
-      fieldId: -1, // this is the field that is searched by 
+      tableIndex: 1, // Book
+      fieldIndex: -1, // this is the field that is searched by 
       returnFields: {
         0: { // id
-          tableId: 1, // Book
-          fieldId: 0, // id
+          tableIndex: 1, // Book
+          fieldIndex: 0, // id
         },
         1: {  // name
-          tableId: 1, // Book
-          fieldId: 1, // name
+          tableIndex: 1, // Book
+          fieldIndex: 1, // name
         },
       },
       subQueries: [{
-        tableId: 0, // Author
-        fieldId: 0, // id
+        tableIndex: 0, // Author
+        fieldIndex: 0, // id
         refType: 'many to one',
         returnFields: {
           1: { // name
-            tableId: 0, // Author
-            fieldId: 1, // name
+            tableIndex: 0, // Author
+            fieldIndex: 1, // name
           },
           2: { // age
-            tableId: 0, // Author
-            fieldId: 2, // age
+            tableIndex: 0, // Author
+            fieldIndex: 2, // age
           }, 
         },
         
@@ -271,11 +271,11 @@ const CustomizedQueryContainer = (props) => {
   
     let endString = 'export {'
     exportNames.forEach((name, i) => {
-        if (i) {
-        endString += `, ${name}`
-        } else {
-            endString += ` ${name}`
-        }
+      if (i) {
+      endString += `, ${name}`
+      } else {
+        endString += ` ${name}`
+      }
     })
   
     return queryString += endString + '};';
@@ -285,16 +285,16 @@ const CustomizedQueryContainer = (props) => {
     let string = ''
     
     // define the starting string for the query
-    if (query.fieldId === -1) {
+    if (query.fieldIndex === -1) {
       string = `const query${query.name} = gql\`${enter}${tab}{${enter}${tab}${tab}${query.name} {${enter}`;
     } else {
-      const searchingByField = data[query.tableId].fields[query.fieldId]
+      const searchingByField = data[query.tableIndex].fields[query.fieldIndex]
       string = `const query${query.name} = gql\`${enter}${tab}query($${searchingByField.name}: ${searchingByField.type}) {${enter}${tab}${tab}${query.name}(${searchingByField.name}: $${searchingByField.name}) {${enter}`;
     }
     
     // display all the base return fields
-    for (let fieldId in query.returnFields) {
-      const fieldName = data[query.tableId].fields[fieldId].name
+    for (let fieldIndex in query.returnFields) {
+      const fieldName = data[query.tableIndex].fields[fieldIndex].name
       string += `${tab}${tab}${tab}${fieldName}${enter}`;
     };
 
@@ -307,14 +307,14 @@ const CustomizedQueryContainer = (props) => {
       // build start of subQuery based on refType
       const subQueryRefType = subQuery.refType
       if (subQueryRefType === 'one to many' || subQueryRefType === 'many to many') {
-        string += `${baseSubQueryTabs}every${data[subQuery.tableId].type}{${enter}`
+        string += `${baseSubQueryTabs}every${data[subQuery.tableIndex].type}{${enter}`
       } else {
-        string += `${baseSubQueryTabs}${data[subQuery.tableId].type.toLowerCase()}{${enter}`
+        string += `${baseSubQueryTabs}${data[subQuery.tableIndex].type.toLowerCase()}{${enter}`
       }
       
       // build all the return fields of the subQuery
-      for (let fieldId in subQuery.returnFields) {
-        const fieldName = data[subQuery.tableId].fields[fieldId].name;
+      for (let fieldIndex in subQuery.returnFields) {
+        const fieldName = data[subQuery.tableIndex].fields[fieldIndex].name;
         string += baseSubQueryTabs + tab + fieldName + enter; 
       }
     }
