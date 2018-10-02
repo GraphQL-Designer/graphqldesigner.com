@@ -8,7 +8,6 @@ const mapStateToProps = store => ({
   queries: store.query.queries
 })
 
-
 const CustomizedQueryContainer = (props) => {
   const enter = `
   `
