@@ -49,14 +49,7 @@ const queryReducers = (state = initialState, action) => {
         queries: newReturnQuery
       }
     
-    case types.OPEN_CREATE_QUERY:
-
-      return {
-        ...state,
-        queryMode: 'create',
-        selectedQuery: customQueryReset
-      }
-    
+    // User inputs name for new customized query
     case types.HANDLE_NEW_QUERY_NAME:
       tempNewQuery = Object.assign({}, state.newQuery, 
         {name: action.payload.value})
@@ -100,9 +93,16 @@ const queryReducers = (state = initialState, action) => {
       }
     }
 
+    // User selects type or field for customized query
     case types.HANDLE_NEW_QUERY_CHANGE:
-      tempNewQuery = Object.assign({}, state.newQuery, 
-        {[action.payload.name]: action.payload.value})
+      if (action.payload.name === 'tableIndex') {
+        const fieldIndex = {'fieldIndex': -1}; // reset field since a new table was selected
+        const tableIndex = {[action.payload.name]: action.payload.value}
+        tempNewQuery = Object.assign({}, state.newQuery, tableIndex, fieldIndex)
+      } else {
+        tempNewQuery = Object.assign({}, state.newQuery, 
+          {[action.payload.name]: action.payload.value})
+      }
       
       return{
         ...state,

@@ -13,16 +13,11 @@ const mapStateToProps = store => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  // deleteTable: tableIndex => dispatch(actions.deleteTable(tableIndex)),
 });
 
 const QueryApp = (props) => {
   let sidebar = '';
-  // if (props.queryMode === 'create') {
   sidebar = <CreateQuerySidebar/>
-  // } else {
-  //   sidebar = <CustomizeQuerySidebar/>
-  // }
 
   return (
     <div id='query-app'>
