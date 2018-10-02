@@ -9,74 +9,154 @@ const mapStateToProps = store => ({
   tables: store.schema.tables,
 });
 
-const CodeSqlDBSchemaContainer = (props) => {
+const CodeSeqlDBSchemaContainer = (props) => {
   const enter = `
   `;
   const tab = '  ';
+  let createTablesCode = ``;
+  const foreignKeys = {};
+  let primaryKey = [];
 
-  let schemaCode = [];
+  function parseSequelSchema(table) {
+    if (!table) return ``;
 
-  function parseSqlSchema(table) {
-    if (!table) return;
-    let schema = `${tab}const sequelize = require('sequelize');${enter}${enter}`;
+    createTablesCode += `${enter}${tab}${tab}CREATE TABLE \`${table.type}\` (${enter}`;
 
-    const startLine = `const ${table.type}= sequelize.define("${table.type}", {${enter}${tab}`;
-    schema += startLine;
-    let firstLoop = true;
+    // create code for each field
     for (const fieldId in table.fields) {
-      if (fieldId !== '0') {
-        if (!firstLoop) schema += `,${enter}${tab}${tab}`;
-        firstLoop = false;
-        schema += createSchemaField(table.fields[fieldId]);
+      createTablesCode += createSchemaField(table.fields[fieldId]);
+      // so long as it's not the last field, add a comma
+      const tableProps = Object.keys(table.fields);
+      if (fieldId !== tableProps[tableProps.length - 1]) {
+        createTablesCode += `,`;
       }
+      createTablesCode += enter;
     }
-    schema += `${enter}});${enter}${enter}module.exports = sequelize.model("${table.type}",${table.type}DataTypes);${enter}${enter}`;
 
-    return schema;
+    // if table has a primary key
+    if (primaryKey.length > 0) {
+      createTablesCode += `${tab}${tab}${tab}PRIMARY KEY (`;
+      primaryKey.forEach((key, i) => {
+        if (i === primaryKey.length - 1) {
+          createTablesCode += `\`${key}\`)${enter}`;
+        } else {
+          createTablesCode += `\`${key}\`, `;
+        }
+      });
+    }
+    // reset primaryKey to empty so primary keys don't slip into the next table
+    primaryKey = [];
+    createTablesCode += `${tab}${tab});${enter}`;
   }
-  function createSchemaField(table) {
-    let schema = `${table.name}: ${checkForArray('start')}{${enter}${tab}${tab}type: ${checkDataType(table.type)},${enter}${tab}${tab}unique: ${table.unique},${enter}${tab}${tab}required: ${table.required}`;
+  function createSchemaField(field) {
+    let fieldCode = ``;
+    fieldCode += `${tab}${tab}${tab}\`${field.name}\`${tab}${checkDataType(field.type)}`;
+    fieldCode += checkRequired(field.required);
+    fieldCode += checkUnique(field.unique);
+    fieldCode += checkDefault(field.defaultValue);
 
-
-    if (table.defaultValue) {
-      schema += `,${enter}${tab}${tab}default: "${table.defaultValue}"`;
+    if (field.primaryKey) {
+      primaryKey.push(field.name);
     }
 
-    return schema += `${enter}${tab}${tab}${checkForArray('end')}`;
-
-    function checkForArray(position) {
-      if (table.multipleValues) {
-        if (position === 'start') return '[';
-        if (position === 'end') return ']';
+    if (field.relationSelected) {
+      const relationData = {
+        'relatedTable': field.relation.tableIndex,
+        'relatedField': field.relation.fieldIndex,
+        'fieldMakingRelation': field.fieldNum
+      };
+      if (foreignKeys[field.tableNum]) {
+        foreignKeys[field.tableNum].push(relationData);
+      } else {
+        foreignKeys[field.tableNum] = [relationData];
       }
-      return '';
     }
+    return fieldCode;
+  }
 
-    function checkDataType(type) {
-      if (type === 'ID') {
-        return 'String';
-      }
-      return type;
+  function checkDataType(dataType) {
+    switch(dataType){
+      case 'String':
+        return `VARCHAR`;
+      case 'Number':
+        return `INT`;
+      case 'Boolean':
+        return `BOOLEAN`;
+      case 'ID':
+        return `VARCHAR`;
     }
   }
+
+  function checkUnique(fieldUnique) {
+    if (fieldUnique) return `${tab}UNIQUE`;
+    else return '';
+  }
+
+  function checkRequired(fieldRequired) {
+    if (fieldRequired) return `${tab}NOT NULL`;
+    else return '';
+  }
+
+  function checkDefault(fieldDefault) {
+    if (fieldDefault.length > 0) return `${tab}DEFAULT '${fieldDefault}'`;
+    else return '';
+  }
+
+  // loop through tables and create build script for each table
   for (const tableId in props.tables) {
-    schemaCode.push(
-      <pre>
-        {parseSqlSchema(props.tables[tableId])};
-        <hr/>
-      </pre>
-    )
+    parseSequelSchema(props.tables[tableId]);
   }
+
+  // if any tables have relations, aka foreign keys
+  for (const tableId in foreignKeys) {
+    // loop through the table's fields to find the particular relation
+    foreignKeys[tableId].forEach((relationInfo, relationCount) => {
+      // name of table making relation
+      const tableMakingRelation = props.tables[tableId].type;
+      // get name of field making relation
+      const fieldId = relationInfo.fieldMakingRelation;
+      const fieldMakingRelation = props.tables[tableId].fields[fieldId].name;
+      // get name of table being referenced
+      const relatedTableId = relationInfo.relatedTable;
+      const relatedTable = props.tables[relatedTableId].type;
+      // get name of field being referenced
+      const relatedFieldId = relationInfo.relatedField;
+      const relatedField = props.tables[relatedTableId].fields[relatedFieldId].name;
+
+      createTablesCode += `${enter}${tab}${tab}ALTER TABLE \`${tableMakingRelation}\` ADD CONSTRAINT \`${tableMakingRelation}_fk${relationCount}\` FOREIGN KEY (\`${fieldMakingRelation}\`) REFERENCES \`${relatedTable}\`(\`${relatedField}\`);${enter}`;
+    });
+  }
+
+  if (createTablesCode.length > 0) {
+    createTablesCode += tab;
+  }
+  const SequelCode = `  const sequelize = require('sequelize');
+  
+  const sequelize = new Sequelize('db', 'username', 'password', {
+    host: /* enter your hostname */
+    dialect: 'mysql' 
+  }); 
+
+  
+  let createTables = \`${createTablesCode}\`;
+
+  
+  sequelize.sync({ logging: console.log })
+  .then(() => (createTables, function(err, data) {
+      if (err) {
+        console.log(err.message);
+      }
+  });`;
 
   return (
-    <div className="code-container-side">
-      <h4 className='codeHeader'>Database Schemas</h4>
-      <hr/>
-      {/* <pre>
-        {schema}
-      </pre> */}
-      {schemaCode}
+    <div id="code-container-sequelize">
+      <h4 className="codeHeader">Sequelize Database Schemas</h4>
+      <hr />
+      <pre>
+        {SequelCode}
+      </pre>
+      <pre id='column-filler-for-scroll'></pre>
     </div>
   );
 };
-export default connect(mapStateToProps, null)(CodeSqlDBSchemaContainer);
+export default connect(mapStateToProps, null)(CodeSeqlDBSchemaContainer);
