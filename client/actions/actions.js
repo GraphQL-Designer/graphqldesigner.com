@@ -125,3 +125,8 @@ export const submitSubQueryHandler = subQuery => ({
   type: types.SUBMIT_SUBQUERY_HANDLER,
   payload: subQuery,
 });
+
+export const deletedFieldRelationUpdate = indexes => ({
+  type: types.DELETED_FIELD_RELATION_UPDATE,
+  payload: indexes,
+});

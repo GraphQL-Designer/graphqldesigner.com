@@ -173,6 +173,8 @@ const queryReducers = (state = initialState, action) => {
         subQuery: customQueryReset
       }
 
+      case types.DELETED_FIELD_RELATION_UPDATE:
+       
         
         default:
         return state;
