@@ -29,6 +29,7 @@ const queryReducers = (state = initialState, action) => {
     fieldIndex: -1
   }
 
+  let subQueryIndex = state.subQueryIndex;
   let newReturnFields;
   let newReturnQuery;
   let newSubQuery;
@@ -137,6 +138,24 @@ const queryReducers = (state = initialState, action) => {
             ...state,
             subQuery: newSubQuery
           }
+
+        case types.SUBMIT_SUBQUERY_HANDLER:
+          console.log('submitting subquery');
+
+          subQueryIndex += 1;
+
+          newSubQuery = Object.assign({}, state.subQuery)
+          newReturnQuery = Object.assign({}, state.newQuery)
+
+          newReturnQuery.subQueries.push(newSubQuery);
+
+          return {
+            ...state,
+            subQueryIndex,
+            newQuery: newReturnQuery,
+            subQuery: customQueryReset
+          }
+
         
         default:
         return state;

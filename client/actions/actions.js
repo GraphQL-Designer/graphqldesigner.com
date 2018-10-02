@@ -120,3 +120,8 @@ export const handleNewSubQueryToggle = field => ({
   type: types.HANDLE_NEW_SUBQUERY_TOGGLE,
   payload: field
 })
+
+export const submitSubQueryHandler = subQuery => ({
+  type: types.SUBMIT_SUBQUERY_HANDLER,
+  payload: subQuery
+})

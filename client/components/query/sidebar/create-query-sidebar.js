@@ -56,7 +56,8 @@ const mapDispatchToProps = dispatch => ({
   handleReturnValues: returnValues => dispatch(actions.handleReturnValues(returnValues)),
   handleSubQuerySelector: tableFieldIndexes => dispatch(actions.handleSubQuerySelector(tableFieldIndexes)),
   handleNewQueryName: name => dispatch(actions.handleNewQueryName(name)),
-  handleNewSubQueryToggle: field => dispatch(actions.handleNewSubQueryToggle(field))
+  handleNewSubQueryToggle: field => dispatch(actions.handleNewSubQueryToggle(field)),
+  submitSubQueryHandler: subQuery => dispatch(actions.submitSubQueryHandler(subQuery))
 });
 
 class CreateQuerySidebar extends Component {
@@ -75,6 +76,7 @@ class CreateQuerySidebar extends Component {
     this.submitHandler = this.submitHandler.bind(this);
     this.handleToggle = this.handleToggle.bind(this);
     this.createReturnFields = this.createReturnFields.bind(this);
+    this.submitSubQueryHandler = this.submitSubQueryHandler.bind(this);
   }
 
   // when a user types into the input for Query Name
@@ -110,6 +112,11 @@ class CreateQuerySidebar extends Component {
     event.preventDefault();
     // this.props.createQuery(this.state);
 
+  }
+
+  submitSubQueryHandler(event){
+    event.preventDefault();
+    this.props.submitSubQueryHandler(this.props.subQuery)
   }
 
   handleSubQuerySelector(tableIndex, fieldIndex) {
@@ -289,7 +296,14 @@ class CreateQuerySidebar extends Component {
 
                 {this.props.subQuery.tableIndex > -1 && (
                   <div>
-                    {listSubqueries}
+                      {listSubqueries}
+                      <RaisedButton
+                        label="Create SubQuery"
+                        fullWidth
+                        secondary
+                        type="submit"
+                        onClick={this.submitSubQueryHandler}
+                      />  
                   </div>
                 )}
               </Paper>  
