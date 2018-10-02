@@ -68,7 +68,7 @@ const CodeClientContainer = (props) => {
   parseClientQueries(props.tables);
 
   return (
-    <div className="code-container-side">
+    <div id="code-container-client">
       <h4 className='codeHeader'>Client Queries</h4>
       <hr/>
       <pre>

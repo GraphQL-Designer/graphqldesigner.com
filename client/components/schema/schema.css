@@ -26,6 +26,9 @@
   height: auto; 
   overflow-y: auto;
   overflow-x: hidden; 
+  background-image: url("/public/images/graphql_wallpaper.png");
+  background-repeat: no-repeat; 
+  background-size: 100% 100%; 
 }
 
 #sidebar-container {
