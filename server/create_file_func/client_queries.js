@@ -7,7 +7,7 @@ function parseClientQueries(data) {
     query += buildClientQueryAll(data[prop]);
     exportNames.push(`queryEvery${data[prop].type}`);
 
-    if (data[prop].fields[0]) {
+    if (!!data[prop].fields[0]) {
       query += buildClientQueryById(data[prop]);
       exportNames.push(`query${data[prop].type}ById `);
     }
