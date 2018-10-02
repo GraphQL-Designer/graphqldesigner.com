@@ -27,7 +27,15 @@ h1,h2,h3,h4,h5,h6,p{
   border-right: 10px solid  rgb(44,48,56);
   padding: 10px; 
   overflow: auto; 
+}
 
+.codeHeader{
+  text-align: center;
+}
+
+hr {
+  color: white; 
+  background: white; 
 }
 
 #customized-query-container {

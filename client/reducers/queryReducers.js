@@ -14,24 +14,25 @@ const initialState = {
   subQuery: {
     tableIndex: -1,
     fieldIndex: -1,
+    refType: '',
     returnFields: {}
   },
   newSubQuerySelected: false
 };
 
 const queryReducers = (state = initialState, action) => {
+  const subQueryReset = {
+    tableIndex: -1,
+    fieldIndex: -1,
+    refType: '', 
+    returnFields: {},
+  }
   const newQueryReset = {
     name: '',
     tableIndex: -1,
     fieldIndex: -1,
     returnFields: {},
     subQueries: []
-  }
-
-  const subQueryReset = {
-    tableIndex: -1,
-    fieldIndex: -1,
-    returnFields: {}
   }
 
   let subQueryIndex = state.subQueryIndex;
@@ -43,10 +44,11 @@ const queryReducers = (state = initialState, action) => {
   let newQueriesIndex;
 
   switch (action.type) {
+    // Submit new customized query
     case types.CREATE_QUERY: 
       newReturnQuery = Object.assign({}, state.queries, {[state.queriesIndex]: state.newQuery});
-      newQueriesIndex = state.queriesIndex + 1;
-      
+      const newQueriesIndex = state.queriesIndex + 1;
+    
       return{
         ...state,
         queriesIndex: newQueriesIndex,
@@ -71,17 +73,18 @@ const queryReducers = (state = initialState, action) => {
         newQuery: tempNewQuery
       }
       
-    case types.CREATE_RETURN_FIELDS:
-      newReturnFields = Object.assign({}, state.newQuery.returnFields, )
+    // case types.CREATE_RETURN_FIELDS:
+    //   newReturnFields = Object.assign({}, state.newQuery.returnFields, )
       
-      Object.assign({}, state.newQuery, {returnFields : 
-        Object.assign({}, state.newQuery.returnFields[action.payload.index], {name: action.payload.name, value: action.payload.value})})
+    //   Object.assign({}, state.newQuery, {returnFields : 
+    //     Object.assign({}, state.newQuery.returnFields[action.payload.index], {name: action.payload.name, value: action.payload.value})})
         
-      return{
-        ...state,
-        newQuery: newReturnFields
-      }
-        
+    //   return{
+    //     ...state,
+    //     newQuery: newReturnFields
+    //   }
+    
+    
     case types.HANDLE_RETURN_VALUES:
       let { subQueryIndex, fieldIndex, tableIndex, returnFieldsIndex } = action.payload;
       if(subQueryIndex < 0) {
@@ -131,11 +134,12 @@ const queryReducers = (state = initialState, action) => {
         newQuery: tempNewQuery
       }
     
-
+    // Select type or field for SubQuery
     case types.HANDLE_SUBQUERY_SELECTOR:
       newSubQuery = Object.assign({}, state.subQuery, {
         tableIndex: action.payload.tableIndex,
-        fieldIndex: action.payload.fieldIndex
+        fieldIndex: action.payload.fieldIndex,
+        refType: action.payload.refType
       })
       return{
         ...state,
