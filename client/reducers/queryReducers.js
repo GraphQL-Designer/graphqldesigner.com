@@ -1,7 +1,6 @@
 import * as types from '../actions/action-types';
 
 const initialState = {
-  queryMode: 'create',
   queriesIndex: 0,
   subQueryIndex: -1,
   queries: {},
@@ -21,11 +20,17 @@ const initialState = {
 };
 
 const queryReducers = (state = initialState, action) => {
-
-  const customQueryReset = {
-    queryName: '',
+  const subQueryReset = {
     tableIndex: -1,
-    fieldIndex: -1
+    fieldIndex: -1,
+    returnFields: {},
+  }
+  const newQueryReset = {
+    name: '',
+    tableIndex: -1,
+    fieldIndex: -1,
+    returnFields: {},
+    subQueries: []
   }
 
   let subQueryIndex = state.subQueryIndex;
@@ -33,25 +38,18 @@ const queryReducers = (state = initialState, action) => {
   let newReturnQuery;
   let newSubQuery;
   let tempNewQuery;
-  let newSubQueries;
 
   switch (action.type) {
     case types.CREATE_QUERY: 
-      const newQuery = Object.assign({}, action.payload)
-      
+      newReturnQuery = Object.assign({}, state.queries, {[subQueryIndex]: state.newQuery});
+      const newQueriesIndex = state.queriesIndex + 1;
+    
       return{
         ...state,
         queriesIndex: newQueriesIndex,
-        queryMode: 'customQuery',
-        selectedQuery: newQuery
-      }
-    
-    case types.OPEN_CREATE_QUERY:
-
-      return {
-        ...state,
-        queryMode: 'create',
-        selectedQuery: customQueryReset
+        queries: newReturnQuery,
+        newQuery: newQueryReset,
+        subQueries: subQueryReset
       }
     
     // User inputs name for new customized query
@@ -66,7 +64,6 @@ const queryReducers = (state = initialState, action) => {
       
     case types.CREATE_RETURN_FIELDS:
       newReturnFields = Object.assign({}, state.newQuery.returnFields, )
-      
       
       Object.assign({}, state.newQuery, {returnFields : 
         Object.assign({}, state.newQuery.returnFields[action.payload.index], {name: action.payload.name, value: action.payload.value})})
@@ -167,11 +164,10 @@ const queryReducers = (state = initialState, action) => {
         ...state,
         subQueryIndex : newSubQueryIndex,
         newQuery: newReturnQuery,
-        subQuery: customQueryReset
+        subQuery: subQueryReset
       }
 
-        
-        default:
+      default:
         return state;
       }
     };
