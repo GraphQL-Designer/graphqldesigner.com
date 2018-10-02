@@ -55,17 +55,17 @@ function buildDbModelRequirePaths(data) {
 }
 
 function buildGraphqlTypeSchema(table, data) {
-    let query = `const ${table.type}Type = new GraphQLObjectType({\n\tname: '${table.type}',\n\tfields: () => ({`
+    let query = `const ${table.type}Type = new GraphQLObjectType({\n\tname: '${table.type}',\n\tfields: () => ({`;
 
     let firstLoop = true;
     for (let prop in table.fields) {
         if (!firstLoop) query+= ',';
         firstLoop = false;
 
-        query += `\n\t\t${table.fields[prop].name}: { type: ${checkForMultipleValues(table.fields[prop].multipleValues, 'front')}${tableTypeToGraphqlType(table.fields[prop].type)}${checkForMultipleValues(table.fields[prop].multipleValues, 'back')} }`
+        query += `\n\t\t${table.fields[prop].name}: { type: ${checkForMultipleValues(table.fields[prop].multipleValues, 'front')}${tableTypeToGraphqlType(table.fields[prop].type)}${checkForMultipleValues(table.fields[prop].multipleValues, 'back')} }`;
 
         if (table.fields[prop].relation.tableIndex > -1) {
-            query += createSubQuery(table.fields[prop], data)
+            query += createSubQuery(table.fields[prop], data);
         }
 
         const refBy = table.fields[prop].refBy;
@@ -82,7 +82,7 @@ function buildGraphqlTypeSchema(table, data) {
                     }
                 };
                 query += createSubQuery(field, data);
-            })
+            });
         }
     }
     return query += '\n\t})\n});\n\n';
@@ -106,30 +106,30 @@ function tableTypeToGraphqlType(type) {
 }
 
 function toTitleCase(refTypeName) {
-  let name = refTypeName[0].toUpperCase()
-  name += refTypeName.slice(1).toLowerCase()
-  return name
+  let name = refTypeName[0].toUpperCase();
+  name += refTypeName.slice(1).toLowerCase();
+  return name;
 }
 
 function createSubQuery(field, data) {
   const refTypeName = data[field.relation.tableIndex].type;
   const refFieldName = data[field.relation.tableIndex].fields[field.relation.fieldIndex].name;
   const refFieldType = data[field.relation.tableIndex].fields[field.relation.fieldIndex].type;
-  const query = `,\n\t\t${createSubQueryName(refTypeName)}: {\n\t\t\ttype: ${refTypeName}Type,\n\t\t\tresolve(parent, args) {\n\t\t\t\treturn ${refTypeName}.${findDbSearchMethod(refFieldName, refFieldType, field.relation.refType)}(${createSearchObject(refFieldName, refFieldType, field)});\n\t\t\t}\n\t\t}`
-  return query
-  
+  const query = `,\n\t\t${createSubQueryName(refTypeName)}: {\n\t\t\ttype: ${refTypeName}Type,\n\t\t\tresolve(parent, args) {\n\t\t\t\treturn ${refTypeName}.${findDbSearchMethod(refFieldName, refFieldType, field.relation.refType)}(${createSearchObject(refFieldName, refFieldType, field)});\n\t\t\t}\n\t\t}`;
+  return query;
+
   function createSubQueryName(tableIndex, data) {
     switch (field.relation.refType) {
       case 'one to one':
-        return `${refTypeName.toLowerCase()}`
+        return `${refTypeName.toLowerCase()}`;
       case 'one to many':
-        return `everyRelated${toTitleCase(refTypeName)}`
+        return `everyRelated${toTitleCase(refTypeName)}`;
       case 'many to one':
-        return `${refTypeName.toLowerCase()}`
+        return `${refTypeName.toLowerCase()}`;
       case 'many to many':
-        return `everyRelated${toTitleCase(refTypeName)}`
+        return `everyRelated${toTitleCase(refTypeName)}`;
       default:
-        return `everyRelated${toTitleCase(refTypeName)}`
+        return `everyRelated${toTitleCase(refTypeName)}`;
       }
   }
 }
@@ -212,7 +212,7 @@ function checkForRequired(required, position) {
   if (required) {
     if (position === 'front') {
       return 'new GraphQLNonNull(';
-    } 
+    }
     return ')';
   }
   return '';
@@ -222,7 +222,7 @@ function checkForMultipleValues(multipleValues, position) {
   if (multipleValues) {
     if (position === 'front') {
       return 'new GraphQLList(';
-    } 
+    }
     return ')';
   }
   return '';
