@@ -19,7 +19,7 @@ const mapDispatchToProps = dispatch => ({
 const QueryApp = (props) => {
   let sidebar = '';
   // if (props.queryMode === 'create') {
-    sidebar = <CreateQuerySidebar/>
+  sidebar = <CreateQuerySidebar/>
   // } else {
   //   sidebar = <CustomizeQuerySidebar/>
   // }

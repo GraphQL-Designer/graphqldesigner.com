@@ -19,7 +19,7 @@ const mapStateToProps = store => ({
   tableName: store.schema.selectedTable.type,
   tableID: store.schema.selectedTable.tableID,
   database: store.schema.database,
-  selectedTable: store.schema.selectedTable
+  selectedTable: store.schema.selectedTable,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -28,7 +28,7 @@ const mapDispatchToProps = dispatch => ({
   tableNameChange: tableName => dispatch(actions.handleTableNameChange(tableName)),
   idSelector: () => dispatch(actions.handleTableID()),
   openTableCreator: () => dispatch(actions.openTableCreator()),
-  handleSnackbarUpdate: status => dispatch(actions.handleSnackbarUpdate(status))
+  handleSnackbarUpdate: status => dispatch(actions.handleSnackbarUpdate(status)),
 });
 
 class CreateTable extends React.Component {
@@ -162,5 +162,5 @@ class CreateTable extends React.Component {
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(CreateTable);

@@ -131,6 +131,7 @@ class TableOptions extends React.Component {
       this.handleSnackbarUpdate('Please enter a field name (no space, symbols allowed)');
     }
   }
+
   render() {
     let tables = [];
     let fields = [];

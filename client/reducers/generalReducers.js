@@ -1,14 +1,14 @@
 import * as types from '../actions/action-types';
 
 const initialState = {
-  statusMessage: ''
+  statusMessage: '',
 };
 
 const generalReducers = (state = initialState, action) => {
   switch (action.type) {
     case types.MESSAGE:
       return {
-        ...state
+        ...state,
       };
 
     case types.HANDLE_SNACKBAR_UPDATE:
@@ -16,7 +16,7 @@ const generalReducers = (state = initialState, action) => {
 
       return {
         ...state,
-        statusMessage: newState
+        statusMessage: newState,
       };
 
     default:
