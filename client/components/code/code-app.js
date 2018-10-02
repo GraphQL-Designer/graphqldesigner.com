@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 
 // components
 import CodeDBMongoContainer from './code-db-mongo-container.js';
-import CodeDBSQLContainer from './code-db-sql-container.js';
-import CodeSeqlDBSchemaContainer from './code-db-sequelize-container.js';
+import CodeDBSQLContainer from './code-db-mysql-container.js';
+import CodeDBSequelizeContainer from './code-db-sequelize-container.js';
 import CodeClientContainer from './code-client-container.js';
 import CodeServerContainer from './code-server-container.js';
 
@@ -19,9 +19,8 @@ class CodeApp extends Component {
 
   render() {
     let databaseContainer = <CodeDBMongoContainer/>
-    if (this.props.database === 'MySQL') databaseContainer = <CodeSeqlDBSchemaContainer/>
-
-    console.log(this.props.database)
+    if (this.props.database === 'MySQL') databaseContainer = <CodeDBSQLContainer/>
+    if (this.props.database === 'Sequelize') databaseContainer = <CodeDBSequelizeContainer/>
   
     return (
       <div className='code-app'>

@@ -70,7 +70,7 @@ const CodeDBSchemaContainer = (props) => {
 
   return (
     <div id="code-container-database">
-      <h4 className='codeHeader'>Database Schemas</h4>
+      <h4 className='codeHeader'>MongoDB Schemas</h4>
       <hr/>
       {schemaCode}
       <pre id='column-filler-for-scroll'></pre>

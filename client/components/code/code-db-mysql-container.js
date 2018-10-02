@@ -161,7 +161,7 @@ const CodeDBSQLContainer = (props) => {
 
   return (
     <div id="code-container-database">
-      <h4 className='codeHeader'>Database Schemas</h4>
+      <h4 className='codeHeader'>MySQL Tables</h4>
       <hr/>
       <pre>
         {SQLCode}

@@ -149,8 +149,8 @@ const CodeSeqlDBSchemaContainer = (props) => {
   });`;
 
   return (
-    <div id="code-container-sequelize">
-      <h4 className="codeHeader">Sequelize Database Schemas</h4>
+    <div id="code-container-database">
+      <h4 className="codeHeader">Sequelize Schemas</h4>
       <hr />
       <pre>
         {SequelCode}
