@@ -216,7 +216,7 @@ class CreateQuerySidebar extends Component {
       for(const fieldID in this.props.tables[newSubQueryTableIndex].fields){
         let field = this.props.tables[newSubQueryTableIndex].fields[fieldID];
         if(Number(field.relation.tableIndex) !== -1){
-          temp.push(field.relation)
+          relations.push(field.relation)
         }
         if(field.refBy.size){
           field.refBy.forEach(ref => {
@@ -224,7 +224,7 @@ class CreateQuerySidebar extends Component {
             const refTableIndex = refSplit[0];
             const refFieldIndex = refSplit[1];
             const refRefType = refSplit[2];
-            temp.push({
+            relations.push({
               tableIndex : refTableIndex,
               fieldIndex: refFieldIndex,
               refType: refRefType,
