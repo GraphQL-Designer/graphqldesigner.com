@@ -6,7 +6,6 @@ import { connect } from 'react-redux';
 import QueryCodeContainer from './query-code-container.js';
 import CustomizeQueryContainer from './customized-query-container.js'
 import CreateQuerySidebar from './sidebar/create-query-sidebar.js';
-import CustomizeQuerySidebar from './sidebar/customize-query-sidebar.js';
 
 const mapStateToProps = store => ({
   queryMode: store.query.queryMode,

@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import SubQuery from './subquery'
 
 // styles
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
-import { List, ListItem } from 'material-ui/List';
+import { List } from 'material-ui/List';
 import SelectField from 'material-ui/SelectField';
 import DropDownMenu from 'material-ui/DropDownMenu';
 import MenuItem from 'material-ui/MenuItem';
@@ -96,8 +97,8 @@ class CreateQuerySidebar extends Component {
     })
   }
 
-  handleToggle(subQueryIndex, fieldIndex, tableIndex) {
-    this.props.handleReturnValues({ subQueryIndex, fieldIndex, tableIndex });
+  handleToggle(subQueryIndex, fieldIndex, tableIndex, returnFieldsIndex) {
+    this.props.handleReturnValues({ subQueryIndex, fieldIndex, tableIndex, returnFieldsIndex });
   }
 
   ///rename function since it dispatches handleNewQueryChange
@@ -122,7 +123,6 @@ class CreateQuerySidebar extends Component {
       this.props.createQuery(this.props.newQuery);
     }
     // this.props.createQuery(this.state);
-
   }
 
   submitSubQueryHandler(event){
@@ -231,7 +231,7 @@ class CreateQuerySidebar extends Component {
               label={field.name}
               onToggle={this.handleNewSubQueryToggle.bind(this, field.fieldNum, field.tableNum)}
               style={style.toggle}
-            />,
+            /> 
         )
       }
     }
@@ -278,6 +278,17 @@ class CreateQuerySidebar extends Component {
                 </List>
               </div>
             }
+            {this.props.newQuery.subQueries.length > 0 && (
+              <div style={{ marginTop: '10px'}}>
+                <h4 style={{marginLeft: '5px'}}>Sub Queries:</h4>
+                <List style={{backgroundColor: 'rgb(54, 58, 66)'}}>
+                {this.props.newQuery.subQueries.map((query, i) => (
+                  <SubQuery key={i} tableIndex={query.tableIndex} fieldIndex={query.fieldIndex} 
+                  newQuery={this.props.newQuery} tables={this.props.tables} subQueryIndex={this.props.subQueryIndex} onToggle={this.handleToggle.bind(this, this.props.subQueryIndex, query.fieldIndex, query.tableIndex)}/>
+                ))}
+                </List>
+              </div>
+            )}
             {this.props.newQuery.tableIndex > -1 && this.props.newQuery.fieldIndex > -1 &&
               <div style={style.paper}>
                 <h4 style={{margin: '5px'}}>Create Subquery:</h4>
