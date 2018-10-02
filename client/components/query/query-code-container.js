@@ -68,6 +68,8 @@ const QueryCodeContainer = (props) => {
 
   return (
     <div id="query-code-container">
+      <h4 className='codeHeader'>Built Queries</h4>
+      <hr/>
       <pre>
         {query}
       </pre>

@@ -96,10 +96,10 @@ export const handleNewQueryChange = field => ({
 });
 
 
-export const createReturnFields = returnFields => ({
-  type: types.CREATE_RETURN_FIELDS,
-  payload: returnFields,
-});
+// export const createReturnFields = returnFields => ({
+//   type: types.CREATE_RETURN_FIELDS,
+//   payload: returnFields,
+// });
 
 export const handleReturnValues = returnValues => ({
   type: types.HANDLE_RETURN_VALUES,

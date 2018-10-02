@@ -14,6 +14,7 @@ const initialState = {
   subQuery: {
     tableIndex: -1,
     fieldIndex: -1,
+    refType: '',
     returnFields: {}
   },
   newSubQuerySelected: false
@@ -23,6 +24,7 @@ const queryReducers = (state = initialState, action) => {
   const subQueryReset = {
     tableIndex: -1,
     fieldIndex: -1,
+    refType: '', 
     returnFields: {},
   }
   const newQueryReset = {
@@ -40,8 +42,9 @@ const queryReducers = (state = initialState, action) => {
   let tempNewQuery;
 
   switch (action.type) {
+    // Submit new customized query
     case types.CREATE_QUERY: 
-      newReturnQuery = Object.assign({}, state.queries, {[subQueryIndex]: state.newQuery});
+      newReturnQuery = Object.assign({}, state.queries, {[state.queriesIndex]: state.newQuery});
       const newQueriesIndex = state.queriesIndex + 1;
     
       return{
@@ -62,17 +65,18 @@ const queryReducers = (state = initialState, action) => {
         newQuery: tempNewQuery
       }
       
-    case types.CREATE_RETURN_FIELDS:
-      newReturnFields = Object.assign({}, state.newQuery.returnFields, )
+    // case types.CREATE_RETURN_FIELDS:
+    //   newReturnFields = Object.assign({}, state.newQuery.returnFields, )
       
-      Object.assign({}, state.newQuery, {returnFields : 
-        Object.assign({}, state.newQuery.returnFields[action.payload.index], {name: action.payload.name, value: action.payload.value})})
+    //   Object.assign({}, state.newQuery, {returnFields : 
+    //     Object.assign({}, state.newQuery.returnFields[action.payload.index], {name: action.payload.name, value: action.payload.value})})
         
-      return{
-        ...state,
-        newQuery: newReturnFields
-      }
-        
+    //   return{
+    //     ...state,
+    //     newQuery: newReturnFields
+    //   }
+    
+    
     case types.HANDLE_RETURN_VALUES:
       let { subQueryIndex, fieldIndex, tableIndex, returnFieldsIndex } = action.payload;
       if(subQueryIndex < 0) {
@@ -122,11 +126,12 @@ const queryReducers = (state = initialState, action) => {
         newQuery: tempNewQuery
       }
     
-
+    // Select type or field for SubQuery
     case types.HANDLE_SUBQUERY_SELECTOR:
       newSubQuery = Object.assign({}, state.subQuery, {
         tableIndex: action.payload.tableIndex,
-        fieldIndex: action.payload.fieldIndex
+        fieldIndex: action.payload.fieldIndex,
+        refType: action.payload.refType
       })
       return{
         ...state,
