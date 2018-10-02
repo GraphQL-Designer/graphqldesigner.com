@@ -68,13 +68,16 @@ class Welcome extends React.Component {
             <img id='icon_react' src='./images/react.png' />
           </div>
           <hr className='welcome-hr' />
-          <h4>Select your database type</h4>
+          <h4>Select your database/ORM type</h4>
           <div id='buttonsContainer'>
-            <RaisedButton value='test' onClick={this.handleDatabaseClick} buttonStyle={styles}>
+            <RaisedButton onClick={this.handleDatabaseClick} buttonStyle={styles}>
               MongoDB
             </RaisedButton>
             <RaisedButton onClick={this.handleDatabaseClick} buttonStyle={styles}>
               MySQL
+            </RaisedButton>
+            <RaisedButton onClick={this.handleDatabaseClick} buttonStyle={styles}>
+              Sequelize
             </RaisedButton>
           </div>
         </Dialog>
