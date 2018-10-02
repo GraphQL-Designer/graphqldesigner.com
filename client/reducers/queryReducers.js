@@ -1,7 +1,6 @@
 import * as types from '../actions/action-types';
 
 const initialState = {
-  queryMode: 'create',
   queriesIndex: 0,
   subQueryIndex: -1,
   queries: {},
@@ -21,11 +20,17 @@ const initialState = {
 };
 
 const queryReducers = (state = initialState, action) => {
-
-  const customQueryReset = {
-    queryName: '',
+  const subQueryReset = {
     tableIndex: -1,
-    fieldIndex: -1
+    fieldIndex: -1,
+    returnFields: {},
+  }
+  const newQueryReset = {
+    name: '',
+    tableIndex: -1,
+    fieldIndex: -1,
+    returnFields: {},
+    subQueries: []
   }
 
   let subQueryIndex = state.subQueryIndex;
@@ -33,25 +38,18 @@ const queryReducers = (state = initialState, action) => {
   let newReturnQuery;
   let newSubQuery;
   let tempNewQuery;
-  let newSubQueries;
 
   switch (action.type) {
     case types.CREATE_QUERY: 
-      const newQuery = Object.assign({}, action.payload)
-      
+      newReturnQuery = Object.assign({}, state.queries, {[subQueryIndex]: state.newQuery});
+      const newQueriesIndex = state.queriesIndex + 1;
+    
       return{
         ...state,
         queriesIndex: newQueriesIndex,
-        queryMode: 'customQuery',
-        selectedQuery: newQuery
-      }
-    
-    case types.OPEN_CREATE_QUERY:
-
-      return {
-        ...state,
-        queryMode: 'create',
-        selectedQuery: customQueryReset
+        queries: newReturnQuery,
+        newQuery: newQueryReset,
+        subQueries: subQueryReset
       }
     
     // User inputs name for new customized query
@@ -67,7 +65,6 @@ const queryReducers = (state = initialState, action) => {
     case types.CREATE_RETURN_FIELDS:
       newReturnFields = Object.assign({}, state.newQuery.returnFields, )
       
-      
       Object.assign({}, state.newQuery, {returnFields : 
         Object.assign({}, state.newQuery.returnFields[action.payload.index], {name: action.payload.name, value: action.payload.value})})
         
@@ -76,41 +73,38 @@ const queryReducers = (state = initialState, action) => {
         newQuery: newReturnFields
       }
         
-        case types.HANDLE_RETURN_VALUES:
-        let { subQueryIndex, fieldIndex, tableIndex, returnFieldsIndex } = action.payload;
-        if(subQueryIndex < 0) {
-          if(!!state.newQuery.returnFields[fieldIndex]) {
-            newReturnFields = Object.assign({}, state.newQuery.returnFields)
-            delete newReturnFields[fieldIndex];
-            newReturnQuery = Object.assign({}, state.newQuery, {returnFields: newReturnFields})
-          } else {
-            newReturnFields = Object.assign({}, state.newQuery.returnFields, {[fieldIndex]: {fieldIndex, tableIndex}})
-            newReturnQuery = Object.assign({}, state.newQuery, {returnFields: newReturnFields})
-          }
-          return {
-            ...state,
-            newQuery: newReturnQuery
-          }
+    case types.HANDLE_RETURN_VALUES:
+      let { subQueryIndex, fieldIndex, tableIndex, returnFieldsIndex } = action.payload;
+      if(subQueryIndex < 0) {
+        if(!!state.newQuery.returnFields[fieldIndex]) {
+          newReturnFields = Object.assign({}, state.newQuery.returnFields)
+          delete newReturnFields[fieldIndex];
+          newReturnQuery = Object.assign({}, state.newQuery, {returnFields: newReturnFields})
         } else {
-          if(!!state.newQuery.subQueries[subQueryIndex].returnFields[returnFieldsIndex]) {
-            newReturnFields = Object.assign({}, state.newQuery.subQueries[subQueryIndex].returnFields)
-            delete newReturnFields[returnFieldsIndex]       
-
-            newReturnQuery =Object.assign({}, state.newQuery);
-            newReturnQuery.subQueries[Number(subQueryIndex)].returnFields = newReturnFields;
-          } else {
-            newReturnFields = Object.assign({}, state.newQuery.subQueries[subQueryIndex].returnFields)
-            newReturnFields[returnFieldsIndex] = { fieldIndex, tableIndex }
-
-            newReturnQuery =Object.assign({}, state.newQuery);
-            newReturnQuery.subQueries[Number(subQueryIndex)].returnFields = newReturnFields;
-          }
-
-          return {
-            ...state,
-            newQuery: newReturnQuery
-          }
+          newReturnFields = Object.assign({}, state.newQuery.returnFields, {[fieldIndex]: {fieldIndex, tableIndex}})
+          newReturnQuery = Object.assign({}, state.newQuery, {returnFields: newReturnFields})
         }
+        return {
+          ...state,
+          newQuery: newReturnQuery
+        }
+      } else {
+        if(!!state.newQuery.subQueries[subQueryIndex].returnFields[returnFieldsIndex]) {
+          newReturnFields = Object.assign({}, state.newQuery.subQueries[subQueryIndex].returnFields)
+          delete newReturnFields[returnFieldsIndex]       
+          newReturnQuery =Object.assign({}, state.newQuery);
+          newReturnQuery.subQueries[Number(subQueryIndex)].returnFields = newReturnFields;
+        } else {
+          newReturnFields = Object.assign({}, state.newQuery.subQueries[subQueryIndex].returnFields)
+          newReturnFields[returnFieldsIndex] = { fieldIndex, tableIndex }
+          newReturnQuery =Object.assign({}, state.newQuery);
+          newReturnQuery.subQueries[Number(subQueryIndex)].returnFields = newReturnFields;
+        }
+        return {
+          ...state,
+          newQuery: newReturnQuery
+        }
+      }
 
     // User selects type or field for customized query
     case types.HANDLE_NEW_QUERY_CHANGE:
@@ -129,33 +123,33 @@ const queryReducers = (state = initialState, action) => {
       }
     
 
-        case types.HANDLE_SUBQUERY_SELECTOR:
-        newSubQuery = Object.assign({}, state.subQuery, {
-          tableIndex: action.payload.tableIndex,
-          fieldIndex: action.payload.fieldIndex
-        })
-          return{
-            ...state,
-            subQuery: newSubQuery
-          }
-        
-        case types.HANDLE_NEW_SUBQUERY_TOGGLE:
-          if(!!state.subQuery.returnFields[action.payload.fieldIndex]){
-            newReturnFields = Object.assign({}, state.subQuery.returnFields)
-            delete newReturnFields[action.payload.fieldIndex];
-            newSubQuery = Object.assign({}, state.subQuery, {returnFields: newReturnFields})
-          } else {
-            newReturnFields = Object.assign({}, state.subQuery.returnFields, {
-              [action.payload.fieldIndex]: {
-                fieldIndex: action.payload.fieldIndex, 
-                tableIndex: action.payload.tableIndex
-              }})
-            newSubQuery = Object.assign({}, state.subQuery, {returnFields: newReturnFields})
-          }
-          return {
-            ...state,
-            subQuery: newSubQuery
-          }
+    case types.HANDLE_SUBQUERY_SELECTOR:
+      newSubQuery = Object.assign({}, state.subQuery, {
+        tableIndex: action.payload.tableIndex,
+        fieldIndex: action.payload.fieldIndex
+      })
+      return{
+        ...state,
+        subQuery: newSubQuery
+      }
+    
+    case types.HANDLE_NEW_SUBQUERY_TOGGLE:
+      if(!!state.subQuery.returnFields[action.payload.fieldIndex]){
+        newReturnFields = Object.assign({}, state.subQuery.returnFields)
+        delete newReturnFields[action.payload.fieldIndex];
+        newSubQuery = Object.assign({}, state.subQuery, {returnFields: newReturnFields})
+      } else {
+        newReturnFields = Object.assign({}, state.subQuery.returnFields, {
+          [action.payload.fieldIndex]: {
+            fieldIndex: action.payload.fieldIndex, 
+            tableIndex: action.payload.tableIndex
+          }})
+        newSubQuery = Object.assign({}, state.subQuery, {returnFields: newReturnFields})
+      }
+      return {
+        ...state,
+        subQuery: newSubQuery
+      }
 
     case types.SUBMIT_SUBQUERY_HANDLER:
       let newSubQueryIndex = state.subQueryIndex;
@@ -170,11 +164,10 @@ const queryReducers = (state = initialState, action) => {
         ...state,
         subQueryIndex : newSubQueryIndex,
         newQuery: newReturnQuery,
-        subQuery: customQueryReset
+        subQuery: subQueryReset
       }
 
-        
-        default:
+      default:
         return state;
       }
     };
