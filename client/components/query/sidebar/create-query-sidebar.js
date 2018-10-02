@@ -120,8 +120,8 @@ class CreateQuerySidebar extends Component {
 
   }
 
-  handleSubQuerySelector(tableIndex, fieldIndex) {
-    this.props.handleSubQuerySelector({tableIndex, fieldIndex})
+  handleSubQuerySelector(tableIndex, fieldIndex, refType) {
+    this.props.handleSubQuerySelector({tableIndex, fieldIndex, refType})
   }
 
   handleNewSubQueryToggle(fieldIndex, tableIndex) {
@@ -215,8 +215,9 @@ class CreateQuerySidebar extends Component {
     temp.forEach((el, i) => {
       const tableName = this.props.tables[el.tableIndex].type;
       const fieldName = this.props.tables[el.tableIndex].fields[el.fieldIndex].name;
+      console.log('input', `${el.tableIndex}.${el.fieldIndex}`)
       subQueryList.push(
-        <MenuItem key={i} value={`${tableName}.${fieldName}.${el.refType}`} primaryText={`${tableName} - ${fieldName}`} onClick={this.handleSubQuerySelector.bind(this, el.tableIndex, el.fieldIndex)} style={style.menuItem}/>,
+        <MenuItem key={i} value={`${el.tableIndex}.${el.fieldIndex}`} primaryText={`${tableName} - ${fieldName}`} onClick={this.handleSubQuerySelector.bind(this, el.tableIndex, el.fieldIndex)} style={style.menuItem}/>,
       )
     })
 
@@ -282,7 +283,7 @@ class CreateQuerySidebar extends Component {
                 <div className='flexRow'>
                   <p style={{marginLeft: '10px'}}>By: </p>
                   <DropDownMenu 
-                    value={this.props.newQuery.tableIndex}
+                    value={`${this.props.subQuery.tableIndex}.${this.props.subQuery.fieldIndex}`}
                     style={style.customWidth}
                   >
                     {subQueryList}
