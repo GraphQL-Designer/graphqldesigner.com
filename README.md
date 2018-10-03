@@ -31,6 +31,8 @@ Patrick Slagle
 Greg Shamalta
 Tsion Adefres
 
+## Running Your Own Version
+
 Use npm run dev for hot module reloading 
 
 **To start the server, run: npm install, npm run pack and then npm run server.
