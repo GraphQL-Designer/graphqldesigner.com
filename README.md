@@ -25,9 +25,10 @@ For more particular client queries, you can customize client queries in addition
 Lastly export your code! 
 
 ##Authors
+
+James Sieu
 Patrick Slagle
 Greg Shamalta
-James Sieu
 Tsion Adefres
 
 Use npm run dev for hot module reloading 
