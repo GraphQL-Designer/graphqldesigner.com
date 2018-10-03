@@ -2,9 +2,10 @@
   display: flex; 
   flex-direction: row-reverse;
   width: 100%;
-  height: calc(100vh - 95px);
+  /* min-width: 750px;  */
+  min-height: 450px;
+  height: calc(100vh - 98px);
   border: 1px solid black;
-  overflow: hidden;
   position: relative;
 }
 
@@ -21,13 +22,24 @@
   align-items: flex-start; 
   flex-wrap: wrap; 
   width: 100%;
-  min-height: 300px;
-  overflow: scroll;
+  position: relative;
+  height: auto; 
+  overflow-y: auto;
+  overflow-x: hidden; 
+  background-image: url("/public/images/graphql_wallpaper.png");
+  background-repeat: no-repeat; 
+  background-size: 100% 100%; 
 }
 
 #sidebar-container {
   position: relative;
-  overflow: scroll;
+  background-color:  rgb(44,48,56);
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  width: 250px; 
+  justify-content: flex-start;
+  flex-shrink: 0; 
 }
 
 .table {
@@ -44,20 +56,34 @@
   height: 100%;
 }
 
-.field{
+.type {
   display: flex; 
   justify-content: space-between;
   align-items: center;
   position: relative;
 }
 
-.fieldContainer {
+.field{
+  display: flex; 
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  margin: 5px 0;
+}
+
+.fieldContainer1 {
+  position: relative;
+  display: flex;
+  width: 96%;
+  left: 5px;
+}
+
+.fieldContainer2 {
   position: relative;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 239px;
-  left: 4px;
+  width: 96%;
 }
 
 .fieldButton {
@@ -75,18 +101,23 @@
 }
 
 .addField {
+  display: flex;
   justify-content: center;
-  height: 50px;
-  margin-top: -5px;
+  text-align: center;
+  height: 40px;
   background-color: rgb(48, 48, 48);
   color: white;
   cursor: pointer;
-  text-align: center;
+  position: relative;
+  width: 96%;
+  left: 5px;
+  margin: 5px 0;
 }
 
 .fieldBreak {
   width: 100%;
   height: 1px;
   border: none;
+  margin: 0;
   background-color: rgba(200, 200, 200, 0.6);
 }

@@ -1,18 +1,49 @@
+h1,h2,h3,h4,h5,h6,p{
+  font-family: "Roboto", sans-serif
+}
 
-.query-app {
+#query-app {
   width: 100%;
-  /* height: 100%;  */
-  height: 65vh; 
-  border: 1px solid blue; 
+  height: calc(100vh - 98px);
+  min-height: 450px;
+  /* min-width: 750px;  */
   display: flex;
   flex-direction: row; 
   padding: 0;
   margin: 0; 
+  overflow: auto; 
 }
 
-.query-code-container {
-  border: 1px solid green;
+.wallpaper {
+  position: absolute;
+  width: 90vw;
+  height: 100%;
+}
+
+#query-code-container {
+  color: white; 
   width: 50%;
+  background-color: rgb(54, 58, 66);
+  border-right: 10px solid  rgb(44,48,56);
+  padding: 10px; 
+  overflow: auto; 
+}
+
+.codeHeader{
+  text-align: center;
+}
+
+hr {
+  color: white; 
+  background: white; 
+}
+
+#customized-query-container {
+  color: white; 
+  width: 50%;
+  background-color: rgb(54, 58, 66);
+  padding: 10px; 
+  overflow: auto; 
 }
 
 pre{

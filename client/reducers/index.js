@@ -1,13 +1,17 @@
 import { combineReducers } from 'redux';
 
 // import all reducers here
-import reducers from './reducers';
+import schemaReducers from './schemaReducers.js';
+import generalReducers from './generalReducers.js';
+import queryReducers from './queryReducers.js';
+
 
 // combine reducers
 const combinedReducers = combineReducers({
-  data: reducers
+  general: generalReducers,
+  schema: schemaReducers,
+  query: queryReducers,
 });
 
 // make the combined reducers available for import
 export default combinedReducers;
-

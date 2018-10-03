@@ -1,36 +1,34 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { TransitionGroup, CSSTransition } from 'react-transition-group'
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
 
-//components
+// components
 import Table from './table.js';
-import CreateTable from './sidebar/create-table.js'
-import TableOptions from './sidebar/table-options.js'
+import CreateTable from './sidebar/create-table.js';
+import TableOptions from './sidebar/table-options.js';
 
-//styles
-import './schema.css'
+// styles
+import './schema.css';
 
 // We use store.data, because of index.js reduce function
 const mapStateToProps = store => ({
-  tables: store.data.tables, 
-  tableIndex: store.data.tableIndex,
-  // Need below to subscribe to store. store.data.tables is an object so never changes
-  tableCount: store.data.tableCount,
-  selectedField: store.data.selectedField
+  tables: store.schema.tables,
+  tableIndex: store.schema.tableIndex,
+  selectedField: store.schema.selectedField,
 });
 
 class SchemaApp extends Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
-      sidebar: true
-    }
+      sidebar: true,
+    };
   }
 
   render() {
-    // Dynamically renders each table based on the number of tables. 
-    let tableComponents = []; 
-    let keyNum = 100 //React requires a key to avoid errors. 
+    // Dynamically renders each table based on the number of tables.
+    let tableComponents = [];
+    let keyNum = 100; // React requires a key to avoid errors.
     for (let property in this.props.tables){
       tableComponents.push(
         <CSSTransition
@@ -39,19 +37,18 @@ class SchemaApp extends Component {
         classNames="fadeScale"
         >
           <Table
-            key={property} 
+            key={property}
             tableData={this.props.tables[property]}
             tableIndex={property}
             fieldCount={this.props.tables[property].fieldCount}
           />
         </CSSTransition>
-      )
+      );
     }
-    
+
     let sidebar = '';
     return (
       <div className='schema-app-container'>
-        <img className='wallpaper' src='./images/graphql_wallpaper.png'/>
         <CSSTransition
           in={this.state.sidebar}
           timeout={200}
@@ -66,22 +63,23 @@ class SchemaApp extends Component {
             >
               <CreateTable/>
             </CSSTransition>
-            
+
             <CSSTransition
               in={this.props.selectedField.tableNum >= 0}
               key='fields'
               timeout={200}
               classNames='fade'
             >
-              <TableOptions/> 
+              <TableOptions/>
             </CSSTransition>
           </div>
         </CSSTransition>
         <TransitionGroup className='table-components-container'>
+          {/* <img className='wallpaper' src='../../../public/images/graphql_wallpaper.png'/> */}
           {tableComponents}
         </TransitionGroup>
       </div>
-    )
+    );
   }
 }
 

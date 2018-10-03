@@ -1,27 +1,36 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
-//components
-import CodeDBSchemaContainer from './code-dbschema-container.js';
+// components
+import CodeDBMongoContainer from './code-db-mongo-container.js';
+import CodeDBSQLContainer from './code-db-mysql-container.js';
+import CodeDBSequelizeContainer from './code-db-sequelize-container.js';
 import CodeClientContainer from './code-client-container.js';
 import CodeServerContainer from './code-server-container.js';
-import DrawerSidebar from './drawer.js'
+
+const mapStateToProps = store => ({
+  database: store.schema.database,
+});
 
 class CodeApp extends Component {
-  constructor (props){
+  constructor (props) {
     super(props)
   }
 
-  render(){
+  render() {
+    let databaseContainer = <CodeDBMongoContainer/>
+    if (this.props.database === 'MySQL') databaseContainer = <CodeDBSQLContainer/>
+    if (this.props.database === 'Sequelize') databaseContainer = <CodeDBSequelizeContainer/>
   
     return (
       <div className='code-app'>
-        <CodeDBSchemaContainer/>
-        <CodeClientContainer/>
+        <div className='wallpaper'></div>
+        {databaseContainer}
         <CodeServerContainer/>
-        <DrawerSidebar/>
+        <CodeClientContainer/>
       </div>
     )
   }
-};
+}
 
-export default CodeApp;
+export default connect(mapStateToProps, null)(CodeApp);

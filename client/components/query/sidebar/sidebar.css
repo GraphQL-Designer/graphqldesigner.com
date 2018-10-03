@@ -1,6 +1,14 @@
-.sidebar{
-  width: 50%;
-  border: 1px solid black; 
+.sidebar-container{
+  display: flex;
+  flex-direction: column; 
+  flex-shrink: 0; 
+  /* overflow-y: auto;  */
   color: white;
-  background-color: #5f5e5e;
+  width: 250px;  
+  background-color:  rgb(44,48,56);
+}
+
+.typeFieldInput {
+  display: flex;
+  align-items: flex-end;
 }
