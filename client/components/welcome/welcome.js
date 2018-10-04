@@ -37,7 +37,6 @@ class Welcome extends React.Component {
   }
 
   handleDatabaseClick(event) {
-    // event.preventDefault();
     this.props.handleNewProject(false);
     this.props.chooseDatabase(event.target.innerHTML);
     if (event.target.innerHTML === 'MongoDB') this.props.tablesToMongoFormat();
@@ -74,11 +73,11 @@ class Welcome extends React.Component {
               MongoDB
             </RaisedButton>
             <RaisedButton onClick={this.handleDatabaseClick} buttonStyle={styles}>
-              MySQL
+              SQL
             </RaisedButton>
-            <RaisedButton onClick={this.handleDatabaseClick} buttonStyle={styles}>
+            {/* <RaisedButton onClick={this.handleDatabaseClick} buttonStyle={styles}>
               Sequelize
-            </RaisedButton>
+            </RaisedButton> */}
           </div>
         </Dialog>
       </div>
