@@ -18,8 +18,9 @@ const createReadMe = require('./create_file_func/create_readme');
 const buildExpressServer = require('./create_file_func/express_server');
 const parseClientQueries = require('./create_file_func/client_queries');
 const parseClientMutations = require('./create_file_func/client_mutations');
-const parseGraphqlMongoServer = require('./create_file_func/graphql_mongo_server');
+const parseGraphqlServer = require('./create_file_func/graphql_server');
 const parseMongoschema = require('./create_file_func/mongo_schema');
+const mysqlPool = require('./create_file_func/mysql_pool');
 
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, '../public')));
@@ -29,35 +30,26 @@ app.post('/write-files', (req, res) => {
   const dateStamp = Date.now();
 
   buildDirectories(dateStamp, () => {
+
     fs.writeFileSync(path.join(PATH, `build-files${dateStamp}/readme.md`), createReadMe());
-    fs.writeFileSync(path.join(PATH, `build-files${dateStamp}/index.js`), buildExpressServer());
+    fs.writeFileSync(path.join(PATH, `build-files${dateStamp}/index.js`), buildExpressServer(data.database));
+    fs.writeFileSync(path.join(PATH, `build-files${dateStamp}/server/graphql-schema/index.js`), parseGraphqlServer(data.data, data.database));
 
     buildClientQueries(data.data, dateStamp, () => {
-      if (data.database === 'MongoDB') {
-        buildForMongo(data.data, dateStamp, () => {
-          // ZIP main build folder and responds to client
-          zipper.sync.zip(path.join(PATH, `build-files${dateStamp}`)).compress().save(path.join(PATH, `graphql${dateStamp}.zip`));
 
-          const file = path.join(PATH, `graphql${dateStamp}.zip`);
-          res.setHeader('Content-Type', 'application/force-download');
-          res.setHeader('Content-disposition', 'filename=graphql.zip');
-          res.download(file, (err) => {
-            if (err) {
-              console.log(err);
-            } else {
-              console.log('Download Complete!');
+      if (data.database === 'MongoDB') buildForMongo(data.data, dateStamp);
+      if (data.database === 'MySQL') buildForMySQL(data.data, dateStamp);
 
-              setTimeout(() => {
-                deleteTempFiles(data.database, data.data, dateStamp, () => {
-                  deleteTempFolders(dateStamp, () => {
-                    console.log('Deleted Temp Files');
-                  });
-                });
-              }, 6000);
-            }
+      sendResponse(dateStamp, res, () => {
+
+        setTimeout(() => {
+          deleteTempFiles(data.database, data.data, dateStamp, () => {
+            deleteTempFolders(dateStamp, () => {
+              console.log('Deleted Temp Files');
+            });
           });
-        });
-      }
+        }, 6000);
+      });
     });
   });
 });
@@ -73,7 +65,7 @@ function buildDirectories(dateStamp, cb) {
   fs.mkdirSync(path.join(PATH, `build-files${dateStamp}`, 'client', 'graphql', 'queries'));
   fs.mkdirSync(path.join(PATH, `build-files${dateStamp}`, 'client', 'graphql', 'mutations'));
   fs.mkdirSync(path.join(PATH, `build-files${dateStamp}`, 'server'));
-  fs.mkdirSync(path.join(PATH, `build-files${dateStamp}`, 'server', 'db-model'));
+  fs.mkdirSync(path.join(PATH, `build-files${dateStamp}`, 'server', 'db'));
   fs.mkdirSync(path.join(PATH, `build-files${dateStamp}`, 'server', 'graphql-schema'));
   return cb();
 }
@@ -85,14 +77,27 @@ function buildClientQueries(data, dateStamp, cb) {
 }
 
 function buildForMongo(data, dateStamp, cb) {
-  fs.writeFileSync(path.join(PATH, `build-files${dateStamp}/server/graphql-schema/index.js`), parseGraphqlMongoServer(data));
   const indexes = Object.keys(data);
   
   indexes.forEach(index => {
     parseMongoschema(data[index], query => {
-      fs.writeFileSync(path.join(PATH, `build-files${dateStamp}/server/db-model/${data[index].type.toLowerCase()}.js`), query);
+      fs.writeFileSync(path.join(PATH, `build-files${dateStamp}/server/db/${data[index].type.toLowerCase()}.js`), query);
       });
     });
+  return cb();
+}
+
+function buildForMySQL(data, dateStamp, cb) {
+  mysqlPool()
+//CODE COPPIED FROM MONGO
+
+  // const indexes = Object.keys(data);
+  
+  // indexes.forEach(index => {
+  //   parseMongoschema(data[index], query => {
+  //     fs.writeFileSync(path.join(PATH, `build-files${dateStamp}/server/db/${data[index].type.toLowerCase()}.js`), query);
+  //     });
+  //   });
   return cb();
 }
 
@@ -108,7 +113,7 @@ function deleteTempFiles(database, data, dateStamp, cb) {
 
     function step(i) {
       if (i < indexes.length) {
-        fs.unlinkSync(path.join(PATH, `build-files${dateStamp}/server/db-model/${data[indexes[i]].type.toLowerCase()}.js`));
+        fs.unlinkSync(path.join(PATH, `build-files${dateStamp}/server/db/${data[indexes[i]].type.toLowerCase()}.js`));
         step(i + 1);
 
       } else {
@@ -123,7 +128,7 @@ function deleteTempFiles(database, data, dateStamp, cb) {
 
 function deleteTempFolders(dateStamp, cb) {
   fs.rmdirSync(path.join(PATH, `build-files${dateStamp}`, 'server', 'graphql-schema'));
-  fs.rmdirSync(path.join(PATH, `build-files${dateStamp}`, 'server', 'db-model'));
+  fs.rmdirSync(path.join(PATH, `build-files${dateStamp}`, 'server', 'db'));
   fs.rmdirSync(path.join(PATH, `build-files${dateStamp}`, 'server'));
   fs.rmdirSync(path.join(PATH, `build-files${dateStamp}`, 'client', 'graphql', 'queries'));
   fs.rmdirSync(path.join(PATH, `build-files${dateStamp}`, 'client', 'graphql', 'mutations'));
@@ -131,4 +136,18 @@ function deleteTempFolders(dateStamp, cb) {
   fs.rmdirSync(path.join(PATH, `build-files${dateStamp}`, 'client'));
   fs.rmdirSync(path.join(PATH, `build-files${dateStamp}`));
   return cb();
+}
+
+function sendResponse(dateStamp, res, cb) {
+  zipper.sync.zip(path.join(PATH, `build-files${dateStamp}`)).compress().save(path.join(PATH, `graphql${dateStamp}.zip`));
+
+  const file = path.join(PATH, `graphql${dateStamp}.zip`);
+  res.setHeader('Content-Type', 'application/force-download');
+  res.setHeader('Content-disposition', 'filename=graphql.zip');
+  res.download(file, (err) => {
+    if (err) console.log(err);
+
+    console.log('Download Complete!');
+    return cb()
+  })
 }
