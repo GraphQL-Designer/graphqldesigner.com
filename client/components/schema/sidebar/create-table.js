@@ -11,7 +11,26 @@ import RaisedButton from 'material-ui/RaisedButton';
 import Checkbox from 'material-ui/Checkbox';
 import KeyboardArrowLeft from 'material-ui/svg-icons/hardware/keyboard-arrow-left';
 import FlatButton from 'material-ui/FlatButton';
+import {List, ListItem} from 'material-ui/List';
+import Divider from 'material-ui/Divider';
+import Paper from 'material-ui/Paper';
 import './sidebar.css';
+
+const style = {
+  paper: {
+    display: 'flex',
+    marginTop: '5px',
+    marginBottom: '5px',
+    marginRight: '5px',
+    marginLeft: '5px',
+    backgroundColor: 'rgb(54, 58, 66)',
+    paddingLeft: '0px',
+    paddingRight: '0px'
+  },
+  relationDesc: {
+    fontSize: '12px'
+  }
+}
 
 const mapStateToProps = store => ({
   tables: store.schema.tables,
@@ -152,6 +171,38 @@ class CreateTable extends React.Component {
             style={{ marginTop: '25px' }}
           />
         </form>
+        <br />
+        <br />
+        <div>
+          <Paper style={style.paper}>
+          <List style={{paddingLeft: '18px'}}>
+            <ListItem disabled={true} style={{fontSize: '20px'}}><strong>Legend</strong></ListItem>
+            <Divider />
+            <ListItem disabled={true}>Required : *</ListItem>
+            <ListItem disabled={true}>Unique : !</ListItem>
+            <ListItem disabled={true}>Multiple Values : [ ]</ListItem>
+            <ListItem disabled={true}
+              nestedItems={[
+                <ListItem disabled={true} style={style.relationDesc}>
+                  Diagonal color on field (Name) indicates field is referenced by another field of that same color
+                </ListItem>,
+                <ListItem disabled={true}>
+                  <img src='./../../../../public/images/relation1.png'/>
+                </ListItem>,
+                <ListItem disabled={true} style={style.relationDesc}>
+                  Colored field (AuthorId) indicates it has relation to another field of that same color
+                </ListItem>,
+                <ListItem disabled={true}>
+                  <img src='./../../../../public/images/relation2.png'/>
+                </ListItem>
+              ]}
+            >
+              Relation :
+            </ListItem>
+          </List>
+
+          </Paper>
+        </div>
         {/* <div id='loader-container'>
           <Loader/>
         </div> */}

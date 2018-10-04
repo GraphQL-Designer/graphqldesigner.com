@@ -24,6 +24,7 @@ h1,h2,h3,h4,h5,h6,p{
   justify-content: flex-start;
   /* min-height: 350px;  */
   position: absolute;
+  overflow: auto;
 }
 
 #fieldOptions {
@@ -41,7 +42,7 @@ form{
   display: flex; 
   flex-direction: column; 
   padding: 0px 10px;
-  min-height: 200px; 
+  min-height: 220px; 
   color: white; 
   overflow-y: auto; 
 }
@@ -74,4 +75,10 @@ select{
   align-items: flex-end; 
   font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
   font-weight: 600; 
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  max-height: 100%;
 }
