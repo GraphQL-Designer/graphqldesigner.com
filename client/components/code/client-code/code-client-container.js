@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 // styling
-import './code.css';
+import '../code.css';
 
 const mapStateToProps = store => ({
   // queryName: store.query.queryName,
@@ -13,9 +13,9 @@ const mapStateToProps = store => ({
 
 const CodeClientContainer = (props) => {
   const enter = `
-  `;
+`;
   const tab = '  ';
-  let query = `${tab}import { gql } from 'apollo-boost';${enter}${enter}`;
+  let query = `import { gql } from 'apollo-boost';${enter}${enter}`;
 
   function parseClientQueries(tables) {
     const exportNames = [];

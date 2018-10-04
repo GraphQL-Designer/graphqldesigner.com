@@ -2,14 +2,14 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 // Styling
-import './code.css';
+import '../code.css';
 
 
 const mapStateToProps = store => ({
   tables: store.schema.tables,
 });
 
-const CodeDBSQLContainer = (props) => {
+const CodeSeqlDBSchemaContainer = (props) => {
   const enter = `
   `;
   const tab = '  ';
@@ -17,7 +17,7 @@ const CodeDBSQLContainer = (props) => {
   const foreignKeys = {};
   let primaryKey = [];
 
-  function parseSQLSchema(table) {
+  function parseSequelSchema(table) {
     if (!table) return ``;
 
     createTablesCode += `${enter}${tab}${tab}CREATE TABLE \`${table.type}\` (${enter}`;
@@ -30,7 +30,7 @@ const CodeDBSQLContainer = (props) => {
       if (fieldId !== tableProps[tableProps.length - 1]) {
         createTablesCode += `,`;
       }
-      createTablesCode += enter; 
+      createTablesCode += enter;
     }
 
     // if table has a primary key
@@ -104,12 +104,11 @@ const CodeDBSQLContainer = (props) => {
 
   // loop through tables and create build script for each table
   for (const tableId in props.tables) {
-    parseSQLSchema(props.tables[tableId]);
+    parseSequelSchema(props.tables[tableId]);
   }
 
   // if any tables have relations, aka foreign keys
   for (const tableId in foreignKeys) {
-    console.log('what are foreignKeys', foreignKeys);
     // loop through the table's fields to find the particular relation
     foreignKeys[tableId].forEach((relationInfo, relationCount) => {
       // name of table making relation
@@ -127,48 +126,37 @@ const CodeDBSQLContainer = (props) => {
       createTablesCode += `${enter}${tab}${tab}ALTER TABLE \`${tableMakingRelation}\` ADD CONSTRAINT \`${tableMakingRelation}_fk${relationCount}\` FOREIGN KEY (\`${fieldMakingRelation}\`) REFERENCES \`${relatedTable}\`(\`${relatedField}\`);${enter}`;
     });
   }
-  // tab the closing `
+
   if (createTablesCode.length > 0) {
     createTablesCode += tab;
   }
-  let SQLCode = `  const mysql = require('mysql');
-  const connection = mysql.createConnection({
-  host: /* enter your hostname */
-  user: /* enter your user information */
-  password: /* enter your password */
-  database: /* enter your database information */
+  const SequelCode = `  const sequelize = require('sequelize');
   
-  // connect to the MySQL server
-  connection.connect(function(err) {
-    if (err) {
-      return console.error('error: ' + err.message);
-    }
+  const sequelize = new Sequelize('db', 'username', 'password', {
+    host: /* enter your hostname */
+    dialect: 'mysql' 
+  }); 
 
-    let createTables = \`${createTablesCode}\`;
-    
-    connection.query(createTables, function(err, results, fields) {
+  
+  let createTables = \`${createTablesCode}\`;
+
+  
+  sequelize.sync({ logging: console.log })
+  .then(() => (createTables, function(err, data) {
       if (err) {
         console.log(err.message);
       }
-    });
-   
-    connection.end(function(err) {
-      if (err) {
-        return console.log(err.message);
-      }
-    });
   });`;
 
   return (
     <div id="code-container-database">
-      <h4 className='codeHeader'>MySQL Tables</h4>
-      <hr/>
+      <h4 className="codeHeader">Sequelize Schemas</h4>
+      <hr />
       <pre>
-        {SQLCode}
+        {SequelCode}
       </pre>
       <pre id='column-filler-for-scroll'></pre>
     </div>
   );
 };
-
-export default connect(mapStateToProps, null)(CodeDBSQLContainer);
+export default connect(mapStateToProps, null)(CodeSeqlDBSchemaContainer);

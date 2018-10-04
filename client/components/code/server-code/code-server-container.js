@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import './code.css';
+import '../code.css';
 
 const mapStateToProps = store => ({
 
@@ -136,11 +136,11 @@ const CodeServerContainer = (props) => {
     function createSubQueryName(tableIndex, data) {
       switch (field.relation.refType) {
         case 'one to one':
-          return `${refTypeName.toLowerCase()}`
+          return `related${toTitleCase(refTypeName)}`
         case 'one to many':
           return `everyRelated${toTitleCase(refTypeName)}`
         case 'many to one':
-          return `${refTypeName.toLowerCase()}`
+          return `related${toTitleCase(refTypeName)}`
         case 'many to many':
           return `everyRelated${toTitleCase(refTypeName)}`
         default:

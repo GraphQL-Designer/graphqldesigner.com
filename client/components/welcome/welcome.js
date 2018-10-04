@@ -76,9 +76,9 @@ class Welcome extends React.Component {
             <RaisedButton onClick={this.handleDatabaseClick} buttonStyle={styles}>
               MySQL
             </RaisedButton>
-            <RaisedButton onClick={this.handleDatabaseClick} buttonStyle={styles}>
+            {/* <RaisedButton onClick={this.handleDatabaseClick} buttonStyle={styles}>
               Sequelize
-            </RaisedButton>
+            </RaisedButton> */}
           </div>
         </Dialog>
       </div>
