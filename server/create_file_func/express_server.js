@@ -1,14 +1,21 @@
-function buildExpressServer(data) {
-  const query = `
+function buildExpressServer(database) {
+const query = `
 const express = require('express');
 const graphqlHTTP = require('express-graphql');
-const mongoose = require('mongoose');
 const GQLSchema = require('./graphql-schema');
 const path = require('path');
 const app = express();
+`
+
+if (database === 'MongoDB') {
+  query += `
+const mongoose = require('mongoose');
 
 mongoose.connect('Your Database Here!');
+`;
+}
 
+query += `
 app.use(express.static(path.join(__dirname, './public')))
 
 app.use('/graphql', graphqlHTTP({
