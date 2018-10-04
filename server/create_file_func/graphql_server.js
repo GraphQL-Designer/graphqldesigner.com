@@ -121,11 +121,11 @@ function createSubQuery(field, data) {
   function createSubQueryName(tableIndex, data) {
     switch (field.relation.refType) {
       case 'one to one':
-        return `related${refTypeName.toLowerCase()}`;
+        return `related${toTitleCase(refTypeName)}`;
       case 'one to many':
         return `everyRelated${toTitleCase(refTypeName)}`;
       case 'many to one':
-        return `related${refTypeName.toLowerCase()}`;
+        return `related${toTitleCase(refTypeName)}`;
       case 'many to many':
         return `everyRelated${toTitleCase(refTypeName)}`;
       default:
