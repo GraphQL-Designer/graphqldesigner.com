@@ -64,7 +64,7 @@ class App extends Component {
         <Welcome chooseDatabase={this.props.chooseDatabase} />
         <div className="app-body-container">
           <Tabs className="tabs">
-            <Tab label="Schemas" style={style.tabStyle}>
+            <Tab label="Schemas" style={style.tabStyle} id='schemaTab'>
               <SchemaApp className="schemaTest" />
             </Tab>
             {/* <Tab label="Queries" style={style.tabStyle}>
