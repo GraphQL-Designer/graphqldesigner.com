@@ -51,6 +51,7 @@ const {
 }
 
 function buildDbModelRequirePaths(data) {
+  // UPDATE
   return `const ${data.type} = require('../db-model/${data.type.toLowerCase()}.js');\n`;
 }
 

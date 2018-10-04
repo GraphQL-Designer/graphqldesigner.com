@@ -64,14 +64,14 @@ class App extends Component {
         <Welcome chooseDatabase={this.props.chooseDatabase} />
         <div className="app-body-container">
           <Tabs className="tabs">
-            <Tab label="Schemas" style={style.tabStyle}>
-              <SchemaApp className="schemaTest" />
+            <Tab id="schemaTab" label="Schemas" style={style.tabStyle}>
+              <SchemaApp/>
             </Tab>
             {/* <Tab label="Queries" style={style.tabStyle}>
               <QueryApp />
             </Tab> */}
             <Tab label="Code" style={style.tabStyle}>
-              <CodeApp />
+              <CodeApp/>
             </Tab>
           </Tabs>
           <Snackbar

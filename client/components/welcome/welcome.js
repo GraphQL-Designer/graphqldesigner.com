@@ -60,14 +60,14 @@ class Welcome extends React.Component {
           className='welcome-container'
           paperClassName='welcome-box'
         >
-          <div id='subheading'>Simply create and implement a full stack React GraphQL App.</div>
+          <div id='subheading'>Rapidly prototype a full stack React GraphQL Application.</div>
           <div className='iconContainer'>
             <img id='icon_graphql' src='./images/graphql.png' />
             <img id='icon_express' src='./images/express.png' />
             <img id='icon_react' src='./images/react.png' />
           </div>
           <hr className='welcome-hr' />
-          <h4>Select your database/ORM type</h4>
+          <h4>Select your database type</h4>
           <div id='buttonsContainer'>
             <RaisedButton onClick={this.handleDatabaseClick} buttonStyle={styles}>
               MongoDB

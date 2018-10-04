@@ -12,13 +12,18 @@ const CodeServerContainer = (props) => {
 `;
   const tab = '  ';
 
-  function parseGraphqlMongoServer(tables, database) {
+  function parseGraphQLServer(tables, database) {
     let query = `const graphql = require('graphql');${enter}`;
 
-    
-    for (const tableId in tables) {
-      query += buildDbModelRequirePaths(tables[tableId]);
-    }
+    // if (database === 'MongoDB') {
+      for (const tableId in tables) {
+        query += buildMongoRequirePaths(tables[tableId]);
+      }
+    // }
+    // if (database === 'MySQL') {
+    //   // COMPLETE, DON'T KNOW PATH
+    //   query += `const db = require('')`
+    // }
 
     query += `
 const { 
@@ -65,7 +70,8 @@ const {
     return query;
   }
 
-  function buildDbModelRequirePaths(table) {
+  function buildMongoRequirePaths(table) {
+    // UPDATE
     return `const ${table.type} = require('../db-model/${table.type.toLowerCase()}.js');${enter}`;
   }
 
@@ -130,8 +136,18 @@ const {
     const refFieldName = tables[field.relation.tableIndex].fields[field.relation.fieldIndex].name;
     const refFieldType = tables[field.relation.tableIndex].fields[field.relation.fieldIndex].type;
 
-    const query = `,${enter}${tab}${tab}${createSubQueryName()}: {${enter}${tab}${tab}${tab}type: ${refTypeName}Type,${enter}${tab}${tab}${tab}resolve(parent, args) {${enter}${tab}${tab}${tab}${tab}return ${refTypeName}.${findDbSearchMethod(refFieldName, refFieldType, field.relation.refType)}(${createSearchObject(refFieldName, refFieldType, field)});${enter}${tab}${tab}${tab}}${enter}${tab}${tab}}`;
+    let query = `,${enter}${tab}${tab}${createSubQueryName()}: {${enter}`
+        query += `${tab}${tab}${tab}type: ${refTypeName}Type,${enter}`
+        query += `${tab}${tab}${tab}resolve(parent, args) {${enter}`
+        query += `${tab}${tab}${tab}${tab}`
 
+        if (props.database === 'MongoDB') {
+          query += `return ${refTypeName}.${findMongooseSearchMethod(refFieldName, refFieldType, field.relation.refType)}`
+          query += `(${createSearchObject(refFieldName, refFieldType, field)});${enter}`
+        } else if (props.database === 'MySQL') {
+          query += `db.query("SELECT * FROM ${refTypeName} WHERE ${refFieldName} = )`
+        }
+        query += `${tab}${tab}${tab}}${enter}${tab}${tab}}`;
     return query;
 
     function createSubQueryName() {
@@ -150,7 +166,7 @@ const {
     }
   }
 
-  function findDbSearchMethod(refFieldName, refFieldType, refType) {
+  function findMongooseSearchMethod(refFieldName, refFieldType, refType) {
     if (refFieldName === 'id' || refFieldType === 'ID') return 'findById';
     switch (refType) {
       case 'one to one':
@@ -167,13 +183,9 @@ const {
   }
 
   function createSearchObject(refFieldName, refFieldType, field) {
-    const refType = field.relation.refType;
-
     if (refFieldName === 'id' || refFieldType === 'ID') {
       return `parent.${field.name}`;
-    } if (refType === 'one to one') {
-      return `{ ${refFieldName}: parent.${field.name} }`;
-    }
+    } 
     return `{ ${refFieldName}: parent.${field.name} }`;
   }
 
@@ -242,7 +254,7 @@ const {
     return '';
   }
 
-  const code = parseGraphqlMongoServer(props.tables);
+  const code = parseGraphQLServer(props.tables, props.database);
 
   return (
     <div id="code-container-server">
