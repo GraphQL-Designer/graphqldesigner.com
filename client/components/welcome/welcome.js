@@ -37,7 +37,6 @@ class Welcome extends React.Component {
   }
 
   handleDatabaseClick(event) {
-    // event.preventDefault();
     this.props.handleNewProject(false);
     this.props.chooseDatabase(event.target.innerHTML);
     if (event.target.innerHTML === 'MongoDB') this.props.tablesToMongoFormat();

@@ -36,6 +36,7 @@ const mapDispatchToProps = dispatch => ({
   updateField: fieldIndex => dispatch(actions.updateField(fieldIndex)),
   handleFieldsSelect: field => dispatch(actions.handleFieldsSelect(field)),
   handleSelectedTable: tableIndex => dispatch(actions.handleSelectedTable(tableIndex)),
+  deletedFieldRelationUpdate: indexes => dispatch(actions.deletedFieldRelationUpdate(indexes))
 });
 
 class Table extends Component {
@@ -56,6 +57,11 @@ class Table extends Component {
   handleDeleteField(event) {
     const tableIndex = this.props.tableIndex;
     const fieldIndex = event.currentTarget.value; // need currentTarget because of Material-UI
+    const field = this.props.tables[tableIndex].fields[fieldIndex];
+    if(field.relation.tableIndex > -1 || field.refBy.size) {
+        console.log('yes')
+        this.props.deletedFieldRelationUpdate({ tableIndex, fieldIndex })
+      }
     this.props.deleteField([tableIndex, fieldIndex]);
   }
 
