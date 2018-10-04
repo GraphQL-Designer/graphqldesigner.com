@@ -9,26 +9,26 @@ const mapStateToProps = store => ({
 
 const CodeServerContainer = (props) => {
   const enter = `
-  `;
+`;
   const tab = '  ';
 
   function parseGraphqlMongoServer(data) {
-    let query = `${tab}const graphql = require('graphql');${enter}`;
+    let query = `const graphql = require('graphql');${enter}`;
 
     for (const prop in data) {
       query += buildDbModelRequirePaths(data[prop]);
     }
 
     query += `
-  const { 
-      GraphQLObjectType,
-      GraphQLSchema,
-      GraphQLID,
-      GraphQLString, 
-      GraphQLInt, 
-      GraphQLList,
-      GraphQLNonNull
-  } = graphql;
+const { 
+    GraphQLObjectType,
+    GraphQLSchema,
+    GraphQLID,
+    GraphQLString, 
+    GraphQLInt, 
+    GraphQLList,
+    GraphQLNonNull
+} = graphql;
   ${enter}`;
 
     // BUILD TYPE SCHEMA

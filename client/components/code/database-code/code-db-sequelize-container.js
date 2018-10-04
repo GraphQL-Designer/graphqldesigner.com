@@ -11,7 +11,7 @@ const mapStateToProps = store => ({
 
 const CodeSeqlDBSchemaContainer = (props) => {
   const enter = `
-  `;
+`;
   const tab = '  ';
   let createTablesCode = ``;
   const foreignKeys = {};
@@ -20,7 +20,7 @@ const CodeSeqlDBSchemaContainer = (props) => {
   function parseSequelSchema(table) {
     if (!table) return ``;
 
-    createTablesCode += `${enter}${tab}${tab}CREATE TABLE \`${table.type}\` (${enter}`;
+    createTablesCode += `${enter}CREATE TABLE \`${table.type}\` (${enter}`;
 
     // create code for each field
     for (const fieldId in table.fields) {
@@ -46,11 +46,11 @@ const CodeSeqlDBSchemaContainer = (props) => {
     }
     // reset primaryKey to empty so primary keys don't slip into the next table
     primaryKey = [];
-    createTablesCode += `${tab}${tab});${enter}`;
+    createTablesCode += `${tab});${enter}`;
   }
   function createSchemaField(field) {
     let fieldCode = ``;
-    fieldCode += `${tab}${tab}${tab}\`${field.name}\`${tab}${checkDataType(field.type)}`;
+    fieldCode += `${tab}\`${field.name}\`${tab}${checkDataType(field.type)}`;
     fieldCode += checkRequired(field.required);
     fieldCode += checkUnique(field.unique);
     fieldCode += checkDefault(field.defaultValue);
@@ -123,7 +123,7 @@ const CodeSeqlDBSchemaContainer = (props) => {
       const relatedFieldId = relationInfo.relatedField;
       const relatedField = props.tables[relatedTableId].fields[relatedFieldId].name;
 
-      createTablesCode += `${enter}${tab}${tab}ALTER TABLE \`${tableMakingRelation}\` ADD CONSTRAINT \`${tableMakingRelation}_fk${relationCount}\` FOREIGN KEY (\`${fieldMakingRelation}\`) REFERENCES \`${relatedTable}\`(\`${relatedField}\`);${enter}`;
+      createTablesCode += `${enter}ALTER TABLE \`${tableMakingRelation}\` ADD CONSTRAINT \`${tableMakingRelation}_fk${relationCount}\` FOREIGN KEY (\`${fieldMakingRelation}\`) REFERENCES \`${relatedTable}\`(\`${relatedField}\`);${enter}`;
     });
   }
 

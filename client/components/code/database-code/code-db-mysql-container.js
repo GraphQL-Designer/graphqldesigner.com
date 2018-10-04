@@ -130,40 +130,9 @@ const CodeDBSQLContainer = (props) => {
       const relatedFieldId = relationInfo.relatedField;
       const relatedField = props.tables[relatedTableId].fields[relatedFieldId].name;
 
-      createTablesCode += `${enter}${tab}ALTER TABLE \`${tableMakingRelation}\` ADD CONSTRAINT \`${tableMakingRelation}_fk${relationCount}\` FOREIGN KEY (\`${fieldMakingRelation}\`) REFERENCES \`${relatedTable}\`(\`${relatedField}\`);${enter}`;
+      createTablesCode += `${enter}ALTER TABLE \`${tableMakingRelation}\` ADD CONSTRAINT \`${tableMakingRelation}_fk${relationCount}\` FOREIGN KEY (\`${fieldMakingRelation}\`) REFERENCES \`${relatedTable}\`(\`${relatedField}\`);${enter}`;
     });
   }
-  // tab the closing `
-  // if (createTablesCode.length > 0) {
-  //   createTablesCode += `\``;
-  // }
-  let SQLCode = `  const mysql = require('mysql');
-  const connection = mysql.createConnection({
-  host: /* enter your hostname */
-  user: /* enter your user information */
-  password: /* enter your password */
-  database: /* enter your database information */
-  
-  // connect to the MySQL server
-  connection.connect(function(err) {
-    if (err) {
-      return console.error('error: ' + err.message);
-    }
-
-    let createTables = \`${createTablesCode}\`;
-    
-    connection.query(createTables, function(err, results, fields) {
-      if (err) {
-        console.log(err.message);
-      }
-    });
-   
-    connection.end(function(err) {
-      if (err) {
-        return console.log(err.message);
-      }
-    });
-  });`;
 
   return (
     <div id="code-container-database">
