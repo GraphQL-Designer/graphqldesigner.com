@@ -15,7 +15,7 @@
     "url": "git+https://github.com/grs83/graphqldesigner.com.git"
   },
   "scripts": {
-    "pack": "webpack",
+    "pack": "webpack -p",
     "dev": "webpack-dev-server",
     "server": "nodemon server/index.js",
     "start": "node server/index.js",
@@ -34,6 +34,7 @@
     "react-dom": "^16.5.0",
     "redux-devtools-extension": "^2.13.5",
     "style-loader": "^0.22.1",
+    "uglifyjs-webpack-plugin": "^2.0.1",
     "watchify": "^3.11.0",
     "webpack": "^4.17.0",
     "webpack-cli": "^3.1.0",

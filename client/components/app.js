@@ -67,9 +67,9 @@ class App extends Component {
             <Tab label="Schemas" style={style.tabStyle}>
               <SchemaApp className="schemaTest" />
             </Tab>
-            <Tab label="Queries" style={style.tabStyle}>
+            {/* <Tab label="Queries" style={style.tabStyle}>
               <QueryApp />
-            </Tab>
+            </Tab> */}
             <Tab label="Code" style={style.tabStyle}>
               <CodeApp />
             </Tab>
