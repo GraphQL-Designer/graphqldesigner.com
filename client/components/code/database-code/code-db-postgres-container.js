@@ -78,13 +78,13 @@ const CodeDBPostgresSchemaContainer = (props) => {
   function checkDataType(dataType) {
     switch(dataType){
       case "String":
-        return "VARCHAR";
+        return "varchar";
       case "Number":
-        return "INT";
+        return "integer";
       case "Boolean":
-        return "BOOLEAN";
+        return "boolean";
       case "ID":
-        return "VARCHAR";
+        return "serial";
     }
   }
 
