@@ -132,8 +132,7 @@ function createSubQuery(field, data) {
         return `everyRelated${toTitleCase(refTypeName)}`;
       }
   }
-}
-
+} //
 
 function findDbSearchMethod(refFieldName, refFieldType, refType) {
   if (refFieldName === 'id' || refFieldType === 'ID') return 'findById';
