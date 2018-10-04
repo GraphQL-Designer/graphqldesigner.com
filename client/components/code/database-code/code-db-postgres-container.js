@@ -136,7 +136,7 @@ const CodeDBPostgresSchemaContainer = (props) => {
 
   return (
     <div id="code-container-database">
-      <h4 className='codeHeader'>MySQL Create Scripts</h4>
+      <h4 className='codeHeader'>PostgreSQL Create Scripts</h4>
       <hr/>
       <pre>
         {createTablesCode}
