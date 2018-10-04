@@ -323,6 +323,7 @@ const reducers = (state = initialState, action) => {
             prevRefBy = new Set(prevRefBy);
             prevRefBy.delete(prevRefInfo);
             state.tables[prevRelatedTableIndex].fields[prevRelatedFieldIndex].refBy = prevRefBy;
+            newRefBy = new Set(prevRefBy);
           }
           // relation selected, add relation infomation to other field
           if (relationSelected) {
