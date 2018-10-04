@@ -17,7 +17,7 @@ const CodeDBPostgresSchemaContainer = (props) => {
   const foreignKeys = {};
   let primaryKey = [];
 
-  function parseSQLSchema(table) {
+  function parsePostgresSchema(table) {
     if (!table) return ``;
 
     createTablesCode += `CREATE TABLE "${table.type}" (${enter}`;
@@ -110,7 +110,7 @@ const CodeDBPostgresSchemaContainer = (props) => {
 
   // loop through tables and create build script for each table
   for (const tableId in props.tables) {
-    parseSQLSchema(props.tables[tableId]);
+    parsePostgresSchema(props.tables[tableId]);
   }
 
   // if any tables have relations, aka foreign keys
