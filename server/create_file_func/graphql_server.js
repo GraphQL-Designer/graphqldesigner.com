@@ -1,4 +1,4 @@
-function parseGraphqlMongoServer(data) {
+function parseGraphqlServer(data, database) {
   let query = "const graphql = require('graphql');\n";
 
   for (const prop in data) {
@@ -134,7 +134,6 @@ function createSubQuery(field, data) {
   }
 }
 
-
 function findDbSearchMethod(refFieldName, refFieldType, refType) {
   if (refFieldName === 'id' || refFieldType === 'ID') return 'findById';
   switch (refType) {
@@ -228,4 +227,4 @@ function checkForMultipleValues(multipleValues, position) {
   return '';
 }
 
-module.exports = parseGraphqlMongoServer;
+module.exports = parseGraphqlServer;
