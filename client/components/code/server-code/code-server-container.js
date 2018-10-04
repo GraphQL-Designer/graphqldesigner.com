@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import './code.css';
+import '../code.css';
 
 const mapStateToProps = store => ({
 
@@ -9,26 +9,26 @@ const mapStateToProps = store => ({
 
 const CodeServerContainer = (props) => {
   const enter = `
-  `;
+`;
   const tab = '  ';
 
   function parseGraphqlMongoServer(data) {
-    let query = `${tab}const graphql = require('graphql');${enter}`;
+    let query = `const graphql = require('graphql');${enter}`;
 
     for (const prop in data) {
       query += buildDbModelRequirePaths(data[prop]);
     }
 
     query += `
-  const { 
-      GraphQLObjectType,
-      GraphQLSchema,
-      GraphQLID,
-      GraphQLString, 
-      GraphQLInt, 
-      GraphQLList,
-      GraphQLNonNull
-  } = graphql;
+const { 
+    GraphQLObjectType,
+    GraphQLSchema,
+    GraphQLID,
+    GraphQLString, 
+    GraphQLInt, 
+    GraphQLList,
+    GraphQLNonNull
+} = graphql;
   ${enter}`;
 
     // BUILD TYPE SCHEMA
@@ -136,11 +136,11 @@ const CodeServerContainer = (props) => {
     function createSubQueryName(tableIndex, data) {
       switch (field.relation.refType) {
         case 'one to one':
-          return `${refTypeName.toLowerCase()}`
+          return `related${toTitleCase(refTypeName)}`
         case 'one to many':
           return `everyRelated${toTitleCase(refTypeName)}`
         case 'many to one':
-          return `${refTypeName.toLowerCase()}`
+          return `related${toTitleCase(refTypeName)}`
         case 'many to many':
           return `everyRelated${toTitleCase(refTypeName)}`
         default:

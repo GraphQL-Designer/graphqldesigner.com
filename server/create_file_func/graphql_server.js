@@ -1,4 +1,4 @@
-function parseGraphqlMongoServer(data) {
+function parseGraphqlServer(data, database) {
   let query = "const graphql = require('graphql');\n";
 
   for (const prop in data) {
@@ -121,11 +121,11 @@ function createSubQuery(field, data) {
   function createSubQueryName(tableIndex, data) {
     switch (field.relation.refType) {
       case 'one to one':
-        return `related${refTypeName.toLowerCase()}`;
+        return `related${toTitleCase(refTypeName)}`;
       case 'one to many':
         return `everyRelated${toTitleCase(refTypeName)}`;
       case 'many to one':
-        return `related${refTypeName.toLowerCase()}`;
+        return `related${toTitleCase(refTypeName)}`;
       case 'many to many':
         return `everyRelated${toTitleCase(refTypeName)}`;
       default:
@@ -133,7 +133,6 @@ function createSubQuery(field, data) {
       }
   }
 }
-
 
 function findDbSearchMethod(refFieldName, refFieldType, refType) {
   if (refFieldName === 'id' || refFieldType === 'ID') return 'findById';
@@ -228,4 +227,4 @@ function checkForMultipleValues(multipleValues, position) {
   return '';
 }
 
-module.exports = parseGraphqlMongoServer;
+module.exports = parseGraphqlServer;

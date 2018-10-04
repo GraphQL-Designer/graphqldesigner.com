@@ -15,6 +15,7 @@ const initialState = {
     name: '',
     type: 'String',
     primaryKey: false,
+    autoIncrement: false,
     unique: false,
     defaultValue: '',
     required: false,
@@ -53,6 +54,7 @@ const reducers = (state = initialState, action) => {
     name: '',
     type: 'String',
     primaryKey: false,
+    autoIncrement: false,
     unique: false,
     defaultValue: '',
     required: false,
@@ -76,6 +78,7 @@ const reducers = (state = initialState, action) => {
     name: 'id',
     type: 'ID',
     primaryKey: true,
+    autoIncrement: true,
     unique: true,
     defaultValue: '',
     required: false,
@@ -295,7 +298,6 @@ const reducers = (state = initialState, action) => {
 
       // relation selected. New field, or updating field with no previous relation. Add relation
       if ((selectedFieldNum < 0 || !relationPreviouslySelected) && relationSelected) {
-        console.log('new field, or updating field with no prior relation, add relation to other field');
         refBy = state.tables[newRelatedTableIndex].fields[newRelatedFieldIndex].refBy;
         refBy = new Set(refBy);
         refBy.add(newRefInfo);
@@ -312,7 +314,6 @@ const reducers = (state = initialState, action) => {
 
         // relation changed, update the other fields (delete old if necessary, and add new)
         if (!newRefBy.has(newRefInfo)) {
-          console.log('new relation');
           // A previous relation existed, delete it
           if (relationPreviouslySelected) {
             let prevRefBy = state.tables[prevRelatedTableIndex].fields[prevRelatedFieldIndex].refBy;
@@ -320,7 +321,6 @@ const reducers = (state = initialState, action) => {
             if (prevRelatedRefType === 'one to many') prevRelatedRefType = 'many to one';
             else if (prevRelatedRefType === 'many to one') prevRelatedRefType = 'one to many';
             const prevRefInfo = `${tableNum}.${selectedFieldNum}.${prevRelatedRefType}`;
-            console.log('delete relation', prevRefInfo);
             prevRefBy = new Set(prevRefBy);
             prevRefBy.delete(prevRefInfo);
             state.tables[prevRelatedTableIndex].fields[prevRelatedFieldIndex].refBy = prevRefBy;
@@ -330,7 +330,6 @@ const reducers = (state = initialState, action) => {
           if (relationSelected) {
             newRefBy = new Set(newRefBy);
             newRefBy.add(newRefInfo);
-            console.log('add relation', newRefInfo);
             state.tables[newRelatedTableIndex].fields[newRelatedFieldIndex].refBy = newRefBy;
           }
         }

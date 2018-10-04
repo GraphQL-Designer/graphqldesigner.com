@@ -247,11 +247,20 @@ class TableOptions extends React.Component {
                 value={this.props.selectedField.defaultValue}
               />
 
-              {this.props.database === 'SQL' && (
+              {this.props.database === 'MySQL' && (
                 <Toggle
                   label="Primary Key"
                   toggled={this.props.selectedField.primaryKey}
                   onToggle={this.handleToggle.bind(null, 'primaryKey')}
+                  style={style.toggle}
+                />
+              )}
+
+              {this.props.database === 'MySQL' && (
+                <Toggle
+                  label="Auto Increment"
+                  toggled={this.props.selectedField.autoIncrement}
+                  onToggle={this.handleToggle.bind(null, 'autoIncrement')}
                   style={style.toggle}
                 />
               )}

@@ -73,11 +73,11 @@ class Welcome extends React.Component {
               MongoDB
             </RaisedButton>
             <RaisedButton onClick={this.handleDatabaseClick} buttonStyle={styles}>
-              SQL
+              MySQL
             </RaisedButton>
-            {/* <RaisedButton onClick={this.handleDatabaseClick} buttonStyle={styles}>
-              Sequelize
-            </RaisedButton> */}
+            {/*<RaisedButton onClick={this.handleDatabaseClick} buttonStyle={styles}>
+              PostgreSQL
+              </RaisedButton>*/}
           </div>
         </Dialog>
       </div>
