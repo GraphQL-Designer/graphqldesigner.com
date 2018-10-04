@@ -20,7 +20,9 @@ const parseClientQueries = require('./create_file_func/client_queries');
 const parseClientMutations = require('./create_file_func/client_mutations');
 const parseGraphqlServer = require('./create_file_func/graphql_server');
 const parseMongoschema = require('./create_file_func/mongo_schema');
+const parseMySQLTables = require('./create_file_func/mysql_scripts');
 const mysqlPool = require('./create_file_func/mysql_pool');
+
 
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, '../public')));
@@ -89,15 +91,7 @@ function buildForMongo(data, dateStamp, cb) {
 
 function buildForMySQL(data, dateStamp, cb) {
   mysqlPool()
-//CODE COPPIED FROM MONGO
-
-  // const indexes = Object.keys(data);
-  
-  // indexes.forEach(index => {
-  //   parseMongoschema(data[index], query => {
-  //     fs.writeFileSync(path.join(PATH, `build-files${dateStamp}/server/db/${data[index].type.toLowerCase()}.js`), query);
-  //     });
-  //   });
+  fs.writeFileSync(path.join(PATH, `build-files${dateStamp}/server/db/table-build-scripts.js`), parseMySQLTables(data));
   return cb();
 }
 

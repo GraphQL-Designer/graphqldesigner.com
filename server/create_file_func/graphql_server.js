@@ -134,7 +134,6 @@ function createSubQuery(field, data) {
   }
 }
 
-
 function findDbSearchMethod(refFieldName, refFieldType, refType) {
   if (refFieldName === 'id' || refFieldType === 'ID') return 'findById';
   switch (refType) {
