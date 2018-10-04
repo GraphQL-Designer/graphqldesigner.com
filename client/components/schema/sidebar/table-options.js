@@ -144,22 +144,22 @@ class TableOptions extends React.Component {
           value={types}
           primaryText={this.props.tables[types].type}
         />,
-      )
+      );
     }
 
-    const selectedTableIndex = this.props.selectedField.relation.tableIndex
+    const selectedTableIndex = this.props.selectedField.relation.tableIndex;
     if (selectedTableIndex >= 0) {
       for (let field in this.props.tables[selectedTableIndex].fields) {
         // check if field has a relation to selected field, if so, don't push
         let noRelationExists = true; 
-        const tableIndex = this.props.selectedField.tableNum
-        let fieldIndex = this.props.selectedField.fieldNum
+        const tableIndex = this.props.selectedField.tableNum;
+        let fieldIndex = this.props.selectedField.fieldNum;
         if (fieldIndex >= 0) {
-          const refBy = this.props.tables[tableIndex].fields[fieldIndex].refBy
+          const refBy = this.props.tables[tableIndex].fields[fieldIndex].refBy;
           if (refBy.size > 0) {
-            const refTypes = ['one to one', 'one to many', 'many to one', 'many to many']
+            const refTypes = ['one to one', 'one to many', 'many to one', 'many to many'];
             for (let i = 0; i < refTypes.length; i += 1) {
-              const refInfo = `${selectedTableIndex}.${field}.${refTypes[i]}`
+              const refInfo = `${selectedTableIndex}.${field}.${refTypes[i]}`;
               if (refBy.has(refInfo)) {
                 noRelationExists = false; 
               }
@@ -182,12 +182,12 @@ class TableOptions extends React.Component {
 
     function fieldName(fieldNum, tableNum, tables) {
       // Header text if adding a new field
-      let h2Text = 'Add Field'
-      let h4Text = `in ${tables[tableNum].type}`
+      let h2Text = 'Add Field';
+      let h4Text = `in ${tables[tableNum].type}`;
       // Header text if updating a field
       if (fieldNum >= 0) {
-        h2Text = `Update ${tables[tableNum].fields[fieldNum].name}`
-        h4Text = `in ${tables[tableNum].type}`
+        h2Text = `Update ${tables[tableNum].fields[fieldNum].name}`;
+        h4Text = `in ${tables[tableNum].type}`;
       }
       return (
         <div style={{ marginTop: '10px' }}>
@@ -247,7 +247,7 @@ class TableOptions extends React.Component {
                 value={this.props.selectedField.defaultValue}
               />
 
-              {this.props.database === 'MySQL' && (
+              {this.props.database !== 'MongoDb' && (
                 <Toggle
                   label="Primary Key"
                   toggled={this.props.selectedField.primaryKey}
@@ -270,7 +270,7 @@ class TableOptions extends React.Component {
                 style={style.toggle}
               />
 
-              {this.props.database === 'MySQL' && (
+              {this.props.database !== 'MongoDB' && (
                 <Toggle
                   label="Auto Increment"
                   toggled={this.props.selectedField.autoIncrement}

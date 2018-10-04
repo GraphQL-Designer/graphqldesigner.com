@@ -156,7 +156,7 @@ parseClientQueries(props.tables);
 
   return (
     <div id="code-container-client">
-      <h4 className='codeHeader'>Client Queries</h4>
+      <h4 className='codeHeader'>Client Queries and Mutations</h4>
       <hr/>
       <pre>
         {query}

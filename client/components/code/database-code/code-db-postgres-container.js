@@ -35,22 +35,23 @@ const CodeDBPostgresSchemaContainer = (props) => {
 
     // if table has a primary key
     if (primaryKey.length > 0) {
-      createTablesCode += `${tab}PRIMARY KEY (`;
-      primaryKey.forEach((key, i) => {
+      createTablesCode += `${tab}${tab}CONSTRAINT ${table.type}_pk PRIMARY KEY (`;
+      primaryKey.forEach((key, i) => {``
         if (i === primaryKey.length - 1) {
-          createTablesCode += `"${key}")${enter}`;
+          createTablesCode += `"${key}")`;
         } else {
           createTablesCode += `"${key}", `;
         }
       });
+      createTablesCode += `${enter}) WITH (${enter} OIDS=FALSE${enter});${enter}${enter}`;
     }
     // reset primaryKey to empty so primary keys don't slip into the next table
     primaryKey = [];
-    createTablesCode += `);${enter}`;
   }
+  
   function createSchemaField(field) {
     let fieldCode = ``;
-    fieldCode += `${tab}"${field.name}"${tab}${checkDataType(field.type)}`;
+    fieldCode += `${tab}${tab}"${field.name}"${tab}${checkDataType(field.type)}`;
     fieldCode += checkAutoIncrement(field.autoIncrement);
     fieldCode += checkRequired(field.required);
     fieldCode += checkUnique(field.unique);
@@ -74,17 +75,16 @@ const CodeDBPostgresSchemaContainer = (props) => {
     }
     return fieldCode;
   }
-
   function checkDataType(dataType) {
     switch(dataType){
       case "String":
-        return "VARCHAR";
+        return "varchar";
       case "Number":
-        return "INT";
+        return "integer";
       case "Boolean":
-        return "BOOLEAN";
+        return "boolean";
       case "ID":
-        return "VARCHAR";
+        return "serial";
     }
   }
 
@@ -109,9 +109,7 @@ const CodeDBPostgresSchemaContainer = (props) => {
   }
 
   // loop through tables and create build script for each table
-  for (const tableId in props.tables) {
-    parsePostgresSchema(props.tables[tableId]);
-  }
+
 
   // if any tables have relations, aka foreign keys
   for (const tableId in foreignKeys) {
@@ -129,11 +127,15 @@ const CodeDBPostgresSchemaContainer = (props) => {
       // get name of field being referenced
       const relatedFieldId = relationInfo.relatedField;
       const relatedField = props.tables[relatedTableId].fields[relatedFieldId].name;
+      createTablesCode += `${enter}${enter}ALTER TABLE "${tableMakingRelation}" ADD CONSTRAINT "${tableMakingRelation}_fk${relationCount}" FOREIGN KEY ("${fieldMakingRelation}") REFERENCES "${relatedTable}"("${relatedField}");${enter}`;
 
-      createTablesCode += `${enter}ALTER TABLE "${tableMakingRelation}" ADD CONSTRAINT "${tableMakingRelation}_fk${relationCount}" FOREIGN KEY ("${fieldMakingRelation}") REFERENCES "${relatedTable}"("${relatedField}");${enter}`;
     });
   }
 
+  
+  for (const tableId in props.tables) {
+    parsePostgresSchema(props.tables[tableId]);
+  }
   return (
     <div id="code-container-database">
       <h4 className='codeHeader'>PostgreSQL Create Scripts</h4>
