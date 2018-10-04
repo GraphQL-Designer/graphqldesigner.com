@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import '../code.css';
 
 const mapStateToProps = store => ({
-
+  database: store.schema.database,
   tables: store.schema.tables,
 });
 
@@ -12,11 +12,12 @@ const CodeServerContainer = (props) => {
 `;
   const tab = '  ';
 
-  function parseGraphqlMongoServer(data) {
+  function parseGraphqlMongoServer(tables, database) {
     let query = `const graphql = require('graphql');${enter}`;
 
-    for (const prop in data) {
-      query += buildDbModelRequirePaths(data[prop]);
+    
+    for (const tableId in tables) {
+      query += buildDbModelRequirePaths(tables[tableId]);
     }
 
     query += `
@@ -32,19 +33,19 @@ const {
   ${enter}`;
 
     // BUILD TYPE SCHEMA
-    for (const prop in data) {
-      query += buildGraphqlTypeSchema(data[prop], data);
+    for (const tableId in tables) {
+      query += buildGraphqlTypeSchema(tables[tableId], tables);
     }
 
     // BUILD ROOT QUERY
     query += `const RootQuery = new GraphQLObjectType({${enter}${tab}name: 'RootQueryType',${enter}${tab}fields: {${enter}`;
 
     let firstRootLoop = true;
-    for (const prop in data) {
+    for (const tableId in tables) {
       if (!firstRootLoop) query += `,${enter}`;
       firstRootLoop = false;
 
-      query += buildGraphqlRootQury(data[prop]);
+      query += buildGraphqlRootQury(tables[tableId]);
     }
     query += `${enter}${tab}}${enter}});${enter}${enter}`;
 
@@ -52,11 +53,11 @@ const {
     query += `const Mutation = new GraphQLObjectType({${enter}${tab}name: 'Mutation',${enter}${tab}fields: {${enter}`;
 
     let firstMutationLoop = true;
-    for (const prop in data) {
+    for (const tableId in tables) {
       if (!firstMutationLoop) query += `,${enter}`;
       firstMutationLoop = false;
 
-      query += buildGraphqlMutationQury(data[prop]);
+      query += buildGraphqlMutationQury(tables[tableId]);
     }
     query += `${enter}${tab}}${enter}});${enter}${enter}`;
 
@@ -64,11 +65,11 @@ const {
     return query;
   }
 
-  function buildDbModelRequirePaths(data) {
-    return `const ${data.type} = require('../db-model/${data.type.toLowerCase()}.js');${enter}`;
+  function buildDbModelRequirePaths(table) {
+    return `const ${table.type} = require('../db-model/${table.type.toLowerCase()}.js');${enter}`;
   }
 
-  function buildGraphqlTypeSchema(table, data) {
+  function buildGraphqlTypeSchema(table, tables) {
     let query = `const ${table.type}Type = new GraphQLObjectType({${enter}${tab}name: '${table.type}',${enter}${tab}fields: () => ({`;
 
     let firstLoop = true;
@@ -79,7 +80,7 @@ const {
       query += `${enter}${tab}${tab}${table.fields[prop].name}: { type: ${checkForMultipleValues(table.fields[prop].multipleValues, 'front')}${tableTypeToGraphqlType(table.fields[prop].type)}${checkForMultipleValues(table.fields[prop].multipleValues, 'back')} }`;
 
       if (table.fields[prop].relation.tableIndex > -1) {
-        query += createSubQuery(table.fields[prop], data);
+        query += createSubQuery(table.fields[prop], tables);
       }
 
       const refBy = table.fields[prop].refBy;
@@ -94,7 +95,7 @@ const {
               refType: parsedValue[2],
             },
           };
-          query += createSubQuery(field, data);
+          query += createSubQuery(field, tables);
         });
       }
     }
@@ -124,16 +125,16 @@ const {
     return name
   }
 
-  function createSubQuery(field, data) {
-    const refTypeName = data[field.relation.tableIndex].type;
-    const refFieldName = data[field.relation.tableIndex].fields[field.relation.fieldIndex].name;
-    const refFieldType = data[field.relation.tableIndex].fields[field.relation.fieldIndex].type;
+  function createSubQuery(field, tables) {
+    const refTypeName = tables[field.relation.tableIndex].type;
+    const refFieldName = tables[field.relation.tableIndex].fields[field.relation.fieldIndex].name;
+    const refFieldType = tables[field.relation.tableIndex].fields[field.relation.fieldIndex].type;
 
-    const query = `,${enter}${tab}${tab}${createSubQueryName(refTypeName)}: {${enter}${tab}${tab}${tab}type: ${refTypeName}Type,${enter}${tab}${tab}${tab}resolve(parent, args) {${enter}${tab}${tab}${tab}${tab}return ${refTypeName}.${findDbSearchMethod(refFieldName, refFieldType, field.relation.refType)}(${createSearchObject(refFieldName, refFieldType, field)});${enter}${tab}${tab}${tab}}${enter}${tab}${tab}}`;
+    const query = `,${enter}${tab}${tab}${createSubQueryName()}: {${enter}${tab}${tab}${tab}type: ${refTypeName}Type,${enter}${tab}${tab}${tab}resolve(parent, args) {${enter}${tab}${tab}${tab}${tab}return ${refTypeName}.${findDbSearchMethod(refFieldName, refFieldType, field.relation.refType)}(${createSearchObject(refFieldName, refFieldType, field)});${enter}${tab}${tab}${tab}}${enter}${tab}${tab}}`;
 
     return query;
 
-    function createSubQueryName(tableIndex, data) {
+    function createSubQueryName() {
       switch (field.relation.refType) {
         case 'one to one':
           return `related${toTitleCase(refTypeName)}`
@@ -176,41 +177,41 @@ const {
     return `{ ${refFieldName}: parent.${field.name} }`;
   }
 
-  function buildGraphqlRootQury(data) {
+  function buildGraphqlRootQury(table) {
     let query = '';
 
-    query += createFindAllRootQuery(data);
+    query += createFindAllRootQuery(table);
 
-    if (data.fields[0]) {
-      query += createFindByIdQuery(data);
+    if (table.fields[0]) {
+      query += createFindByIdQuery(table);
     }
     return query;
   }
 
-  function createFindAllRootQuery(data) {
-    const query = `${tab}${tab}every${toTitleCase(data.type)}: {${enter}${tab}${tab}${tab}type: new GraphQLList(${data.type}Type),${enter}${tab}${tab}${tab}resolve() {${enter}${tab}${tab}${tab}${tab}return ${data.type}.find({});${enter}${tab}${tab}${tab}}${enter}${tab}${tab}}`;
+  function createFindAllRootQuery(table) {
+    const query = `${tab}${tab}every${toTitleCase(table.type)}: {${enter}${tab}${tab}${tab}type: new GraphQLList(${table.type}Type),${enter}${tab}${tab}${tab}resolve() {${enter}${tab}${tab}${tab}${tab}return ${table.type}.find({});${enter}${tab}${tab}${tab}}${enter}${tab}${tab}}`;
 
     return query;
   }
 
-  function createFindByIdQuery(data) {
-    const query = `,${enter}${tab}${tab}${data.type.toLowerCase()}: {${enter}${tab}${tab}${tab}type: ${data.type}Type,${enter}${tab}${tab}${tab}args: { id: { type: GraphQLID }},${enter}${tab}${tab}${tab}resolve(parent, args) {${enter}${tab}${tab}${tab}${tab}return ${data.type}.findById(args.id);${enter}${tab}${tab}${tab}}${enter}${tab}${tab}}`;
+  function createFindByIdQuery(table) {
+    const query = `,${enter}${tab}${tab}${table.type.toLowerCase()}: {${enter}${tab}${tab}${tab}type: ${table.type}Type,${enter}${tab}${tab}${tab}args: { id: { type: GraphQLID }},${enter}${tab}${tab}${tab}resolve(parent, args) {${enter}${tab}${tab}${tab}${tab}return ${table.type}.findById(args.id);${enter}${tab}${tab}${tab}}${enter}${tab}${tab}}`;
 
     return query;
   }
 
-  function buildGraphqlMutationQury(data) {
-    let query = `${tab}${tab}add${data.type}: {${enter}${tab}${tab}${tab}type: ${data.type}Type,${enter}${tab}${tab}${tab}args: {${enter}`;
+  function buildGraphqlMutationQury(table) {
+    let query = `${tab}${tab}add${table.type}: {${enter}${tab}${tab}${tab}type: ${table.type}Type,${enter}${tab}${tab}${tab}args: {${enter}`;
 
     let firstLoop = true;
-    for (const prop in data.fields) {
+    for (const prop in table.fields) {
       if (!firstLoop) query += `,${enter}`;
       firstLoop = false;
 
-      query += `${tab}${tab}${tab}${tab}${data.fields[prop].name}: ${buildMutationArgType(data.fields[prop])}`;
+      query += `${tab}${tab}${tab}${tab}${table.fields[prop].name}: ${buildMutationArgType(table.fields[prop])}`;
     }
 
-    query += `${enter}${tab}${tab}${tab}},${enter}${tab}${tab}${tab}resolve(parent, args) {${enter}${tab}${tab}${tab}${tab}const ${data.type.toLowerCase()} = new ${data.type}(args);${enter}${tab}${tab}${tab}${tab}return ${data.type.toLowerCase()}.save();${enter}${tab}${tab}${tab}}${enter}${tab}${tab}}`;
+    query += `${enter}${tab}${tab}${tab}},${enter}${tab}${tab}${tab}resolve(parent, args) {${enter}${tab}${tab}${tab}${tab}const ${table.type.toLowerCase()} = new ${table.type}(args);${enter}${tab}${tab}${tab}${tab}return ${table.type.toLowerCase()}.save();${enter}${tab}${tab}${tab}}${enter}${tab}${tab}}`;
 
     return query;
 

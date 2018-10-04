@@ -118,7 +118,7 @@ function createSubQuery(field, data) {
   const query = `,\n\t\t${createSubQueryName(refTypeName)}: {\n\t\t\ttype: ${refTypeName}Type,\n\t\t\tresolve(parent, args) {\n\t\t\t\treturn ${refTypeName}.${findDbSearchMethod(refFieldName, refFieldType, field.relation.refType)}(${createSearchObject(refFieldName, refFieldType, field)});\n\t\t\t}\n\t\t}`;
   return query;
 
-  function createSubQueryName(tableIndex, data) {
+  function createSubQueryName() {
     switch (field.relation.refType) {
       case 'one to one':
         return `related${toTitleCase(refTypeName)}`;
