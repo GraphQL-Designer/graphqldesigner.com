@@ -17,7 +17,7 @@ const CodeDBSQLContainer = (props) => {
   const foreignKeys = {};
   let primaryKey = [];
 
-  function parseSQLSchema(table) {
+  function parseSQLTable(table) {
     if (!table) return ``;
 
     createTablesCode += `CREATE TABLE \`${table.type}\` (${enter}`;
@@ -110,12 +110,11 @@ const CodeDBSQLContainer = (props) => {
 
   // loop through tables and create build script for each table
   for (const tableId in props.tables) {
-    parseSQLSchema(props.tables[tableId]);
+    parseSQLTable(props.tables[tableId]);
   }
 
   // if any tables have relations, aka foreign keys
   for (const tableId in foreignKeys) {
-    console.log('what are foreignKeys', foreignKeys);
     // loop through the table's fields to find the particular relation
     foreignKeys[tableId].forEach((relationInfo, relationCount) => {
       // name of table making relation

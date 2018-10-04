@@ -1,16 +1,19 @@
-const foreignKeys = {};
-let primaryKey = [];
 
-function parseSQLScripts(tables) {
+function parseSQLTables(tables) {
+  const foreignKeys = {};
+  let primaryKey = [];
+  for (const tableId in props.tables) {
+    parseSQLTable(tables[tableId]);
+  }
 
-  function parseSQLSchema(table) {
+  function parseSQLTable(table) {
     if (!table) return ``;
     
-    createTablesCode += `CREATE TABLE \`${table.type}\` (${enter}`;
+    createTablesCode += `CREATE TABLE \`${table.type}\` (\n`;
     
     // create code for each field
     for (const fieldId in table.fields) {
-      createTablesCode += createSchemaField(table.fields[fieldId]);
+      createTablesCode += createTableField(table.fields[fieldId]);
       // so long as it's not the last field, add a comma
       const tableProps = Object.keys(table.fields);
       if (fieldId !== tableProps[tableProps.length - 1]) {
@@ -21,10 +24,10 @@ function parseSQLScripts(tables) {
     
     // if table has a primary key
     if (primaryKey.length > 0) {
-      createTablesCode += `${tab}PRIMARY KEY (`;
+      createTablesCode += `\tPRIMARY KEY (`;
       primaryKey.forEach((key, i) => {
         if (i === primaryKey.length - 1) {
-          createTablesCode += `\`${key}\`)${enter}`;
+          createTablesCode += `\`${key}\`)\n`;
         } else {
           createTablesCode += `\`${key}\`, `;
         }
@@ -32,11 +35,11 @@ function parseSQLScripts(tables) {
     }
   // reset primaryKey to empty so primary keys don't slip into the next table
   primaryKey = [];
-  createTablesCode += `);${enter}`;
+  createTablesCode += `);\n`;
 }
-function createSchemaField(field) {
+function createTableField(field) {
   let fieldCode = ``;
-  fieldCode += `${tab}\`${field.name}\`${tab}${checkDataType(field.type)}`;
+  fieldCode += `\t\`${field.name}\`\t${checkDataType(field.type)}`;
   fieldCode += checkAutoIncrement(field.autoIncrement);
   fieldCode += checkRequired(field.required);
   fieldCode += checkUnique(field.unique);
@@ -75,33 +78,32 @@ function checkDataType(dataType) {
 }
 
 function checkAutoIncrement(fieldAutoIncrement) {
-  if (fieldAutoIncrement) return `${tab}AUTO_INCREMENT`;
+  if (fieldAutoIncrement) return `\tAUTO_INCREMENT`;
   else return '';
 }
 
 function checkUnique(fieldUnique) {
-  if (fieldUnique) return `${tab}UNIQUE`;
+  if (fieldUnique) return `\tUNIQUE`;
   else return '';
 }
 
 function checkRequired(fieldRequired) {
-  if (fieldRequired) return `${tab}NOT NULL`;
+  if (fieldRequired) return `\tNOT NULL`;
   else return '';
 }
 
 function checkDefault(fieldDefault) {
-  if (fieldDefault.length > 0) return `${tab}DEFAULT '${fieldDefault}'`;
+  if (fieldDefault.length > 0) return `\tDEFAULT '${fieldDefault}'`;
   else return '';
 }
 
 // loop through tables and create build script for each table
 for (const tableId in props.tables) {
-  parseSQLSchema(props.tables[tableId]);
+  parseSQLTable(props.tables[tableId]);
 }
 
   // if any tables have relations, aka foreign keys
   for (const tableId in foreignKeys) {
-    console.log('what are foreignKeys', foreignKeys);
     // loop through the table's fields to find the particular relation
     foreignKeys[tableId].forEach((relationInfo, relationCount) => {
       // name of table making relation
@@ -116,7 +118,9 @@ for (const tableId in props.tables) {
       const relatedFieldId = relationInfo.relatedField;
       const relatedField = props.tables[relatedTableId].fields[relatedFieldId].name;
       
-      createTablesCode += `${enter}ALTER TABLE \`${tableMakingRelation}\` ADD CONSTRAINT \`${tableMakingRelation}_fk${relationCount}\` FOREIGN KEY (\`${fieldMakingRelation}\`) REFERENCES \`${relatedTable}\`(\`${relatedField}\`);${enter}`;
+      createTablesCode += `\nALTER TABLE \`${tableMakingRelation}\` ADD CONSTRAINT \`${tableMakingRelation}_fk${relationCount}\` FOREIGN KEY (\`${fieldMakingRelation}\`) REFERENCES \`${relatedTable}\`(\`${relatedField}\`);\n`;
     });
   }
 }
+
+export default parseSQLTables
