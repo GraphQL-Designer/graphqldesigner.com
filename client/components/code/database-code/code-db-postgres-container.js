@@ -20,7 +20,7 @@ const CodeDBPostgresSchemaContainer = (props) => {
   function parseSQLSchema(table) {
     if (!table) return ``;
 
-    createTablesCode += `CREATE TABLE \`${table.type}\` (${enter}`;
+    createTablesCode += `CREATE TABLE "${table.type}" (${enter}`;
 
     // create code for each field
     for (const fieldId in table.fields) {
@@ -38,9 +38,9 @@ const CodeDBPostgresSchemaContainer = (props) => {
       createTablesCode += `${tab}PRIMARY KEY (`;
       primaryKey.forEach((key, i) => {
         if (i === primaryKey.length - 1) {
-          createTablesCode += `\`${key}\`)${enter}`;
+          createTablesCode += `"${key}")${enter}`;
         } else {
-          createTablesCode += `\`${key}\`, `;
+          createTablesCode += `"${key}", `;
         }
       });
     }
@@ -50,7 +50,7 @@ const CodeDBPostgresSchemaContainer = (props) => {
   }
   function createSchemaField(field) {
     let fieldCode = ``;
-    fieldCode += `${tab}\`${field.name}\`${tab}${checkDataType(field.type)}`;
+    fieldCode += `${tab}"${field.name}"${tab}${checkDataType(field.type)}`;
     fieldCode += checkAutoIncrement(field.autoIncrement);
     fieldCode += checkRequired(field.required);
     fieldCode += checkUnique(field.unique);
@@ -62,9 +62,9 @@ const CodeDBPostgresSchemaContainer = (props) => {
 
     if (field.relationSelected) {
       const relationData = {
-        'relatedTable': field.relation.tableIndex,
-        'relatedField': field.relation.fieldIndex,
-        'fieldMakingRelation': field.fieldNum
+        "relatedTable": field.relation.tableIndex,
+        "relatedField": field.relation.fieldIndex,
+        "fieldMakingRelation": field.fieldNum
       };
       if (foreignKeys[field.tableNum]) {
         foreignKeys[field.tableNum].push(relationData);
@@ -77,14 +77,14 @@ const CodeDBPostgresSchemaContainer = (props) => {
 
   function checkDataType(dataType) {
     switch(dataType){
-      case 'String':
-        return `VARCHAR`;
-      case 'Number':
-        return `INT`;
-      case 'Boolean':
-        return `BOOLEAN`;
-      case 'ID':
-        return `VARCHAR`;
+      case "String":
+        return "VARCHAR";
+      case "Number":
+        return "INT";
+      case "Boolean":
+        return "BOOLEAN";
+      case "ID":
+        return "VARCHAR";
     }
   }
 
@@ -104,7 +104,7 @@ const CodeDBPostgresSchemaContainer = (props) => {
   }
 
   function checkDefault(fieldDefault) {
-    if (fieldDefault.length > 0) return `${tab}DEFAULT '${fieldDefault}'`;
+    if (fieldDefault.length > 0) return `${tab}DEFAULT "${fieldDefault}"`;
     else return '';
   }
 
@@ -130,7 +130,7 @@ const CodeDBPostgresSchemaContainer = (props) => {
       const relatedFieldId = relationInfo.relatedField;
       const relatedField = props.tables[relatedTableId].fields[relatedFieldId].name;
 
-      createTablesCode += `${enter}ALTER TABLE \`${tableMakingRelation}\` ADD CONSTRAINT \`${tableMakingRelation}_fk${relationCount}\` FOREIGN KEY (\`${fieldMakingRelation}\`) REFERENCES \`${relatedTable}\`(\`${relatedField}\`);${enter}`;
+      createTablesCode += `${enter}ALTER TABLE "${tableMakingRelation}" ADD CONSTRAINT "${tableMakingRelation}_fk${relationCount}" FOREIGN KEY ("${fieldMakingRelation}") REFERENCES "${relatedTable}"("${relatedField}");${enter}`;
     });
   }
 
