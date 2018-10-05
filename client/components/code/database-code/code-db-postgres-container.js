@@ -20,7 +20,7 @@ const CodeDBPostgresSchemaContainer = (props) => {
   function parsePostgresSchema(table) {
     if (!table) return ``;
 
-    createTablesCode += `${enter}CREATE TABLE "${table.type.toLowerCase()}" (${enter}`;
+    createTablesCode += `${enter}CREATE TABLE "${table.type}" (${enter}`;
 
     // create code for each field
     for (const fieldId in table.fields) {
@@ -35,7 +35,7 @@ const CodeDBPostgresSchemaContainer = (props) => {
 
     // if table has a primary key
     if (primaryKey.length > 0) {
-      createTablesCode += `${tab}${tab}CONSTRAINT ${table.type.toLowerCase()}_pk PRIMARY KEY (`;
+      createTablesCode += `${tab}${tab}CONSTRAINT ${table.type}_pk PRIMARY KEY (`;
       primaryKey.forEach((key, i) => {``;
         if (i === primaryKey.length - 1) {
           createTablesCode += `"${key}")`;
@@ -51,7 +51,7 @@ const CodeDBPostgresSchemaContainer = (props) => {
 
   function createSchemaField(field) {
     let fieldCode = ``;
-    fieldCode += `${tab}${tab}"${field.name.toLowerCase()}"${tab}${checkDataType(field.type)}`;
+    fieldCode += `${tab}${tab}"${field.name}"${tab}${checkDataType(field.type)}`;
     fieldCode += checkAutoIncrement(field.autoIncrement);
     fieldCode += checkRequired(field.required);
     fieldCode += checkUnique(field.unique);
