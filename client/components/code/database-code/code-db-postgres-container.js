@@ -20,7 +20,7 @@ const CodeDBPostgresSchemaContainer = (props) => {
   function parsePostgresSchema(table) {
     if (!table) return ``;
 
-    createTablesCode += `CREATE TABLE "${table.type.toLowerCase()}" (${enter}`;
+    createTablesCode += `${enter}CREATE TABLE "${table.type.toLowerCase()}" (${enter}`;
 
     // create code for each field
     for (const fieldId in table.fields) {
@@ -30,13 +30,13 @@ const CodeDBPostgresSchemaContainer = (props) => {
       if (fieldId !== tableProps[tableProps.length - 1]) {
         createTablesCode += `,`;
       }
-      createTablesCode += enter; 
+      createTablesCode += `${enter}`;
     }
 
     // if table has a primary key
     if (primaryKey.length > 0) {
       createTablesCode += `${tab}${tab}CONSTRAINT ${table.type.toLowerCase()}_pk PRIMARY KEY (`;
-      primaryKey.forEach((key, i) => {``
+      primaryKey.forEach((key, i) => {``;
         if (i === primaryKey.length - 1) {
           createTablesCode += `"${key}")`;
         } else {
@@ -48,7 +48,7 @@ const CodeDBPostgresSchemaContainer = (props) => {
     // reset primaryKey to empty so primary keys don't slip into the next table
     primaryKey = [];
   }
-  
+
   function createSchemaField(field) {
     let fieldCode = ``;
     fieldCode += `${tab}${tab}"${field.name.toLowerCase()}"${tab}${checkDataType(field.type)}`;
@@ -131,17 +131,22 @@ const CodeDBPostgresSchemaContainer = (props) => {
 
     });
   }
-
   
   for (const tableId in props.tables) {
     parsePostgresSchema(props.tables[tableId]);
   }
+  if (createTablesCode.length > 0) {
+    createTablesCode += `${enter}`;
+  }
+
+  const PostgreSQL = `${createTablesCode}`;
+
   return (
     <div id="code-container-database">
       <h4 className='codeHeader'>PostgreSQL Create Scripts</h4>
       <hr/>
       <pre>
-        {createTablesCode}
+        {PostgreSQL}
       </pre>
       <pre id='column-filler-for-scroll'></pre>
     </div>
