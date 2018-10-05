@@ -12,7 +12,7 @@ function parseMongoschema(data, cb) {
     }
   query += `\n});\n\nmodule.exports = mongoose.model("${data.type}", ${data.type.toLowerCase()}Schema);`;
 
-  return cb(query);
+  return
 }
 
 function createSchemaField(data) {
