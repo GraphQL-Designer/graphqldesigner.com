@@ -72,8 +72,6 @@ function buildReturnValues(data) {
   let query = '';
 
   for (const prop in data.fields) {
-    firstLoop = false;
-
     query += `\t\t\t${data.fields[prop].name}\n`;
   }
 

@@ -46,7 +46,7 @@ const CodeDBSQLContainer = (props) => {
     }
     // reset primaryKey to empty so primary keys don't slip into the next table
     primaryKey = [];
-    createTablesCode += `);${enter}`;
+    createTablesCode += `);${enter}${enter}`;
   }
   function createSchemaField(field) {
     let fieldCode = ``;
