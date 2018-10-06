@@ -1,6 +1,5 @@
 function buildExpressServer(database) {
-const query = `
-const express = require('express');
+let query = `const express = require('express');
 const graphqlHTTP = require('express-graphql');
 const GQLSchema = require('./graphql-schema');
 const path = require('path');

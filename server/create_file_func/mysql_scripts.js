@@ -123,4 +123,4 @@ for (const tableId in props.tables) {
   }
 }
 
-export default parseSQLTables
+module.exports = parseSQLTables;
