@@ -33,16 +33,23 @@ const CodeClientContainer = (props) => {
     // Build mutations
     for (const tableId in tables) {
       // Build add mutations
-      query += buildAddMutationParams(tables[tableId], 'add');
-      query += buildTypeParamas(tables[tableId]);
+      query += buildMutationParams(tables[tableId], 'add');
+      query += buildTypeParams(tables[tableId], 'add');
       query += buildReturnValues(tables[tableId]);
       exportNames.push(`add${tables[tableId].type}Mutation`);
 
-      // Build delete mutations if there is an unique id
+      // Build delete and update mutations if there is an unique id
       if (tables[tableId].fields[0]) {
+        // update mutations
+        query += buildMutationParams(tables[tableId], 'update');
+        query += buildTypeParams(tables[tableId], 'update');
+        query += buildReturnValues(tables[tableId]);
+        exportNames.push(`update${tables[tableId].type}Mutation`);
+
+        // delete mutations
         query += buildDeleteMutationParams(tables[tableId]);
         query += buildReturnValues(tables[tableId]);
-        exportNames.push(`remove${tables[tableId].type}Mutation`);
+        exportNames.push(`delete${tables[tableId].type}Mutation`);
       }
     }
 
@@ -63,7 +70,27 @@ const CodeClientContainer = (props) => {
   // --------------------- Query Functions ---------------- //
 
   function buildClientQueryAll(table) {
-    let string = `const queryEvery${table.type} = gql\`${enter}${tab}{${enter}${tab}${tab}${table.type.toLowerCase()}s {${enter}`;
+    let string = `const queryEvery${table.type} = gql\`${enter}`
+    string += `${tab}{${enter}`
+    string += `${tab}${tab}every${toTitleCase(table.type)} {${enter}`;
+
+    for (const fieldId in table.fields) {
+      string += `${tab}${tab}${tab}${table.fields[fieldId].name}${enter}`;
+    }
+  
+    return string += `${tab}${tab}}${enter}${tab}}${enter}\`${enter}${enter}`;
+  }
+  
+  function toTitleCase(refTypeName) {
+    let name = refTypeName[0].toUpperCase();
+    name += refTypeName.slice(1).toLowerCase();
+    return name;
+  }
+
+  function buildClientQueryById(table) {
+    let string = `const query${table.type}ById = gql\`${enter}`
+    string += `${tab}query(${table.type}: ID) {${enter}`
+    string += `${tab}${tab}${table.type}(${table.type}: ${table.type}) {${enter}`;
 
     for (const fieldId in table.fields) {
       string += `${tab}${tab}${tab}${table.fields[fieldId].name}${enter}`;
@@ -72,23 +99,20 @@ const CodeClientContainer = (props) => {
     return string += `${tab}${tab}}${enter}${tab}}${enter}\`${enter}${enter}`;
   }
 
-  function buildClientQueryById(tables) {
-    let string = `const query${tables.type}ById = gql\`${enter}${tab}query($id: ID) {${enter}${tab}${tab}${tables.type.toLowerCase()}(id: $id) {${enter}`;
-
-    for (const fieldId in tables.fields) {
-      string += `${tab}${tab}${tab}${tables.fields[fieldId].name}${enter}`;
-    }
-  
-    return string += `${tab}${tab}}${enter}${tab}}${enter}\`${enter}${enter}`;
-  }
-
   // --------------------- Mutation Functions ---------------- //
   
-  function buildAddMutationParams(table, mutationType) {
-  let query = `const add${table.type}Mutation = gql\`${enter}${tab}mutation(`;
+  // builds params for either add or update mutations
+  function buildMutationParams(table, mutationType) {
+  let query = `const ${mutationType}${table.type}Mutation = gql\`${enter}${tab}mutation(`;
 
   let firstLoop = true;
   for (const fieldId in table.fields) {
+    if (fieldId === 0 && mutationType === 'update') {
+      if (!firstLoop) query += ', ';
+      firstLoop = false;
+
+      query += `$${table.fields[fieldId].name}: ID!`;
+    }
     if (fieldId !== '0') {
       if (!firstLoop) query += ', ';
       firstLoop = false;
@@ -102,9 +126,10 @@ const CodeClientContainer = (props) => {
 }
 
 function buildDeleteMutationParams(table) {
+  const idName = table.fields[0].name;
   let query = `const delete${table.type}Mutation = gpq\`${enter}`
-     query += `${tab}mutation($id: ID){${enter}`
-     query += `${tab}${tab}delete${table.type}(id: $id){${enter}`
+     query += `${tab}mutation($${idName}: ID!){${enter}`
+     query += `${tab}${tab}delete${table.type}(${idName}: $${idName}){${enter}`
   return query; 
 }
 
@@ -125,8 +150,8 @@ function checkForRequired(required) {
   return '';
 }
 
-function buildTypeParamas(table) {
-  let query = `${tab}addBook(`;
+function buildTypeParams(table, mutationType) {
+  let query = `${tab}${mutationType}${table.type}(`;
 
   let firstLoop = true;
   for (const fieldId in table.fields) {

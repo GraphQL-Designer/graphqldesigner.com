@@ -247,7 +247,7 @@ class TableOptions extends React.Component {
                 value={this.props.selectedField.defaultValue}
               />
 
-              {this.props.database !== 'MongoDb' && (
+              {this.props.database !== 'MongoDB' && (
                 <Toggle
                   label="Primary Key"
                   toggled={this.props.selectedField.primaryKey}

@@ -63,7 +63,7 @@ const {
       if (!firstMutationLoop) query += `,${enter}`;
       firstMutationLoop = false;
   
-      query += buildGraphqlMutationQury(data[prop], database);
+      query += buildGraphqlMutationQuery(data[prop], database);
     }
     query += `${enter}${tab}}${enter}});${enter}${enter}`;
   
@@ -160,7 +160,7 @@ const {
       query += `${tab}${tab}${tab}${tab}${tab}const sql = \`SELECT * FROM ${refTypeName} WHERE `;
   
       if (field.type === 'ID') {
-        query += `id = \${parent.${field.name}}`;
+        query += `${field.name} = \${parent.${field.name}}`;
       } else {
         query += `${refFieldName} = \${parent.${field.name}}`;
       }
@@ -207,12 +207,8 @@ const {
     }
     
     function createSearchObject(refFieldName, refFieldType, field) {
-      const refType = field.relation.refType;
-    
       if (refFieldName === 'id' || refFieldType === 'ID') {
         return `parent.${field.name}`;
-      } else if (refType === 'one to one') {
-        return `{ ${refFieldName}: parent.${field.name} }`;
       } else {
         return `{ ${refFieldName}: parent.${field.name} }`;
       }
@@ -255,9 +251,11 @@ const {
   }
   
   function createFindByIdQuery(table, database) {
+    const idFieldName = table.fields[0].name
+
     let query = `,${enter}${tab}${tab}${table.type.toLowerCase()}: {${enter}`
     query += `${tab}${tab}${tab}type: ${table.type}Type,${enter}`
-    query += `${tab}${tab}${tab}args: { id: { type: GraphQLID }},${enter}`
+    query += `${tab}${tab}${tab}args: { ${idFieldName}: { type: GraphQLID }},${enter}`
     query += `${tab}${tab}${tab}resolve(parent, args) {${enter}`
     query += `${tab}${tab}${tab}${tab}`;
   
@@ -266,14 +264,27 @@ const {
     }
   
     if (database === 'MySQL') {
-      query += `getConnection((err, con) => {${enter}${tab}${tab}${tab}${tab}${tab}const sql = \`SELECT * FROM ${table.type} WHERE id = \${args.id}\`;${enter}${tab}${tab}${tab}${tab}${tab}con.query(sql, (err, result) => {${enter}${tab}${tab}${tab}${tab}${tab}${tab}if (err) throw err;${enter}${tab}${tab}${tab}${tab}${tab}${tab}con.release();${enter}${tab}${tab}${tab}${tab}${tab}${tab}return result;${enter}${tab}${tab}${tab}${tab}${tab}})${enter}${tab}${tab}${tab}${tab}})`
+      query += `getConnection((err, con) => {${enter}`
+      query += `${tab}${tab}${tab}${tab}${tab}const sql = \`SELECT * FROM ${table.type} WHERE ${idFieldName} = \${args.${idFieldName}}\`;${enter}`
+      query += `${tab}${tab}${tab}${tab}${tab}con.query(sql, (err, result) => {${enter}`
+      query += `${tab}${tab}${tab}${tab}${tab}${tab}if (err) throw err;${enter}`
+      query += `${tab}${tab}${tab}${tab}${tab}${tab}con.release();${enter}`
+      query += `${tab}${tab}${tab}${tab}${tab}${tab}return result;${enter}`
+      query += `${tab}${tab}${tab}${tab}${tab}})${enter}`
+      query += `${tab}${tab}${tab}${tab}})`
     }
   
     return query += `${enter}${tab}${tab}${tab}}${enter}${tab}${tab}}`;
   }
   
-  function buildGraphqlMutationQury(table, database) {
-    return `${addMutation(table, database)},${enter}${updateMutation(table, database)},${enter}${deleteMutation(table, database)}` 
+  function buildGraphqlMutationQuery(table, database) {
+    let string = ``;
+    string += `${addMutation(table, database)}`
+    if (table.fields[0]) {
+      string += `,${enter}${updateMutation(table, database)},${enter}`
+      string += `${deleteMutation(table, database)}` 
+    }
+    return string; 
   }
   
   function addMutation(table, database) {
@@ -320,7 +331,21 @@ const {
     if (database === 'MongoDB') query += `return ${table.type}.findByIdAndUpdate(args.id, args);`;
   
     if (database === 'MySQL') {
-      query += `getConnection((err, con) => {${enter}${tab}${tab}${tab}${tab}${tab}let updateValues = '';${enter}${tab}${tab}${tab}${tab}${tab}for (const prop in args) {${enter}${tab}${tab}${tab}${tab}${tab}${tab}updateValues += \`\${prop} = '\${args[prop]}' \`${enter}${tab}${tab}${tab}${tab}${tab}}${enter}${tab}${tab}${tab}${tab}${tab}const sql = \`UPDATE ${table.type} SET \${updateValues}WHERE id = \${args.id}\`;${enter}${tab}${tab}${tab}${tab}${tab}con.query(sql, args, (err, result) => {${enter}${tab}${tab}${tab}${tab}${tab}${tab}if (err) throw err;${enter}${tab}${tab}${tab}${tab}${tab}${tab}con.release();${enter}${tab}${tab}${tab}${tab}${tab}${tab}return result;${enter}${tab}${tab}${tab}${tab}${tab}})${enter}${tab}${tab}${tab}${tab}})`
+      const idFieldName = table.fields[0].name; 
+    
+      query += `getConnection((err, con) => {${enter}`
+      query += `${tab}${tab}${tab}${tab}${tab}let updateValues = '';${enter}`
+      query += `${tab}${tab}${tab}${tab}${tab}for (const prop in args) {${enter}`
+      query += `${tab}${tab}${tab}${tab}${tab}${tab}updateValues += \`\${prop} = '\${args[prop]}' \`${enter}`
+      query += `${tab}${tab}${tab}${tab}${tab}}${enter}`
+      query += `${tab}${tab}${tab}${tab}${tab}const sql = \`UPDATE ${table.type} SET \${updateValues} WHERE ${idFieldName} = \${args.`
+      query += `${idFieldName}}\`;${enter}`
+      query += `${tab}${tab}${tab}${tab}${tab}con.query(sql, args, (err, result) => {${enter}`
+      query += `${tab}${tab}${tab}${tab}${tab}${tab}if (err) throw err;${enter}`
+      query += `${tab}${tab}${tab}${tab}${tab}${tab}con.release();${enter}`
+      query += `${tab}${tab}${tab}${tab}${tab}${tab}return result;${enter}`
+      query += `${tab}${tab}${tab}${tab}${tab}})${enter}`
+      query += `${tab}${tab}${tab}${tab}})`
     }
   
     return query += `${enter}${tab}${tab}${tab}}${enter}${tab}${tab}}`;
@@ -333,12 +358,26 @@ const {
   }
   
   function deleteMutation(table, database) {
-    let query = `${tab}${tab}delete${table.type}: {${enter}${tab}${tab}${tab}type: ${table.type}Type,${enter}${tab}${tab}${tab}args: { id: { type: GraphQLID }},${enter}${tab}${tab}${tab}resolve(parent, args) {${enter}${tab}${tab}${tab}${tab}`
+    const idFieldName = table.fields[0].name
+
+    let query = `${tab}${tab}delete${table.type}: {${enter}`
+    query += `${tab}${tab}${tab}type: ${table.type}Type,${enter}`
+    query += `${tab}${tab}${tab}args: { ${idFieldName}: { type: GraphQLID }},${enter}`
+    query += `${tab}${tab}${tab}resolve(parent, args) {${enter}`
+    query += `${tab}${tab}${tab}${tab}`
   
     if (database === 'MongoDB') query += `return ${table.type}.findByIdAndRemove(args.id);`
   
     if (database === 'MySQL') {
-      query += `getConnection((err, con) => {${enter}${tab}${tab}${tab}${tab}${tab}const sql = \`DELETE FROM ${table.type} WHERE id = \${args.id}\`;${enter}${tab}${tab}${tab}${tab}${tab}con.query(sql, (err, result) => {${enter}${tab}${tab}${tab}${tab}${tab}${tab}if (err) throw err;${enter}${tab}${tab}${tab}${tab}${tab}${tab}con.release();${enter}${tab}${tab}${tab}${tab}${tab}${tab}return result;${enter}${tab}${tab}${tab}${tab}${tab}})${enter}${tab}${tab}${tab}${tab}})`
+      query += `getConnection((err, con) => {${enter}`
+      query += `${tab}${tab}${tab}${tab}${tab}const sql = \`DELETE FROM ${table.type} WHERE ${idFieldName} = \${args.`
+      query += `${idFieldName}}\`;${enter}`
+      query += `${tab}${tab}${tab}${tab}${tab}con.query(sql, (err, result) => {${enter}`
+      query += `${tab}${tab}${tab}${tab}${tab}${tab}if (err) throw err;${enter}`
+      query += `${tab}${tab}${tab}${tab}${tab}${tab}con.release();${enter}`
+      query += `${tab}${tab}${tab}${tab}${tab}${tab}return result;${enter}`
+      query += `${tab}${tab}${tab}${tab}${tab}})${enter}`
+      query += `${tab}${tab}${tab}${tab}})`
     }
   
     return query += `${enter}${tab}${tab}${tab}}${enter}${tab}${tab}}`;
