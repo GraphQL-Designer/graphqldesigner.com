@@ -132,7 +132,10 @@ function createSubQuery(field, data, database) {
   query += '\n\t\t\tresolve(parent, args) {\n\t\t\t\t'
 
   if (database === 'MongoDB') {
-    query += `return ${refTypeName}.${findDbSearchMethod(refFieldName, refFieldType, field.relation.refType)}(${createSearchObject(refFieldName, refFieldType, field)});`;
+    query += `return ${refTypeName}.${findDbSearchMethod(refFieldName, refFieldType, field.relation.refType)}`
+    query += `(${createSearchObject(refFieldName, refFieldType, field)});\n`
+    query += `\t\t\t}\n`
+    query += `\t\t}`
   }
 
   if (database === 'MySQL') {
@@ -143,8 +146,16 @@ function createSubQuery(field, data, database) {
     } else {
       query += `${refFieldName} = \${parent.${field.name}}`;
     }
-    query += '\`;\n\t\t\t\t\tcon.query(sql, (err, result) => {\n\t\t\t\t\t\tif (err) throw err;\n\t\t\t\t\t\tcon.release();\n\t\t\t\t\t\treturn result;\n\t\t\t\t\t})\n\t\t\t\t})'
+    query += `\`;\n\t\t\t\t\tcon.query(sql, (err, result) => {\n`
+    query += `\t\t\t\t\t\tif (err) throw err;\n`
+    query += `\t\t\t\t\t\tcon.release();\n`
+    query += `\t\t\t\t\t\treturn result;\n`
+    query += `\t\t\t\t\t})\n`
+    query += `\t\t\t\t})\n`
+    query += `\t\t\t}\n`
+    query += `\t\t}`
   }
+  return query; 
 
   return query += '\n\t\t\t}\n\t\t}';
 
@@ -205,7 +216,7 @@ function buildGraphqlRootQury(data, database) {
 }
 
 function createFindAllRootQuery(table, database) {
-  let query = `\t\tevery${toTitleCase(table.type)}s: {\n\t\t\ttype: new GraphQLList(${table.type}Type),\n\t\t\tresolve() {\n\t\t\t\t`
+  let query = `\t\tevery${toTitleCase(table.type)}: {\n\t\t\ttype: new GraphQLList(${table.type}Type),\n\t\t\tresolve() {\n\t\t\t\t`
 
   if (database === 'MongoDB') {
     query += `return ${table.type}.find({});`

@@ -2,9 +2,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import * as actions from '../../../actions/actions.js';
 
-// components
-import Loader from '../../loader/index.js';
-
 // styles
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
@@ -176,23 +173,23 @@ class CreateTable extends React.Component {
         <div>
           <Paper style={style.paper}>
           <List style={{paddingLeft: '18px'}}>
-            <ListItem disabled={true} style={{fontSize: '20px'}}><strong>Legend</strong></ListItem>
+            <ListItem key='legend' disabled={true} style={{fontSize: '20px'}}><strong>Legend</strong></ListItem>
             <Divider />
-            <ListItem disabled={true}>Required : *</ListItem>
-            <ListItem disabled={true}>Unique : !</ListItem>
-            <ListItem disabled={true}>Multiple Values : [ ]</ListItem>
-            <ListItem disabled={true}
+            <ListItem key='legend-required' disabled={true}>Required : *</ListItem>
+            <ListItem key='unique' disabled={true}>Unique : !</ListItem>
+            <ListItem key='multiple-values' disabled={true}>Multiple Values : [ ]</ListItem>
+            <ListItem key='relation' disabled={true}
               nestedItems={[
-                <ListItem disabled={true} style={style.relationDesc}>
+                <ListItem key='relation-desc1' disabled={true} style={style.relationDesc}>
                   Diagonal color on field (Name) indicates field is referenced by another field of that same color
                 </ListItem>,
-                <ListItem disabled={true}>
+                <ListItem key='relation-pic' disabled={true}>
                   <img src='./images/relation1.png'/>
                 </ListItem>,
-                <ListItem disabled={true} style={style.relationDesc}>
+                <ListItem key='relation-desc2' disabled={true} style={style.relationDesc}>
                   Colored field (AuthorId) indicates it has relation to another field of that same color
                 </ListItem>,
-                <ListItem disabled={true}>
+                <ListItem key='relation-pic2' disabled={true}>
                   <img src='./images/relation2.png'/>
                 </ListItem>
               ]}
@@ -203,9 +200,6 @@ class CreateTable extends React.Component {
 
           </Paper>
         </div>
-        {/* <div id='loader-container'>
-          <Loader/>
-        </div> */}
       </div>
     );
   }
@@ -215,3 +209,4 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps,
 )(CreateTable);
+

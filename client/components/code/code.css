@@ -45,6 +45,7 @@ pre {
 }
 
 #code-container-client{
+  position: relative; 
   width: 33.33%; 
   padding: 10px; 
   overflow: auto;
@@ -52,6 +53,7 @@ pre {
 }
 
 #code-container-database{
+  position: relative; 
   display: flex;
   flex-direction: column; 
   width: 33.33%; 
@@ -61,6 +63,7 @@ pre {
 }
 
 #code-container-server{
+  position: relative; 
   width: 33.33%; 
   padding: 10px; 
   overflow: auto;
