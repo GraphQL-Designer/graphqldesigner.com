@@ -104,7 +104,7 @@ const CodeClientContainer = (props) => {
 function buildDeleteMutationParams(table) {
   let query = `const delete${table.type}Mutation = gpq\`${enter}`
      query += `${tab}mutation($id: ID){${enter}`
-     query += `${tab}${tab}delete${table.type}(id: $id){`
+     query += `${tab}${tab}delete${table.type}(id: $id){${enter}`
   return query; 
 }
 
