@@ -122,7 +122,7 @@ function createSubQuery(field, data, database) {
   const refTypeName = data[field.relation.tableIndex].type;
   const refFieldName = data[field.relation.tableIndex].fields[field.relation.fieldIndex].name;
   const refFieldType = data[field.relation.tableIndex].fields[field.relation.fieldIndex].type;
-  let query = `,\n\t\t${createMongoSubQueryName(refTypeName)}: {\n\t\t\ttype: `
+  let query = `,\n\t\t${createSubQueryName(refTypeName)}: {\n\t\t\ttype: `
   
   if (field.relation.refType === 'one to many' || field.relation.refType === 'many to many') {
       query += `new GraphQLList(${refTypeName}Type),`
@@ -146,6 +146,8 @@ function createSubQuery(field, data, database) {
     query += '\`;\n\t\t\t\t\tcon.query(sql, (err, result) => {\n\t\t\t\t\t\tif (err) throw err;\n\t\t\t\t\t\tcon.release();\n\t\t\t\t\t\treturn result;\n\t\t\t\t\t})\n\t\t\t\t})'
   }
 
+  return query += '\n\t\t\t}\n\t\t}';
+
   function createSubQueryName() {
     switch (field.relation.refType) {
       case 'one to one':
@@ -158,7 +160,7 @@ function createSubQuery(field, data, database) {
         return `everyRelated${toTitleCase(refTypeName)}`;
       default:
         return `everyRelated${toTitleCase(refTypeName)}`;
-      }
+    }
   }
 }
 
