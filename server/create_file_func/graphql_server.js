@@ -146,9 +146,13 @@ function createSubQuery(field, data, database) {
     query += '\`;\n\t\t\t\t\tcon.query(sql, (err, result) => {\n\t\t\t\t\t\tif (err) throw err;\n\t\t\t\t\t\tcon.release();\n\t\t\t\t\t\treturn result;\n\t\t\t\t\t})\n\t\t\t\t})'
   }
 
+<<<<<<< HEAD
   return query += '\n\t\t\t}\n\t\t}';
 
   function createMongoSubQueryName(tableIndex, data) {
+=======
+  function createSubQueryName() {
+>>>>>>> 1fad08973a08c5b806cc9bbb0664d51db67695f7
     switch (field.relation.refType) {
       case 'one to one':
         return `related${toTitleCase(refTypeName)}`;
@@ -163,7 +167,6 @@ function createSubQuery(field, data, database) {
       }
   }
 }
-
 
 function findDbSearchMethod(refFieldName, refFieldType, refType) {
   if (refFieldName === 'id' || refFieldType === 'ID') return 'findById';

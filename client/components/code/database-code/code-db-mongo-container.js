@@ -35,7 +35,7 @@ const CodeDBSchemaContainer = (props) => {
     return schema;
   }
   function createSchemaField(field) {
-    let schema = `${field.name}: ${checkForArray('start')}{${enter}${tab}type: ${checkDataType(field.type)},${enter}${tab}${tab}unique: ${field.unique},${enter}${tab}${tab}required: ${field.required}`;
+    let schema = `${field.name}: ${checkForArray('start')}{${enter}${tab}${tab}type: ${checkDataType(field.type)},${enter}${tab}${tab}unique: ${field.unique},${enter}${tab}${tab}required: ${field.required}`;
 
 
     if (field.defaultValue) {
