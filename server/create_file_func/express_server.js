@@ -2,7 +2,7 @@ function buildExpressServer(database) {
 const query = `
 const express = require('express');
 const graphqlHTTP = require('express-graphql');
-const GQLSchema = require('./graphql-schema');
+const schema = require('./graphql-schema');
 const path = require('path');
 const app = express();
 `
@@ -19,7 +19,7 @@ query += `
 app.use(express.static(path.join(__dirname, './public')))
 
 app.use('/graphql', graphqlHTTP({
-    GQLSchema,
+    schema,
     graphiql: false //Set to true to view GraphiQl in browser at /graphql
 }));
 
