@@ -187,13 +187,13 @@ class CreateTable extends React.Component {
                   Diagonal color on field (Name) indicates field is referenced by another field of that same color
                 </ListItem>,
                 <ListItem disabled={true}>
-                  <img src='./../../../../public/images/relation1.png'/>
+                  <img src='./images/relation1.png'/>
                 </ListItem>,
                 <ListItem disabled={true} style={style.relationDesc}>
                   Colored field (AuthorId) indicates it has relation to another field of that same color
                 </ListItem>,
                 <ListItem disabled={true}>
-                  <img src='./../../../../public/images/relation2.png'/>
+                  <img src='./images/relation2.png'/>
                 </ListItem>
               ]}
             >
