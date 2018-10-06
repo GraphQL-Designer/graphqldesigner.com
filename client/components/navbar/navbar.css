@@ -9,6 +9,11 @@
   align-items: center; 
 }
 
+#header-name {
+  color: white; 
+  padding: 0px 0px 0px 10px
+}
+
 .overlay {
   z-index: 99;
   position: fixed;

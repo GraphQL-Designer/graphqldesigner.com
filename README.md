@@ -4,7 +4,7 @@ A user friendly Graphql designer aimed to simplify creation and implementation o
 
 ## Background
 
-GraphQL is an emerging open source data query and manipulation language that is becoming the preferred method over RESTful architecture, fulfilling queries with just one API call, with no overfetching or underfetching of data.  Although GraphQL is on the rise, the entry barrier is relatively high and benefits become costly to developers. Designing an application with GraphQL  and manually setting up schemas varying in complexity, depending on the backend architecture, becomes time consuming and redundant.
+GraphQL is an emerging open source data query and manipulation language that is becoming the preferred method over RESTful architecture, fulfilling queries with just one API call, with no overfetching or underfetching of data.  Although GraphQL is on the rise, the entry barrier is relatively high and benefits become costly to developers. Designing an application with GraphQL and manually setting up complex schemas can become time-consuming and redundant.
 
 GraphQL Designer solves these problems by allowing developers to build their database and queries through an interactive interface and with a touch of a button, export their database and customized queries code to be used in their project environment.
 
@@ -33,6 +33,4 @@ Tsion Adefres
 
 ## Running Your Own Version
 
-Use npm run dev for hot module reloading 
-
-**To start the server, run: npm install, npm run pack and then npm run server.
+Use npm run dev for hot module reloading and to start the server, run npm install->npm run pack->npm run server.

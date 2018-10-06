@@ -85,6 +85,19 @@
   right: 5px;
 }
 
+.table-components-container{
+  display: flex; 
+  background-color: rgb(54, 58, 66);
+  justify-content: flex-start; 
+  align-items: flex-start; 
+  flex-wrap: wrap; 
+  width: 100%;
+  position: relative;
+  height: auto; 
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
 .addField {
   display: flex;
   justify-content: center;

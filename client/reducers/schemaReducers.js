@@ -105,7 +105,8 @@ const reducers = (state = initialState, action) => {
   switch (action.type) {
     case types.CHOOSE_DATABASE:
       const database = action.payload;
-      document.getElementById('schemaTab').click();
+      // go to the schema tab if they start a new project
+      document.getElementById('schemaTab').click()
 
       return {
         ...state,
