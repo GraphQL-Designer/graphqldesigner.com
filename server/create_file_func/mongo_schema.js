@@ -1,4 +1,4 @@
-function parseMongoschema(data, cb) {
+function parseMongoschema(data) {
     let query = `const mongoose = require('mongoose');\nconst Schema = mongoose.Schema;\n\nconst ${data.type.toLowerCase()}Schema = new Schema({\n\t`
 
     let firstLoop = true;
@@ -12,7 +12,7 @@ function parseMongoschema(data, cb) {
     }
   query += `\n});\n\nmodule.exports = mongoose.model("${data.type}", ${data.type.toLowerCase()}Schema);`;
 
-  return
+  return query;
 }
 
 function createSchemaField(data) {
