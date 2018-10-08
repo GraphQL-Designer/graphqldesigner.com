@@ -1,15 +1,15 @@
-function parseClientQueries(data) {
+function parseClientQueries(tables) {
   let query = "import { gql } from \'apollo-boost\';\n\n";
   const exportNames = [];
 
-  // data is state.tables from schemaReducer
-  for (const prop in data) {
-    query += buildClientQueryAll(data[prop]);
-    exportNames.push(`queryEvery${data[prop].type}`);
+  // tables is state.tables from schemaReducer
+  for (const tableId in tables) {
+    query += buildClientQueryAll(tables[tableId]);
+    exportNames.push(`queryEvery${tables[tableId].type}`);
 
-    if (!!data[prop].fields[0]) {
-      query += buildClientQueryById(data[prop]);
-      exportNames.push(`query${data[prop].type}ById `);
+    if (!!tables[tableId].fields[0]) {
+      query += buildClientQueryById(tables[tableId]);
+      exportNames.push(`query${tables[tableId].type}ById `);
     }
   }
 
@@ -25,24 +25,34 @@ function parseClientQueries(data) {
   return query += `${endString  }};`;
 }
 
-function buildClientQueryAll(data) {
-  let string = `const queryEvery${data.type} = gql\`\n\t{\n\t\t${data.type.toLowerCase()}s {\n`;
+function buildClientQueryAll(table) {
+  let string = `const queryEvery${table.type} = gql\`\n`
+  string += `\t{\n`
+  string += `\t\tevery${toTitleCase(table.type)} {\n`;
 
-  for (const prop in data.fields) {
-    string += `\t\t\t${data.fields[prop].name}\n`;
+  for (const fieldId in table.fields) {
+    string += `\t\t\t${table.fields[fieldId].name}\n`;
   }
 
-  return string += '\t\t}\n\t}\n`\n\n';
+  return string += `\t\t}\n\t}\n\`\n\n`;
 }
 
-function buildClientQueryById(data) {
-  let string = `const query${data.type}ById = gql\`\n\tquery($id: ID) {\n\t\t${data.type.toLowerCase()}(id: $id) {\n`;
+function toTitleCase(refTypeName) {
+  let name = refTypeName[0].toUpperCase();
+  name += refTypeName.slice(1).toLowerCase();
+  return name;
+}
 
-  for (const prop in data.fields) {
-    string += `\t\t\t${data.fields[prop].name}\n`;
+function buildClientQueryById(table) {
+  let string = `const query${table.type}ById = gql\`\n`
+  string += `\tquery(${table.type}: ID) {\n`
+  string += `\t\t${table.type}(${table.type}: ${table.type}) {\n`;
+  
+  for (const fieldId in table.fields) {
+    string += `\t\t\t${table.fields[fieldId].name}\n`;
   }
 
-  return string += '\t\t}\n\t}\n`\n\n';
+  return string += `\t\t}\n\t}\n\`\n\n`;
 }
 
 module.exports = parseClientQueries;
