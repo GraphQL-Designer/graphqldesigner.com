@@ -1,28 +1,37 @@
 
-# graphqlesigner.com ![alt text](https://travis-ci.org/GraphQL-Designer/graphqldesigner.com.svg?branch=dev)
-A user friendly application to rapidly prototype a full-stack React GraphQL application. 
+# GraphQL Designer ![alt text](https://travis-ci.org/GraphQL-Designer/graphqldesigner.com.svg?branch=dev)
+[GraphQL Designer](https://www.graphqldesigner.com/) is prototyping tool to develop a full-stack GraphQL application. 
 
-After a few simple inputs, GraphQL Designer auto generates code to start and implment your new application, including GraphQL root queries, types, mutations, and client queiries, along with NoSQL schemas or SQL build scripts. 
+With a few simple inputs, GraphQL Designer auto generates code for download to start and implement your new application, including GraphQL root queries, schemas, mutations, and client queries. Also downloaded are the NoSQL schemas or SQL build scripts, and server file. 
 
 ![](graphql.gif)
 
 ## Background
 
-GraphQL is an emerging open source data query and manipulation language that is becoming the preferred method over RESTful architecture, fulfilling queries with just one API call, with no overfetching or underfetching of data.  Although GraphQL is on the rise, the entry barrier is relatively high and benefits become costly to developers. Designing an application with GraphQL  and manually setting up schemas varying in complexity, depending on the backend architecture, becomes time consuming and redundant.
+GraphQL is an emerging open source data query and manipulation language that can be a preferred method over RESTful architecture, fulfilling queries with less API calls, and limiting over-fetching and under-fetching of data.  Although GraphQL is a powerful query language, starting a new GraphQL application can be time consuming due to its redundant structure. This repetitive code can make developing a GraphQL application more intuitive, but also means for every GraphQL type created, a large amount of additional code is required.
 
-GraphQL Designer solves these problems by allowing developers to build their database and queries through an interactive interface and with a touch of a button, export their database and customized queries code to be used in their project environment.
+For example, adding a new GraphQL type "User" with the fields "id", "age", "messages" may require the following:
+- A root query for an individual User by id
+- A root query for all the Users
+- Mutation to create a User with a id, age, and messages
+- Mutation to select a User by id, and update their age or messages
+- Mutation to delete a User by id
+- Client queries for User and the particular fields
+- A NoSQL schema or SQL create script for User
+
+Notice that all of these items revolve around similar information, User and its fields: id, age, and messages.
+
+GraphQL Designer solves this repetition by requiring the developer just to enter the information once. Once a GraphQL type is created on our platform, root queries, mutations, client queries, and a NoSQL schema or SQL create script is auto generated and ready for download. After download, the code can be simply dragged and dropped into your code base or favorite text editor!
 
 ## How To Use 
 
-Visit https://www.graphqldesigner.com and choose a database model to implement (MongoDB or MySQL). Create tables that will represent your database schemas and GraphQL types. Each table consists of fields, which not only becomes a GraphQL field, but a SQL column or NoSQL key as well.
+Visit [GraphQL Designer](https://www.graphqldesigner.com/) and choose a database model to implement (MongoDB or MySQL). Based on the database selected, our application will generate the code for your database schemas or build scripts and GraphQL resolvers.
+
+Next create a table for every GraphQL type your application will need. Each created table will also represent your database code. Each table consists of fields, which not only becomes a GraphQL field, but a SQL column or NoSQL key as well.
 
 ![](Screenshots/Screenshot-Schema.png)
 
 The fields can be customized to meet your desired database structure, and using relations, can dynamically make the resolvers for each GraphQL type. By default at this point, our application can auto generate a server file, database setup code, and GraphQL types, root queries, mutations, and client queries.
-
-![](Screenshots/Screenshot-Code.png)
-
-For more particular client queries, you can customize client queries in addition to the default generated ones. 
 
 ![](Screenshots/Screenshot-Query.png)
 
@@ -30,12 +39,13 @@ Lastly export your code!
 
 ## Authors
 
-James Sieu
-Patrick Slagle
-Greg Shamalta
-Tsion Adefres
+[James Sieu](https://www.linkedin.com/in/james-sieu/)[@jamessieu](https://github.com/jamessieu)
+[Patrick Slagle](https://www.linkedin.com/in/patrickslagle/)[@patrickslagle](https://github.com/patrickslagle)
+[Greg Shamalta](https://www.linkedin.com/in/gregory-shamalta/)[@grs83](https://github.com/grs83)
+[Tsion Adefres](https://www.linkedin.com/in/tadefres/)[@Tsionad](https://github.com/Tsionad)
 
 ## Running Your Own Version
+
 
 Use npm run dev for hot module reloading 
 
