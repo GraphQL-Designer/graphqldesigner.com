@@ -1,6 +1,8 @@
 
 # graphqlesigner.com ![alt text](https://travis-ci.org/GraphQL-Designer/graphqldesigner.com.svg?branch=dev)
-A user friendly application to rapidly prototype a full-stack React GraphQL application. After a few simple inputs, GraphQL Designer auto generates code to start and implment your new application, including GraphQL root queries, types, mutations, and client queiries, along with NoSQL schemas or SQL build scripts. 
+A user friendly application to rapidly prototype a full-stack React GraphQL application. 
+
+After a few simple inputs, GraphQL Designer auto generates code to start and implment your new application, including GraphQL root queries, types, mutations, and client queiries, along with NoSQL schemas or SQL build scripts. 
 
 ![](graphql.gif)
 
