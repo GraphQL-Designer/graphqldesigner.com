@@ -28,7 +28,7 @@ function createPackageJson(data) {
   -GraphQL mutations and queries (in client folder) and schemas(in server folder) are created, ready to be put into your code base
   
     -start server by running "node server/index.js"
-    -to test the backend go to localhost:4000/graphiql to use tgit stathe query interface to test queries and create mutations made using the application
+    -to test the backend go to localhost:4000/graphiql to use git stathe query interface to test queries and create mutations made using the application
   
   -(Optional)use create react app in "my-app" folder and create a new folder called client by entering "init react-app client"
     -move graphql folder and its content extracted from GraphQL Designer to client/src
