@@ -30,8 +30,6 @@ app.use(express.static(path.join(__dirname, '../public')));
 app.post('/write-files', (req, res) => {
   const data = req.body; // data.data is state.tables from schemaReducer. See Navbar component
   const dateStamp = Date.now();
-  console.log('fields of table 0', data.data['0'].fields);
-  console.log('fields of table 1', data.data['1'].fields); 
 
   buildDirectories(dateStamp, () => {
 
