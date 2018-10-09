@@ -56,7 +56,7 @@ app.post('/write-files', (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log('Server Listening!');
+  console.log(`Server Listening to ${PORT}!`);
 });
 
 
@@ -87,7 +87,8 @@ function buildForMongo(data, dateStamp) {
 }
 
 function buildForMySQL(data, dateStamp) {
-  fs.writeFileSync(path.join(PATH, `build-files${dateStamp}/server/db/mysql_pool.js`), mysqlPool());
+  //fs.writeFileSync(path.join(PATH, `build-files${dateStamp}/server/db/mysql_pool.js`), mysqlPool());
+  fs.writeFileSync(path.join(PATH, `build-files${dateStamp}/server/db/mysql_scripts.md`), parseMySQLTables(data));
 }
 
 
@@ -115,7 +116,7 @@ function deleteTempFiles(database, data, dateStamp, cb) {
   fs.unlinkSync(path.join(PATH, `graphql${dateStamp}.zip`));
 
   if (database === 'MySQL') {
-    fs.unlinkSync(path.join(PATH, `build-files${dateStamp}/server/db/mysql_pool.js`));
+    fs.unlinkSync(path.join(PATH, `build-files${dateStamp}/server/db/mysql_scripts.md`));
   }
 
   if (database ==='MongoDB') {
