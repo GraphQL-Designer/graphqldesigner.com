@@ -247,7 +247,7 @@ class TableOptions extends React.Component {
                 value={this.props.selectedField.defaultValue}
               />
 
-              {this.props.database !== 'MongoDb' && (
+              {this.props.database !== 'MongoDB' && (
                 <Toggle
                   label="Primary Key"
                   toggled={this.props.selectedField.primaryKey}
@@ -330,7 +330,6 @@ class TableOptions extends React.Component {
                     <MenuItem value='one to one' primaryText="one to one" />
                     <MenuItem value='one to many' primaryText="one to many" />
                     <MenuItem value='many to one' primaryText="many to one" />
-                    <MenuItem value='many to many' primaryText="many to many" />
                   </DropDownMenu>
                 </div>
               </span>)}

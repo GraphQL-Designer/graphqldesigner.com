@@ -30,15 +30,22 @@ const {
   }
 
   // BUILD ROOT QUERY
-  query += "const RootQuery = new GraphQLObjectType({\n\tname: 'RootQueryType',\n\tfields: {\n";
+  query += "const RootQuery = new GraphQLObjectType({\n\tname: 'RootQueryType',\n\tfields: ";
+  
+  if (database === 'MongoDB') {
+    query += '{\n'
+  } else {
+    query += '() => ({\n'
+  }
 
   let firstRootLoop = true;
   for (const prop in data) {
     if (!firstRootLoop) query += ',\n';
     firstRootLoop = false;
 
-    query += buildGraphqlRootQury(data[prop], database);
+    query += buildGraphqlRootQuery(data[prop], database);
   }
+
   query += '\n\t}\n});\n\n';
 
   // BUILD MUTATIONS
@@ -49,7 +56,7 @@ const {
     if (!firstMutationLoop) query += ',\n';
     firstMutationLoop = false;
 
-    query += buildGraphqlMutationQury(data[prop], database);
+    query += buildGraphqlMutationQuery(data[prop], database);
   }
   query += '\n\t}\n});\n\n';
 
@@ -114,7 +121,6 @@ function buildGraphqlTypeSchema(table, data, database) {
     function findUniqueForSQL(table) {
       let primaryKeyName = [];
       for (let prop in table.fields) {
-        console.log(table.fields)
         if (table.fields[prop].primaryKey) {
           primaryKeyName.push(`'${table.fields[prop].name}'`)
         }
@@ -154,7 +160,7 @@ function createSubQuery(field, data, database) {
   const refFieldType = data[field.relation.tableIndex].fields[field.relation.fieldIndex].type;
   let query = `,\n\t\t${createSubQueryName(refTypeName)}: {\n\t\t\ttype: `
   
-  if (field.relation.refType === 'one to many' || field.relation.refType === 'many to many') {
+  if (field.relation.refType === 'one to many') {
       query += `new GraphQLList(${refTypeName}Type),`
   } else {
       query += `${refTypeName}Type,`
@@ -164,38 +170,12 @@ function createSubQuery(field, data, database) {
     query += '\n\t\t\tresolve(parent, args) {\n\t\t\t\t'
     query += `return ${refTypeName}.${findDbSearchMethod(refFieldName, refFieldType, field.relation.refType)}`
     query += `(${createSearchObject(refFieldName, refFieldType, field)});\n`
-    query += `\t\t\t}\n`
-    query += `\t\t}`
   }
 
   if (database === 'MySQL') {
-    if (field.relation.refType !== 'many to many') {
       query += `\n\t\t\tsqlJoin(${data[field.tableNum].type.toLowerCase()}Table, ${refTypeName.toLowerCase()}Table) {`;
       query += `\n\t\t\t\treturn \`\${${data[field.tableNum].type.toLowerCase()}Table}.${field.name} = \${${refTypeName.toLowerCase()}Table}.${refFieldName}\`\n`;
-    } else {
-      query += '\n\t\t\tjunction: {';
-      query += '\n\t\t\t\tsqlTable: \'relationships\',';
-      query += '\n\t\t\t\tsqlJoins: [';
-      query += `\n\t\t\t\t\t `
-      query += `\n\t\t\t\treturn \`\${${data[field.tableNum].type.toLowerCase()}Table}.${field.name} = \${${refTypeName.toLowerCase()}Table}.${refFieldName}\`\n`;
-    }
-    //query += `getConnection((err, con) => {\n\t\t\t\t\tconst sql = \`SELECT * FROM ${refTypeName} WHERE `;
-    // if (field.type === 'ID') {
-    //   query += `id = \${parent.${field.name}}`;
-    // } else {
-    //   query += `${refFieldName} = \${parent.${field.name}}`;
-    // }
-    // query += `\`;\n\t\t\t\t\tcon.query(sql, (err, result) => {\n`
-    // query += `\t\t\t\t\t\tif (err) throw err;\n`
-    // query += `\t\t\t\t\t\tcon.release();\n`
-    // query += `\t\t\t\t\t\treturn result;\n`
-    // query += `\t\t\t\t\t})\n`
-    // query += `\t\t\t\t})\n`
-    query += `\t\t\t}\n`
-    query += `\t\t}`
   }
-  return query; 
-
   return query += '\n\t\t\t}\n\t\t}';
 
   function createSubQueryName() {
@@ -231,59 +211,92 @@ function findDbSearchMethod(refFieldName, refFieldType, refType) {
 }
 
 function createSearchObject(refFieldName, refFieldType, field) {
-  const refType = field.relation.refType;
-
   if (refFieldName === 'id' || refFieldType === 'ID') {
     return `parent.${field.name}`;
-  } else if (refType === 'one to one') {
-    return `{ ${refFieldName}: parent.${field.name} }`;
   } else {
     return `{ ${refFieldName}: parent.${field.name} }`;
   }
 }
 
-function buildGraphqlRootQury(data, database) {
+function buildGraphqlRootQuery(data, database) {
   let query = '';
 
   query += createFindAllRootQuery(data, database);
 
-  if (!!data.fields[0]) {
+  if (!!data.fields[0] && database === 'MongoDb') {
     query += createFindByIdQuery(data, database);
+  }
+
+  if (database === 'MySQL') {
+    query += createSQLPrimaryKeyRootQuery(data, database);
   }
 
   return query;
 }
 
 function createFindAllRootQuery(table, database) {
-  let query = `\t\tevery${toTitleCase(table.type)}: {\n\t\t\ttype: new GraphQLList(${table.type}Type),\n\t\t\tresolve() {\n\t\t\t\t`
+  let query = `\t\tevery${toTitleCase(table.type)}: {\n\t\t\ttype: new GraphQLList(${table.type}Type),\n\t\t\tresolve`
 
   if (database === 'MongoDB') {
-    query += `return ${table.type}.find({});`
+    query += `() {\n\t\t\t\treturn ${table.type}.find({});`
   }
 
   if (database === 'MySQL') {
-    query += `getConnection((err, con) => {\n\t\t\t\t\tconst sql = \'SELECT * FROM ${table.type}\';\n\t\t\t\t\tcon.query(sql, (err, results) => {\n\t\t\t\t\t\tif (err) throw err;\n\t\t\t\t\t\tcon.release();\n\t\t\t\t\t\treturn results;\n\t\t\t\t\t})\n\t\t\t\t})`
+    query += `: (parent, args, context, resolveInfo) => {\n\t\t\t\treturn joinMonster(resolveInfo, context, sql => {\n\t\t\t\t\treturn knex.raw(sql)\n\t\t\t\t})`
   }
 
   return query += '\n\t\t\t}\n\t\t}';
 }
 
 function createFindByIdQuery(table, database) {
-  let query = `,\n\t\t${table.type.toLowerCase()}: {\n\t\t\ttype: ${table.type}Type,\n\t\t\targs: { id: { type: GraphQLID }},\n\t\t\tresolve(parent, args) {\n\t\t\t\t`;
+  const idFieldName = table.fields[0].name
+  let query = `,\n\t\t${table.type.toLowerCase()}: {\n\t\t\ttype: ${table.type}Type,\n\t\t\targs: { ${idFieldName}: { type: new GraphQLNonNull(GraphQLID) }},\n\t\t\tresolve(parent, args) {\n\t\t\t\treturn ${table.type}.findById(args.id);\n\t\t\t}\n\t\t}`
 
-  if (database === 'MongoDB') {
-    query += `return ${table.type}.findById(args.id);`
-  }
-
-  if (database === 'MySQL') {
-    query += `getConnection((err, con) => {\n\t\t\t\t\tconst sql = \`SELECT * FROM ${table.type} WHERE id = \${args.id}\`;\n\t\t\t\t\tcon.query(sql, (err, result) => {\n\t\t\t\t\t\tif (err) throw err;\n\t\t\t\t\t\tcon.release();\n\t\t\t\t\t\treturn result;\n\t\t\t\t\t})\n\t\t\t\t})`
-  }
-
-  return query += '\n\t\t\t}\n\t\t}';
+  return query;
 }
 
-function buildGraphqlMutationQury(table, database) {
-  return `${addMutation(table, database)},\n${updateMutation(table, database)},\n${deleteMutation(table, database)}` 
+function createSQLPrimaryKeyRootQuery(table, database) {
+  let primaryKey = '';
+  const primaryKeyValue = findUniqueForSQL(table);
+  if (Array.isArray(primaryKeyValue)) {
+    primaryKey = primaryKeyValue[0];
+  } else {
+    primaryKey = primaryKeyValue;
+  }
+  console.log('table', primaryKey)
+  if (primaryKey) {
+    let query = `,\n\t\t${table.type.toLowerCase()}: {\n\t\t\ttype: ${table.type}Type,\n\t\t\targs: { ${primaryKey}: { type: new GraphQLNonNull(${typeCheck(primaryKey)}) }},\n\t\t\twhere: (${table.type.toLowerCase()}Table, args, context) => {\n\t\t\t\tif (args.${primaryKey}) return\`\${${table.type.toLowerCase()}Table}.${primaryKey} = \${args.${primaryKey}}\`\n\t\t\t},\n\t\t\tresolve: (parent, args, context, resolveInfo) => {\n\t\t\t\treturn joinMonster(resolveInfo, context, sql => {\n\t\t\t\t\treturn knex.raw(sql)\n\t\t\t\t})\n\t\t\t}\n\t\t}`
+  
+    return query;
+  }
+  return '';
+
+  function findUniqueForSQL(table) {
+    let primaryKeyName = [];
+    for (let prop in table.fields) {
+      if (table.fields[prop].primaryKey) {
+        primaryKeyName.push(`${table.fields[prop].name}`)
+      }
+    }
+    if (primaryKeyName.length === 1) return primaryKeyName[0];
+    if (primaryKeyName.length > 1) return primaryKeyName;
+    return //PRIMARY KEY NEEDED!!!;
+  }
+
+  function typeCheck(value) {
+    if (value === 'id') return 'GraphQLID'
+    return 'GraphQLString'
+  }
+}
+
+function buildGraphqlMutationQuery(table, database) {
+  let string = ``;
+  string += `${addMutation(table, database)}`
+  if (table.fields[0]) {
+    string += `,\n${updateMutation(table, database)},\n`
+    string += `${deleteMutation(table, database)}` 
+  }
+  return string; 
 }
 
 function addMutation(table, database) {
@@ -330,7 +343,21 @@ function updateMutation(table, database) {
   if (database === 'MongoDB') query += `return ${table.type}.findByIdAndUpdate(args.id, args);`;
 
   if (database === 'MySQL') {
-    query += `getConnection((err, con) => {\n\t\t\t\t\tlet updateValues = '';\n\t\t\t\t\tfor (const prop in args) {\n\t\t\t\t\t\tupdateValues += \`\${prop} = '\${args[prop]}' \`\n\t\t\t\t\t}\n\t\t\t\t\tconst sql = \`UPDATE ${table.type} SET \${updateValues}WHERE id = \${args.id}\`;\n\t\t\t\t\tcon.query(sql, args, (err, result) => {\n\t\t\t\t\t\tif (err) throw err;\n\t\t\t\t\t\tcon.release();\n\t\t\t\t\t\treturn result;\n\t\t\t\t\t})\n\t\t\t\t})`
+    const idFieldName = table.fields[0].name; 
+  
+    query += `getConnection((err, con) => {\n`
+    query += `\t\t\t\t\tlet updateValues = '';\n`
+    query += `\t\t\t\t\tfor (const prop in args) {\n`
+    query += `\t\t\t\t\t\tupdateValues += \`\${prop} = '\${args[prop]}' \`\n`
+    query += `\t\t\t\t\t}\n`
+    query += `\t\t\t\t\tconst sql = \`UPDATE ${table.type} SET \${updateValues} WHERE ${idFieldName} = \${args.`
+    query += `${idFieldName}}\`;\n`
+    query += `\t\t\t\t\tcon.query(sql, args, (err, result) => {\n`
+    query += `\t\t\t\t\t\tif (err) throw err;\n`
+    query += `\t\t\t\t\t\tcon.release();\n`
+    query += `\t\t\t\t\t\treturn result;\n`
+    query += `\t\t\t\t\t})\n`
+    query += `\t\t\t\t})`
   }
 
   return query += '\n\t\t\t}\n\t\t}';
@@ -343,12 +370,23 @@ function updateMutation(table, database) {
 }
 
 function deleteMutation(table, database) {
-  let query = `\t\tdelete${table.type}: {\n\t\t\ttype: ${table.type}Type,\n\t\t\targs: { id: { type: GraphQLID }},\n\t\t\tresolve(parent, args) {\n\t\t\t\t`
+  const idFieldName = table.fields[0].name
+  let query = `\t\tdelete${table.type}: {\n\t\t\ttype: ${table.type}Type,\n\t\t\targs: { ${idFieldName}: { type: GraphQLID }},\n\t\t\tresolve(parent, args) {\n\t\t\t\t`
 
   if (database === 'MongoDB') query += `return ${table.type}.findByIdAndRemove(args.id);`
 
   if (database === 'MySQL') {
-    query += `getConnection((err, con) => {\n\t\t\t\t\tconst sql = \`DELETE FROM ${table.type} WHERE id = \${args.id}\`;\n\t\t\t\t\tcon.query(sql, (err, result) => {\n\t\t\t\t\t\tif (err) throw err;\n\t\t\t\t\t\tcon.release();\n\t\t\t\t\t\treturn result;\n\t\t\t\t\t})\n\t\t\t\t})`
+    const idFieldName = table.fields[0].name
+
+    query += `getConnection((err, con) => {\n`
+    query += `\t\t\t\t\tconst sql = \`DELETE FROM ${table.type} WHERE ${idFieldName} = \${args.`
+    query += `${idFieldName}}\`;\n`
+    query += `\t\t\t\t\tcon.query(sql, (err, result) => {\n`
+    query += `\t\t\t\t\t\tif (err) throw err;\n`
+    query += `\t\t\t\t\t\tcon.release();\n`
+    query += `\t\t\t\t\t\treturn result;\n`
+    query += `\t\t\t\t\t})\n`
+    query += `\t\t\t\t})`
   }
 
   return query += '\n\t\t\t}\n\t\t}';

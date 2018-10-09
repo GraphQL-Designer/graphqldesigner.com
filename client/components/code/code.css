@@ -21,13 +21,13 @@ pre {
   width: 100%; 
 }
 
-.wallpaper{
+/* .wallpaper{
   width: calc(100vw - 250px);
   height: calc(100vh - 98px); 
   background-image: url("/public/images/graphql_wallpaper.png");
   background-repeat: no-repeat; 
   background-size: 100% 100%; 
-}
+} */
 
 .code-app {
   display: flex;
