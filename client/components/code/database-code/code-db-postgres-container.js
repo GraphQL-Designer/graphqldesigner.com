@@ -30,12 +30,12 @@ const CodeDBPostgresSchemaContainer = (props) => {
       if (fieldId !== tableProps[tableProps.length - 1]) {
         createTablesCode += `,`;
       }
-      createTablesCode += enter; 
+      // createTablesCode += enter; 
     }
 
     // if table has a primary key
     if (primaryKey.length > 0) {
-      createTablesCode += `${tab}${tab}CONSTRAINT ${table.type}_pk PRIMARY KEY (`;
+      createTablesCode += `,${enter}${tab}${tab}CONSTRAINT ${table.type}_pk PRIMARY KEY (`;
       primaryKey.forEach((key, i) => {``
         if (i === primaryKey.length - 1) {
           createTablesCode += `"${key}")`;
@@ -44,6 +44,8 @@ const CodeDBPostgresSchemaContainer = (props) => {
         }
       });
       createTablesCode += `${enter}) WITH (${enter} OIDS=FALSE${enter});${enter}${enter}`;
+    } else {
+      createTablesCode += `${enter});${enter}${enter}`
     }
     // reset primaryKey to empty so primary keys don't slip into the next table
     primaryKey = [];
@@ -51,8 +53,7 @@ const CodeDBPostgresSchemaContainer = (props) => {
   
   function createSchemaField(field) {
     let fieldCode = ``;
-    fieldCode += `${tab}${tab}"${field.name}"${tab}${checkDataType(field.type)}`;
-    fieldCode += checkAutoIncrement(field.autoIncrement);
+    fieldCode += `${tab}${tab}"${field.name}"${tab}${checkDataType(field.type, field.autoIncrement)}`;
     fieldCode += checkRequired(field.required);
     fieldCode += checkUnique(field.unique);
     fieldCode += checkDefault(field.defaultValue);
@@ -75,7 +76,9 @@ const CodeDBPostgresSchemaContainer = (props) => {
     }
     return fieldCode;
   }
-  function checkDataType(dataType) {
+
+  function checkDataType(dataType, autoIncrement) {
+    if (autoIncrement) return "serial"
     switch(dataType){
       case "String":
         return "varchar";
@@ -86,11 +89,6 @@ const CodeDBPostgresSchemaContainer = (props) => {
       case "ID":
         return "serial";
     }
-  }
-
-  function checkAutoIncrement(fieldAutoIncrement) {
-    if (fieldAutoIncrement) return `${tab}AUTO_INCREMENT`;
-    else return '';
   }
 
   function checkUnique(fieldUnique) {
@@ -109,7 +107,9 @@ const CodeDBPostgresSchemaContainer = (props) => {
   }
 
   // loop through tables and create build script for each table
-
+  for (const tableId in props.tables) {
+    parsePostgresSchema(props.tables[tableId]);
+  }
 
   // if any tables have relations, aka foreign keys
   for (const tableId in foreignKeys) {
@@ -127,15 +127,11 @@ const CodeDBPostgresSchemaContainer = (props) => {
       // get name of field being referenced
       const relatedFieldId = relationInfo.relatedField;
       const relatedField = props.tables[relatedTableId].fields[relatedFieldId].name;
-      createTablesCode += `${enter}${enter}ALTER TABLE "${tableMakingRelation}" ADD CONSTRAINT "${tableMakingRelation}_fk${relationCount}" FOREIGN KEY ("${fieldMakingRelation}") REFERENCES "${relatedTable}"("${relatedField}");${enter}`;
+      createTablesCode += `${enter}ALTER TABLE "${tableMakingRelation}" ADD CONSTRAINT "${tableMakingRelation}_fk${relationCount}" FOREIGN KEY ("${fieldMakingRelation}") REFERENCES "${relatedTable}"("${relatedField}");${enter}`;
 
     });
   }
 
-  
-  for (const tableId in props.tables) {
-    parsePostgresSchema(props.tables[tableId]);
-  }
   return (
     <div id="code-container-database">
       <h4 className='codeHeader'>PostgreSQL Create Scripts</h4>
