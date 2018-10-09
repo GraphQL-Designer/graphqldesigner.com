@@ -1,5 +1,5 @@
 function buildExpressServer(database) {
-let query = `
+  let query = `
 require('dotenv').config();
 const express = require('express');
 const graphqlHTTP = require('express-graphql');
@@ -8,15 +8,15 @@ const path = require('path');
 const app = express();
 `
 
-if (database === 'MongoDB') {
-  query += `
+  if (database === 'MongoDB') {
+    query += `
 const mongoose = require('mongoose');
 
 mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true }, () => console.log('connected to database'));
 `;
-}
+  }
 
-query += `
+  query += `
 app.use(express.static(path.join(__dirname, './public')))
 
 app.use('/graphql', graphqlHTTP({
@@ -25,7 +25,7 @@ app.use('/graphql', graphqlHTTP({
 }));
 
 app.listen(4000, () => {
-    console.log('Listening on 4000')
+  console.log('Listening on 4000')
 });
 `;
   return query;
