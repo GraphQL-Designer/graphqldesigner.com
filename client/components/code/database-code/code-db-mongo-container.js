@@ -61,7 +61,7 @@ const CodeDBSchemaContainer = (props) => {
   }
   for (const tableId in props.tables) {
     schemaCode.push(
-      <pre>
+      <pre key={'mongoSchema' + tableId}>
         {parseMongoschema(props.tables[tableId])};
         <hr/>
       </pre>

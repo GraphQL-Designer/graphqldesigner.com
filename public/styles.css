@@ -4,11 +4,20 @@
     box-sizing: border-box;
 }
 
-.table-components-container{
+#wallpaper-schema{
     background-image: url("./images/graphql_wallpaper.png");
     background-repeat: no-repeat; 
     background-size: 100% 100%; 
-  }
+}
+
+.wallpaper-code{
+    position: absolute; 
+    width: calc(100vw - 250px);
+    height: calc(100vh - 98px); 
+    background-image: url("./images/graphql_wallpaper.png");
+    background-repeat: no-repeat; 
+    background-size: 100% 100%; 
+}
 
 .flexRow {
     display: flex;
