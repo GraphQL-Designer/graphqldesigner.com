@@ -9,7 +9,7 @@ if (database === 'MongoDB') {
 }
 
 if (database === 'MySQL') {
-  query += "const getConnection = require('../db/mysql_pool.js');\n";
+  query += "import joinMonster from 'join-monster';\n";
 }
 
 query += `
@@ -62,7 +62,22 @@ function buildDbModelRequirePaths(data) {
 }
 
 function buildGraphqlTypeSchema(table, data, database) {
-    let query = `const ${table.type}Type = new GraphQLObjectType({\n\tname: '${table.type}',\n\tfields: () => ({`;
+    let query = `const ${table.type}Type = new GraphQLObjectType({\n\tname: '${table.type}',`;
+
+    if (database === 'MySQL') {
+      const uniquKey = findUniqueForSQL(table);
+      function isArray(key, pos) {
+        if (Array.isArray(key)) {
+          if (pos === 'front') return '[ ';
+          if (pos === 'back') return ' ]'
+        }
+        return ''
+      }
+
+      query += `\n\tsqlTable: '${table.type.toLowerCase()}s',\n\tuniqueKey: ${isArray(uniquKey, 'front')}${uniquKey}${isArray(uniquKey, 'back')},`;
+    }
+
+    query += '\n\tfields: () => ({';
 
     let firstLoop = true;
     for (let prop in table.fields) {
@@ -81,6 +96,8 @@ function buildGraphqlTypeSchema(table, data, database) {
                 const parsedValue = value.split('.');
                 const field = {
                     name: table.fields[prop].name,
+                    tableNum: table.fields[prop].tableNum,
+                    fieldNum: table.fields[prop].fieldNum,
                     relation: {
                         tableIndex: parsedValue[0],
                         fieldIndex: parsedValue[1],
@@ -93,6 +110,19 @@ function buildGraphqlTypeSchema(table, data, database) {
         }
     }
     return query += '\n\t})\n});\n\n';
+
+    function findUniqueForSQL(table) {
+      let primaryKeyName = [];
+      for (let prop in table.fields) {
+        console.log(table.fields)
+        if (table.fields[prop].primaryKey) {
+          primaryKeyName.push(`'${table.fields[prop].name}'`)
+        }
+      }
+      if (primaryKeyName.length === 1) return primaryKeyName[0];
+      if (primaryKeyName.length > 1) return primaryKeyName;
+      return //PRIMARY KEY NEEDED!!!;
+    }
 }
 
 function tableTypeToGraphqlType(type) {
@@ -129,9 +159,9 @@ function createSubQuery(field, data, database) {
   } else {
       query += `${refTypeName}Type,`
   }
-  query += '\n\t\t\tresolve(parent, args) {\n\t\t\t\t'
 
   if (database === 'MongoDB') {
+    query += '\n\t\t\tresolve(parent, args) {\n\t\t\t\t'
     query += `return ${refTypeName}.${findDbSearchMethod(refFieldName, refFieldType, field.relation.refType)}`
     query += `(${createSearchObject(refFieldName, refFieldType, field)});\n`
     query += `\t\t\t}\n`
@@ -139,19 +169,28 @@ function createSubQuery(field, data, database) {
   }
 
   if (database === 'MySQL') {
-    query += `getConnection((err, con) => {\n\t\t\t\t\tconst sql = \`SELECT * FROM ${refTypeName} WHERE `;
-
-    if (field.type === 'ID') {
-      query += `id = \${parent.${field.name}}`;
+    if (field.relation.refType !== 'many to many') {
+      query += `\n\t\t\tsqlJoin(${data[field.tableNum].type.toLowerCase()}Table, ${refTypeName.toLowerCase()}Table) {`;
+      query += `\n\t\t\t\treturn \`\${${data[field.tableNum].type.toLowerCase()}Table}.${field.name} = \${${refTypeName.toLowerCase()}Table}.${refFieldName}\`\n`;
     } else {
-      query += `${refFieldName} = \${parent.${field.name}}`;
+      query += '\n\t\t\tjunction: {';
+      query += '\n\t\t\t\tsqlTable: \'relationships\',';
+      query += '\n\t\t\t\tsqlJoins: [';
+      query += `\n\t\t\t\t\t `
+      query += `\n\t\t\t\treturn \`\${${data[field.tableNum].type.toLowerCase()}Table}.${field.name} = \${${refTypeName.toLowerCase()}Table}.${refFieldName}\`\n`;
     }
-    query += `\`;\n\t\t\t\t\tcon.query(sql, (err, result) => {\n`
-    query += `\t\t\t\t\t\tif (err) throw err;\n`
-    query += `\t\t\t\t\t\tcon.release();\n`
-    query += `\t\t\t\t\t\treturn result;\n`
-    query += `\t\t\t\t\t})\n`
-    query += `\t\t\t\t})\n`
+    //query += `getConnection((err, con) => {\n\t\t\t\t\tconst sql = \`SELECT * FROM ${refTypeName} WHERE `;
+    // if (field.type === 'ID') {
+    //   query += `id = \${parent.${field.name}}`;
+    // } else {
+    //   query += `${refFieldName} = \${parent.${field.name}}`;
+    // }
+    // query += `\`;\n\t\t\t\t\tcon.query(sql, (err, result) => {\n`
+    // query += `\t\t\t\t\t\tif (err) throw err;\n`
+    // query += `\t\t\t\t\t\tcon.release();\n`
+    // query += `\t\t\t\t\t\treturn result;\n`
+    // query += `\t\t\t\t\t})\n`
+    // query += `\t\t\t\t})\n`
     query += `\t\t\t}\n`
     query += `\t\t}`
   }
