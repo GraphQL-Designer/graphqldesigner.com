@@ -18,12 +18,12 @@ query += `
 app.use(express.static(path.join(__dirname, './public')))
 
 app.use('/graphql', graphqlHTTP({
-    GQLSchema,
-    graphiql: false //Set to true to view GraphiQl in browser at /graphql
+  GQLSchema,
+  graphiql: false //Set to true to view GraphiQl in browser at /graphql
 }));
 
 app.listen(4000, () => {
-    console.log('Listening on 4000')
+  console.log('Listening on 4000')
 });
 `;
   return query;

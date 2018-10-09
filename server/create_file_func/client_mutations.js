@@ -1,3 +1,5 @@
+const tab = `  `
+
 function parseClientMutations(tables) {
   let query = "import { gql } from \'apollo-boost\';\n\n";
   const exportNames = [];
@@ -27,11 +29,9 @@ function parseClientMutations(tables) {
   let endString = `export {\n`;
   exportNames.forEach((name, i) => {
     if (i === 0) {
-      endString += `\t${name},\n`;
-    } else if (i < exportNames.length - 1) {
-      endString += `\t${name},\n`;
+      endString += `${tab}${name},\n`;
     } else {
-      endString += tab + name + enter;
+      endString += `${tab}${name},\n`;
     }
   });
 
@@ -40,7 +40,7 @@ function parseClientMutations(tables) {
 
 // builds params for either add or update mutations
 function buildMutationParams(table, mutationType) {
-  let query = `const ${mutationType}${table.type}Mutation = gql\`\n\tmutation(`;
+  let query = `const ${mutationType}${table.type}Mutation = gql\`\n${tab}mutation(`;
 
   let firstLoop = true;
   for (const fieldId in table.fields) {
@@ -59,14 +59,14 @@ function buildMutationParams(table, mutationType) {
       query += `${checkForRequired(table.fields[fieldId].required)}`;
     }
   }
-  return query += `) {\n\t`;
+  return query += `) {\n${tab}`;
 }
 
 function buildDeleteMutationParams(table) {
   const idName = table.fields[0].name;
   let query = `const delete${table.type}Mutation = gpq\`\n`
-     query += `\tmutation($${idName}: ID!){\n`
-     query += `\t\tdelete${table.type}(${idName}: $${idName}){\n`
+     query += `${tab}mutation($${idName}: ID!){\n`
+     query += `${tab}${tab}delete${table.type}(${idName}: $${idName}){\n`
   return query; 
 }
 
@@ -88,7 +88,7 @@ function checkForRequired(required) {
 }
 
 function buildTypeParams(table, mutationType) {
-  let query = `\t${mutationType}${table.type}(`;
+  let query = `${tab}${mutationType}${table.type}(`;
 
   let firstLoop = true;
   for (const fieldId in table.fields) {
@@ -106,10 +106,10 @@ function buildReturnValues(table) {
   let query = '';
 
   for (const fieldId in table.fields) {
-    query += `\t\t\t${table.fields[fieldId].name}\n`;
+    query += `${tab}${tab}${tab}${table.fields[fieldId].name}\n`;
   }
 
-  return query += `\t\t}\n\t}\n\`\n\n`;
+  return query += `${tab}${tab}}\n${tab}}\n\`\n\n`;
 }
 
 module.exports = parseClientMutations;

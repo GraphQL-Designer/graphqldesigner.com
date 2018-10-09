@@ -1,3 +1,5 @@
+const tab = `  `
+
 function parseClientQueries(tables) {
   let query = "import { gql } from \'apollo-boost\';\n\n";
   const exportNames = [];
@@ -27,14 +29,14 @@ function parseClientQueries(tables) {
 
 function buildClientQueryAll(table) {
   let string = `const queryEvery${table.type} = gql\`\n`
-  string += `\t{\n`
-  string += `\t\tevery${toTitleCase(table.type)} {\n`;
+  string += `${tab}{\n`
+  string += `${tab}${tab}every${toTitleCase(table.type)} {\n`;
 
   for (const fieldId in table.fields) {
-    string += `\t\t\t${table.fields[fieldId].name}\n`;
+    string += `${tab}${tab}${tab}${table.fields[fieldId].name}\n`;
   }
 
-  return string += `\t\t}\n\t}\n\`\n\n`;
+  return string += `${tab}${tab}}\n${tab}}\n\`\n\n`;
 }
 
 function toTitleCase(refTypeName) {
@@ -45,14 +47,14 @@ function toTitleCase(refTypeName) {
 
 function buildClientQueryById(table) {
   let string = `const query${table.type}ById = gql\`\n`
-  string += `\tquery(${table.type}: ID) {\n`
-  string += `\t\t${table.type}(${table.type}: ${table.type}) {\n`;
+  string += `${tab}query(${table.type}: ID) {\n`
+  string += `${tab}${tab}${table.type}(${table.type}: ${table.type}) {\n`;
   
   for (const fieldId in table.fields) {
-    string += `\t\t\t${table.fields[fieldId].name}\n`;
+    string += `${tab}${tab}${tab}${table.fields[fieldId].name}\n`;
   }
 
-  return string += `\t\t}\n\t}\n\`\n\n`;
+  return string += `${tab}${tab}}\n${tab}}\n\`\n\n`;
 }
 
 module.exports = parseClientQueries;

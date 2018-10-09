@@ -30,6 +30,8 @@ app.use(express.static(path.join(__dirname, '../public')));
 app.post('/write-files', (req, res) => {
   const data = req.body; // data.data is state.tables from schemaReducer. See Navbar component
   const dateStamp = Date.now();
+  console.log('fields of table 0', data.data['0'].fields);
+  console.log('fields of table 1', data.data['1'].fields); 
 
   buildDirectories(dateStamp, () => {
 
@@ -56,7 +58,7 @@ app.post('/write-files', (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log('Server Listening!');
+  console.log(`Server Listening to ${PORT}!`);
 });
 
 function buildDirectories(dateStamp, cb) {
@@ -87,7 +89,7 @@ function buildForMongo(data, dateStamp) {
 
 function buildForMySQL(data, dateStamp) {
   fs.writeFileSync(path.join(PATH, `build-files${dateStamp}/server/db/mysql_pool.js`), mysqlPool());
-  fs.writeFileSync(path.join(PATH, `build-files${dateStamp}/server/db/mysql_scripts.js`), parseMySQLTables());
+  fs.writeFileSync(path.join(PATH, `build-files${dateStamp}/server/db/mysql_scripts.js`), parseMySQLTables(data));
 }
 
 function deleteTempFiles(database, data, dateStamp, cb) {
