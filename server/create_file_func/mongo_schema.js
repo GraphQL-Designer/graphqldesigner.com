@@ -1,4 +1,4 @@
-function parseMongoschema(data, cb) {
+function parseMongoschema(data) {
   const tab = `  `
   let query = `const mongoose = require('mongoose');\nconst Schema = mongoose.Schema;\n\nconst ${data.type.toLowerCase()}Schema = new Schema({\n${tab}`
 
@@ -11,7 +11,6 @@ function parseMongoschema(data, cb) {
     }
   }
   query += `\n});\n\nmodule.exports = mongoose.model("${data.type}", ${data.type.toLowerCase()}Schema);`;
-
   return query; 
 }
 
