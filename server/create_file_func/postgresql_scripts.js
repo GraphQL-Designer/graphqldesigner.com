@@ -2,7 +2,7 @@ function parsePostgresTables(tables) {
   const foreignKeys = {};
   let primaryKey = [];
   for (const tableId in props.tables) {
-    parseSQLTable(tables[tableId]);
+    parsePostgresTable(tables[tableId]);
   }
 
   function parsePostgresSchema(table) {

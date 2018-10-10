@@ -8,9 +8,6 @@ With a few simple inputs, GraphQL Designer auto generates code for download to s
 
 ## Background
 
-<<<<<<< HEAD
-GraphQL is an emerging open source data query and manipulation language that is becoming the preferred method over RESTful architecture, fulfilling queries with just one API call, with no overfetching or underfetching of data.  Although GraphQL is on the rise, the entry barrier is relatively high and benefits become costly to developers. Designing an application with GraphQL and manually setting up complex schemas can become time-consuming and redundant.
-=======
 GraphQL is an emerging open source data query and manipulation language that can be a preferred method over RESTful architecture, fulfilling queries with less API calls, and limiting over-fetching and under-fetching of data.  Although GraphQL is a powerful query language, starting a new GraphQL application can be time consuming due to its redundant structure. This repetitive code can make developing a GraphQL application more intuitive, but also means for every GraphQL type created, a large amount of additional code is required.
 
 For example, adding a new GraphQL type "User" with the fields "id", "age", and "messages" may require the following:
@@ -21,7 +18,6 @@ For example, adding a new GraphQL type "User" with the fields "id", "age", and "
 - Mutation to delete a User by id
 - Client queries for User and the particular fields
 - A NoSQL schema or SQL create script for User
->>>>>>> f929520f20686834fbedc46100b79daef6dfa88a
 
 Notice that all of these items revolve around similar information? User and its fields: id, age, and messages.
 
@@ -53,11 +49,7 @@ Lastly export your code!
 
 ## Running Your Own Version
 
-<<<<<<< HEAD
-Use npm run dev for hot module reloading and to start the server, run npm install->npm run pack->npm run server.
-=======
 
 Use npm run dev for hot module reloading 
 
-**To start the server, run: npm install, npm run pack and then npm run server.
->>>>>>> f929520f20686834fbedc46100b79daef6dfa88a
+To start the server, run: npm install, npm run pack and then npm run server.
