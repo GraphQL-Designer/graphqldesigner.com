@@ -267,7 +267,7 @@ function createSQLPrimaryKeyRootQuery(table, database) {
   }
 
   if (primaryKey) {
-    let query = `,\n\t\t${table.type.toLowerCase()}: {\n\t\t\ttype: ${table.type}Type,\n\t\t\targs: { ${primaryKey}: { type: new GraphQLNonNull(${typeCheck(primaryKey)}) }},\n\t\t\twhere: (${table.type.toLowerCase()}Table, args, context) => {\n\t\t\t\tif (args.${primaryKey}) return\`\${${table.type.toLowerCase()}Table}.${primaryKey} = \${args.${primaryKey}}\`\n\t\t\t},\n\t\t\tresolve: (parent, args, context, resolveInfo) => {\n\t\t\t\treturn joinMonster(resolveInfo, context, sql => {\n\t\t\t\t\treturn knex.raw(sql)\n\t\t\t\t})\n\t\t\t}\n\t\t}`
+    let query = `,\n\t\t${table.type.toLowerCase()}: {\n\t\t\ttype: ${table.type}Type,\n\t\t\targs: { ${buildArgs(primaryKeyValue)}},\n\t\t\twhere: (${table.type.toLowerCase()}Table, args, context) => {\n\t\t\t\tif ${buildParams(primaryKeyValue)} return\`${buildConstraints(primaryKeyValue)}\`\n\t\t\t},\n\t\t\tresolve: (parent, args, context, resolveInfo) => {\n\t\t\t\treturn joinMonster(resolveInfo, context, sql => {\n\t\t\t\t\treturn knex.raw(sql)\n\t\t\t\t})\n\t\t\t}\n\t\t}`
   
     return query;
   }
@@ -284,9 +284,52 @@ function createSQLPrimaryKeyRootQuery(table, database) {
     if (primaryKeyName.length > 1) return primaryKeyName;
     return //PRIMARY KEY NEEDED!!!;
   }
+  //${primaryKey}: { type: new GraphQLNonNull(${typeCheck(primaryKey)}) }
+  function buildArgs(values) {
+    if (Array.isArray(values)) {
+      let args = '';
+      values.forEach((value, i) => {
+        if (i) {
+          args += ',\n\t\t\t\t'
+        } else {
+          args += '\n\t\t\t\t'
+        }
+        args += `${value}: { type: new GraphQLNonNull(${typeCheck(value)}) }`
+      })
+      return args += '\n\t\t\t'
+    } else {
+      return `${values}: { type: new GraphQLNonNull(${typeCheck(values)}) }`;
+    }
+  }
 
-  function buildArgs() {
-
+  function buildParams(values) {
+    if (Array.isArray(values)) {
+      let args = '(';
+      values.forEach((value, i) => {
+        if (i) {
+          args += ' && '
+        }
+        args += `args.${value}`
+      })
+      return args += ')'
+    } else {
+      return `(args.${values})`;
+    }
+  }
+  
+  function buildConstraints(values) {
+    if (Array.isArray(values)) {
+      let args = '';
+      values.forEach((value, i) => {
+        if (i) {
+          args += ' and '
+        }
+        args += `\${${table.type.toLowerCase()}Table}.${value} = \${args.${value}}`
+      })
+      return args
+    } else {
+      return `\${${table.type.toLowerCase()}Table}.${values} = \${args.${values}}`;
+    }
   }
 
   function typeCheck(value) {
