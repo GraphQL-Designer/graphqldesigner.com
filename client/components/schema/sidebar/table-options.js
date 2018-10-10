@@ -117,8 +117,17 @@ class TableOptions extends React.Component {
       else {
         if (this.props.selectedField.relationSelected) {
           // check if Type, Field, and RefType are selected if Relation is toggled
-          if (this.props.selectedField.relation.tableIndex === -1 || this.props.selectedField.relation.fieldIndex === -1 || !this.props.selectedField.relation.refType) {
-            return this.handleSnackbarUpdate('Please fill out Type, Field, and RefType in Relation');
+          let relationNotFilled;
+          let message;
+          if (this.props.database === 'MongoDB') {
+            relationNotFilled = this.props.selectedField.relation.tableIndex === -1 || this.props.selectedField.relation.fieldIndex === -1 || !this.props.selectedField.relation.refType;
+            message = 'Please fill out Type, Field, and RefType in Relation';
+          } else {
+            relationNotFilled = this.props.selectedField.relation.tableIndex === -1 || this.props.selectedField.relation.fieldIndex === -1;
+            message = 'Please fill out Type and Field in Foreign Key';
+          }
+          if (relationNotFilled) {
+            return this.handleSnackbarUpdate(message);
           }
         }
         // update state if field name was modified to take out spaces and symbols. 
