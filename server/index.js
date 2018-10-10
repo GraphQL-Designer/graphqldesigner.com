@@ -87,7 +87,7 @@ function buildForMongo(data, dateStamp) {
 
 function buildForMySQL(data, dateStamp) {
   fs.writeFileSync(path.join(PATH, `build-files${dateStamp}/server/db/mysql_pool.js`), mysqlPool());
-  fs.writeFileSync(path.join(PATH, `build-files${dateStamp}/server/db/mysql_scripts.`), parseMySQLTables(data));
+  fs.writeFileSync(path.join(PATH, `build-files${dateStamp}/server/db/mysql_scripts.md`), parseMySQLTables(data));
 }
 
 function deleteTempFiles(database, data, dateStamp, cb) {
@@ -100,7 +100,7 @@ function deleteTempFiles(database, data, dateStamp, cb) {
 
   if (database === 'MySQL') {
     fs.unlinkSync(path.join(PATH, `build-files${dateStamp}/server/db/mysql_pool.js`));
-    fs.unlinkSync(path.join(PATH, `build-files${dateStamp}/server/db/mysql_scripts.js`));
+    fs.unlinkSync(path.join(PATH, `build-files${dateStamp}/server/db/mysql_scripts.md`));
   }
 
   if (database ==='MongoDB') {
