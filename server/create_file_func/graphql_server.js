@@ -364,7 +364,7 @@ function addMutation(table, database) {
   if (database === 'MongoDB') query += `const ${table.type.toLowerCase()} = new ${table.type}(args);\n${tab}${tab}${tab}${tab}return ${table.type.toLowerCase()}.save();`;
 
   if (database === 'MySQL') {
-    query += `getConnection((err, con) => {\n${tab}${tab}${tab}${tab}${tab}const sql = 'INSERT INTO ${table.type} SET ?';\n${tab}${tab}${tab}${tab}${tab}con.query(sql, args, (err, result) => {\n${tab}${tab}${tab}${tab}${tab}${tab}if (err) throw err;\n${tab}${tab}${tab}${tab}${tab}${tab}con.release();\n${tab}${tab}${tab}${tab}${tab}${tab}return result;\n${tab}${tab}${tab}${tab}${tab}})\n${tab}${tab}${tab}${tab}})`
+    query += `return knex('${table.type.toLowerCase()}s').insert(args)`
   }
 
   return query += `\n${tab}${tab}${tab}}\n${tab}${tab}}`
@@ -392,21 +392,10 @@ function updateMutation(table, database) {
   if (database === 'MongoDB') query += `return ${table.type}.findByIdAndUpdate(args.id, args);`;
 
   if (database === 'MySQL') {
-    const idFieldName = table.fields[0].name; 
+    const idFieldName = table.fields[0].name;
+    const primaryKey = findPrimaryForSQL(table);
   
-    query += `getConnection((err, con) => {\n`
-    query += `${tab}${tab}${tab}${tab}${tab}let updateValues = '';\n`
-    query += `${tab}${tab}${tab}${tab}${tab}for (const prop in args) {\n`
-    query += `${tab}${tab}${tab}${tab}${tab}${tab}updateValues += \`\${prop} = '\${args[prop]}' \`\n`
-    query += `${tab}${tab}${tab}${tab}${tab}}\n`
-    query += `${tab}${tab}${tab}${tab}${tab}const sql = \`UPDATE ${table.type} SET \${updateValues} WHERE ${idFieldName} = \${args.`
-    query += `${idFieldName}}\`;\n`
-    query += `${tab}${tab}${tab}${tab}${tab}con.query(sql, args, (err, result) => {\n`
-    query += `${tab}${tab}${tab}${tab}${tab}${tab}if (err) throw err;\n`
-    query += `${tab}${tab}${tab}${tab}${tab}${tab}con.release();\n`
-    query += `${tab}${tab}${tab}${tab}${tab}${tab}return result;\n`
-    query += `${tab}${tab}${tab}${tab}${tab}})\n`
-    query += `${tab}${tab}${tab}${tab}})`
+    query += `return knex('${table.type.toLowerCase()}s').where('${primaryKey}', '=', '${args.primaryKey}').update(args)`
   }
 
   return query += `\n${tab}${tab}${tab}}\n${tab}${tab}}`;
@@ -415,6 +404,18 @@ function updateMutation(table, database) {
     const query = `{ type: ${checkForMultipleValues(field.multipleValues, 'front')}${tableTypeToGraphqlType(field.type)}${checkForMultipleValues(field.multipleValues, 'back')} }`;
 
     return query
+  }
+
+  function findPrimaryForSQL(table) {
+    let primaryKeyName = [];
+    for (let prop in table.fields) {
+      if (table.fields[prop].primaryKey) {
+        primaryKeyName.push(`${table.fields[prop].name}`)
+      }
+    }
+    if (primaryKeyName.length === 1) return primaryKeyName[0];
+    if (primaryKeyName.length > 1) return primaryKeyName;
+    return //PRIMARY KEY NEEDED!!!;
   }
 }
 
