@@ -1,14 +1,14 @@
 
 # GraphQL Designer ![alt text](https://travis-ci.org/GraphQL-Designer/graphqldesigner.com.svg?branch=dev)
-[GraphQL Designer](https://www.graphqldesigner.com/) is prototyping tool to develop full-stack GraphQL applications. 
+[GraphQL Designer](https://www.graphqldesigner.com/) is a prototyping tool to develop full-stack GraphQL applications. 
 
-With a few simple inputs, GraphQL Designer auto generates code for download to start and implement your new application, including GraphQL root queries, schemas, mutations, and client queries. Also downloaded are the NoSQL schemas or SQL build scripts, and server file. 
+With a few simple inputs, GraphQL Designer auto generates code for download, to start and implement your new application including GraphQL root queries, schemas, mutations, and client queries. Also available for dowload are the NoSQL schemas or SQL build scripts, and a server file. 
 
 ![](graphql.gif)
 
 ## Background
 
-GraphQL is an emerging open source data query and manipulation language that can be a preferred method over RESTful architecture, fulfilling queries with less API calls, and limiting over-fetching and under-fetching of data.  Although GraphQL is a powerful query language, starting a new GraphQL application can be time consuming due to its redundant structure. This repetitive code can make developing a GraphQL application more intuitive, but also means for every GraphQL type created, a large amount of additional code is required.
+GraphQL is an emerging open source data query and manipulation language that can be a preferred method over RESTful architecture, fulfilling queries with less API calls, and limiting over-fetching and under-fetching of data.  Although GraphQL is a powerful query language, starting a new GraphQL application can be time consuming due to its redundant structure. This repetitive code can make developing a GraphQL application more intuitive, but this could also mean that for every GraphQL type created, a large amount of additional code would be required.
 
 For example, adding a new GraphQL type "User" with the fields "id", "age", and "messages" may require the following:
 - A root query for an individual User by id
@@ -19,9 +19,9 @@ For example, adding a new GraphQL type "User" with the fields "id", "age", and "
 - Client queries for User and the particular fields
 - A NoSQL schema or SQL create script for User
 
-Notice that all of these items revolve around similar information? User and its fields: id, age, and messages.
+You will notice that all these items revolve around a similar piece of information- User and its fields: id, age, and messages.
 
-GraphQL Designer solves this repetition by requiring the developer just to enter the information once. Once a GraphQL type is created on our platform, root queries, mutations, client queries, and a NoSQL schema or SQL create script is auto generated and ready for download. After download, the code can be simply dragged and dropped into your code base or favorite text editor!
+GraphQL Designer solves this repetition by requiring the developer to simply enter the information only once. Once a GraphQL type is created on our platform, root queries, mutations, client queries, and a NoSQL schema or SQL create script is auto generated and ready for download. Once downloaded, the code can then be dragged and dropped effortlessly into your code base or favorite text editor!
 
 ## How To Use 
 
