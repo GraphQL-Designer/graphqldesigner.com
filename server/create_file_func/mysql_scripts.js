@@ -8,9 +8,9 @@ function parseSQLTables(tables) {
 
   function parseSQLTable(table) {
     if (!table) return ``;
-    
+
     createTablesCode += `CREATE TABLE \`${table.type}\` (\n`;
-    
+
     // create code for each field
     for (const fieldId in table.fields) {
       createTablesCode += createTableField(table.fields[fieldId]);
@@ -19,9 +19,9 @@ function parseSQLTables(tables) {
       if (fieldId !== tableProps[tableProps.length - 1]) {
         createTablesCode += `,`;
       }
-      createTablesCode += enter; 
+      createTablesCode += `\n`;
     }
-    
+
     // if table has a primary key
     if (primaryKey.length > 0) {
       createTablesCode += `\tPRIMARY KEY (`;
@@ -44,11 +44,11 @@ function createTableField(field) {
   fieldCode += checkRequired(field.required);
   fieldCode += checkUnique(field.unique);
   fieldCode += checkDefault(field.defaultValue);
-  
+
   if (field.primaryKey) {
     primaryKey.push(field.name);
   }
-  
+
   if (field.relationSelected) {
     const relationData = {
       'relatedTable': field.relation.tableIndex,
@@ -117,7 +117,7 @@ for (const tableId in props.tables) {
       // get name of field being referenced
       const relatedFieldId = relationInfo.relatedField;
       const relatedField = props.tables[relatedTableId].fields[relatedFieldId].name;
-      
+
       createTablesCode += `\nALTER TABLE \`${tableMakingRelation}\` ADD CONSTRAINT \`${tableMakingRelation}_fk${relationCount}\` FOREIGN KEY (\`${fieldMakingRelation}\`) REFERENCES \`${relatedTable}\`(\`${relatedField}\`);\n`;
     });
   }

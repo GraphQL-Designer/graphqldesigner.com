@@ -36,7 +36,7 @@ const CodeDBPostgresSchemaContainer = (props) => {
     // if table has a primary key
     if (primaryKey.length > 0) {
       createTablesCode += `${tab}${tab}CONSTRAINT ${table.type}_pk PRIMARY KEY (`;
-      primaryKey.forEach((key, i) => {``;
+      primaryKey.forEach((key, i) => {
         if (i === primaryKey.length - 1) {
           createTablesCode += `"${key}")`;
         } else {
@@ -47,6 +47,7 @@ const CodeDBPostgresSchemaContainer = (props) => {
     }
     // reset primaryKey to empty so primary keys don't slip into the next table
     primaryKey = [];
+    createTablesCode += `);${enter}${enter}`;
   }
 
   function createSchemaField(field) {
@@ -128,7 +129,6 @@ const CodeDBPostgresSchemaContainer = (props) => {
       const relatedFieldId = relationInfo.relatedField;
       const relatedField = props.tables[relatedTableId].fields[relatedFieldId].name;
       createTablesCode += `${enter}${enter}ALTER TABLE "${tableMakingRelation}" ADD CONSTRAINT "${tableMakingRelation}_fk${relationCount}" FOREIGN KEY ("${fieldMakingRelation}") REFERENCES "${relatedTable}"("${relatedField}");${enter}`;
-
     });
   }
   

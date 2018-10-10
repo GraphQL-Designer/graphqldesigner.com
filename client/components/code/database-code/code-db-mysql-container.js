@@ -30,7 +30,7 @@ const CodeDBSQLContainer = (props) => {
       if (fieldId !== tableProps[tableProps.length - 1]) {
         createTablesCode += `,`;
       }
-      createTablesCode += enter; 
+      createTablesCode += `${enter}`; 
     }
 
     // if table has a primary key
