@@ -21,7 +21,7 @@ const parseClientMutations = require('./create_file_func/client_mutations');
 const parseGraphqlServer = require('./create_file_func/graphql_server');
 const parseMongoschema = require('./create_file_func/mongo_schema');
 const parseMySQLTables = require('./create_file_func/mysql_scripts');
-const mysqlPool = require('./create_file_func/mysql_pool');
+const knexPool = require('./create_file_func/knex_pool');
 
 
 app.use(bodyParser.json());
@@ -87,7 +87,7 @@ function buildForMongo(data, dateStamp) {
 }
 
 function buildForMySQL(data, dateStamp) {
-  //fs.writeFileSync(path.join(PATH, `build-files${dateStamp}/server/db/mysql_pool.js`), mysqlPool());
+  fs.writeFileSync(path.join(PATH, `build-files${dateStamp}/server/db/knex_pool.js`), knexPool());
   fs.writeFileSync(path.join(PATH, `build-files${dateStamp}/server/db/mysql_scripts.md`), parseMySQLTables(data));
 }
 
@@ -117,6 +117,7 @@ function deleteTempFiles(database, data, dateStamp, cb) {
 
   if (database === 'MySQL') {
     fs.unlinkSync(path.join(PATH, `build-files${dateStamp}/server/db/mysql_scripts.md`));
+    fs.unlinkSync(path.join(PATH, `build-files${dateStamp}/server/db/knex_pool.js`));
   }
 
   if (database ==='MongoDB') {

@@ -10,7 +10,7 @@ function parseGraphqlServer(data, database) {
   }
 
 if (database === 'MySQL') {
-  query += "import joinMonster from 'join-monster';\n";
+  query += "import joinMonster from 'join-monster';\nimport knex from '../db/knex_pool.js\n";
 }
 
 query += `
