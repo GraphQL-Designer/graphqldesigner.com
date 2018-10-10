@@ -1,28 +1,28 @@
-function parseMongoschema(data, cb) {
-    let query = `const mongoose = require('mongoose');\nconst Schema = mongoose.Schema;\n\nconst ${data.type.toLowerCase()}Schema = new Schema({\n\t`
+function parseMongoschema(data) {
+  const tab = `  `
+  let query = `const mongoose = require('mongoose');\nconst Schema = mongoose.Schema;\n\nconst ${data.type.toLowerCase()}Schema = new Schema({\n${tab}`
 
-    let firstLoop = true;
-    for (let prop in data.fields) {
-        if (prop !== '0') {
-            if (!firstLoop) query += ',\n\t'
-            firstLoop = false
-    
-            query += createSchemaField(data.fields[prop]);
-        }
+  let firstLoop = true;
+  for (let prop in data.fields) {
+    if (prop !== '0') {
+      if (!firstLoop) query += `,\n${tab}`
+      firstLoop = false
+      query += createSchemaField(data.fields[prop]);
     }
+  }
   query += `\n});\n\nmodule.exports = mongoose.model("${data.type}", ${data.type.toLowerCase()}Schema);`;
-
-  return cb(query);
+  return query; 
 }
 
 function createSchemaField(data) {
-  let query = `${data.name}: ${checkForArray('start')}{\n\t\ttype: ${checkDataType(data.type)},\n\t\tunique: ${data.unique},\n\t\trequired: ${data.required}`;
+  const tab = `  `;
+  let query = `${data.name}: ${checkForArray('start')}{\n${tab}${tab}type: ${checkDataType(data.type)},\n${tab}${tab}unique: ${data.unique},\n${tab}${tab}required: ${data.required}`;
 
   if (data.defaultValue) {
-    query += `,\n\t\tdefault: "${data.defaultValue}"`;
+    query += `,\n${tab}${tab}default: "${data.defaultValue}"`;
   }
 
-  return query += `\n\t}${checkForArray('end')}`;
+  return query += `\n${tab}}${checkForArray('end')}`;
 
   function checkForArray(position) {
     if (data.multipleValues) {

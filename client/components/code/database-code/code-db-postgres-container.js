@@ -2,25 +2,25 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 // Styling
-import './code.css';
+import '../code.css';
 
 
 const mapStateToProps = store => ({
   tables: store.schema.tables,
 });
 
-const CodeDBSQLContainer = (props) => {
+const CodeDBPostgresSchemaContainer = (props) => {
   const enter = `
-  `;
+`;
   const tab = '  ';
   let createTablesCode = ``;
   const foreignKeys = {};
   let primaryKey = [];
 
-  function parseSQLSchema(table) {
+  function parsePostgresSchema(table) {
     if (!table) return ``;
 
-    createTablesCode += `${enter}${tab}${tab}CREATE TABLE \`${table.type}\` (${enter}`;
+    createTablesCode += `CREATE TABLE "${table.type}" (${enter}`;
 
     // create code for each field
     for (const fieldId in table.fields) {
@@ -30,27 +30,30 @@ const CodeDBSQLContainer = (props) => {
       if (fieldId !== tableProps[tableProps.length - 1]) {
         createTablesCode += `,`;
       }
-      createTablesCode += enter; 
+      // createTablesCode += enter; 
     }
 
     // if table has a primary key
     if (primaryKey.length > 0) {
-      createTablesCode += `${tab}${tab}${tab}PRIMARY KEY (`;
-      primaryKey.forEach((key, i) => {
+      createTablesCode += `,${enter}${tab}${tab}CONSTRAINT ${table.type}_pk PRIMARY KEY (`;
+      primaryKey.forEach((key, i) => {``
         if (i === primaryKey.length - 1) {
-          createTablesCode += `\`${key}\`)${enter}`;
+          createTablesCode += `"${key}")`;
         } else {
-          createTablesCode += `\`${key}\`, `;
+          createTablesCode += `"${key}", `;
         }
       });
+      createTablesCode += `${enter}) WITH (${enter} OIDS=FALSE${enter});${enter}${enter}`;
+    } else {
+      createTablesCode += `${enter});${enter}${enter}`
     }
     // reset primaryKey to empty so primary keys don't slip into the next table
     primaryKey = [];
-    createTablesCode += `${tab}${tab});${enter}`;
   }
+  
   function createSchemaField(field) {
     let fieldCode = ``;
-    fieldCode += `${tab}${tab}${tab}\`${field.name}\`${tab}${checkDataType(field.type)}`;
+    fieldCode += `${tab}${tab}"${field.name}"${tab}${checkDataType(field.type, field.autoIncrement)}`;
     fieldCode += checkRequired(field.required);
     fieldCode += checkUnique(field.unique);
     fieldCode += checkDefault(field.defaultValue);
@@ -61,9 +64,9 @@ const CodeDBSQLContainer = (props) => {
 
     if (field.relationSelected) {
       const relationData = {
-        'relatedTable': field.relation.tableIndex,
-        'relatedField': field.relation.fieldIndex,
-        'fieldMakingRelation': field.fieldNum
+        "relatedTable": field.relation.tableIndex,
+        "relatedField": field.relation.fieldIndex,
+        "fieldMakingRelation": field.fieldNum
       };
       if (foreignKeys[field.tableNum]) {
         foreignKeys[field.tableNum].push(relationData);
@@ -74,16 +77,17 @@ const CodeDBSQLContainer = (props) => {
     return fieldCode;
   }
 
-  function checkDataType(dataType) {
+  function checkDataType(dataType, autoIncrement) {
+    if (autoIncrement) return "serial"
     switch(dataType){
-      case 'String':
-        return `VARCHAR`;
-      case 'Number':
-        return `INT`;
-      case 'Boolean':
-        return `BOOLEAN`;
-      case 'ID':
-        return `VARCHAR`;
+      case "String":
+        return "varchar";
+      case "Number":
+        return "integer";
+      case "Boolean":
+        return "boolean";
+      case "ID":
+        return "serial";
     }
   }
 
@@ -98,13 +102,13 @@ const CodeDBSQLContainer = (props) => {
   }
 
   function checkDefault(fieldDefault) {
-    if (fieldDefault.length > 0) return `${tab}DEFAULT '${fieldDefault}'`;
+    if (fieldDefault.length > 0) return `${tab}DEFAULT "${fieldDefault}"`;
     else return '';
   }
 
   // loop through tables and create build script for each table
   for (const tableId in props.tables) {
-    parseSQLSchema(props.tables[tableId]);
+    parsePostgresSchema(props.tables[tableId]);
   }
 
   // if any tables have relations, aka foreign keys
@@ -123,52 +127,21 @@ const CodeDBSQLContainer = (props) => {
       // get name of field being referenced
       const relatedFieldId = relationInfo.relatedField;
       const relatedField = props.tables[relatedTableId].fields[relatedFieldId].name;
+      createTablesCode += `${enter}ALTER TABLE "${tableMakingRelation}" ADD CONSTRAINT "${tableMakingRelation}_fk${relationCount}" FOREIGN KEY ("${fieldMakingRelation}") REFERENCES "${relatedTable}"("${relatedField}");${enter}`;
 
-      createTablesCode += `${enter}${tab}${tab}ALTER TABLE \`${tableMakingRelation}\` ADD CONSTRAINT \`${tableMakingRelation}_fk${relationCount}\` FOREIGN KEY (\`${fieldMakingRelation}\`) REFERENCES \`${relatedTable}\`(\`${relatedField}\`);${enter}`;
     });
   }
-  // tab the closing `
-  if (createTablesCode.length > 0) {
-    createTablesCode += tab;
-  }
-  let SQLCode = `  const mysql = require('mysql');
-  const connection = mysql.createConnection({
-  host: /* enter your hostname */
-  user: /* enter your user information */
-  password: /* enter your password */
-  database: /* enter your database information */
-  
-  // connect to the MySQL server
-  connection.connect(function(err) {
-    if (err) {
-      return console.error('error: ' + err.message);
-    }
-
-    let createTables = \`${createTablesCode}\`;
-    
-    connection.query(createTables, function(err, results, fields) {
-      if (err) {
-        console.log(err.message);
-      }
-    });
-   
-    connection.end(function(err) {
-      if (err) {
-        return console.log(err.message);
-      }
-    });
-  });`;
 
   return (
     <div id="code-container-database">
-      <h4 className='codeHeader'>MySQL Tables</h4>
+      <h4 className='codeHeader'>PostgreSQL Create Scripts</h4>
       <hr/>
       <pre>
-        {SQLCode}
+        {createTablesCode}
       </pre>
       <pre id='column-filler-for-scroll'></pre>
     </div>
   );
 };
 
-export default connect(mapStateToProps, null)(CodeDBSQLContainer);
+export default connect(mapStateToProps, null)(CodeDBPostgresSchemaContainer);

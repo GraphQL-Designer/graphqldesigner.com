@@ -37,9 +37,9 @@ class MainNav extends React.Component {
 
     // JSON.stringify doesn't work with Sets. Change Sets to arrays for export
     const tables = this.props.tables; 
-    const changedTables = []
+    const changedTables = {}
     for (let tableId in tables) {
-      const changedFields = []
+      const changedFields = {}
       for (let fieldId in tables[tableId].fields) {
         const field = tables[tableId].fields[fieldId];
         const refBy = field.refBy
@@ -48,16 +48,17 @@ class MainNav extends React.Component {
           refBy.forEach(ele => {
             refByArray.push(ele);
           })
-          changedFields.push(Object.assign({}, field, { 'refBy': refByArray }))
+          changedFields[fieldId] = (Object.assign({}, field, { 'refBy': refByArray }))
         }
       }
-      if (changedFields.length > 0) {
+      if (Object.keys(changedFields).length > 0) {
         const fields = Object.assign({}, tables[tableId].fields, changedFields)
-        changedTables.push(Object.assign({}, tables[tableId], { 'fields': fields }))
+        changedTables[tableId] = (Object.assign({}, tables[tableId], { 'fields': fields }))
       }
     }
     const tableData = Object.assign({}, tables, changedTables)
-    const data = Object.assign({}, { 'data': tableData }, { 'database': 'MongoDB'})
+    const data = Object.assign({}, { 'data': tableData }, { 'database': this.props.database })
+    console.log('this is data', data); 
 
     setTimeout(() => {
       fetch('/write-files', {
@@ -96,12 +97,11 @@ class MainNav extends React.Component {
       <div>
         <nav id="navbar">
           <div id="nav-left">
+            {/* <h2 id="header-name">GraphQL Designer</h2> */}
             <FlatButton label="New Project" onClick={this.handleNewProject} />
             <FlatButton style={{ color: '#FF4280' }} label="Export Code" onClick={this.handleExport} />
           </div>
-          <div id="nav-misd" />
           <div id="nav-right">
-            {/* <FlatButton label="Logout" /> */}
           </div>
         </nav>
         {this.state.modal && (

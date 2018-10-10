@@ -1,4 +1,5 @@
 const path = require('path');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = {
   // devtool: 'inline-source-map',
@@ -10,7 +11,8 @@ module.exports = {
     publicPath: '/public'
   },
   mode: 'development',
-  module: {
+  // watch: true, //Bundle on saved changes
+  module: { 
     rules: [
       {
         test: /\.(js|jsx)$/,
@@ -27,4 +29,7 @@ module.exports = {
       }
     ]
   },
+  optimization: {
+    minimizer: [new UglifyJsPlugin()]
+  }
 };

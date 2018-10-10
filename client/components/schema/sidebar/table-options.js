@@ -61,6 +61,11 @@ class TableOptions extends React.Component {
 
   handleToggle(name, event, value) {
     this.props.handleChange({ name: name, value: value });
+
+    // set required to true and disabled if primary key is selected for SQL
+    if (this.props.database !== 'MongoDB' && name === 'primaryKey' && value === true) {
+      this.props.handleChange({ name: 'required', value: true });
+    }
   }
 
   handleChange(event) {
@@ -112,8 +117,17 @@ class TableOptions extends React.Component {
       else {
         if (this.props.selectedField.relationSelected) {
           // check if Type, Field, and RefType are selected if Relation is toggled
-          if (this.props.selectedField.relation.tableIndex === -1 || this.props.selectedField.relation.fieldIndex === -1 || !this.props.selectedField.relation.refType) {
-            return this.handleSnackbarUpdate('Please fill out Type, Field, and RefType in Relation');
+          let relationNotFilled;
+          let message;
+          if (this.props.database === 'MongoDB') {
+            relationNotFilled = this.props.selectedField.relation.tableIndex === -1 || this.props.selectedField.relation.fieldIndex === -1 || !this.props.selectedField.relation.refType;
+            message = 'Please fill out Type, Field, and RefType in Relation';
+          } else {
+            relationNotFilled = this.props.selectedField.relation.tableIndex === -1 || this.props.selectedField.relation.fieldIndex === -1;
+            message = 'Please fill out Type and Field in Foreign Key';
+          }
+          if (relationNotFilled) {
+            return this.handleSnackbarUpdate(message);
           }
         }
         // update state if field name was modified to take out spaces and symbols. 
@@ -144,24 +158,24 @@ class TableOptions extends React.Component {
           value={types}
           primaryText={this.props.tables[types].type}
         />,
-      )
+      );
     }
 
-    const selectedTableIndex = this.props.selectedField.relation.tableIndex
+    const selectedTableIndex = this.props.selectedField.relation.tableIndex;
     if (selectedTableIndex >= 0) {
       for (let field in this.props.tables[selectedTableIndex].fields) {
         // check if field has a relation to selected field, if so, don't push
-        let noRelationExists = true; 
-        const tableIndex = this.props.selectedField.tableNum
-        let fieldIndex = this.props.selectedField.fieldNum
+        let noRelationExists = true;
+        const tableIndex = this.props.selectedField.tableNum;
+        let fieldIndex = this.props.selectedField.fieldNum;
         if (fieldIndex >= 0) {
-          const refBy = this.props.tables[tableIndex].fields[fieldIndex].refBy
+          const refBy = this.props.tables[tableIndex].fields[fieldIndex].refBy;
           if (refBy.size > 0) {
-            const refTypes = ['one to one', 'one to many', 'many to one', 'many to many']
+            const refTypes = ['one to one', 'one to many', 'many to one', 'many to many'];
             for (let i = 0; i < refTypes.length; i += 1) {
-              const refInfo = `${selectedTableIndex}.${field}.${refTypes[i]}`
+              const refInfo = `${selectedTableIndex}.${field}.${refTypes[i]}`;
               if (refBy.has(refInfo)) {
-                noRelationExists = false; 
+                noRelationExists = false;
               }
             }
           }
@@ -182,12 +196,12 @@ class TableOptions extends React.Component {
 
     function fieldName(fieldNum, tableNum, tables) {
       // Header text if adding a new field
-      let h2Text = 'Add Field'
-      let h4Text = `in ${tables[tableNum].type}`
+      let h2Text = 'Add Field';
+      let h4Text = `in ${tables[tableNum].type}`;
       // Header text if updating a field
       if (fieldNum >= 0) {
-        h2Text = `Update ${tables[tableNum].fields[fieldNum].name}`
-        h4Text = `in ${tables[tableNum].type}`
+        h2Text = `Update ${tables[tableNum].fields[fieldNum].name}`;
+        h4Text = `in ${tables[tableNum].type}`;
       }
       return (
         <div style={{ marginTop: '10px' }}>
@@ -247,7 +261,7 @@ class TableOptions extends React.Component {
                 value={this.props.selectedField.defaultValue}
               />
 
-              {this.props.database === 'SQL' && (
+              {this.props.database !== 'MongoDB' && (
                 <Toggle
                   label="Primary Key"
                   toggled={this.props.selectedField.primaryKey}
@@ -261,6 +275,7 @@ class TableOptions extends React.Component {
                 toggled={this.props.selectedField.required}
                 onToggle={this.handleToggle.bind(null, 'required')}
                 style={style.toggle}
+                disabled={this.props.selectedField.primaryKey}
               />
 
               <Toggle
@@ -270,18 +285,27 @@ class TableOptions extends React.Component {
                 style={style.toggle}
               />
 
+              {this.props.database !== 'MongoDB' && (
+                <Toggle
+                  label="Auto Increment"
+                  toggled={this.props.selectedField.autoIncrement}
+                  onToggle={this.handleToggle.bind(null, 'autoIncrement')}
+                  style={style.toggle}
+                />
+              )}
+
               {this.props.database === 'MongoDB' && (
-              <Toggle
-                label="Multiple Values"
-                toggled={this.props.selectedField.multipleValues && !this.props.selectedField.relationSelected}
-                onToggle={this.handleToggle.bind(null, 'multipleValues')}
-                style={style.toggle}
-                disabled={this.props.selectedField.relationSelected || this.props.selectedField.refBy.size > 0}
-              />
+                <Toggle
+                  label="Multiple Values"
+                  toggled={this.props.selectedField.multipleValues && !this.props.selectedField.relationSelected}
+                  onToggle={this.handleToggle.bind(null, 'multipleValues')}
+                  style={style.toggle}
+                  disabled={this.props.selectedField.relationSelected || this.props.selectedField.refBy.size > 0}
+                />
               )}
 
               <Toggle
-                label="Relation"
+                label={this.props.database === 'MongoDB' ? 'Relation' : 'Foreign Key'}
                 toggled={this.props.selectedField.relationSelected && !this.props.selectedField.multipleValues}
                 onToggle={this.handleToggle.bind(null, 'relationSelected')}
                 style={style.toggle}
@@ -311,19 +335,21 @@ class TableOptions extends React.Component {
                   </DropDownMenu>
                 </div>
 
-                <div className='relation-options'>
-                  <p>RefType:</p>
-                  <DropDownMenu
-                    value={this.props.selectedField.relation.refType}
-                    style={style.customWidth}
-                    onChange={this.handleSelectChange.bind(null, 'relation.refType')} // access 'relation.refType' as name in handleChange
-                  >
-                    <MenuItem value='one to one' primaryText="one to one" />
-                    <MenuItem value='one to many' primaryText="one to many" />
-                    <MenuItem value='many to one' primaryText="many to one" />
-                    <MenuItem value='many to many' primaryText="many to many" />
-                  </DropDownMenu>
-                </div>
+                {this.props.database === 'MongoDB' && (
+                  <div className='relation-options'>
+                    <p>RefType:</p>
+                    <DropDownMenu
+                      value={this.props.selectedField.relation.refType}
+                      style={style.customWidth}
+                      onChange={this.handleSelectChange.bind(null, 'relation.refType')} // access 'relation.refType' as name in handleChange
+                    >
+                      <MenuItem value='one to one' primaryText="one to one" />
+                      <MenuItem value='one to many' primaryText="one to many" />
+                      <MenuItem value='many to one' primaryText="many to one" />
+                      {/* <MenuItem value='many to many' primaryText="many to many" /> */}
+                    </DropDownMenu>
+                  </div>
+                )}
               </span>)}
               <RaisedButton
                 secondary={true}

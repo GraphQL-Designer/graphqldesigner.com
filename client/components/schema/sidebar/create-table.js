@@ -2,16 +2,32 @@ import React from 'react';
 import { connect } from 'react-redux';
 import * as actions from '../../../actions/actions.js';
 
-// components
-import Loader from '../../loader/index.js';
-
 // styles
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import Checkbox from 'material-ui/Checkbox';
 import KeyboardArrowLeft from 'material-ui/svg-icons/hardware/keyboard-arrow-left';
 import FlatButton from 'material-ui/FlatButton';
+import {List, ListItem} from 'material-ui/List';
+import Divider from 'material-ui/Divider';
+import Paper from 'material-ui/Paper';
 import './sidebar.css';
+
+const style = {
+  paper: {
+    display: 'flex',
+    marginTop: '5px',
+    marginBottom: '5px',
+    marginRight: '5px',
+    marginLeft: '5px',
+    backgroundColor: 'rgb(54, 58, 66)',
+    paddingLeft: '0px',
+    paddingRight: '0px'
+  },
+  relationDesc: {
+    fontSize: '12px'
+  }
+}
 
 const mapStateToProps = store => ({
   tables: store.schema.tables,
@@ -152,9 +168,38 @@ class CreateTable extends React.Component {
             style={{ marginTop: '25px' }}
           />
         </form>
-        {/* <div id='loader-container'>
-          <Loader/>
-        </div> */}
+        <br />
+        <br />
+        <div>
+          <Paper style={style.paper}>
+          <List style={{paddingLeft: '18px'}}>
+            <ListItem key='legend' disabled={true} style={{fontSize: '20px'}}><strong>Legend</strong></ListItem>
+            <Divider />
+            <ListItem key='legend-required' disabled={true}>Required : *</ListItem>
+            <ListItem key='unique' disabled={true}>Unique : !</ListItem>
+            <ListItem key='multiple-values' disabled={true}>Multiple Values : [ ]</ListItem>
+            <ListItem key='relation' disabled={true}
+              nestedItems={[
+                <ListItem key='relation-desc1' disabled={true} style={style.relationDesc}>
+                  Diagonal color on field (Name) indicates field is referenced by another field of that same color
+                </ListItem>,
+                <ListItem key='relation-pic' disabled={true}>
+                  <img src='./images/relation1.png'/>
+                </ListItem>,
+                <ListItem key='relation-desc2' disabled={true} style={style.relationDesc}>
+                  Colored field (AuthorId) indicates it has relation to another field of that same color
+                </ListItem>,
+                <ListItem key='relation-pic2' disabled={true}>
+                  <img src='./images/relation2.png'/>
+                </ListItem>
+              ]}
+            >
+              Relation :
+            </ListItem>
+          </List>
+
+          </Paper>
+        </div>
       </div>
     );
   }
@@ -164,3 +209,4 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps,
 )(CreateTable);
+
