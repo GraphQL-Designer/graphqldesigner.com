@@ -10,7 +10,7 @@ function parseGraphqlServer(data, database) {
   }
 
 if (database === 'MySQL') {
-  query += "import joinMonster from 'join-monster';\nimport knex from '../db/knex_pool.js\n";
+  query += "import joinMonster from 'join-monster';\nimport knex from '../db/knex_pool.js';\n";
 }
 
 query += `
@@ -176,7 +176,7 @@ function createSubQuery(field, data, database) {
 
   if (database === 'MySQL') {
       query += `\n\t\t\tsqlJoin(${data[field.tableNum].type.toLowerCase()}Table, ${refTypeName.toLowerCase()}Table) {`;
-      query += `\n\t\t\t\treturn \`\${${data[field.tableNum].type.toLowerCase()}Table}.${field.name} = \${${refTypeName.toLowerCase()}Table}.${refFieldName}\`\n`;
+      query += `\n\t\t\t\treturn \`\${${data[field.tableNum].type.toLowerCase()}Table}.${field.name} = \${${refTypeName.toLowerCase()}Table}.${refFieldName}\``;
   }
   return query += '\n\t\t\t}\n\t\t}';
 
@@ -267,7 +267,7 @@ function createSQLPrimaryKeyRootQuery(table, database) {
   }
 
   if (primaryKey) {
-    let query = `,\n\t\t${table.type.toLowerCase()}: {\n\t\t\ttype: ${table.type}Type,\n\t\t\targs: { ${buildArgs(primaryKeyValue)}},\n\t\t\twhere: (${table.type.toLowerCase()}Table, args, context) => {\n\t\t\t\tif ${buildParams(primaryKeyValue)} return\`${buildConstraints(primaryKeyValue)}\`\n\t\t\t},\n\t\t\tresolve: (parent, args, context, resolveInfo) => {\n\t\t\t\treturn joinMonster(resolveInfo, context, sql => {\n\t\t\t\t\treturn knex.raw(sql)\n\t\t\t\t})\n\t\t\t}\n\t\t}`
+    let query = `,\n\t\t${table.type.toLowerCase()}: {\n\t\t\ttype: ${table.type}Type,\n\t\t\targs: { ${buildArgs(primaryKeyValue)}},\n\t\t\twhere: (${table.type.toLowerCase()}Table, args, context) => {\n\t\t\t\tif ${buildParams(primaryKeyValue)} return \`${buildConstraints(primaryKeyValue)}\`\n\t\t\t},\n\t\t\tresolve: (parent, args, context, resolveInfo) => {\n\t\t\t\treturn joinMonster(resolveInfo, context, sql => {\n\t\t\t\t\treturn knex.raw(sql)\n\t\t\t\t})\n\t\t\t}\n\t\t}`
   
     return query;
   }
@@ -341,7 +341,7 @@ function createSQLPrimaryKeyRootQuery(table, database) {
 function buildGraphqlMutationQuery(table, database) {
   let string = ``;
   string += `${addMutation(table, database)}`
-  if (table.fields[0]) {
+  if (table.fields[0] && database === 'MongoDB' || database === 'MySQL') {
     string += `,\n${updateMutation(table, database)},\n`
     string += `${deleteMutation(table, database)}` 
   }
@@ -392,10 +392,9 @@ function updateMutation(table, database) {
   if (database === 'MongoDB') query += `return ${table.type}.findByIdAndUpdate(args.id, args);`;
 
   if (database === 'MySQL') {
-    const idFieldName = table.fields[0].name;
     const primaryKey = findPrimaryForSQL(table);
   
-    query += `return knex('${table.type.toLowerCase()}s').where('${primaryKey}', '=', '${args.primaryKey}').update(args)`
+    query += `return knex('${table.type.toLowerCase()}s').where('${primaryKey}', '=', args.${primaryKey}).update(args)`
   }
 
   return query += `\n${tab}${tab}${tab}}\n${tab}${tab}}`;
@@ -405,41 +404,34 @@ function updateMutation(table, database) {
 
     return query
   }
-
-  function findPrimaryForSQL(table) {
-    let primaryKeyName = [];
-    for (let prop in table.fields) {
-      if (table.fields[prop].primaryKey) {
-        primaryKeyName.push(`${table.fields[prop].name}`)
-      }
-    }
-    if (primaryKeyName.length === 1) return primaryKeyName[0];
-    if (primaryKeyName.length > 1) return primaryKeyName;
-    return //PRIMARY KEY NEEDED!!!;
-  }
 }
 
 function deleteMutation(table, database) {
-  const idFieldName = table.fields[0].name
+  let idFieldName = ''
+  if (database === 'MongoDB') idFieldName = table.fields[0].name;
+  if (database === 'MySQL') idFieldName = findPrimaryForSQL(table);
+
   let query = `${tab}${tab}delete${table.type}: {\n${tab}${tab}${tab}type: ${table.type}Type,\n${tab}${tab}${tab}args: { ${idFieldName}: { type: GraphQLID }},\n${tab}${tab}${tab}resolve(parent, args) {\n${tab}${tab}${tab}${tab}`
 
   if (database === 'MongoDB') query += `return ${table.type}.findByIdAndRemove(args.id);`
 
-  if (database === 'MySQL') {
-    const idFieldName = table.fields[0].name
-
-    query += `getConnection((err, con) => {\n`
-    query += `${tab}${tab}${tab}${tab}${tab}const sql = \`DELETE FROM ${table.type} WHERE ${idFieldName} = \${args.`
-    query += `${idFieldName}}\`;\n`
-    query += `${tab}${tab}${tab}${tab}${tab}con.query(sql, (err, result) => {\n`
-    query += `${tab}${tab}${tab}${tab}${tab}${tab}if (err) throw err;\n`
-    query += `${tab}${tab}${tab}${tab}${tab}${tab}con.release();\n`
-    query += `${tab}${tab}${tab}${tab}${tab}${tab}return result;\n`
-    query += `${tab}${tab}${tab}${tab}${tab}})\n`
-    query += `${tab}${tab}${tab}${tab}})`
+  if (database === 'MySQL') {  
+    query += `return knex('${table.type.toLowerCase()}s').where('${idFieldName}', '=', args.${idFieldName}).del()`
   }
 
   return query += `\n${tab}${tab}${tab}}\n${tab}${tab}}`;
+}
+
+function findPrimaryForSQL(table) {
+  let primaryKeyName = [];
+  for (let prop in table.fields) {
+    if (table.fields[prop].primaryKey) {
+      primaryKeyName.push(`${table.fields[prop].name}`)
+    }
+  }
+  if (primaryKeyName.length === 1) return primaryKeyName[0];
+  if (primaryKeyName.length > 1) return primaryKeyName[0];
+  return //PRIMARY KEY NEEDED!!!;
 }
 
 function checkForRequired(required, position) {
