@@ -40,8 +40,11 @@ Lastly export your code!
 ## Authors
 
 [James Sieu](https://www.linkedin.com/in/james-sieu/)[@jamessieu](https://github.com/jamessieu)
+
 [Patrick Slagle](https://www.linkedin.com/in/patrickslagle/)[@patrickslagle](https://github.com/patrickslagle)
+
 [Greg Shamalta](https://www.linkedin.com/in/gregory-shamalta/)[@grs83](https://github.com/grs83)
+
 [Tsion Adefres](https://www.linkedin.com/in/tadefres/)[@Tsionad](https://github.com/Tsionad)
 
 ## Running Your Own Version
