@@ -335,7 +335,7 @@ class TableOptions extends React.Component {
                   </DropDownMenu>
                 </div>
 
-               // {this.props.database === 'MongoDB' && (
+                {this.props.database === 'MongoDB' && (
                   <div className='relation-options'>
                     <p>RefType:</p>
                     <DropDownMenu
@@ -349,7 +349,7 @@ class TableOptions extends React.Component {
                       {/* <MenuItem value='many to many' primaryText="many to many" /> */}
                     </DropDownMenu>
                   </div>
-                //)}
+                )}
               </span>)}
               <RaisedButton
                 secondary={true}
