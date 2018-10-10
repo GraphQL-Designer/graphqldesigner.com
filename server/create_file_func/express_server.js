@@ -1,20 +1,22 @@
 function buildExpressServer(database) {
-let query = `const express = require('express');
+  let query = `
+require('dotenv').config();
+const express = require('express');
 const graphqlHTTP = require('express-graphql');
 const schema = require('./graphql-schema');
 const path = require('path');
 const app = express();
 `
 
-if (database === 'MongoDB') {
-  query += `
+  if (database === 'MongoDB') {
+    query += `
 const mongoose = require('mongoose');
 
-mongoose.connect('Your Database Here!');
+mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true }, () => console.log('connected to database'));
 `;
-}
+  }
 
-query += `
+  query += `
 app.use(express.static(path.join(__dirname, './public')))
 
 app.use('/graphql', graphqlHTTP({
