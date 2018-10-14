@@ -49,7 +49,6 @@ class Welcome extends React.Component {
       fontSize: '1.2em',
       color: 'white',
     };
-
     return (
       <div>
         <Dialog
@@ -75,9 +74,9 @@ class Welcome extends React.Component {
             <RaisedButton onClick={this.handleDatabaseClick} buttonStyle={styles}>
               MySQL
             </RaisedButton>
-            {/* <RaisedButton onClick={this.handleDatabaseClick} buttonStyle={styles}>
+            <RaisedButton onClick={this.handleDatabaseClick} buttonStyle={styles}>
               PostgreSQL
-            </RaisedButton> */}
+            </RaisedButton>
           </div>
         </Dialog>
       </div>
