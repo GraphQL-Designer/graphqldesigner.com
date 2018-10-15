@@ -20,6 +20,7 @@ const {
   GraphQLID,
   GraphQLString, 
   GraphQLInt, 
+  GraphQLBoolean,
   GraphQLList,
   GraphQLNonNull
 } = graphql;
@@ -226,7 +227,7 @@ function createFindAllRootQuery(table, database) {
 
 function createFindByIdQuery(table, database) {
   const idFieldName = table.fields[0].name
-  let query = `,\n${tab}${tab}${table.type.toLowerCase()}: {\n${tab}${tab}${tab}type: ${table.type}Type,\n${tab}${tab}${tab}args: { ${idFieldName}: { type: GraphQLID }},\n${tab}${tab}${tab}resolve(parent, args) {\n${tab}${tab}${tab}${tab}`;
+  let query = `,\n${tab}${tab}${table.type.toLowerCase()}: {\n${tab}${tab}${tab}type: ${table.type}Type,\n${tab}${tab}${tab}args: { ${idFieldName}: { type: ${tableTypeToGraphqlType(table.fields[0].type) }},\n${tab}${tab}${tab}resolve(parent, args) {\n${tab}${tab}${tab}${tab}`;
 
   if (database === 'MongoDB') {
     query += `return ${table.type}.findById(args.id);`
@@ -328,7 +329,7 @@ function updateMutation(table, database) {
 
 function deleteMutation(table, database) {
   const idFieldName = table.fields[0].name
-  let query = `${tab}${tab}delete${table.type}: {\n${tab}${tab}${tab}type: ${table.type}Type,\n${tab}${tab}${tab}args: { ${idFieldName}: { type: GraphQLID }},\n${tab}${tab}${tab}resolve(parent, args) {\n${tab}${tab}${tab}${tab}`
+  let query = `${tab}${tab}delete${table.type}: {\n${tab}${tab}${tab}type: ${table.type}Type,\n${tab}${tab}${tab}args: { ${idFieldName}: { type: ${tableTypeToGraphqlType(table.fields[0].type) }},\n${tab}${tab}${tab}resolve(parent, args) {\n${tab}${tab}${tab}${tab}`
 
   if (database === 'MongoDB') query += `return ${table.type}.findByIdAndRemove(args.id);`
 

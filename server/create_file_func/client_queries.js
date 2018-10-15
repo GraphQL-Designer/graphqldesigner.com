@@ -47,8 +47,8 @@ function toTitleCase(refTypeName) {
 
 function buildClientQueryById(table) {
   let string = `const query${table.type}ById = gql\`\n`
-  string += `${tab}query(${table.type}: ID) {\n`
-  string += `${tab}${tab}${table.type}(${table.type}: ${table.type}) {\n`;
+  string += `${tab}query($${table.type}: ${table.fields[0].type}!) {\n`
+  string += `${tab}${tab}${table.type}(${table.type}: $${table.type}) {\n`;
   
   for (const fieldId in table.fields) {
     string += `${tab}${tab}${tab}${table.fields[fieldId].name}\n`;
