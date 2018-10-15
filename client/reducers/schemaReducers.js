@@ -97,7 +97,7 @@ const reducers = (state = initialState, action) => {
 
   const mongoTable = Object.assign({}, tableReset, {
     fields: {
-      0: Object.assign({}, idDefault, { tableNum: state.tableIndex }),
+      0: Object.assign({}, idDefault, { type: 'String' }, { tableNum: state.tableIndex }),
     },
   });
 

@@ -44,29 +44,37 @@ function buildMutationParams(table, mutationType) {
 
   let firstLoop = true;
   for (const fieldId in table.fields) {
-    if (fieldId === 0 && mutationType === 'update') {
+    // if there's an unique id and creating an update mutation, then take in ID
+    if (fieldId === '0' && mutationType === 'update') {
       if (!firstLoop) query += ', ';
       firstLoop = false;
 
-      query += `$${table.fields[fieldId].name}: ID!`;
+      query += `$${table.fields[fieldId].name}: ${table.fields[fieldId].type}!`;
     }
     if (fieldId !== '0') {
       if (!firstLoop) query += ', ';
       firstLoop = false;
 
       query += `$${table.fields[fieldId].name}: ${checkForMultipleValues(table.fields[fieldId].multipleValues, 'front')}`;
-      query += `${table.fields[fieldId].type}${checkForMultipleValues(table.fields[fieldId].multipleValues, 'back')}`;
+      query += `${checkFieldType(table.fields[fieldId].type)}${checkForMultipleValues(table.fields[fieldId].multipleValues, 'back')}`;
       query += `${checkForRequired(table.fields[fieldId].required)}`;
     }
   }
   return query += `) {\n${tab}`;
 }
 
+// in case the inputed field type is Number, turn to Int to work with GraphQL
+function checkFieldType(fieldType) {
+  if (fieldType === 'Number') return 'Int'
+  else return fieldType
+}
+
+
 function buildDeleteMutationParams(table) {
   const idName = table.fields[0].name;
   let query = `const delete${table.type}Mutation = gpq\`\n`
-     query += `${tab}mutation($${idName}: ID!){\n`
-     query += `${tab}${tab}delete${table.type}(${idName}: $${idName}){\n`
+    query += `${tab}mutation($${idName}: ${table.fields[0].type}!){\n`
+    query += `${tab}${tab}delete${table.type}(${idName}: $${idName}){\n`
   return query; 
 }
 
@@ -92,6 +100,12 @@ function buildTypeParams(table, mutationType) {
 
   let firstLoop = true;
   for (const fieldId in table.fields) {
+    // if there's an unique id and creating an update mutation, then take in ID
+    if (fieldId === '0' && mutationType === 'update') {
+      if (!firstLoop) query += ', ';
+      firstLoop = false;
+      query += `${table.fields[fieldId].name}: $${table.fields[fieldId].name}`;
+    }
     if (fieldId !== '0') {
       if (!firstLoop) query += ', ';
       firstLoop = false;

@@ -335,21 +335,19 @@ class TableOptions extends React.Component {
                   </DropDownMenu>
                 </div>
 
-                {this.props.database === 'MongoDB' && (
-                  <div className='relation-options'>
-                    <p>RefType:</p>
-                    <DropDownMenu
-                      value={this.props.selectedField.relation.refType}
-                      style={style.customWidth}
-                      onChange={this.handleSelectChange.bind(null, 'relation.refType')} // access 'relation.refType' as name in handleChange
-                    >
-                      <MenuItem value='one to one' primaryText="one to one" />
-                      <MenuItem value='one to many' primaryText="one to many" />
-                      <MenuItem value='many to one' primaryText="many to one" />
-                      {/* <MenuItem value='many to many' primaryText="many to many" /> */}
-                    </DropDownMenu>
-                  </div>
-                )}
+                <div className='relation-options'>
+                  <p>RefType:</p>
+                  <DropDownMenu
+                    value={this.props.selectedField.relation.refType}
+                    style={style.customWidth}
+                    onChange={this.handleSelectChange.bind(null, 'relation.refType')} // access 'relation.refType' as name in handleChange
+                  >
+                    <MenuItem value='one to one' primaryText="one to one" />
+                    <MenuItem value='one to many' primaryText="one to many" />
+                    <MenuItem value='many to one' primaryText="many to one" />
+                    {/* <MenuItem value='many to many' primaryText="many to many" /> */}
+                  </DropDownMenu>
+                </div>
               </span>)}
               <RaisedButton
                 secondary={true}
@@ -359,7 +357,6 @@ class TableOptions extends React.Component {
                 style={{ marginTop: '25px' }}
               />
             </form>
-            {/* <div style={{ width: '100%', height: '40px' }} /> */}
           </div>
         )}
       </div>
