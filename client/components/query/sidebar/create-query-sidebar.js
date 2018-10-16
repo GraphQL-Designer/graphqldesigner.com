@@ -51,22 +51,22 @@ const style = {
 };
 
 const mapStateToProps = store => ({
-  tables: store.schema.tables,
-  newQuery: store.query.newQuery,
-  subQuery: store.query.subQuery,
-  newSubQuerySelected: store.query.newSubQuerySelected,
-  subQueryIndex: store.query.subQueryIndex,
+  // tables: store.schema.tables,
+  // newQuery: store.query.newQuery,
+  // subQuery: store.query.subQuery,
+  // newSubQuerySelected: store.query.newSubQuerySelected,
+  // subQueryIndex: store.query.subQueryIndex,
 });
 
 const mapDispatchToProps = dispatch => ({
-  createQuery: query => dispatch(actions.createQuery(query)),
-  handleNewQueryChange: field => dispatch(actions.handleNewQueryChange(field)),
+  // createQuery: query => dispatch(actions.createQuery(query)),
+  // handleNewQueryChange: field => dispatch(actions.handleNewQueryChange(field)),
   // createReturnFields: returnFields => dispatch(actions.createReturnFields(returnFields)),
-  handleReturnValues: returnValues => dispatch(actions.handleReturnValues(returnValues)),
-  handleSubQuerySelector: tableFieldIndexes => dispatch(actions.handleSubQuerySelector(tableFieldIndexes)),
-  handleNewQueryName: name => dispatch(actions.handleNewQueryName(name)),
-  handleNewSubQueryToggle: field => dispatch(actions.handleNewSubQueryToggle(field)),
-  submitSubQueryHandler: subQuery => dispatch(actions.submitSubQueryHandler(subQuery)),
+  // handleReturnValues: returnValues => dispatch(actions.handleReturnValues(returnValues)),
+  // handleSubQuerySelector: tableFieldIndexes => dispatch(actions.handleSubQuerySelector(tableFieldIndexes)),
+  // handleNewQueryName: name => dispatch(actions.handleNewQueryName(name)),
+  // handleNewSubQueryToggle: field => dispatch(actions.handleNewSubQueryToggle(field)),
+  // submitSubQueryHandler: subQuery => dispatch(actions.submitSubQueryHandler(subQuery)),
 });
 
 class CreateQuerySidebar extends Component {
