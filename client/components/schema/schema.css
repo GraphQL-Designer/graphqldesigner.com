@@ -9,13 +9,6 @@
   position: relative;
 }
 
-.wallpaper {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-}
-
-
 #sidebar-container {
   position: relative;
   background-color:  rgb(44,48,56);
@@ -83,6 +76,19 @@
 .delete-button {
   position: absolute;
   right: 5px;
+}
+
+.table-components-container{
+  display: flex; 
+  background-color: rgb(54, 58, 66);
+  justify-content: flex-start; 
+  align-items: flex-start; 
+  flex-wrap: wrap; 
+  width: 100%;
+  position: relative;
+  height: auto; 
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .addField {

@@ -30,7 +30,7 @@ const CodeDBSchemaContainer = (props) => {
         schema += createSchemaField(table.fields[fieldId]);
       }
     }
-    schema += `${enter}});${enter}${enter}module.exports = mongoose.model("${table.type}",${table.type}Schema)`;
+    schema += `${enter}});${enter}${enter}module.exports = mongoose.model("${table.type}", ${table.type.toLowerCase()}Schema)`;
 
     return schema;
   }
@@ -61,8 +61,10 @@ const CodeDBSchemaContainer = (props) => {
   }
   for (const tableId in props.tables) {
     schemaCode.push(
-      <pre>
+      <pre key={'mongoSchema' + tableId}>
         {parseMongoschema(props.tables[tableId])};
+        {enter}
+        {enter}
         <hr/>
       </pre>
     )

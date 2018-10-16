@@ -4,8 +4,8 @@ import { connect } from 'react-redux';
 import './query.css';
 
 const mapStateToProps = store => ({
-  tables: store.schema.tables,
-  queries: store.query.queries
+  // tables: store.schema.tables,
+  // queries: store.query.queries
 })
 
 const CustomizedQueryContainer = (props) => {

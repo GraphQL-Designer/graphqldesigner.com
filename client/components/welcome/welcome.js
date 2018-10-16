@@ -49,7 +49,6 @@ class Welcome extends React.Component {
       fontSize: '1.2em',
       color: 'white',
     };
-
     return (
       <div>
         <Dialog
@@ -77,7 +76,7 @@ class Welcome extends React.Component {
             </RaisedButton>
             <RaisedButton onClick={this.handleDatabaseClick} buttonStyle={styles}>
               PostgreSQL
-              </RaisedButton>
+            </RaisedButton>
           </div>
         </Dialog>
       </div>

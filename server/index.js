@@ -31,14 +31,13 @@ app.post('/write-files', (req, res) => {
   const data = req.body; // data.data is state.tables from schemaReducer. See Navbar component
   const dateStamp = Date.now();
 
-  buildDirectories(dateStamp, () => {
 
+  buildDirectories(dateStamp, () => {
     fs.writeFileSync(path.join(PATH, `build-files${dateStamp}/readme.md`), createReadMe());
     fs.writeFileSync(path.join(PATH, `build-files${dateStamp}/index.js`), buildExpressServer(data.database));
     fs.writeFileSync(path.join(PATH, `build-files${dateStamp}/server/graphql-schema/index.js`), parseGraphqlServer(data.data, data.database));
 
     buildClientQueries(data.data, dateStamp, () => {
-
       if (data.database === 'MongoDB') buildForMongo(data.data, dateStamp);
       if (data.database === 'MySQL') buildForMySQL(data.data, dateStamp);
 
@@ -57,7 +56,7 @@ app.post('/write-files', (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log('Server Listening!');
+  console.log(`Server Listening to ${PORT}!`);
 });
 
 function buildDirectories(dateStamp, cb) {
@@ -78,21 +77,17 @@ function buildClientQueries(data, dateStamp, cb) {
   return cb();
 }
 
-function buildForMongo(data, dateStamp, cb) {
+function buildForMongo(data, dateStamp) {
   const indexes = Object.keys(data);
   
   indexes.forEach(index => {
-    parseMongoschema(data[index], query => {
-      fs.writeFileSync(path.join(PATH, `build-files${dateStamp}/server/db/${data[index].type.toLowerCase()}.js`), query);
-      });
-    });
-  return cb();
+    fs.writeFileSync(path.join(PATH, `build-files${dateStamp}/server/db/${data[index].type.toLowerCase()}.js`), parseMongoschema(data[index]));
+  });
 }
 
-function buildForMySQL(data, dateStamp, cb) {
-  mysqlPool()
-  fs.writeFileSync(path.join(PATH, `build-files${dateStamp}/server/db/table-build-scripts.js`), parseMySQLTables(data));
-  return cb();
+function buildForMySQL(data, dateStamp) {
+  fs.writeFileSync(path.join(PATH, `build-files${dateStamp}/server/db/mysql_pool.js`), mysqlPool());
+  fs.writeFileSync(path.join(PATH, `build-files${dateStamp}/server/db/mysql_scripts.md`), parseMySQLTables(data));
 }
 
 function deleteTempFiles(database, data, dateStamp, cb) {
@@ -101,8 +96,14 @@ function deleteTempFiles(database, data, dateStamp, cb) {
   fs.unlinkSync(path.join(PATH, `build-files${dateStamp}/client/graphql/queries/index.js`));
   fs.unlinkSync(path.join(PATH, `build-files${dateStamp}/client/graphql/mutations/index.js`));
   fs.unlinkSync(path.join(PATH, `build-files${dateStamp}/server/graphql-schema/index.js`));
+  fs.unlinkSync(path.join(PATH, `graphql${dateStamp}.zip`));
 
-  if (database = 'MongoDB') {
+  if (database === 'MySQL') {
+    fs.unlinkSync(path.join(PATH, `build-files${dateStamp}/server/db/mysql_pool.js`));
+    fs.unlinkSync(path.join(PATH, `build-files${dateStamp}/server/db/mysql_scripts.md`));
+  }
+
+  if (database ==='MongoDB') {
     const indexes = Object.keys(data);
 
     function step(i) {
@@ -111,13 +112,12 @@ function deleteTempFiles(database, data, dateStamp, cb) {
         step(i + 1);
 
       } else {
-
-        fs.unlinkSync(path.join(PATH, `graphql${dateStamp}.zip`));
         return cb();
       }
     }
     step(0);
   }
+  return cb()
 }
 
 function deleteTempFolders(dateStamp, cb) {
