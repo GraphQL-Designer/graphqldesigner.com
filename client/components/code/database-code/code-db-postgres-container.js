@@ -20,7 +20,7 @@ const CodeDBPostgresSchemaContainer = (props) => {
   function parsePostgresSchema(table) {
     if (!table) return ``;
 
-    createTablesCode += `CREATE TABLE "${table.type}" (${enter}`;
+    createTablesCode += `${enter}CREATE TABLE "${table.type}" (${enter}`;
 
     // create code for each field
     for (const fieldId in table.fields) {
@@ -36,7 +36,7 @@ const CodeDBPostgresSchemaContainer = (props) => {
     // if table has a primary key
     if (primaryKey.length > 0) {
       createTablesCode += `,${enter}${tab}${tab}CONSTRAINT ${table.type}_pk PRIMARY KEY (`;
-      primaryKey.forEach((key, i) => {``
+      primaryKey.forEach((key, i) => {
         if (i === primaryKey.length - 1) {
           createTablesCode += `"${key}")`;
         } else {
@@ -49,8 +49,9 @@ const CodeDBPostgresSchemaContainer = (props) => {
     }
     // reset primaryKey to empty so primary keys don't slip into the next table
     primaryKey = [];
+    createTablesCode += `);${enter}${enter}`;
   }
-  
+
   function createSchemaField(field) {
     let fieldCode = ``;
     fieldCode += `${tab}${tab}"${field.name}"${tab}${checkDataType(field.type, field.autoIncrement)}`;
@@ -128,16 +129,16 @@ const CodeDBPostgresSchemaContainer = (props) => {
       const relatedFieldId = relationInfo.relatedField;
       const relatedField = props.tables[relatedTableId].fields[relatedFieldId].name;
       createTablesCode += `${enter}ALTER TABLE "${tableMakingRelation}" ADD CONSTRAINT "${tableMakingRelation}_fk${relationCount}" FOREIGN KEY ("${fieldMakingRelation}") REFERENCES "${relatedTable}"("${relatedField}");${enter}`;
-
     });
   }
+
 
   return (
     <div id="code-container-database">
       <h4 className='codeHeader'>PostgreSQL Create Scripts</h4>
       <hr/>
       <pre>
-        {createTablesCode}
+        {PostgreSQL}
       </pre>
       <pre id='column-filler-for-scroll'></pre>
     </div>
