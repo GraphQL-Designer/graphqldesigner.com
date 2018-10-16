@@ -1,7 +1,6 @@
 #navbar{
   background-color: rgb(50,54,60);
   width: 100%;
-  /* min-width: 750px;  */
   height: 50px; 
   display: flex; 
   flex-direction: row; 
@@ -9,9 +8,18 @@
   align-items: center; 
 }
 
+#nav-left{
+  height: 85%;
+  padding: 0px 10px; 
+  display: flex; 
+  align-items: center; 
+}
+
+
 #header-name {
   color: white; 
-  padding: 0px 0px 0px 10px
+  padding: 0px 0px 0px 10px;
+  color: rgb(255,66,128); 
 }
 
 .overlay {
