@@ -3,13 +3,11 @@
 
 [GraphQL Designer](https://www.graphqldesigner.com/) is prototyping tool to develop full-stack GraphQL applications. 
 
-With a few simple inputs, GraphQL Designer auto generates code for download to start and implement your new application, including GraphQL root queries, schemas, mutations, and client queries. Also downloaded are the NoSQL schemas or SQL build scripts, and server file. 
+With a few simple inputs, GraphQL Designer auto generates code for download, to start and implement your new application including GraphQL root queries, schemas, mutations, and client queries. Also available for download are the NoSQL schemas or SQL build scripts, and a server file. 
 
 ![](graphql.gif)
 
 ## Background
-
-GraphQL is an emerging open source data query and manipulation language that can be a preferred method over RESTful architecture, fulfilling queries with less API calls, and limiting over-fetching and under-fetching of data.  Although GraphQL is a powerful query language, starting a new GraphQL application can be time consuming due to its redundant structure. This repetitive code can make developing a GraphQL application more intuitive, but also means for every GraphQL type created, a large amount of additional code is required.
 GraphQL is an emerging open source data query and manipulation language that can be a preferred method over RESTful architecture, fulfilling queries with less API calls, and limiting over-fetching and under-fetching of data.  Although GraphQL is a powerful query language, starting a new GraphQL application can be time consuming due to its redundant structure. This repetitive code can make developing a GraphQL application more intuitive, but this could also mean that for every GraphQL type created, a large amount of additional code would be required.
 
 For example, adding a new GraphQL type "User" with the fields "id", "age", and "messages" may require the following:
@@ -21,15 +19,15 @@ For example, adding a new GraphQL type "User" with the fields "id", "age", and "
 - Client queries for User and the particular fields
 - A NoSQL schema or SQL create script for User
 
-Notice that all of these items revolve around similar information? User and its fields: id, age, and messages.
+You will notice that all these items revolve around a similar piece of information - User and its fields: id, age, and messages.
 
-GraphQL Designer solves this repetition by requiring the developer just to enter the information once. Once a GraphQL type is created on our platform, root queries, mutations, client queries, and a NoSQL schema or SQL create script is auto generated and ready for download. After download, the code can be simply dragged and dropped into your code base or favorite text editor!
+GraphQL Designer solves this repetition by requiring the developer just to enter the information once. Once a GraphQL type is created on this platform, root queries, mutations, client queries, and a NoSQL schema or SQL create script is auto generated and ready for download. After download, the code can be simply dragged and dropped into your code base or favorite text editor!
 
 ## How To Use 
 
 Visit [GraphQL Designer](https://www.graphqldesigner.com/) and choose a database model to implement (MongoDB or MySQL). Based on the database selected, our application will generate the code for your database schemas or build scripts and GraphQL resolvers.
 
-Next create a table for every GraphQL type your application will need. Each created table will also represent the structure of your NoSQL schema or SQL table. Each created table in our application can have several fields, which not only becomes a GraphQL field, but a SQL column or NoSQL key as well.
+Next create a table for every GraphQL type your application will need. Each table created will also represent the structure of your NoSQL schema or SQL table. Each created table in our application can have several fields, which not only becomes a GraphQL field, but a SQL column or NoSQL key as well.
 
 ![](Screenshots/Screenshot-Schema.png)
 
@@ -54,5 +52,5 @@ Lastly export your code!
 
 Use npm run dev for hot module reloading 
 
-**To start the server, run: npm install, npm run pack and then npm run server.
+To start the server, run 'npm install', 'npm run pack' and then 'npm run server'.
 
