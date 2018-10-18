@@ -33,6 +33,7 @@ const {
   GraphQLID,
   GraphQLString, 
   GraphQLInt, 
+  GraphQLBoolean,
   GraphQLList,
   GraphQLNonNull
 } = graphql;
@@ -255,7 +256,7 @@ const {
 
     let query = `,${enter}${tab}${tab}${table.type.toLowerCase()}: {${enter}`
     query += `${tab}${tab}${tab}type: ${table.type}Type,${enter}`
-    query += `${tab}${tab}${tab}args: { ${idFieldName}: { type: GraphQLID }},${enter}`
+    query += `${tab}${tab}${tab}args: { ${idFieldName}: { type: ${tableTypeToGraphqlType(table.fields[0].type)} }},${enter}`
     query += `${tab}${tab}${tab}resolve(parent, args) {${enter}`
     query += `${tab}${tab}${tab}${tab}`;
   
@@ -362,7 +363,7 @@ const {
 
     let query = `${tab}${tab}delete${table.type}: {${enter}`
     query += `${tab}${tab}${tab}type: ${table.type}Type,${enter}`
-    query += `${tab}${tab}${tab}args: { ${idFieldName}: { type: GraphQLID }},${enter}`
+    query += `${tab}${tab}${tab}args: { ${idFieldName}: { type: ${tableTypeToGraphqlType(table.fields[0].type)} }},${enter}`
     query += `${tab}${tab}${tab}resolve(parent, args) {${enter}`
     query += `${tab}${tab}${tab}${tab}`
   

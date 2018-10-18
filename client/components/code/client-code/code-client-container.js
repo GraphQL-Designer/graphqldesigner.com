@@ -5,9 +5,6 @@ import { connect } from 'react-redux';
 import '../code.css';
 
 const mapStateToProps = store => ({
-  // queryName: store.query.queryName,
-  // queryField: store.query.graphQLTypeOptions,
-  // queryType: store.query.graphQLSearchOptions
   tables: store.schema.tables,
 });
 
@@ -89,8 +86,8 @@ const CodeClientContainer = (props) => {
 
   function buildClientQueryById(table) {
     let string = `const query${table.type}ById = gql\`${enter}`
-    string += `${tab}query(${table.type}: ID) {${enter}`
-    string += `${tab}${tab}${table.type}(${table.type}: ${table.type}) {${enter}`;
+    string += `${tab}query($${table.type}: ${table.fields[0].type}!) {${enter}`
+    string += `${tab}${tab}${table.type}(${table.type}: $${table.type}) {${enter}`;
 
     for (const fieldId in table.fields) {
       string += `${tab}${tab}${tab}${table.fields[fieldId].name}${enter}`;
@@ -107,28 +104,35 @@ const CodeClientContainer = (props) => {
 
   let firstLoop = true;
   for (const fieldId in table.fields) {
-    if (fieldId === 0 && mutationType === 'update') {
+    // if there's an unique id and creating an update mutation, then take in ID
+    if (fieldId === '0' && mutationType === 'update') {
       if (!firstLoop) query += ', ';
       firstLoop = false;
 
-      query += `$${table.fields[fieldId].name}: ID!`;
+      query += `$${table.fields[fieldId].name}: ${table.fields[fieldId].type}!`;
     }
     if (fieldId !== '0') {
       if (!firstLoop) query += ', ';
       firstLoop = false;
 
       query += `$${table.fields[fieldId].name}: ${checkForMultipleValues(table.fields[fieldId].multipleValues, 'front')}`;
-      query += `${table.fields[fieldId].type}${checkForMultipleValues(table.fields[fieldId].multipleValues, 'back')}`;
+      query += `${checkFieldType(table.fields[fieldId].type)}${checkForMultipleValues(table.fields[fieldId].multipleValues, 'back')}`;
       query += `${checkForRequired(table.fields[fieldId].required)}`;
     }
   }
   return query += `) {${enter}${tab}`;
 }
 
+// in case the inputed field type is Number, turn to Int to work with GraphQL
+function checkFieldType(fieldType) {
+  if (fieldType === 'Number') return 'Int'
+  else return fieldType
+}
+
 function buildDeleteMutationParams(table) {
   const idName = table.fields[0].name;
   let query = `const delete${table.type}Mutation = gpq\`${enter}`
-     query += `${tab}mutation($${idName}: ID!){${enter}`
+     query += `${tab}mutation($${idName}: ${table.fields[0].type}!){${enter}`
      query += `${tab}${tab}delete${table.type}(${idName}: $${idName}){${enter}`
   return query; 
 }
@@ -155,6 +159,12 @@ function buildTypeParams(table, mutationType) {
 
   let firstLoop = true;
   for (const fieldId in table.fields) {
+    // if there's an unique id and creating an update mutation, then take in ID
+    if (fieldId === '0' && mutationType === 'update') {
+     if (!firstLoop) query += ', ';
+     firstLoop = false;
+     query += `${table.fields[fieldId].name}: $${table.fields[fieldId].name}`;
+    }
     if (fieldId !== '0') {
       if (!firstLoop) query += ', ';
       firstLoop = false;

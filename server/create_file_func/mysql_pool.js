@@ -13,10 +13,10 @@ database: "mydb"
 })
 
 const getConnection = function(callback) {
-    pool.getConnection(function(err, con) {
-        if (err) return callback(err);
-        callback(err, con);
-    });
+  pool.getConnection(function(err, con) {
+    if (err) return callback(err);
+    callback(err, con);
+  });
 };
 
 module.exports = getConnection;

@@ -1,3 +1,5 @@
+const tab = `  `
+
 function parseClientMutations(tables) {
   let query = "import { gql } from \'apollo-boost\';\n\n";
   const exportNames = [];
@@ -27,9 +29,9 @@ function parseClientMutations(tables) {
   let endString = `export {\n`;
   exportNames.forEach((name, i) => {
     if (i === 0) {
-      endString += `\t${name},\n`;
+      endString += `${tab}${name},\n`;
     } else {
-      endString += `\t${name},\n`;
+      endString += `${tab}${name},\n`;
     }
   });
 
@@ -38,33 +40,41 @@ function parseClientMutations(tables) {
 
 // builds params for either add or update mutations
 function buildMutationParams(table, mutationType) {
-  let query = `const ${mutationType}${table.type}Mutation = gql\`\n\tmutation(`;
+  let query = `const ${mutationType}${table.type}Mutation = gql\`\n${tab}mutation(`;
 
   let firstLoop = true;
   for (const fieldId in table.fields) {
-    if (fieldId === 0 && mutationType === 'update') {
+    // if there's an unique id and creating an update mutation, then take in ID
+    if (fieldId === '0' && mutationType === 'update') {
       if (!firstLoop) query += ', ';
       firstLoop = false;
 
-      query += `$${table.fields[fieldId].name}: ID!`;
+      query += `$${table.fields[fieldId].name}: ${table.fields[fieldId].type}!`;
     }
     if (fieldId !== '0') {
       if (!firstLoop) query += ', ';
       firstLoop = false;
 
       query += `$${table.fields[fieldId].name}: ${checkForMultipleValues(table.fields[fieldId].multipleValues, 'front')}`;
-      query += `${table.fields[fieldId].type}${checkForMultipleValues(table.fields[fieldId].multipleValues, 'back')}`;
+      query += `${checkFieldType(table.fields[fieldId].type)}${checkForMultipleValues(table.fields[fieldId].multipleValues, 'back')}`;
       query += `${checkForRequired(table.fields[fieldId].required)}`;
     }
   }
-  return query += `) {\n\t`;
+  return query += `) {\n${tab}`;
 }
+
+// in case the inputed field type is Number, turn to Int to work with GraphQL
+function checkFieldType(fieldType) {
+  if (fieldType === 'Number') return 'Int'
+  else return fieldType
+}
+
 
 function buildDeleteMutationParams(table) {
   const idName = table.fields[0].name;
   let query = `const delete${table.type}Mutation = gpq\`\n`
-     query += `\tmutation($${idName}: ID!){\n`
-     query += `\t\tdelete${table.type}(${idName}: $${idName}){\n`
+    query += `${tab}mutation($${idName}: ${table.fields[0].type}!){\n`
+    query += `${tab}${tab}delete${table.type}(${idName}: $${idName}){\n`
   return query; 
 }
 
@@ -86,10 +96,16 @@ function checkForRequired(required) {
 }
 
 function buildTypeParams(table, mutationType) {
-  let query = `\t${mutationType}${table.type}(`;
+  let query = `${tab}${mutationType}${table.type}(`;
 
   let firstLoop = true;
   for (const fieldId in table.fields) {
+    // if there's an unique id and creating an update mutation, then take in ID
+    if (fieldId === '0' && mutationType === 'update') {
+      if (!firstLoop) query += ', ';
+      firstLoop = false;
+      query += `${table.fields[fieldId].name}: $${table.fields[fieldId].name}`;
+    }
     if (fieldId !== '0') {
       if (!firstLoop) query += ', ';
       firstLoop = false;
@@ -104,10 +120,10 @@ function buildReturnValues(table) {
   let query = '';
 
   for (const fieldId in table.fields) {
-    query += `\t\t\t${table.fields[fieldId].name}\n`;
+    query += `${tab}${tab}${tab}${table.fields[fieldId].name}\n`;
   }
 
-  return query += `\t\t}\n\t}\n\`\n\n`;
+  return query += `${tab}${tab}}\n${tab}}\n\`\n\n`;
 }
 
 module.exports = parseClientMutations;

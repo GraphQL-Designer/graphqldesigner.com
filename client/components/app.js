@@ -24,7 +24,7 @@ const style = {
 import MainNav from './navbar/navbar';
 import Welcome from './welcome/welcome.js';
 import SchemaApp from './schema/schema-app.js';
-import QueryApp from './query/query-app.js';
+//import QueryApp from './query/query-app.js';
 import CodeApp from './code/code-app.js';
 
 const mapStateToProps = store => ({
