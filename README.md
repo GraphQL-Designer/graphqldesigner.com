@@ -1,9 +1,9 @@
 
 # GraphQL Designer ![alt text](https://travis-ci.org/GraphQL-Designer/graphqldesigner.com.svg?branch=dev)
 
-[GraphQL Designer](https://www.graphqldesigner.com/) is prototyping tool to develop full-stack GraphQL applications. 
+[GraphQL Designer](https://www.graphqldesigner.com/) is prototyping tool to develop full-stack GraphQL applications.
 
-With a few simple inputs, GraphQL Designer auto generates code for download, to start and implement your new application including GraphQL root queries, schemas, mutations, and client queries. Also available for download are the NoSQL schemas or SQL build scripts, and a server file. 
+With a few simple inputs, GraphQL Designer auto generates code for download, to start and implement your new application including GraphQL root queries, schemas, mutations, and client queries. Also available for download are the NoSQL schemas or SQL build scripts, and a server file.
 
 ![](graphql.gif)
 
@@ -23,7 +23,7 @@ You will notice that all these items revolve around a similar piece of informati
 
 GraphQL Designer solves this repetition by requiring the developer just to enter the information once. Once a GraphQL type is created on this platform, root queries, mutations, client queries, and a NoSQL schema or SQL create script is auto generated and ready for download. After download, the code can be simply dragged and dropped into your code base or favorite text editor!
 
-## How To Use 
+## How To Use
 
 Visit [GraphQL Designer](https://www.graphqldesigner.com/) and choose a database model to implement (MongoDB or MySQL). Based on the database selected, our application will generate the code for your database schemas or build scripts and GraphQL resolvers.
 
@@ -35,7 +35,7 @@ The fields can be customized to meet your desired database structure, and using 
 
 ![](Screenshots/Screenshot-Query.png)
 
-Lastly export your code! 
+Lastly export your code!
 
 ## Authors
 
@@ -50,7 +50,12 @@ Lastly export your code!
 ## Running Your Own Version
 
 
-Use npm run dev for hot module reloading 
+Use `npm run dev` for hot module reloading
 
-To start the server, run 'npm install', 'npm run pack' and then 'npm run server'.
+To start the server:
+```
+npm install
+npm run pack
+npm run server
+```
 
