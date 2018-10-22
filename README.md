@@ -8,6 +8,7 @@ With a few simple inputs, GraphQL Designer auto generates code for download, to 
 ![](graphql.gif)
 
 ## Background
+
 GraphQL is an emerging open source data query and manipulation language that can be a preferred method over RESTful architecture, fulfilling queries with less API calls, and limiting over-fetching and under-fetching of data.  Although GraphQL is a powerful query language, starting a new GraphQL application can be time consuming due to its redundant structure. This repetitive code can make developing a GraphQL application more intuitive, but this could also mean that for every GraphQL type created, a large amount of additional code would be required.
 
 For example, adding a new GraphQL type "User" with the fields "id", "age", and "messages" may require the following:
@@ -49,7 +50,6 @@ Lastly export your code!
 
 ## Running Your Own Version
 
-
 Use `npm run dev` for hot module reloading
 
 To start the server:
@@ -58,3 +58,7 @@ npm install
 npm run pack
 npm run server
 ```
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE.md](https://github.com/GraphQL-Designer/graphqldesigner.com/blob/master/LICENSE.md) file for details.
