@@ -1,7 +1,7 @@
 
 # GraphQL Designer ![alt text](https://travis-ci.org/GraphQL-Designer/graphqldesigner.com.svg?branch=dev)
 
-[GraphQL Designer](https://www.graphqldesigner.com/) is prototyping tool to develop full-stack GraphQL applications.
+[GraphQL Designer](https://www.graphqldesigner.com/) is a prototyping tool to develop full-stack GraphQL applications.
 
 With a few simple inputs, GraphQL Designer auto generates code for download, to start and implement your new application including GraphQL root queries, schemas, mutations, and client queries. Also available for download are the NoSQL schemas or SQL build scripts, and a server file.
 
@@ -59,3 +59,6 @@ npm run pack
 npm run server
 ```
 
+## License
+
+This project is licensed under the MIT License - see the [LICENSE.md](https://github.com/GraphQL-Designer/graphqldesigner.com/blob/master/License.md) file for details.
