@@ -4,15 +4,15 @@
   "description": "A user friendly Graphql designer aimed to simplify creation and implementation of a full stack React Graphql app.",
   "main": "index.js",
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Tsion Adefres, Greg Shamalta, Patrick Slagle, James Sieu",
+  "license": "MIT",
   "bugs": {
-    "url": "https://github.com/grs83/graphqldesigner.com/issues"
+    "url": "https://github.com/GraphQL-Designer/graphqldesigner.com/issues"
   },
-  "homepage": "https://github.com/grs83/graphqldesigner.com#readme",
+  "homepage": "https://github.com/GraphQL-Designer/graphqldesigner.com#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/grs83/graphqldesigner.com.git"
+    "url": "git+https://github.com/GraphQL-Designer/graphqldesigner.com.git"
   },
   "scripts": {
     "pack": "webpack -p",
