@@ -58,7 +58,3 @@ npm install
 npm run pack
 npm run server
 ```
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE.md](https://github.com/GraphQL-Designer/graphqldesigner.com/blob/master/License.md) file for details.
