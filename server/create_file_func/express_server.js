@@ -6,7 +6,7 @@ const graphqlHTTP = require('express-graphql');
 const schema = require('./graphql-schema');
 const path = require('path');
 const app = express();
-`
+`;
 
   if (database === 'MongoDB') {
     query += `

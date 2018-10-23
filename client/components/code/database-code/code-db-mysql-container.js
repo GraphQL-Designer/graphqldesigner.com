@@ -20,7 +20,7 @@ const CodeDBSQLContainer = (props) => {
   function parseSQLTable(table) {
     if (!table) return ``;
 
-    createTablesCode += `CREATE TABLE \`${table.type}\` (${enter}`;
+    createTablesCode += `${enter}CREATE TABLE \`${table.type}\` (${enter}`;
 
     // create code for each field
     for (const fieldId in table.fields) {

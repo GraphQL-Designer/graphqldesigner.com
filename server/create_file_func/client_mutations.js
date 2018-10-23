@@ -1,4 +1,4 @@
-const tab = `  `
+const tab = `  `;
 
 function parseClientMutations(tables) {
   let query = "import { gql } from \'apollo-boost\';\n\n";
@@ -11,7 +11,7 @@ function parseClientMutations(tables) {
     query += buildTypeParams(tables[tableId], 'add');
     query += buildReturnValues(tables[tableId]);
     exportNames.push(`add${tables[tableId].type}Mutation`);
-    
+
     // Build delete and update mutations if there is an unique id
     if (tables[tableId].fields[0]) {
       // update mutations
@@ -65,17 +65,17 @@ function buildMutationParams(table, mutationType) {
 
 // in case the inputed field type is Number, turn to Int to work with GraphQL
 function checkFieldType(fieldType) {
-  if (fieldType === 'Number') return 'Int'
-  else return fieldType
+  if (fieldType === 'Number') return 'Int';
+  else return fieldType;
 }
 
 
 function buildDeleteMutationParams(table) {
   const idName = table.fields[0].name;
-  let query = `const delete${table.type}Mutation = gpq\`\n`
-    query += `${tab}mutation($${idName}: ${table.fields[0].type}!){\n`
-    query += `${tab}${tab}delete${table.type}(${idName}: $${idName}){\n`
-  return query; 
+  let query = `const delete${table.type}Mutation = gpq\`\n`;
+  query += `${tab}mutation($${idName}: ${table.fields[0].type}!){\n`;
+  query += `${tab}${tab}delete${table.type}(${idName}: $${idName}){\n`;
+  return query;
 }
 
 function checkForMultipleValues(multipleValues, position) {

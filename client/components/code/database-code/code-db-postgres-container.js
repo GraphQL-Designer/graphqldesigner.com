@@ -30,26 +30,26 @@ const CodeDBPostgresSchemaContainer = (props) => {
       if (fieldId !== tableProps[tableProps.length - 1]) {
         createTablesCode += `,`;
       }
-      // createTablesCode += enter; 
+      createTablesCode += `${enter}`; 
     }
 
     // if table has a primary key
     if (primaryKey.length > 0) {
-      createTablesCode += `,${enter}${tab}${tab}CONSTRAINT ${table.type}_pk PRIMARY KEY (`;
+      createTablesCode += `${tab}${tab}CONSTRAINT ${table.type}_pk PRIMARY KEY (`;
       primaryKey.forEach((key, i) => {
         if (i === primaryKey.length - 1) {
-          createTablesCode += `"${key}")`;
+          createTablesCode += `"${key}")${enter}`;
         } else {
           createTablesCode += `"${key}", `;
         }
       });
-      createTablesCode += `${enter}) WITH (${enter} OIDS=FALSE${enter});${enter}${enter}`;
+      createTablesCode += `${enter}) WITH (${enter} OIDS=FALSE${enter});${enter}`;
     } else {
-      createTablesCode += `${enter});${enter}${enter}`
+      createTablesCode += `${enter});`;
     }
     // reset primaryKey to empty so primary keys don't slip into the next table
     primaryKey = [];
-    createTablesCode += `);${enter}${enter}`;
+    createTablesCode += `${enter}${enter}`;
   }
 
   function createSchemaField(field) {
@@ -79,7 +79,7 @@ const CodeDBPostgresSchemaContainer = (props) => {
   }
 
   function checkDataType(dataType, autoIncrement) {
-    if (autoIncrement) return "serial"
+    if (autoIncrement) return "serial";
     switch(dataType){
       case "String":
         return "varchar";
@@ -114,7 +114,7 @@ const CodeDBPostgresSchemaContainer = (props) => {
 
   // if any tables have relations, aka foreign keys
   for (const tableId in foreignKeys) {
-    console.log('what are foreignKeys', foreignKeys);
+    // console.log('what are foreignKeys', foreignKeys);
     // loop through the table's fields to find the particular relation
     foreignKeys[tableId].forEach((relationInfo, relationCount) => {
       // name of table making relation
@@ -128,7 +128,7 @@ const CodeDBPostgresSchemaContainer = (props) => {
       // get name of field being referenced
       const relatedFieldId = relationInfo.relatedField;
       const relatedField = props.tables[relatedTableId].fields[relatedFieldId].name;
-      createTablesCode += `${enter}ALTER TABLE "${tableMakingRelation}" ADD CONSTRAINT "${tableMakingRelation}_fk${relationCount}" FOREIGN KEY ("${fieldMakingRelation}") REFERENCES "${relatedTable}"("${relatedField}");${enter}`;
+      createTablesCode += `ALTER TABLE "${tableMakingRelation}" ADD CONSTRAINT "${tableMakingRelation}_fk${relationCount}" FOREIGN KEY ("${fieldMakingRelation}") REFERENCES "${relatedTable}"("${relatedField}");${enter}`;
     });
   }
 
@@ -138,7 +138,7 @@ const CodeDBPostgresSchemaContainer = (props) => {
       <h4 className='codeHeader'>PostgreSQL Create Scripts</h4>
       <hr/>
       <pre>
-        {PostgreSQL}
+        {createTablesCode}
       </pre>
       <pre id='column-filler-for-scroll'></pre>
     </div>
