@@ -20,7 +20,7 @@ function parseSQLTables(tables) {
       if (fieldId !== fieldIds[fieldIds.length - 1]) {
         createTablesCode += `,`;
       }
-      createTablesCode += `\n`; 
+      createTablesCode += `\n`;
     }
 
     // if table has a primary key
@@ -59,7 +59,7 @@ function parseSQLTables(tables) {
       createTablesCode += `\nALTER TABLE \`${tableMakingRelation}\` ADD CONSTRAINT \`${tableMakingRelation}_fk${relationCount}\` FOREIGN KEY (\`${fieldMakingRelation}\`) REFERENCES \`${relatedTable}\`(\`${relatedField}\`);\n`;
     });
   }
-  return createTablesCode; 
+  return createTablesCode;
 
   function createTableField(field) {
     let fieldCode = ``;
@@ -68,11 +68,11 @@ function parseSQLTables(tables) {
     fieldCode += checkRequired(field.required);
     fieldCode += checkUnique(field.unique);
     fieldCode += checkDefault(field.defaultValue);
-    
+
     if (field.primaryKey) {
       primaryKey.push(field.name);
     }
-    
+
     if (field.relationSelected) {
       const relationData = {
         'relatedTable': field.relation.tableIndex,
@@ -87,7 +87,7 @@ function parseSQLTables(tables) {
     }
     return fieldCode;
   }
-  
+
   function checkDataType(dataType) {
     switch(dataType){
       case 'String':
@@ -97,28 +97,28 @@ function parseSQLTables(tables) {
       case 'Boolean':
       return `BOOLEAN`;
       case 'ID':
-      return `VARCHAR`;
+      return 'VARCHAR';
     }
   }
-  
+
   function checkAutoIncrement(fieldAutoIncrement) {
     if (fieldAutoIncrement) return `${tab}AUTO_INCREMENT`;
     else return '';
   }
-  
+
   function checkUnique(fieldUnique) {
     if (fieldUnique) return `${tab}UNIQUE`;
-    else return '';
+    return '';
   }
-  
+
   function checkRequired(fieldRequired) {
     if (fieldRequired) return `${tab}NOT NULL`;
-    else return '';
+    return '';
   }
-  
+
   function checkDefault(fieldDefault) {
     if (fieldDefault.length > 0) return `${tab}DEFAULT '${fieldDefault}'`;
-    else return '';
+    return '';
   }
 }
 

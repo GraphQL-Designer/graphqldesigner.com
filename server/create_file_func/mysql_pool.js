@@ -2,14 +2,14 @@ function mysqlPool() {
 const query = `const mysql = require('mysql')
 
 const pool = mysql.createPool({
-connectionLimit: 10,
-connectTimeout: 5000,
-acquireTimeout: 5000,
-queueLimit: 30,
-host: "localhost",
-user: "yourusername",
-password: "yourpassword",
-database: "mydb"
+  connectionLimit: 10,
+  connectTimeout: 5000,
+  acquireTimeout: 5000,
+  queueLimit: 30,
+  host: "localhost",
+  user: "yourusername",
+  password: "yourpassword",
+  database: "mydb"
 })
 
 const getConnection = function(callback) {
@@ -21,7 +21,7 @@ const getConnection = function(callback) {
 
 module.exports = getConnection;
 `;
-    return query;
+  return query;
 }
 
 module.exports = mysqlPool;

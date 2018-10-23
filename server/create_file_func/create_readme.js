@@ -2,7 +2,8 @@ function createPackageJson(data) {
   const query = `
   -create a project folder "my-app"
     -create a .env file and add MONGO_URI="your Mongo database url" for MongoDB or
-                                SQL_URI="your SQL database url"
+                                SQL_URI="your SQL database url" for MySQL or
+                                POSTGRES_URI="your PostgreSQL database url"
     -unzip exported project from GraphQL Designer and move server folder in project folder "my-app"
     -create a package.json file  in "my-app" folder with npm -init
       -Add the required dependencies below to your package.json file
@@ -22,6 +23,10 @@ function createPackageJson(data) {
             "mongoose": "^5.2.9"
         
           //MySQL Dependencies
+
+
+          //PostgreSQL Dependencies
+
 
     -in server/index.js contains the express server information.  Default port is 4000, but this can be changed to your liking
   -server/graphql-schema/index.js contains schemas based on database created using GraphQL Designer
