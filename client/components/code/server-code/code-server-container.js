@@ -161,7 +161,7 @@ const {
       query += `${tab}${tab}}`;
     }
 
-    if (database === 'MySQL' || datbase === 'PostgreSQL') {
+    if (database === 'MySQL' || database === 'PostgreSQL') {
       if (database === 'MySQL') query += `getConnection((err, con) => {${enter}`;
       if (database === 'PostgreSQL') query += `connect((err, con) => {${enter}`;
       query += `${tab}${tab}${tab}${tab}${tab}const sql = \`SELECT * FROM ${refTypeName} WHERE `;
@@ -311,12 +311,10 @@ const {
 
     if (database === 'MongoDB') query += `const ${table.type.toLowerCase()} = new ${table.type}(args);${enter}${tab}${tab}${tab}${tab}return ${table.type.toLowerCase()}.save();`;
 
-    if (database === 'MySQL') {
-      query += `getConnection((err, con) => {${enter}${tab}${tab}${tab}${tab}${tab}const sql = 'INSERT INTO ${table.type} SET ?';${enter}${tab}${tab}${tab}${tab}${tab}con.query(sql, args, (err, result) => {${enter}${tab}${tab}${tab}${tab}${tab}${tab}if (err) throw err;${enter}${tab}${tab}${tab}${tab}${tab}${tab}con.release();${enter}${tab}${tab}${tab}${tab}${tab}${tab}return result;${enter}${tab}${tab}${tab}${tab}${tab}})${enter}${tab}${tab}${tab}${tab}})`;
-    }
-
-    if (database === 'PostgreSQL') {
-      query += `connect((err, client) => {${enter}${tab}${tab}${tab}${tab}${tab}const pool = 'INSERT INTO ${table.type} SET ?';${enter}${tab}${tab}${tab}${tab}${tab}client.query(pool, args, (err, result) => {${enter}${tab}${tab}${tab}${tab}${tab}${tab}if (err) throw err;${enter}${tab}${tab}${tab}${tab}${tab}${tab}client.release();${enter}${tab}${tab}${tab}${tab}${tab}${tab}return result;${enter}${tab}${tab}${tab}${tab}${tab}})${enter}${tab}${tab}${tab}${tab}})`;
+    if (database === 'MySQL' || database === 'PostgreSQL') {
+      if (database === 'MySQL') query += `getConnection`
+      else query += `connect`
+      query += `((err, con) => {${enter}${tab}${tab}${tab}${tab}${tab}const sql = 'INSERT INTO ${table.type} SET ?';${enter}${tab}${tab}${tab}${tab}${tab}con.query(sql, args, (err, result) => {${enter}${tab}${tab}${tab}${tab}${tab}${tab}if (err) throw err;${enter}${tab}${tab}${tab}${tab}${tab}${tab}con.release();${enter}${tab}${tab}${tab}${tab}${tab}${tab}return result;${enter}${tab}${tab}${tab}${tab}${tab}})${enter}${tab}${tab}${tab}${tab}})`;
     }
 
     return query += `${enter}${tab}${tab}${tab}}${enter}${tab}${tab}}`;
@@ -343,10 +341,12 @@ const {
 
     if (database === 'MongoDB') query += `return ${table.type}.findByIdAndUpdate(args.id, args);`;
 
-    if (database === 'MySQL') {
+    if (database === 'MySQL' || database === 'PostgreSQL') {
       const idFieldName = table.fields[0].name;
 
-      query += `getConnection((err, con) => {${enter}`;
+      if (database === 'MySQL') query += `getConnection`;
+      if (database === 'PostgreSQL') query += `connection`;
+      query += `((err, con) => {${enter}`;
       query += `${tab}${tab}${tab}${tab}${tab}let updateValues = '';${enter}`;
       query += `${tab}${tab}${tab}${tab}${tab}for (const prop in args) {${enter}`;
       query += `${tab}${tab}${tab}${tab}${tab}${tab}updateValues += \`\${prop} = '\${args[prop]}' \`${enter}`;
@@ -356,24 +356,6 @@ const {
       query += `${tab}${tab}${tab}${tab}${tab}con.query(sql, args, (err, result) => {${enter}`;
       query += `${tab}${tab}${tab}${tab}${tab}${tab}if (err) throw err;${enter}`;
       query += `${tab}${tab}${tab}${tab}${tab}${tab}con.release();${enter}`;
-      query += `${tab}${tab}${tab}${tab}${tab}${tab}return result;${enter}`;
-      query += `${tab}${tab}${tab}${tab}${tab}})${enter}`;
-      query += `${tab}${tab}${tab}${tab}})`;
-    }
-
-    if (database === 'PostgreSQL') {
-      const idFieldName = table.fields[0].name;
-
-      query += `connect((err, client) => {${enter}`;
-      query += `${tab}${tab}${tab}${tab}${tab}let updateValues = '';${enter}`;
-      query += `${tab}${tab}${tab}${tab}${tab}for (const prop in args) {${enter}`;
-      query += `${tab}${tab}${tab}${tab}${tab}${tab}updateValues += \`\${prop} = "\${args[prop]}" \`${enter}`;
-      query += `${tab}${tab}${tab}${tab}${tab}}${enter}`;
-      query += `${tab}${tab}${tab}${tab}${tab}const pool = \`UPDATE ${table.type} SET \${updateValues} WHERE ${idFieldName} = \${args.`;
-      query += `${idFieldName}}\`;${enter}`;
-      query += `${tab}${tab}${tab}${tab}${tab}client.query(pool, args, (err, result) => {${enter}`;
-      query += `${tab}${tab}${tab}${tab}${tab}${tab}if (err) throw err;${enter}`;
-      query += `${tab}${tab}${tab}${tab}${tab}${tab}client.release();${enter}`;
       query += `${tab}${tab}${tab}${tab}${tab}${tab}return result;${enter}`;
       query += `${tab}${tab}${tab}${tab}${tab}})${enter}`;
       query += `${tab}${tab}${tab}${tab}})`;
@@ -399,25 +381,15 @@ const {
 
     if (database === 'MongoDB') query += `return ${table.type}.findByIdAndRemove(args.id);`;
 
-    if (database === 'MySQL') {
-      query += `getConnection((err, con) => {${enter}`;
+    if (database === 'MySQL' || database === 'PostgreSQL') {
+      if (database === 'MySQL') query += `getConnection`;
+      if (database === 'PostgreSQL') query += `connect`
+      query += `((err, con) => {${enter}`;
       query += `${tab}${tab}${tab}${tab}${tab}const sql = \`DELETE FROM ${table.type} WHERE ${idFieldName} = \${args.`;
       query += `${idFieldName}}\`;${enter}`;
       query += `${tab}${tab}${tab}${tab}${tab}con.query(sql, (err, result) => {${enter}`;
       query += `${tab}${tab}${tab}${tab}${tab}${tab}if (err) throw err;${enter}`;
       query += `${tab}${tab}${tab}${tab}${tab}${tab}con.release();${enter}`;
-      query += `${tab}${tab}${tab}${tab}${tab}${tab}return result;${enter}`;
-      query += `${tab}${tab}${tab}${tab}${tab}})${enter}`;
-      query += `${tab}${tab}${tab}${tab}})`;
-    }
-
-    if (database === 'PostgreSQL') {
-      query += `connect((err, client) => {${enter}`;
-      query += `${tab}${tab}${tab}${tab}${tab}const pool = \`DELETE FROM ${table.type} WHERE ${idFieldName} = \${args.`;
-      query += `${idFieldName}}\`;${enter}`;
-      query += `${tab}${tab}${tab}${tab}${tab}client.query(pool, (err, result) => {${enter}`;
-      query += `${tab}${tab}${tab}${tab}${tab}${tab}if (err) throw err;${enter}`;
-      query += `${tab}${tab}${tab}${tab}${tab}${tab}client.release();${enter}`;
       query += `${tab}${tab}${tab}${tab}${tab}${tab}return result;${enter}`;
       query += `${tab}${tab}${tab}${tab}${tab}})${enter}`;
       query += `${tab}${tab}${tab}${tab}})`;
