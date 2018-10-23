@@ -63,21 +63,21 @@ const CodeClientContainer = (props) => {
 
     return query += `${endString  }};`;
   }
-  
+
   // --------------------- Query Functions ---------------- //
 
   function buildClientQueryAll(table) {
-    let string = `const queryEvery${table.type} = gql\`${enter}`
-    string += `${tab}{${enter}`
+    let string = `const queryEvery${table.type} = gql\`${enter}`;
+    string += `${tab}{${enter}`;
     string += `${tab}${tab}every${toTitleCase(table.type)} {${enter}`;
 
     for (const fieldId in table.fields) {
       string += `${tab}${tab}${tab}${table.fields[fieldId].name}${enter}`;
     }
-  
+
     return string += `${tab}${tab}}${enter}${tab}}${enter}\`${enter}${enter}`;
   }
-  
+
   function toTitleCase(refTypeName) {
     let name = refTypeName[0].toUpperCase();
     name += refTypeName.slice(1).toLowerCase();
@@ -85,108 +85,108 @@ const CodeClientContainer = (props) => {
   }
 
   function buildClientQueryById(table) {
-    let string = `const query${table.type}ById = gql\`${enter}`
-    string += `${tab}query($${table.type}: ${table.fields[0].type}!) {${enter}`
+    let string = `const query${table.type}ById = gql\`${enter}`;
+    string += `${tab}query($${table.type}: ${table.fields[0].type}!) {${enter}`;
     string += `${tab}${tab}${table.type}(${table.type}: $${table.type}) {${enter}`;
 
     for (const fieldId in table.fields) {
       string += `${tab}${tab}${tab}${table.fields[fieldId].name}${enter}`;
     }
-  
+
     return string += `${tab}${tab}}${enter}${tab}}${enter}\`${enter}${enter}`;
   }
 
   // --------------------- Mutation Functions ---------------- //
-  
+
   // builds params for either add or update mutations
   function buildMutationParams(table, mutationType) {
-  let query = `const ${mutationType}${table.type}Mutation = gql\`${enter}${tab}mutation(`;
+    let query = `const ${mutationType}${table.type}Mutation = gql\`${enter}${tab}mutation(`;
 
-  let firstLoop = true;
-  for (const fieldId in table.fields) {
+    let firstLoop = true;
+    for (const fieldId in table.fields) {
     // if there's an unique id and creating an update mutation, then take in ID
-    if (fieldId === '0' && mutationType === 'update') {
-      if (!firstLoop) query += ', ';
-      firstLoop = false;
+      if (fieldId === '0' && mutationType === 'update') {
+        if (!firstLoop) query += ', ';
+        firstLoop = false;
 
-      query += `$${table.fields[fieldId].name}: ${table.fields[fieldId].type}!`;
+        query += `$${table.fields[fieldId].name}: ${table.fields[fieldId].type}!`;
+      }
+      if (fieldId !== '0') {
+        if (!firstLoop) query += ', ';
+        firstLoop = false;
+
+        query += `$${table.fields[fieldId].name}: ${checkForMultipleValues(table.fields[fieldId].multipleValues, 'front')}`;
+        query += `${checkFieldType(table.fields[fieldId].type)}${checkForMultipleValues(table.fields[fieldId].multipleValues, 'back')}`;
+        query += `${checkForRequired(table.fields[fieldId].required)}`;
+      }
     }
-    if (fieldId !== '0') {
-      if (!firstLoop) query += ', ';
-      firstLoop = false;
+    return query += `) {${enter}${tab}`;
+  }
 
-      query += `$${table.fields[fieldId].name}: ${checkForMultipleValues(table.fields[fieldId].multipleValues, 'front')}`;
-      query += `${checkFieldType(table.fields[fieldId].type)}${checkForMultipleValues(table.fields[fieldId].multipleValues, 'back')}`;
-      query += `${checkForRequired(table.fields[fieldId].required)}`;
+  // in case the inputed field type is Number, turn to Int to work with GraphQL
+  function checkFieldType(fieldType) {
+    if (fieldType === 'Number') return 'Int';
+    else return fieldType;
+  }
+
+  function buildDeleteMutationParams(table) {
+    const idName = table.fields[0].name;
+    let query = `const delete${table.type}Mutation = gpq\`${enter}`;
+    query += `${tab}mutation($${idName}: ${table.fields[0].type}!){${enter}`;
+    query += `${tab}${tab}delete${table.type}(${idName}: $${idName}){${enter}`;
+    return query;
+  }
+
+  function checkForMultipleValues(multipleValues, position) {
+    if (multipleValues) {
+      if (position === 'front') {
+        return '[';
+      }
+      return ']';
     }
+    return '';
   }
-  return query += `) {${enter}${tab}`;
-}
 
-// in case the inputed field type is Number, turn to Int to work with GraphQL
-function checkFieldType(fieldType) {
-  if (fieldType === 'Number') return 'Int'
-  else return fieldType
-}
-
-function buildDeleteMutationParams(table) {
-  const idName = table.fields[0].name;
-  let query = `const delete${table.type}Mutation = gpq\`${enter}`
-     query += `${tab}mutation($${idName}: ${table.fields[0].type}!){${enter}`
-     query += `${tab}${tab}delete${table.type}(${idName}: $${idName}){${enter}`
-  return query; 
-}
-
-function checkForMultipleValues(multipleValues, position) {
-  if (multipleValues) {
-    if (position === 'front') {
-      return '[';
+  function checkForRequired(required) {
+    if (required) {
+      return '!';
     }
-    return ']';
+    return '';
   }
-  return '';
-}
 
-function checkForRequired(required) {
-  if (required) {
-    return '!';
-  }
-  return '';
-}
+  function buildTypeParams(table, mutationType) {
+    let query = `${tab}${mutationType}${table.type}(`;
 
-function buildTypeParams(table, mutationType) {
-  let query = `${tab}${mutationType}${table.type}(`;
-
-  let firstLoop = true;
-  for (const fieldId in table.fields) {
+    let firstLoop = true;
+    for (const fieldId in table.fields) {
     // if there's an unique id and creating an update mutation, then take in ID
-    if (fieldId === '0' && mutationType === 'update') {
-     if (!firstLoop) query += ', ';
-     firstLoop = false;
-     query += `${table.fields[fieldId].name}: $${table.fields[fieldId].name}`;
+      if (fieldId === '0' && mutationType === 'update') {
+        if (!firstLoop) query += ', ';
+        firstLoop = false;
+        query += `${table.fields[fieldId].name}: $${table.fields[fieldId].name}`;
+      }
+      if (fieldId !== '0') {
+        if (!firstLoop) query += ', ';
+        firstLoop = false;
+
+        query += `${table.fields[fieldId].name}: $${table.fields[fieldId].name}`;
+      }
     }
-    if (fieldId !== '0') {
-      if (!firstLoop) query += ', ';
-      firstLoop = false;
-
-      query += `${table.fields[fieldId].name}: $${table.fields[fieldId].name}`;
-    }
-  }
-  return query += `) {${enter}`;
-}
-
-function buildReturnValues(table) {
-  let query = '';
-
-  for (const fieldId in table.fields) {
-    query += `${tab}${tab}${tab}${table.fields[fieldId].name}${enter}`;
+    return query += `) {${enter}`;
   }
 
-  return query += `${tab}${tab}}${enter}${tab}}${enter}\`${enter}${enter}`;
-}
+  function buildReturnValues(table) {
+    let query = '';
+
+    for (const fieldId in table.fields) {
+      query += `${tab}${tab}${tab}${table.fields[fieldId].name}${enter}`;
+    }
+
+    return query += `${tab}${tab}}${enter}${tab}}${enter}\`${enter}${enter}`;
+  }
 
 
-parseClientQueries(props.tables);
+  parseClientQueries(props.tables);
 
 
   return (

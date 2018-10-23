@@ -36,7 +36,7 @@ class MainNav extends React.Component {
     });
 
     // JSON.stringify doesn't work with Sets. Change Sets to arrays for export
-    const tables = this.props.tables; 
+    const tables = this.props.tables;
     const changedTables = {}
     for (let tableId in tables) {
       const changedFields = {}
@@ -58,7 +58,7 @@ class MainNav extends React.Component {
     }
     const tableData = Object.assign({}, tables, changedTables)
     const data = Object.assign({}, { 'data': tableData }, { 'database': this.props.database })
-    console.log('this is data', data); 
+    console.log('this is data', data);
 
     setTimeout(() => {
       fetch('/write-files', {

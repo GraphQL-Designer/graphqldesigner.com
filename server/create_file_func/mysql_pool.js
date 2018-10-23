@@ -1,5 +1,5 @@
 function mysqlPool() {
-  const query = `const mysql = require('mysql')
+const query = `const mysql = require('mysql')
 
 const pool = mysql.createPool({
   connectionLimit: 10,
