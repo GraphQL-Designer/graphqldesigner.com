@@ -44,7 +44,6 @@ function parsePostgresTables(tables) {
   function createSchemaField(field) {
     let fieldCode = ``;
     fieldCode += `\t"${field.name}"\t${checkDataType(field.type)}`;
-    fieldCode += checkAutoIncrement(field.autoIncrement);
     fieldCode += checkRequired(field.required);
     fieldCode += checkUnique(field.unique);
     fieldCode += checkDefault(field.defaultValue);

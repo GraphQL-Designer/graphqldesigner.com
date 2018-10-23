@@ -43,7 +43,7 @@ const CodeDBPostgresSchemaContainer = (props) => {
           createTablesCode += `"${key}", `;
         }
       });
-      createTablesCode += `${enter}) WITH (${enter} OIDS=FALSE${enter});${enter}${enter}`;
+      createTablesCode += `${enter}) WITH (${enter}  OIDS=FALSE${enter});${enter}${enter}`;
     } else {
       createTablesCode += `${enter});${enter}${enter}`
     }
