@@ -23,9 +23,7 @@ const parseGraphqlServer = require('./create_file_func/graphql_server');
 const parseMongoSchema = require('./create_file_func/mongo_schema');
 const parseMySQLTables = require('./create_file_func/mysql_scripts');
 const parsePostgresTables = require('./create_file_func/postgresql_scripts');
-const mysqlPool = require('./create_file_func/mysql_pool');
-const pgPool = require('./create_file_func/postgresql_pool');
-
+const sqlPool = require('./create_file_func/sql_pool');
 
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, '../public')));
@@ -90,12 +88,12 @@ function buildForMongo(data, dateStamp) {
 }
 
 function buildForMySQL(data, dateStamp) {
-  fs.writeFileSync(path.join(PATH, `build-files${dateStamp}/server/db/mysql_pool.js`), mysqlPool());
+  fs.writeFileSync(path.join(PATH, `build-files${dateStamp}/server/db/mysql_pool.js`), sqlPool('MySQL'));
   fs.writeFileSync(path.join(PATH, `build-files${dateStamp}/server/db/mysql_scripts.md`), parseMySQLTables(data));
 }
 
 function buildForPostgreSQL(data, dateStamp) {
-  fs.writeFileSync(path.join(PATH, `build-files${dateStamp}/server/db/postgresql_pool.js`), pgPool());
+  fs.writeFileSync(path.join(PATH, `build-files${dateStamp}/server/db/postgresql_pool.js`), sqlPool('Postgres'));
   fs.writeFileSync(path.join(PATH, `build-files${dateStamp}/server/db/postgresql_scripts.md`), parsePostgresTables(data));
 }
 
