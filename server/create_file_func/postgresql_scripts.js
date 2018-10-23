@@ -2,6 +2,7 @@ function parsePostgresTables(tables) {
   const foreignKeys = {};
   let primaryKey = [];
   let createTablesCode = ``;
+  const tab = `  `
 
   for (const tableId in tables) {
     parsePostgresTable(tables[tableId]);
@@ -10,22 +11,22 @@ function parsePostgresTables(tables) {
   function parsePostgresTable(table) {
     if (!table) return ``;
 
-    createTablesCode += `\nCREATE TABLE "${table.type}" (\n`;
+    createTablesCode += `CREATE TABLE "${table.type}" (`;
 
     // create code for each field
     for (const fieldId in table.fields) {
+      createTablesCode += `\n`;
       createTablesCode += createSchemaField(table.fields[fieldId]);
       // so long as it's not the last field, add a comma
       const fieldIds = Object.keys(table.fields);
       if (fieldId !== fieldIds[fieldIds.length - 1]) {
         createTablesCode += `,`;
       }
-      createTablesCode += `\n`;
     }
 
     // if table has a primary key
     if (primaryKey.length > 0) {
-      createTablesCode += `\t\tCONSTRAINT ${table.type}_pk PRIMARY KEY (`;
+      createTablesCode += `,\n${tab}CONSTRAINT ${table.type}_pk PRIMARY KEY (`;
       primaryKey.forEach((key, i) => {
         if (i === primaryKey.length - 1) {
           createTablesCode += `"${key}")`;
@@ -33,19 +34,17 @@ function parsePostgresTables(tables) {
           createTablesCode += `"${key}", `;
         }
       });
-      createTablesCode += `\n) WITH (\n OIDS=FALSE\n);\n`;
+      createTablesCode += `\n) WITH (\n  OIDS=FALSE\n);\n\n`;
     } else {
-      createTablesCode += `$\n);`;
+      createTablesCode += `\n);\n\n`;
     }
     // reset primaryKey to empty so primary keys don't slip into the next table
     primaryKey = [];
-    createTablesCode += `\n\n`;
   }
 
   function createSchemaField(field) {
     let fieldCode = ``;
-    fieldCode += `\t\t"${field.name}"\t${checkDataType(field.type)}`;
-    fieldCode += checkAutoIncrement(field.autoIncrement);
+    fieldCode += `${tab}"${field.name}"${tab}${checkDataType(field.type)}`;
     fieldCode += checkRequired(field.required);
     fieldCode += checkUnique(field.unique);
     fieldCode += checkDefault(field.defaultValue);
@@ -81,28 +80,20 @@ function parsePostgresTables(tables) {
     }
   }
 
-  function checkAutoIncrement(fieldAutoIncrement) {
-    if (fieldAutoIncrement) return `\tAUTO_INCREMENT`;
-    else return '';
-  }
-
   function checkUnique(fieldUnique) {
-    if (fieldUnique) return `\tUNIQUE`;
+    if (fieldUnique) return `${tab}UNIQUE`;
     else return '';
   }
 
   function checkRequired(fieldRequired) {
-    if (fieldRequired) return `\tNOT NULL`;
+    if (fieldRequired) return `${tab}NOT NULL`;
     else return '';
   }
 
   function checkDefault(fieldDefault) {
-    if (fieldDefault.length > 0) return `\tDEFAULT "${fieldDefault}"`;
+    if (fieldDefault.length > 0) return `${tab}DEFAULT "${fieldDefault}"`;
     return '';
   }
-
-  // loop through tables and create build script for each table
-
 
   // if any tables have relations, aka foreign keys
   for (const tableId in foreignKeys) {

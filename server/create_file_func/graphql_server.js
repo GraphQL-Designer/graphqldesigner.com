@@ -144,8 +144,10 @@ function createSubQuery(field, data, database) {
     query += `${tab}${tab}}`;
   }
 
-  if (database === 'MySQL') {
-    query += `getConnection((err, con) => {\n${tab}${tab}${tab}${tab}${tab}const sql = \`SELECT * FROM ${refTypeName} WHERE `;
+  if (database === 'MySQL' || database === 'PostgreSQL') {
+    if (database === 'MySQL') query += `getConnection`
+    if (database === 'PostgreSQL') query += `connect`
+    query += `((err, con) => {\n${tab}${tab}${tab}${tab}${tab}const sql = \`SELECT * FROM ${refTypeName} WHERE `;
 
     if (field.type === 'ID') {
       query += `${field.name} = \${parent.${field.name}}`;
@@ -162,23 +164,6 @@ function createSubQuery(field, data, database) {
     query += `${tab}${tab}}`;
   }
 
-  if (database === 'PostgreSQL') {
-    query += `connect((err, client) => {\n${tab}${tab}${tab}${tab}${tab}const pool = \`SELECT * FROM ${refTypeName} WHERE `;
-
-    if (field.type === 'ID') {
-      query += `${field.name} = \${parent.${field.name}}`;
-    } else {
-      query += `${refFieldName} = \${parent.${field.name}}`;
-    }
-    query += `\`;\n${tab}${tab}${tab}${tab}${tab}client.query(pool, (err, result) => {\n`;
-    query += `${tab}${tab}${tab}${tab}${tab}${tab}if (err) throw err;\n`;
-    query += `${tab}${tab}${tab}${tab}${tab}${tab}client.release();\n`;
-    query += `${tab}${tab}${tab}${tab}${tab}${tab}return result;\n`;
-    query += `${tab}${tab}${tab}${tab}${tab}})\n`;
-    query += `${tab}${tab}${tab}${tab}})\n`;
-    query += `${tab}${tab}${tab}}\n`;
-    query += `${tab}${tab}}`;
-  }
   return query;
 
   function createSubQueryName() {
@@ -240,12 +225,10 @@ function createFindAllRootQuery(table, database) {
     query += `return ${table.type}.find({});`;
   }
 
-  if (database === 'MySQL') {
-    query += `getConnection((err, con) => {\n${tab}${tab}${tab}${tab}${tab}const sql = \'SELECT * FROM ${table.type}\';\n${tab}${tab}${tab}${tab}${tab}con.query(sql, (err, results) => {\n${tab}${tab}${tab}${tab}${tab}${tab}if (err) throw err;\n${tab}${tab}${tab}${tab}${tab}${tab}con.release();\n${tab}${tab}${tab}${tab}${tab}${tab}return results;\n${tab}${tab}${tab}${tab}${tab}})\n${tab}${tab}${tab}${tab}})`;
-  }
-
-  if (database === 'PostgreSQL') {
-    query += `connect((err, client) => {\n${tab}${tab}${tab}${tab}${tab}const pool = \'SELECT * FROM ${table.type}\';\n${tab}${tab}${tab}${tab}${tab}client.query(pool, (err, results) => {\n${tab}${tab}${tab}${tab}${tab}${tab}if (err) throw err;\n${tab}${tab}${tab}${tab}${tab}${tab}client.release();\n${tab}${tab}${tab}${tab}${tab}${tab}return results;\n${tab}${tab}${tab}${tab}${tab}})\n${tab}${tab}${tab}${tab}})`;
+  if (database === 'MySQL' || database === 'PostgreSQL') {
+    if (database === 'MySQL') query += `getConnection`
+    if (database === 'PostgreSQL') query += `connect`
+    query += `((err, con) => {\n${tab}${tab}${tab}${tab}${tab}const sql = \'SELECT * FROM ${table.type}\';\n${tab}${tab}${tab}${tab}${tab}con.query(sql, (err, results) => {\n${tab}${tab}${tab}${tab}${tab}${tab}if (err) throw err;\n${tab}${tab}${tab}${tab}${tab}${tab}con.release();\n${tab}${tab}${tab}${tab}${tab}${tab}return results;\n${tab}${tab}${tab}${tab}${tab}})\n${tab}${tab}${tab}${tab}})`;
   }
 
   return query += `\n${tab}${tab}${tab}}\n${tab}${tab}}`;
@@ -259,23 +242,14 @@ function createFindByIdQuery(table, database) {
     query += `return ${table.type}.findById(args.id);`;
   }
 
-  if (database === 'MySQL') {
-    query += `getConnection((err, con) => {\n`;
+  if (database === 'MySQL' || database === 'PostgreSQL') {
+    if (database === 'MySQL') query += `getConnection`
+    if (database === 'PostgreSQL') query += `connect`
+    query += `((err, con) => {\n`;
     query += `${tab}${tab}${tab}${tab}${tab}const sql = \`SELECT * FROM ${table.type} WHERE ${idFieldName} = \${args.${idFieldName}}\`;\n`;
     query += `${tab}${tab}${tab}${tab}${tab}con.query(sql, (err, result) => {\n`;
     query += `${tab}${tab}${tab}${tab}${tab}${tab}if (err) throw err;\n`;
     query += `${tab}${tab}${tab}${tab}${tab}${tab}con.release();\n`;
-    query += `${tab}${tab}${tab}${tab}${tab}${tab}return result;\n`;
-    query += `${tab}${tab}${tab}${tab}${tab}})\n`;
-    query += `${tab}${tab}${tab}${tab}})`;
-  }
-
-  if (database === 'PostgreSQL') {
-    query += `connect((err, client) => {\n`;
-    query += `${tab}${tab}${tab}${tab}${tab}const pool = \`SELECT * FROM ${table.type} WHERE ${idFieldName} = \${args.${idFieldName}}\`;\n`;
-    query += `${tab}${tab}${tab}${tab}${tab}client.query(pool, (err, result) => {\n`;
-    query += `${tab}${tab}${tab}${tab}${tab}${tab}if (err) throw err;\n`;
-    query += `${tab}${tab}${tab}${tab}${tab}${tab}client.release();\n`;
     query += `${tab}${tab}${tab}${tab}${tab}${tab}return result;\n`;
     query += `${tab}${tab}${tab}${tab}${tab}})\n`;
     query += `${tab}${tab}${tab}${tab}})`;
@@ -304,24 +278,20 @@ function addMutation(table, database) {
 
     query += `${tab}${tab}${tab}${tab}${table.fields[prop].name}: ${buildMutationArgType(table.fields[prop])}`;
   }
-
   query += `\n${tab}${tab}${tab}},\n${tab}${tab}${tab}resolve(parent, args) {\n${tab}${tab}${tab}${tab}`;
 
   if (database === 'MongoDB') query += `const ${table.type.toLowerCase()} = new ${table.type}(args);\n${tab}${tab}${tab}${tab}return ${table.type.toLowerCase()}.save();`;
 
-  if (database === 'MySQL') {
-    query += `getConnection((err, con) => {\n${tab}${tab}${tab}${tab}${tab}const sql = 'INSERT INTO ${table.type} SET ?';\n${tab}${tab}${tab}${tab}${tab}con.query(sql, args, (err, result) => {\n${tab}${tab}${tab}${tab}${tab}${tab}if (err) throw err;\n${tab}${tab}${tab}${tab}${tab}${tab}con.release();\n${tab}${tab}${tab}${tab}${tab}${tab}return result;\n${tab}${tab}${tab}${tab}${tab}})\n${tab}${tab}${tab}${tab}})`;
-  }
-
-  if (database === 'PostgreSQL') {
-    query += `connect((err, client) => {\n${tab}${tab}${tab}${tab}${tab}const pool = 'INSERT INTO ${table.type} SET ?';\n${tab}${tab}${tab}${tab}${tab}client.query(pool, args, (err, result) => {\n${tab}${tab}${tab}${tab}${tab}${tab}if (err) throw err;\n${tab}${tab}${tab}${tab}${tab}${tab}client.release();\n${tab}${tab}${tab}${tab}${tab}${tab}return result;\n${tab}${tab}${tab}${tab}${tab}})\n${tab}${tab}${tab}${tab}})`;
+  if (database === 'MySQL' || database === 'PostgreSQL') {
+    if (database === 'MySQL') query += `getConnection`
+    if (database === 'PostgreSQL') query += `connect`
+    query += `((err, con) => {\n${tab}${tab}${tab}${tab}${tab}const sql = 'INSERT INTO ${table.type} SET ?';\n${tab}${tab}${tab}${tab}${tab}con.query(sql, args, (err, result) => {\n${tab}${tab}${tab}${tab}${tab}${tab}if (err) throw err;\n${tab}${tab}${tab}${tab}${tab}${tab}con.release();\n${tab}${tab}${tab}${tab}${tab}${tab}return result;\n${tab}${tab}${tab}${tab}${tab}})\n${tab}${tab}${tab}${tab}})`;
   }
 
   return query += `\n${tab}${tab}${tab}}\n${tab}${tab}}`;
 
   function buildMutationArgType(field) {
     const query = `{ type: ${checkForRequired(field.required, 'front')}${checkForMultipleValues(field.multipleValues, 'front')}${tableTypeToGraphqlType(field.type)}${checkForMultipleValues(field.multipleValues, 'back')}${checkForRequired(field.required, 'back')} }`;
-
     return query;
   }
 }
@@ -341,10 +311,12 @@ function updateMutation(table, database) {
 
   if (database === 'MongoDB') query += `return ${table.type}.findByIdAndUpdate(args.id, args);`;
 
-  if (database === 'MySQL') {
+  if (database === 'MySQL' || database === 'PostgreSQL') {
+    if (database === 'MySQL') query += `getConnection`
+    if (database === 'PostgreSQL') query += `connect`
     const idFieldName = table.fields[0].name;
 
-    query += `getConnection((err, con) => {\n`;
+    query += `((err, con) => {\n`;
     query += `${tab}${tab}${tab}${tab}${tab}let updateValues = '';\n`;
     query += `${tab}${tab}${tab}${tab}${tab}for (const prop in args) {\n`;
     query += `${tab}${tab}${tab}${tab}${tab}${tab}updateValues += \`\${prop} = '\${args[prop]}' \`\n`;
@@ -354,24 +326,6 @@ function updateMutation(table, database) {
     query += `${tab}${tab}${tab}${tab}${tab}con.query(sql, args, (err, result) => {\n`;
     query += `${tab}${tab}${tab}${tab}${tab}${tab}if (err) throw err;\n`;
     query += `${tab}${tab}${tab}${tab}${tab}${tab}con.release();\n`;
-    query += `${tab}${tab}${tab}${tab}${tab}${tab}return result;\n`;
-    query += `${tab}${tab}${tab}${tab}${tab}})\n`;
-    query += `${tab}${tab}${tab}${tab}})`;
-  }
-
-  if (database === 'PostgreSQL') {
-    const idFieldName = table.fields[0].name;
-
-    query += `connect((err, client) => {\n`;
-    query += `${tab}${tab}${tab}${tab}${tab}let updateValues = '';\n`;
-    query += `${tab}${tab}${tab}${tab}${tab}for (const prop in args) {\n`;
-    query += `${tab}${tab}${tab}${tab}${tab}${tab}updateValues += \`\${prop} = '\${args[prop]}' \`\n`;
-    query += `${tab}${tab}${tab}${tab}${tab}}\n`;
-    query += `${tab}${tab}${tab}${tab}${tab}const pool = \`UPDATE ${table.type} SET \${updateValues} WHERE ${idFieldName} = \${args.`;
-    query += `${idFieldName}}\`;\n`;
-    query += `${tab}${tab}${tab}${tab}${tab}client.query(pool, args, (err, result) => {\n`;
-    query += `${tab}${tab}${tab}${tab}${tab}${tab}if (err) throw err;\n`;
-    query += `${tab}${tab}${tab}${tab}${tab}${tab}client.release();\n`;
     query += `${tab}${tab}${tab}${tab}${tab}${tab}return result;\n`;
     query += `${tab}${tab}${tab}${tab}${tab}})\n`;
     query += `${tab}${tab}${tab}${tab}})`;
@@ -392,10 +346,12 @@ function deleteMutation(table, database) {
 
   if (database === 'MongoDB') query += `return ${table.type}.findByIdAndRemove(args.id);`;
 
-  if (database === 'MySQL') {
+  if (database === 'MySQL' || database === 'PostgreSQL') {
+    if (database === 'MySQL') query += `getConnection`
+    if (database === 'PostgreSQL') query += `connect`
     const idFieldName = table.fields[0].name;
 
-    query += `getConnection((err, con) => {\n`;
+    query += `((err, con) => {\n`;
     query += `${tab}${tab}${tab}${tab}${tab}const sql = \`DELETE FROM ${table.type} WHERE ${idFieldName} = \${args.`;
     query += `${idFieldName}}\`;\n`;
     query += `${tab}${tab}${tab}${tab}${tab}con.query(sql, (err, result) => {\n`;
@@ -405,21 +361,6 @@ function deleteMutation(table, database) {
     query += `${tab}${tab}${tab}${tab}${tab}})\n`;
     query += `${tab}${tab}${tab}${tab}})`;
   }
-
-  if (database === 'PostgreSQL') {
-    const idFieldName = table.fields[0].name;
-
-    query += `connect((err, client) => {\n`;
-    query += `${tab}${tab}${tab}${tab}${tab}const pool = \`DELETE FROM ${table.type} WHERE ${idFieldName} = \${args.`;
-    query += `${idFieldName}}\`;\n`;
-    query += `${tab}${tab}${tab}${tab}${tab}client.query(pool, (err, result) => {\n`;
-    query += `${tab}${tab}${tab}${tab}${tab}${tab}if (err) throw err;\n`;
-    query += `${tab}${tab}${tab}${tab}${tab}${tab}client.release();\n`;
-    query += `${tab}${tab}${tab}${tab}${tab}${tab}return result;\n`;
-    query += `${tab}${tab}${tab}${tab}${tab}})\n`;
-    query += `${tab}${tab}${tab}${tab}})`;
-  }
-
 
   return query += `\n${tab}${tab}${tab}}\n${tab}${tab}}`;
 }
