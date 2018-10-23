@@ -1,4 +1,3 @@
-
 function parseSQLTables(tables) {
   const foreignKeys = {};
   let primaryKey = [];

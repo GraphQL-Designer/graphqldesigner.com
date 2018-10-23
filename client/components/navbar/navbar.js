@@ -97,11 +97,13 @@ class MainNav extends React.Component {
       <div>
         <nav id="navbar">
           <div id="nav-left">
+          {/* <img id='logo' src='./images/Logo.svg' /> */}
             {/* <h2 id="header-name">GraphQL Designer</h2> */}
             <FlatButton label="New Project" onClick={this.handleNewProject} />
             <FlatButton style={{ color: '#FF4280' }} label="Export Code" onClick={this.handleExport} />
           </div>
           <div id="nav-right">
+
           </div>
         </nav>
         {this.state.modal && (
