@@ -26,7 +26,7 @@ function parsePostgresTables(tables) {
 
     // if table has a primary key
     if (primaryKey.length > 0) {
-      createTablesCode += `\n${tab}CONSTRAINT ${table.type}_pk PRIMARY KEY (`;
+      createTablesCode += `,\n${tab}CONSTRAINT ${table.type}_pk PRIMARY KEY (`;
       primaryKey.forEach((key, i) => {
         if (i === primaryKey.length - 1) {
           createTablesCode += `"${key}")`;
@@ -36,7 +36,7 @@ function parsePostgresTables(tables) {
       });
       createTablesCode += `\n) WITH (\n  OIDS=FALSE\n);\n\n`;
     } else {
-      createTablesCode += `$\n);\n\n`;
+      createTablesCode += `\n);\n\n`;
     }
     // reset primaryKey to empty so primary keys don't slip into the next table
     primaryKey = [];
