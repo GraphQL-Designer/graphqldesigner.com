@@ -5,8 +5,8 @@ function parsePostgresTables(tables) {
     parsePostgresTable(tables[tableId]);
   }
 
-  function parsePostgresSchema(table) {
-    if (!table) return ``;
+  function parsePostgresTable(table) {
+    if (!table) return ` `;
 
     createTablesCode += `\nCREATE TABLE "${table.type}" (\n`;
 
@@ -39,7 +39,7 @@ function parsePostgresTables(tables) {
   }
 
   function createSchemaField(field) {
-    let fieldCode = ``;
+    let fieldCode = ` `;
     fieldCode += `\t\t"${field.name}"\t${checkDataType(field.type)}`;
     fieldCode += checkAutoIncrement(field.autoIncrement);
     fieldCode += checkRequired(field.required);

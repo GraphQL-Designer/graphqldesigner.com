@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const fs = require('fs');
 const zipper = require('zip-local');
 const path = require('path');
+
 const PORT = process.env.PORT || 4100;
 let PATH;
 
@@ -19,9 +20,11 @@ const buildExpressServer = require('./create_file_func/express_server');
 const parseClientQueries = require('./create_file_func/client_queries');
 const parseClientMutations = require('./create_file_func/client_mutations');
 const parseGraphqlServer = require('./create_file_func/graphql_server');
-const parseMongoschema = require('./create_file_func/mongo_schema');
+const parseMongoSchema = require('./create_file_func/mongo_schema');
 const parseMySQLTables = require('./create_file_func/mysql_scripts');
+const parsePostgresTables = require('./create_file_func/postgresql_scripts');
 const mysqlPool = require('./create_file_func/mysql_pool');
+const pgPool = require('./create_file_func/postgresql_pool');
 
 
 app.use(bodyParser.json());
@@ -40,9 +43,10 @@ app.post('/write-files', (req, res) => {
     buildClientQueries(data.data, dateStamp, () => {
       if (data.database === 'MongoDB') buildForMongo(data.data, dateStamp);
       if (data.database === 'MySQL') buildForMySQL(data.data, dateStamp);
+      if (data.database === 'PostgreSQL') buildForPostgreSQL(data.data, dateStamp);
+
 
       sendResponse(dateStamp, res, () => {
-
         setTimeout(() => {
           deleteTempFiles(data.database, data.data, dateStamp, () => {
             deleteTempFolders(dateStamp, () => {
@@ -81,13 +85,18 @@ function buildForMongo(data, dateStamp) {
   const indexes = Object.keys(data);
   
   indexes.forEach(index => {
-    fs.writeFileSync(path.join(PATH, `build-files${dateStamp}/server/db/${data[index].type.toLowerCase()}.js`), parseMongoschema(data[index]));
+    fs.writeFileSync(path.join(PATH, `build-files${dateStamp}/server/db/${data[index].type.toLowerCase()}.js`), parseMongoSchema(data[index]));
   });
 }
 
 function buildForMySQL(data, dateStamp) {
   fs.writeFileSync(path.join(PATH, `build-files${dateStamp}/server/db/mysql_pool.js`), mysqlPool());
   fs.writeFileSync(path.join(PATH, `build-files${dateStamp}/server/db/mysql_scripts.md`), parseMySQLTables(data));
+}
+
+function buildForPostgreSQL(data, dateStamp) {
+  fs.writeFileSync(path.join(PATH, `build-files${dateStamp}/server/db/postgresql_pool.js`), pgPool());
+  fs.writeFileSync(path.join(PATH, `build-files${dateStamp}/server/db/postgresql_scripts.md`), parsePostgresTables(data));
 }
 
 function deleteTempFiles(database, data, dateStamp, cb) {
@@ -98,26 +107,30 @@ function deleteTempFiles(database, data, dateStamp, cb) {
   fs.unlinkSync(path.join(PATH, `build-files${dateStamp}/server/graphql-schema/index.js`));
   fs.unlinkSync(path.join(PATH, `graphql${dateStamp}.zip`));
 
+  if (database === 'PostgreSQL') {
+    fs.unlinkSync(path.join(PATH, `build-files${dateStamp}/server/db/postgresql_pool.js`));
+    fs.unlinkSync(path.join(PATH, `build-files${dateStamp}/server/db/postgresql_scripts.md`));
+  }
+
   if (database === 'MySQL') {
     fs.unlinkSync(path.join(PATH, `build-files${dateStamp}/server/db/mysql_pool.js`));
     fs.unlinkSync(path.join(PATH, `build-files${dateStamp}/server/db/mysql_scripts.md`));
   }
 
-  if (database ==='MongoDB') {
+  if (database === 'MongoDB') {
     const indexes = Object.keys(data);
 
     function step(i) {
       if (i < indexes.length) {
         fs.unlinkSync(path.join(PATH, `build-files${dateStamp}/server/db/${data[indexes[i]].type.toLowerCase()}.js`));
         step(i + 1);
-
       } else {
         return cb();
       }
     }
     step(0);
   }
-  return cb()
+  return cb();
 }
 
 function deleteTempFolders(dateStamp, cb) {
@@ -142,6 +155,6 @@ function sendResponse(dateStamp, res, cb) {
     if (err) console.log(err);
 
     console.log('Download Complete!');
-    return cb()
-  })
+    return cb();
+  });
 }
