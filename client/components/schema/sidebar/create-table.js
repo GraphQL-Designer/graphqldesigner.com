@@ -175,8 +175,8 @@ class CreateTable extends React.Component {
           <List style={{paddingLeft: '18px'}}>
             <ListItem key='legend' disabled={true} style={{fontSize: '20px'}}><strong>Legend</strong></ListItem>
             <Divider />
-            <ListItem key='legend-required' disabled={true}>Required : *</ListItem>
-            <ListItem key='unique' disabled={true}>Unique : !</ListItem>
+            <ListItem key='legend-required' disabled={true}>Required : !</ListItem>
+            <ListItem key='unique' disabled={true}>Unique : *</ListItem>
             <ListItem key='multiple-values' disabled={true}>Multiple Values : [ ]</ListItem>
             <ListItem key='relation' disabled={true}
               nestedItems={[
