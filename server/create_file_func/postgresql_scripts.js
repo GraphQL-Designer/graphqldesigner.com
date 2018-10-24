@@ -1,29 +1,32 @@
 function parsePostgresTables(tables) {
   const foreignKeys = {};
   let primaryKey = [];
-  for (const tableId in props.tables) {
+  let createTablesCode = ``;
+  const tab = `  `
+
+  for (const tableId in tables) {
     parsePostgresTable(tables[tableId]);
   }
 
-  function parsePostgresSchema(table) {
+  function parsePostgresTable(table) {
     if (!table) return ``;
 
-    createTablesCode += `\nCREATE TABLE "${table.type}" (\n`;
+    createTablesCode += `CREATE TABLE "${table.type}" (`;
 
     // create code for each field
     for (const fieldId in table.fields) {
+      createTablesCode += `\n`;
       createTablesCode += createSchemaField(table.fields[fieldId]);
       // so long as it's not the last field, add a comma
-      const tableProps = Object.keys(table.fields);
-      if (fieldId !== tableProps[tableProps.length - 1]) {
+      const fieldIds = Object.keys(table.fields);
+      if (fieldId !== fieldIds[fieldIds.length - 1]) {
         createTablesCode += `,`;
       }
-      createTablesCode += `\n`;
     }
 
     // if table has a primary key
     if (primaryKey.length > 0) {
-      createTablesCode += `\t\tCONSTRAINT ${table.type}_pk PRIMARY KEY (`;
+      createTablesCode += `,\n${tab}CONSTRAINT ${table.type}_pk PRIMARY KEY (`;
       primaryKey.forEach((key, i) => {
         if (i === primaryKey.length - 1) {
           createTablesCode += `"${key}")`;
@@ -31,17 +34,17 @@ function parsePostgresTables(tables) {
           createTablesCode += `"${key}", `;
         }
       });
-      createTablesCode += `\n) WITH (\n OIDS=FALSE\n);\n\n`;
+      createTablesCode += `\n) WITH (\n  OIDS=FALSE\n);\n\n`;
+    } else {
+      createTablesCode += `\n);\n\n`;
     }
     // reset primaryKey to empty so primary keys don't slip into the next table
     primaryKey = [];
-    createTablesCode += `);\n\n`;
   }
 
   function createSchemaField(field) {
     let fieldCode = ``;
-    fieldCode += `\t\t"${field.name}"\t${checkDataType(field.type)}`;
-    fieldCode += checkAutoIncrement(field.autoIncrement);
+    fieldCode += `${tab}"${field.name}"${tab}${checkDataType(field.type)}`;
     fieldCode += checkRequired(field.required);
     fieldCode += checkUnique(field.unique);
     fieldCode += checkDefault(field.defaultValue);
@@ -77,48 +80,40 @@ function parsePostgresTables(tables) {
     }
   }
 
-  function checkAutoIncrement(fieldAutoIncrement) {
-    if (fieldAutoIncrement) return `\tAUTO_INCREMENT`;
-    else return '';
-  }
-
   function checkUnique(fieldUnique) {
-    if (fieldUnique) return `\tUNIQUE`;
+    if (fieldUnique) return `${tab}UNIQUE`;
     else return '';
   }
 
   function checkRequired(fieldRequired) {
-    if (fieldRequired) return `\tNOT NULL`;
+    if (fieldRequired) return `${tab}NOT NULL`;
     else return '';
   }
 
   function checkDefault(fieldDefault) {
-    if (fieldDefault.length > 0) return `\tDEFAULT "${fieldDefault}"`;
-    else return '';
+    if (fieldDefault.length > 0) return `${tab}DEFAULT "${fieldDefault}"`;
+    return '';
   }
-
-  // loop through tables and create build script for each table
-
 
   // if any tables have relations, aka foreign keys
   for (const tableId in foreignKeys) {
-    console.log('what are foreignKeys', foreignKeys);
     // loop through the table's fields to find the particular relation
     foreignKeys[tableId].forEach((relationInfo, relationCount) => {
       // name of table making relation
-      const tableMakingRelation = props.tables[tableId].type;
+      const tableMakingRelation = tables[tableId].type;
       // get name of field making relation
       const fieldId = relationInfo.fieldMakingRelation;
-      const fieldMakingRelation = props.tables[tableId].fields[fieldId].name;
+      const fieldMakingRelation = tables[tableId].fields[fieldId].name;
       // get name of table being referenced
       const relatedTableId = relationInfo.relatedTable;
-      const relatedTable = props.tables[relatedTableId].type;
+      const relatedTable = tables[relatedTableId].type;
       // get name of field being referenced
       const relatedFieldId = relationInfo.relatedField;
-      const relatedField = props.tables[relatedTableId].fields[relatedFieldId].name;
-      createTablesCode += `\n\nALTER TABLE "${tableMakingRelation}" ADD CONSTRAINT "${tableMakingRelation}_fk${relationCount}" FOREIGN KEY ("${fieldMakingRelation}") REFERENCES "${relatedTable}"("${relatedField}");\n`;
+      const relatedField = tables[relatedTableId].fields[relatedFieldId].name;
+      createTablesCode += `\nALTER TABLE "${tableMakingRelation}" ADD CONSTRAINT "${tableMakingRelation}_fk${relationCount}" FOREIGN KEY ("${fieldMakingRelation}") REFERENCES "${relatedTable}"("${relatedField}");\n`;
     });
   }
+  return createTablesCode;
 }
 
-export default parsePostgresTables;
+module.exports = parsePostgresTables;

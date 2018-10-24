@@ -1,17 +1,17 @@
-function parseMongoschema(data) {
-  const tab = `  `
-  let query = `const mongoose = require('mongoose');\nconst Schema = mongoose.Schema;\n\nconst ${data.type.toLowerCase()}Schema = new Schema({\n${tab}`
+function parseMongoSchema(data) {
+  const tab = `  `;
+  let query = `const mongoose = require('mongoose');\nconst Schema = mongoose.Schema;\n\nconst ${data.type.toLowerCase()}Schema = new Schema({\n${tab}`;
 
   let firstLoop = true;
   for (let prop in data.fields) {
     if (prop !== '0') {
-      if (!firstLoop) query += `,\n${tab}`
-      firstLoop = false
+      if (!firstLoop) query += `,\n${tab}`;
+      firstLoop = false;
       query += createSchemaField(data.fields[prop]);
     }
   }
   query += `\n});\n\nmodule.exports = mongoose.model("${data.type}", ${data.type.toLowerCase()}Schema);`;
-  return query; 
+  return query;
 }
 
 function createSchemaField(data) {
@@ -40,4 +40,4 @@ function createSchemaField(data) {
   }
 }
 
-module.exports = parseMongoschema;
+module.exports = parseMongoSchema;

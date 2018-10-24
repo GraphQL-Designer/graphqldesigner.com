@@ -1,4 +1,4 @@
-const tab = `  `
+const tab = `  `;
 
 function parseClientQueries(tables) {
   let query = "import { gql } from \'apollo-boost\';\n\n";
@@ -28,8 +28,8 @@ function parseClientQueries(tables) {
 }
 
 function buildClientQueryAll(table) {
-  let string = `const queryEvery${table.type} = gql\`\n`
-  string += `${tab}{\n`
+  let string = `const queryEvery${table.type} = gql\`\n`;
+  string += `${tab}{\n`;
   string += `${tab}${tab}every${toTitleCase(table.type)} {\n`;
 
   for (const fieldId in table.fields) {
@@ -46,8 +46,8 @@ function toTitleCase(refTypeName) {
 }
 
 function buildClientQueryById(table) {
-  let string = `const query${table.type}ById = gql\`\n`
-  string += `${tab}query($${table.type}: ${table.fields[0].type}!) {\n`
+  let string = `const query${table.type}ById = gql\`\n`;
+  string += `${tab}query($${table.type}: ${table.fields[0].type}!) {\n`;
   string += `${tab}${tab}${table.type}(${table.type}: $${table.type}) {\n`;
   
   for (const fieldId in table.fields) {

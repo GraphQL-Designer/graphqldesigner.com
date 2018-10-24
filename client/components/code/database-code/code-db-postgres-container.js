@@ -20,22 +20,22 @@ const CodeDBPostgresSchemaContainer = (props) => {
   function parsePostgresSchema(table) {
     if (!table) return ``;
 
-    createTablesCode += `${enter}CREATE TABLE "${table.type}" (${enter}`;
+    createTablesCode += `CREATE TABLE "${table.type}" (`;
 
     // create code for each field
     for (const fieldId in table.fields) {
+      createTablesCode += enter; 
       createTablesCode += createSchemaField(table.fields[fieldId]);
       // so long as it's not the last field, add a comma
       const tableProps = Object.keys(table.fields);
       if (fieldId !== tableProps[tableProps.length - 1]) {
         createTablesCode += `,`;
       }
-      // createTablesCode += enter; 
     }
 
     // if table has a primary key
     if (primaryKey.length > 0) {
-      createTablesCode += `,${enter}${tab}${tab}CONSTRAINT ${table.type}_pk PRIMARY KEY (`;
+      createTablesCode += `,${enter}${tab}CONSTRAINT ${table.type}_pk PRIMARY KEY (`;
       primaryKey.forEach((key, i) => {
         if (i === primaryKey.length - 1) {
           createTablesCode += `"${key}")`;
@@ -43,18 +43,17 @@ const CodeDBPostgresSchemaContainer = (props) => {
           createTablesCode += `"${key}", `;
         }
       });
-      createTablesCode += `${enter}) WITH (${enter} OIDS=FALSE${enter});${enter}${enter}`;
+      createTablesCode += `${enter}) WITH (${enter}  OIDS=FALSE${enter});${enter}${enter}`;
     } else {
       createTablesCode += `${enter});${enter}${enter}`
     }
     // reset primaryKey to empty so primary keys don't slip into the next table
     primaryKey = [];
-    createTablesCode += `);${enter}${enter}`;
   }
-
+  
   function createSchemaField(field) {
     let fieldCode = ``;
-    fieldCode += `${tab}${tab}"${field.name}"${tab}${checkDataType(field.type, field.autoIncrement)}`;
+    fieldCode += `${tab}"${field.name}"${tab}${checkDataType(field.type, field.autoIncrement)}`;
     fieldCode += checkRequired(field.required);
     fieldCode += checkUnique(field.unique);
     fieldCode += checkDefault(field.defaultValue);
@@ -114,7 +113,6 @@ const CodeDBPostgresSchemaContainer = (props) => {
 
   // if any tables have relations, aka foreign keys
   for (const tableId in foreignKeys) {
-    console.log('what are foreignKeys', foreignKeys);
     // loop through the table's fields to find the particular relation
     foreignKeys[tableId].forEach((relationInfo, relationCount) => {
       // name of table making relation
@@ -132,13 +130,12 @@ const CodeDBPostgresSchemaContainer = (props) => {
     });
   }
 
-
   return (
     <div id="code-container-database">
       <h4 className='codeHeader'>PostgreSQL Create Scripts</h4>
       <hr/>
       <pre>
-        {PostgreSQL}
+        {createTablesCode}
       </pre>
       <pre id='column-filler-for-scroll'></pre>
     </div>
