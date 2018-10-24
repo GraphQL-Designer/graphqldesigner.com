@@ -1,10 +1,12 @@
 function parseMongoSchema(data) {
-  let query = `const mongoose = require('mongoose');\nconst Schema = mongoose.Schema;\n\nconst ${data.type.toLowerCase()}Schema = new Schema({\n\t`;
+  const tab = `  `;
+  
+  let query = `const mongoose = require('mongoose');\nconst Schema = mongoose.Schema;\n\nconst ${data.type.toLowerCase()}Schema = new Schema({\n${tab}`;
 
   let firstLoop = true;
   for (let prop in data.fields) {
     if (prop !== '0') {
-      if (!firstLoop) query += `,\n\t`;
+      if (!firstLoop) query += `,\n${tab}`;
       firstLoop = false;
       query += createSchemaField(data.fields[prop]);
     }
@@ -15,13 +17,13 @@ function parseMongoSchema(data) {
 
 function createSchemaField(data) {
   const tab = `  `;
-  let query = `${data.name}: ${checkForArray('start')}{\n\t\ttype: ${checkDataType(data.type)},\n\t\tunique: ${data.unique},\n\t\trequired: ${data.required}`;
+  let query = `${data.name}: ${checkForArray('start')}{\n${tab}${tab}type: ${checkDataType(data.type)},\n${tab}${tab}unique: ${data.unique},\n${tab}${tab}required: ${data.required}`;
 
   if (data.defaultValue) {
-    query += `,\n\t\tdefault: "${data.defaultValue}"`;
+    query += `,\n${tab}${tab}default: "${data.defaultValue}"`;
   }
 
-  return query += `\n\t}${checkForArray('end')}`;
+  return query += `\n${tab}}${checkForArray('end')}`;
 
   function checkForArray(position) {
     if (data.multipleValues) {

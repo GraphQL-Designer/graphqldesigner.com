@@ -2,6 +2,7 @@ function parsePostgresTables(tables) {
   const foreignKeys = {};
   let primaryKey = [];
   let createTablesCode = ``;
+  const tab = `  `;
 
   for (const tableId in tables) {
     parsePostgresTable(tables[tableId]);
@@ -25,7 +26,7 @@ function parsePostgresTables(tables) {
 
     // if table has a primary key
     if (primaryKey.length > 0) {
-      createTablesCode += `,\n\tCONSTRAINT ${table.type}_pk PRIMARY KEY (`;
+      createTablesCode += `,\n${tab}CONSTRAINT ${table.type}_pk PRIMARY KEY (`;
       primaryKey.forEach((key, i) => {
         if (i === primaryKey.length - 1) {
           createTablesCode += `"${key}")`;
@@ -43,7 +44,7 @@ function parsePostgresTables(tables) {
 
   function createSchemaField(field) {
     let fieldCode = ``;
-    fieldCode += `\t"${field.name}"\t${checkDataType(field.type)}`;
+    fieldCode += `${tab}"${field.name}"${tab}${checkDataType(field.type)}`;
     // fieldCode += checkAutoIncrement(field.autoIncrement);
     fieldCode += checkRequired(field.required);
     fieldCode += checkUnique(field.unique);
@@ -81,23 +82,23 @@ function parsePostgresTables(tables) {
   }
 
   // function checkAutoIncrement(fieldAutoIncrement) {
-  //   if (fieldAutoIncrement) return `\tAUTO_INCREMENT`;
+  //   if (fieldAutoIncrement) return `${tab}AUTO_INCREMENT`;
   //   else return '';
   // }
 
 
   function checkUnique(fieldUnique) {
-    if (fieldUnique) return `\tUNIQUE`;
+    if (fieldUnique) return `${tab}UNIQUE`;
     else return '';
   }
 
   function checkRequired(fieldRequired) {
-    if (fieldRequired) return `\tNOT NULL`;
+    if (fieldRequired) return `${tab}NOT NULL`;
     else return '';
   }
 
   function checkDefault(fieldDefault) {
-    if (fieldDefault.length > 0) return `\tDEFAULT "${fieldDefault}"`;
+    if (fieldDefault.length > 0) return `${tab}DEFAULT "${fieldDefault}"`;
     return '';
   }
 
