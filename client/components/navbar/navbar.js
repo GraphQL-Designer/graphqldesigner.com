@@ -103,7 +103,9 @@ class MainNav extends React.Component {
             <FlatButton style={{ color: '#FF4280' }} label="Export Code" onClick={this.handleExport} />
           </div>
           <div id="nav-right">
-
+            <a href="https://github.com/GraphQL-Designer/graphqldesigner.com"> 
+              <img src="../../../public/images/githubicon.png" />
+            </a>  
           </div>
         </nav>
         {this.state.modal && (
