@@ -2,7 +2,6 @@ function parsePostgresTables(tables) {
   const foreignKeys = {};
   let primaryKey = [];
   let createTablesCode = ``;
-  const tab = `  `
 
   for (const tableId in tables) {
     parsePostgresTable(tables[tableId]);
@@ -26,7 +25,7 @@ function parsePostgresTables(tables) {
 
     // if table has a primary key
     if (primaryKey.length > 0) {
-      createTablesCode += `,\n${tab}CONSTRAINT ${table.type}_pk PRIMARY KEY (`;
+      createTablesCode += `,\n\tCONSTRAINT ${table.type}_pk PRIMARY KEY (`;
       primaryKey.forEach((key, i) => {
         if (i === primaryKey.length - 1) {
           createTablesCode += `"${key}")`;
@@ -34,7 +33,7 @@ function parsePostgresTables(tables) {
           createTablesCode += `"${key}", `;
         }
       });
-      createTablesCode += `\n) WITH (\n  OIDS=FALSE\n);\n\n`;
+      createTablesCode += `\n\n) WITH (\n  OIDS=FALSE\n);\n\n\n`;
     } else {
       createTablesCode += `\n);\n\n`;
     }
@@ -44,7 +43,8 @@ function parsePostgresTables(tables) {
 
   function createSchemaField(field) {
     let fieldCode = ``;
-    fieldCode += `${tab}"${field.name}"${tab}${checkDataType(field.type)}`;
+    fieldCode += `\t"${field.name}"\t${checkDataType(field.type)}`;
+    // fieldCode += checkAutoIncrement(field.autoIncrement);
     fieldCode += checkRequired(field.required);
     fieldCode += checkUnique(field.unique);
     fieldCode += checkDefault(field.defaultValue);
@@ -80,18 +80,24 @@ function parsePostgresTables(tables) {
     }
   }
 
+  // function checkAutoIncrement(fieldAutoIncrement) {
+  //   if (fieldAutoIncrement) return `\tAUTO_INCREMENT`;
+  //   else return '';
+  // }
+
+
   function checkUnique(fieldUnique) {
-    if (fieldUnique) return `${tab}UNIQUE`;
+    if (fieldUnique) return `\tUNIQUE`;
     else return '';
   }
 
   function checkRequired(fieldRequired) {
-    if (fieldRequired) return `${tab}NOT NULL`;
+    if (fieldRequired) return `\tNOT NULL`;
     else return '';
   }
 
   function checkDefault(fieldDefault) {
-    if (fieldDefault.length > 0) return `${tab}DEFAULT "${fieldDefault}"`;
+    if (fieldDefault.length > 0) return `\tDEFAULT "${fieldDefault}"`;
     return '';
   }
 
