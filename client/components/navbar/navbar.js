@@ -58,7 +58,6 @@ class MainNav extends React.Component {
     }
     const tableData = Object.assign({}, tables, changedTables)
     const data = Object.assign({}, { 'data': tableData }, { 'database': this.props.database })
-    console.log('this is data', data);
 
     setTimeout(() => {
       fetch('/write-files', {
