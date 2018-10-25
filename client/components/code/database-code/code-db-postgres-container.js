@@ -43,10 +43,9 @@ const CodeDBPostgresSchemaContainer = (props) => {
           createTablesCode += `"${key}", `;
         }
       });
-      createTablesCode += `${enter}${enter}) WITH (${enter}  OIDS=FALSE${enter});${enter}${enter}${enter}`;
-    } else {
-      createTablesCode += `${enter});${enter}${enter}`;
-    }
+    } 
+    createTablesCode += `${enter}) WITH (${enter}  OIDS=FALSE${enter});${enter}${enter}`;
+    
     // reset primaryKey to empty so primary keys don't slip into the next table
     primaryKey = [];
   }

@@ -34,10 +34,9 @@ function parsePostgresTables(tables) {
           createTablesCode += `"${key}", `;
         }
       });
-      createTablesCode += `\n\n) WITH (\n  OIDS=FALSE\n);\n\n\n`;
-    } else {
-      createTablesCode += `\n);\n\n`;
-    }
+    } 
+    createTablesCode += `\n) WITH (\n  OIDS=FALSE\n);\n\n`;
+    
     // reset primaryKey to empty so primary keys don't slip into the next table
     primaryKey = [];
   }
