@@ -2,7 +2,7 @@ function parsePostgresTables(tables) {
   const foreignKeys = {};
   let primaryKey = [];
   let createTablesCode = ``;
-  const tab = `  `
+  const tab = `  `;
 
   for (const tableId in tables) {
     parsePostgresTable(tables[tableId]);
@@ -34,9 +34,16 @@ function parsePostgresTables(tables) {
           createTablesCode += `"${key}", `;
         }
       });
+<<<<<<< HEAD
     } 
     createTablesCode += `\n) WITH (\n  OIDS=FALSE\n);\n\n`;
     
+=======
+      createTablesCode += `\n\n) WITH (\n  OIDS=FALSE\n);\n\n\n`;
+    } else {
+      createTablesCode += `\n);\n\n`;
+    }
+>>>>>>> d7d3f4d1561cf5be936b4cd5624f9a0e19b4d999
     // reset primaryKey to empty so primary keys don't slip into the next table
     primaryKey = [];
   }
@@ -44,6 +51,7 @@ function parsePostgresTables(tables) {
   function createSchemaField(field) {
     let fieldCode = ``;
     fieldCode += `${tab}"${field.name}"${tab}${checkDataType(field.type)}`;
+    // fieldCode += checkAutoIncrement(field.autoIncrement);
     fieldCode += checkRequired(field.required);
     fieldCode += checkUnique(field.unique);
     fieldCode += checkDefault(field.defaultValue);
@@ -78,6 +86,12 @@ function parsePostgresTables(tables) {
         return "serial";
     }
   }
+
+  // function checkAutoIncrement(fieldAutoIncrement) {
+  //   if (fieldAutoIncrement) return `${tab}AUTO_INCREMENT`;
+  //   else return '';
+  // }
+
 
   function checkUnique(fieldUnique) {
     if (fieldUnique) return `${tab}UNIQUE`;

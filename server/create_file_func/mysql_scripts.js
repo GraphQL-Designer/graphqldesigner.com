@@ -2,7 +2,8 @@ function parseSQLTables(tables) {
   const foreignKeys = {};
   let primaryKey = [];
   let createTablesCode = ``;
-  let tab = `  `
+  const tab = `  `;
+  
   for (const tableId in tables) {
     parseSQLTable(tables[tableId]);
   }

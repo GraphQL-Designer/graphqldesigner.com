@@ -1,5 +1,6 @@
 function parseMongoSchema(data) {
   const tab = `  `;
+  
   let query = `const mongoose = require('mongoose');\nconst Schema = mongoose.Schema;\n\nconst ${data.type.toLowerCase()}Schema = new Schema({\n${tab}`;
 
   let firstLoop = true;
