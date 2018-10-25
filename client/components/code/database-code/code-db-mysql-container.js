@@ -78,13 +78,13 @@ const CodeDBSQLContainer = (props) => {
   function checkDataType(dataType) {
     switch(dataType){
       case 'String':
-        return `VARCHAR`;
+        return `VARCHAR(255)`;
       case 'Number':
         return `INT`;
       case 'Boolean':
         return `BOOLEAN`;
       case 'ID':
-        return `VARCHAR`;
+        return `INT`;
     }
   }
 

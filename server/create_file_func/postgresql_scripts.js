@@ -2,7 +2,7 @@ function parsePostgresTables(tables) {
   const foreignKeys = {};
   let primaryKey = [];
   let createTablesCode = ``;
-  const tab = `  `
+  const tab = `  `;
 
   for (const tableId in tables) {
     parsePostgresTable(tables[tableId]);
@@ -34,7 +34,7 @@ function parsePostgresTables(tables) {
           createTablesCode += `"${key}", `;
         }
       });
-      createTablesCode += `\n) WITH (\n  OIDS=FALSE\n);\n\n`;
+      createTablesCode += `\n\n) WITH (\n  OIDS=FALSE\n);\n\n\n`;
     } else {
       createTablesCode += `\n);\n\n`;
     }
@@ -45,6 +45,7 @@ function parsePostgresTables(tables) {
   function createSchemaField(field) {
     let fieldCode = ``;
     fieldCode += `${tab}"${field.name}"${tab}${checkDataType(field.type)}`;
+    // fieldCode += checkAutoIncrement(field.autoIncrement);
     fieldCode += checkRequired(field.required);
     fieldCode += checkUnique(field.unique);
     fieldCode += checkDefault(field.defaultValue);
@@ -79,6 +80,12 @@ function parsePostgresTables(tables) {
         return "serial";
     }
   }
+
+  // function checkAutoIncrement(fieldAutoIncrement) {
+  //   if (fieldAutoIncrement) return `${tab}AUTO_INCREMENT`;
+  //   else return '';
+  // }
+
 
   function checkUnique(fieldUnique) {
     if (fieldUnique) return `${tab}UNIQUE`;

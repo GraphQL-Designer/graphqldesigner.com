@@ -2,7 +2,8 @@ function parseSQLTables(tables) {
   const foreignKeys = {};
   let primaryKey = [];
   let createTablesCode = ``;
-  let tab = `  `
+  const tab = `  `;
+  
   for (const tableId in tables) {
     parseSQLTable(tables[tableId]);
   }
@@ -91,13 +92,13 @@ function parseSQLTables(tables) {
   function checkDataType(dataType) {
     switch(dataType){
       case 'String':
-      return `VARCHAR`;
+      return `VARCHAR(255)`;
       case 'Number':
       return `INT`;
       case 'Boolean':
       return `BOOLEAN`;
       case 'ID':
-      return 'VARCHAR';
+      return 'INT';
     }
   }
 
