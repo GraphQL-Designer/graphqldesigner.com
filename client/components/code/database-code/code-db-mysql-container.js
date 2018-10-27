@@ -54,7 +54,7 @@ const CodeDBSQLContainer = (props) => {
     fieldCode += checkAutoIncrement(field.autoIncrement);
     fieldCode += checkRequired(field.required);
     fieldCode += checkUnique(field.unique);
-    fieldCode += checkDefault(field.defaultValue);
+    fieldCode += checkDefault(field.defaultValue, field.type);
 
     if (field.primaryKey) {
       primaryKey.push(field.name);
@@ -103,10 +103,12 @@ const CodeDBSQLContainer = (props) => {
     else return '';
   }
 
-  function checkDefault(fieldDefault) {
+  function checkDefault(fieldDefault, dataType) {
     if (fieldDefault.length > 0) return `${tab}DEFAULT '${fieldDefault}'`;
-    else return '';
+    if (!fieldDefault.length && dataType === 'Boolean') return `${tab}DEFAULT 'true'`;
+    return '';
   }
+
 
   // loop through tables and create build script for each table
   for (const tableId in props.tables) {
