@@ -78,7 +78,7 @@ const CodeDBSQLContainer = (props) => {
   function checkDataType(dataType) {
     switch(dataType){
       case 'String':
-        return `VARCHAR(255)`;
+        return `VARCHAR`;
       case 'Number':
         return `INT`;
       case 'Boolean':
@@ -104,11 +104,11 @@ const CodeDBSQLContainer = (props) => {
   }
 
   function checkDefault(fieldDefault, dataType) {
+    if (dataType === 'String') return fieldDefault.length ? `(${fieldDefault})` : `(255)`;
     if (fieldDefault.length > 0) return `${tab}DEFAULT '${fieldDefault}'`;
-    if (!fieldDefault.length && dataType === 'Boolean') return `${tab}DEFAULT 'true'`;
+    if (dataType === 'Boolean' && !fieldDefault.length) return `${tab}DEFAULT 'true'`;
     return '';
   }
-
 
   // loop through tables and create build script for each table
   for (const tableId in props.tables) {

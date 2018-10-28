@@ -119,8 +119,9 @@ function parseSQLTables(tables) {
   }
 
   function checkDefault(fieldDefault, dataType) {
+    if (dataType === 'String') return fieldDefault.length ? `(${fieldDefault})` : `(255)`;
     if (fieldDefault.length > 0) return `${tab}DEFAULT '${fieldDefault}'`;
-    if (!fieldDefault.length && dataType === 'Boolean') return `${tab}DEFAULT 'true'`;
+    if (dataType === 'Boolean' && !fieldDefault.length) return `${tab}DEFAULT 'true'`;
     return '';
   }
 }
