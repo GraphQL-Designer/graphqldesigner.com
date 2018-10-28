@@ -93,7 +93,7 @@ function parseSQLTables(tables) {
   function checkDataType(dataType) {
     switch(dataType){
       case 'String':
-      return `VARCHAR(255)`;
+      return `VARCHAR`;
       case 'Number':
       return `INT`;
       case 'Boolean':
