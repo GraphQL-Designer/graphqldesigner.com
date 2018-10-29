@@ -65,11 +65,10 @@ function parseSQLTables(tables) {
   function createTableField(field) {
     let fieldCode = ``;
     fieldCode += `${tab}\`${field.name}\`${tab}${checkDataType(field.type)}`;
+    fieldCode += checkDefault(field.defaultValue, field.type);
     fieldCode += checkAutoIncrement(field.autoIncrement);
     fieldCode += checkRequired(field.required);
     fieldCode += checkUnique(field.unique);
-    fieldCode += checkDefault(field.defaultValue, field.type);
-
 
     if (field.primaryKey) {
       primaryKey.push(field.name);

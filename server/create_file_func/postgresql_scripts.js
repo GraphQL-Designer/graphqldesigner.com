@@ -43,11 +43,11 @@ function parsePostgresTables(tables) {
 
   function createSchemaField(field) {
     let fieldCode = ``;
-    fieldCode += `${tab}"${field.name}"${tab}${checkDataType(field.type)}`;
-    // fieldCode += checkAutoIncrement(field.autoIncrement);
+    fieldCode += `${tab}"${field.name}"${tab}${checkDataType(field.type, field.autoIncrement)}`;
+    fieldCode += checkDefault(field.defaultValue, field.type);
     fieldCode += checkRequired(field.required);
     fieldCode += checkUnique(field.unique);
-    fieldCode += checkDefault(field.defaultValue);
+
 
     if (field.primaryKey) {
       primaryKey.push(field.name);
@@ -67,7 +67,9 @@ function parsePostgresTables(tables) {
     }
     return fieldCode;
   }
-  function checkDataType(dataType) {
+
+  function checkDataType(dataType, autoIncrement) {
+    if (autoIncrement) return "serial";
     switch(dataType){
       case "String":
         return "varchar";
@@ -80,12 +82,6 @@ function parsePostgresTables(tables) {
     }
   }
 
-  // function checkAutoIncrement(fieldAutoIncrement) {
-  //   if (fieldAutoIncrement) return `${tab}AUTO_INCREMENT`;
-  //   else return '';
-  // }
-
-
   function checkUnique(fieldUnique) {
     if (fieldUnique) return `${tab}UNIQUE`;
     else return '';
@@ -96,8 +92,9 @@ function parsePostgresTables(tables) {
     else return '';
   }
 
-  function checkDefault(fieldDefault) {
-    if (fieldDefault.length > 0) return `${tab}DEFAULT "${fieldDefault}"`;
+  function checkDefault(fieldDefault, dataType) {
+    if (dataType === 'String' && fieldDefault.length) return `(${fieldDefault})`;
+    if (fieldDefault.length > 0) return `${tab}DEFAULT '${fieldDefault}'`;
     return '';
   }
 

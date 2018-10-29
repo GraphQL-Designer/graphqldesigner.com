@@ -130,7 +130,7 @@ class TableOptions extends React.Component {
             return this.handleSnackbarUpdate(message);
           }
         }
-        // update state if field name was modified to take out spaces and symbols. 
+        // update state if field name was modified to take out spaces and symbols.
         if (originalFieldName !== newFieldName) {
           this.handleSnackbarUpdate('Spaces or symbols were removed from field name');
           this.props.handleChange({
@@ -250,7 +250,7 @@ class TableOptions extends React.Component {
                 <MenuItem value="Boolean" primaryText="Boolean" />
                 <MenuItem value="ID" primaryText="ID" />
               </SelectField>
-
+              
               <TextField
                 hintText="Default Value"
                 floatingLabelText="Default Value"
