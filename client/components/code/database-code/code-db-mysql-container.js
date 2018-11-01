@@ -105,7 +105,7 @@ const CodeDBSQLContainer = (props) => {
 
   function checkDefault(fieldDefault, dataType) {
     if (fieldDefault.length > 0) {
-      const defaultString = `${tab}DEFAULT `;
+      let defaultString = `${tab}DEFAULT `;
       if (dataType === 'String') defaultString += `'${fieldDefault}'`;
       else defaultString += fieldDefault;
       return defaultString;
