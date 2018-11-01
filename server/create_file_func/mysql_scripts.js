@@ -118,7 +118,12 @@ function parseSQLTables(tables) {
   }
 
   function checkDefault(fieldDefault, dataType) {
-    if (fieldDefault.length > 0) return `${tab}DEFAULT '${fieldDefault}'`;
+    if (fieldDefault.length > 0) {
+      const defaultString = `${tab}DEFAULT `;
+      if (dataType === 'String') defaultString += `'${fieldDefault}'`;
+      else defaultString += fieldDefault;
+      return defaultString;
+    }
     return '';
   }
 }
