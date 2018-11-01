@@ -65,10 +65,10 @@ function parseSQLTables(tables) {
   function createTableField(field) {
     let fieldCode = ``;
     fieldCode += `${tab}\`${field.name}\`${tab}${checkDataType(field.type)}`;
-    fieldCode += checkDefault(field.defaultValue, field.type);
     fieldCode += checkAutoIncrement(field.autoIncrement);
     fieldCode += checkRequired(field.required);
     fieldCode += checkUnique(field.unique);
+    fieldCode += checkDefault(field.defaultValue, field.type);
 
     if (field.primaryKey) {
       primaryKey.push(field.name);
@@ -92,7 +92,7 @@ function parseSQLTables(tables) {
   function checkDataType(dataType) {
     switch(dataType){
       case 'String':
-      return `VARCHAR`;
+      return `VARCHAR(255)`;
       case 'Number':
       return `INT`;
       case 'Boolean':
@@ -118,9 +118,7 @@ function parseSQLTables(tables) {
   }
 
   function checkDefault(fieldDefault, dataType) {
-    if (dataType === 'String') return fieldDefault.length ? `(${fieldDefault})` : `(255)`;
     if (fieldDefault.length > 0) return `${tab}DEFAULT '${fieldDefault}'`;
-    if (dataType === 'Boolean' && !fieldDefault.length) return `${tab}DEFAULT 'true'`;
     return '';
   }
 }
