@@ -1,6 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import FlatButton from 'material-ui/FlatButton';
+
+import Dialog from 'material-ui/Dialog';
+
+
 import * as actions from '../../actions/actions.js';
 
 // styling
@@ -8,6 +12,7 @@ import './navbar.css';
 
 // componenets
 import GraphqlLoader from '../loader/index.js';
+import About from './about'
 
 const mapStateToProps = store => ({
   tables: store.schema.tables,
@@ -23,9 +28,11 @@ class MainNav extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      open: false,
       modal: false,
     };
-
+    this.handleClickOpen = this.handleClickOpen.bind(this);   
+    this.handleClose = this.handleClose.bind(this);
     this.handleExport = this.handleExport.bind(this);
     this.handleNewProject = this.handleNewProject.bind(this);
   }
@@ -90,6 +97,15 @@ class MainNav extends React.Component {
   handleNewProject() {
     this.props.handleNewProject(true);
   }
+  
+  handleClickOpen = () => {
+    this.setState({ open: true });
+  };
+
+
+  handleClose = () => {
+    this.setState({ open: false });
+  };
 
   render() {
     return (
@@ -102,6 +118,21 @@ class MainNav extends React.Component {
             <FlatButton style={{ color: '#FF4280' }} label="Export Code" onClick={this.handleExport} />
           </div>
           <div id="nav-right">
+            <FlatButton onClick={this.handleClickOpen}>About</FlatButton>
+            <Dialog
+              modal={true}
+              open={this.state.open}
+              onClose={this.handleClose}
+              autoScrollBodyContent={true}
+              aria-labelledby="scroll-dialog-title"
+              className='about-container'
+              paperClassName='about-box'
+            >
+            <About />
+            <FlatButton className='about-btn' primary={true} onClick={this.handleClose} >
+              Cancel  
+            </FlatButton>
+            </Dialog>  
             <a href="https://github.com/GraphQL-Designer/graphqldesigner.com"> 
               <img src="../../../public/images/githubicon.png" />
             </a>  

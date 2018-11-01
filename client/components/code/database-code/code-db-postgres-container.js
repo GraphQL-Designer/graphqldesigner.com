@@ -53,9 +53,9 @@ const CodeDBPostgresSchemaContainer = (props) => {
   function createSchemaField(field) {
     let fieldCode = ``;
     fieldCode += `${tab}"${field.name}"${tab}${checkDataType(field.type, field.autoIncrement)}`;
+    fieldCode += checkDefault(field.defaultValue, field.type);
     fieldCode += checkRequired(field.required);
     fieldCode += checkUnique(field.unique);
-    fieldCode += checkDefault(field.defaultValue);
 
     if (field.primaryKey) {
       primaryKey.push(field.name);
@@ -77,7 +77,7 @@ const CodeDBPostgresSchemaContainer = (props) => {
   }
 
   function checkDataType(dataType, autoIncrement) {
-    if (autoIncrement) return "serial"
+    if (autoIncrement) return "serial";
     switch(dataType){
       case "String":
         return "varchar";
@@ -100,9 +100,10 @@ const CodeDBPostgresSchemaContainer = (props) => {
     else return '';
   }
 
-  function checkDefault(fieldDefault) {
-    if (fieldDefault.length > 0) return `${tab}DEFAULT "${fieldDefault}"`;
-    else return '';
+  function checkDefault(fieldDefault, dataType) {
+    if (dataType === 'String' && fieldDefault.length) return `(${fieldDefault})`;
+    if (fieldDefault.length > 0) return `${tab}DEFAULT '${fieldDefault}'`;
+    return '';
   }
 
   // loop through tables and create build script for each table

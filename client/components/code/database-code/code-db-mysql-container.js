@@ -51,10 +51,10 @@ const CodeDBSQLContainer = (props) => {
   function createSchemaField(field) {
     let fieldCode = ``;
     fieldCode += `${tab}\`${field.name}\`${tab}${checkDataType(field.type)}`;
+    fieldCode += checkDefault(field.defaultValue, field.type);
     fieldCode += checkAutoIncrement(field.autoIncrement);
     fieldCode += checkRequired(field.required);
     fieldCode += checkUnique(field.unique);
-    fieldCode += checkDefault(field.defaultValue);
 
     if (field.primaryKey) {
       primaryKey.push(field.name);
@@ -78,7 +78,7 @@ const CodeDBSQLContainer = (props) => {
   function checkDataType(dataType) {
     switch(dataType){
       case 'String':
-        return `VARCHAR(255)`;
+        return `VARCHAR`;
       case 'Number':
         return `INT`;
       case 'Boolean':
@@ -103,9 +103,11 @@ const CodeDBSQLContainer = (props) => {
     else return '';
   }
 
-  function checkDefault(fieldDefault) {
+  function checkDefault(fieldDefault, dataType) {
+    if (dataType === 'String') return fieldDefault.length ? `(${fieldDefault})` : `(255)`;
     if (fieldDefault.length > 0) return `${tab}DEFAULT '${fieldDefault}'`;
-    else return '';
+    if (dataType === 'Boolean' && !fieldDefault.length) return `${tab}DEFAULT 'true'`;
+    return '';
   }
 
   // loop through tables and create build script for each table
