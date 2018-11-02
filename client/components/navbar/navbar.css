@@ -6,6 +6,7 @@
   flex-direction: row; 
   justify-content: space-between;
   align-items: center; 
+  padding: 0px 0px 0px 10px;
 }
 
 #nav-left{
@@ -27,6 +28,14 @@
   color: white; 
   padding: 0px 0px 0px 10px;
   color: rgb(255,66,128); 
+}
+
+.cancel-btn {
+  border: 1px  white;
+  width: 125px;
+  font-size: 1.2em;
+  color: rgb(255,66,128); 
+  justify-content: flex-end;
 }
 
 .overlay {

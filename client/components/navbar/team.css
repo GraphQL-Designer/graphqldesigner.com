@@ -1,0 +1,45 @@
+
+.team{
+  /* background-color: rgb(50,54,60); */
+  min-width: 500px;
+  min-height: 400px; 
+  margin-top: -7vh;
+  display: flex; 
+  color: white; 
+  flex-direction: column;
+  justify-content: space-evenly;
+
+}
+.team-heading{
+  font-size: 40px !important;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+  display: block;
+  font-weight: 100;
+}
+
+.team-member  {
+  margin-bottom: 0px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 20px;
+  width: 50vw;
+  font-weight: 50;
+}
+
+
+.team-links{
+  margin: 0;
+  padding: 0;
+  display: block;
+  justify-content: space-between;
+  font-weight: 50;
+  font-family: "open sans", sans-serif white;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+}
