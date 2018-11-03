@@ -46,7 +46,6 @@ class Welcome extends React.Component {
 
   handleWelcomeVersion(version, close, SQLType, event){ 
     if (close){
-      console.log('choose', version)
       this.props.chooseDatabase(version)
       this.props.handleNewProject(false);
       this.setState({
@@ -69,19 +68,6 @@ class Welcome extends React.Component {
   }
 
   render() {
-    // let welcomeModal =  <WelcomeIntro handleWelcomeVersion={this.handleWelcomeVersion}/>;
-    // switch(this.state.welcomeVersion) {
-    //   case 'NoSQL':
-    //     welcomeModal = <WelcomeNoSQL handleWelcomeVersion={this.handleDatabaseClick}/>;
-    //     break; 
-    //   case 'SQL':
-    //     welcomeModal = <WelcomeSQL handleWelcomeVersion={this.handleWelcomeVersion}/>;
-    //     break; 
-    //   case 'JoinMonster':
-    //     welcomeModal = <WelcomeJoinMonster handleDatabaseClick={this.handleDatabaseClick}/>;
-    //     break; 
-    // }
-
     return (
       <div>
         <Dialog
