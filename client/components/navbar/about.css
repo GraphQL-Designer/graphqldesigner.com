@@ -1,0 +1,30 @@
+.about-container{
+  text-align: center;
+  margin-top: -7vh;
+}
+
+.about-box{
+  width: 400px;
+  height: 300px; 
+}
+
+
+#subtitle{
+  font-size: 50px;
+}
+
+.about-btn{
+  display: flex;
+  justify-content: space-around;
+  border: '1px solid white';
+  width: '125px';
+  font-size: '1.2em';
+  color: 'white';
+}
+
+.welcome-hr{
+  height: 2px;
+  background-color: black;
+}
+
+

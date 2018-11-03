@@ -2,7 +2,7 @@ function parsePostgresTables(tables) {
   const foreignKeys = {};
   let primaryKey = [];
   let createTablesCode = ``;
-  const tab = `  `
+  const tab = `  `;
 
   for (const tableId in tables) {
     parsePostgresTable(tables[tableId]);
@@ -34,20 +34,20 @@ function parsePostgresTables(tables) {
           createTablesCode += `"${key}", `;
         }
       });
-      createTablesCode += `\n) WITH (\n  OIDS=FALSE\n);\n\n`;
-    } else {
-      createTablesCode += `\n);\n\n`;
-    }
+    } 
+    createTablesCode += `\n) WITH (\n  OIDS=FALSE\n);\n\n`;
+    
     // reset primaryKey to empty so primary keys don't slip into the next table
     primaryKey = [];
   }
 
   function createSchemaField(field) {
     let fieldCode = ``;
-    fieldCode += `${tab}"${field.name}"${tab}${checkDataType(field.type)}`;
+    fieldCode += `${tab}"${field.name}"${tab}${checkDataType(field.type, field.autoIncrement)}`;
     fieldCode += checkRequired(field.required);
     fieldCode += checkUnique(field.unique);
-    fieldCode += checkDefault(field.defaultValue);
+    fieldCode += checkDefault(field.defaultValue, field.type);
+
 
     if (field.primaryKey) {
       primaryKey.push(field.name);
@@ -67,7 +67,9 @@ function parsePostgresTables(tables) {
     }
     return fieldCode;
   }
-  function checkDataType(dataType) {
+
+  function checkDataType(dataType, autoIncrement) {
+    if (autoIncrement) return "serial";
     switch(dataType){
       case "String":
         return "varchar";
@@ -90,8 +92,13 @@ function parsePostgresTables(tables) {
     else return '';
   }
 
-  function checkDefault(fieldDefault) {
-    if (fieldDefault.length > 0) return `${tab}DEFAULT "${fieldDefault}"`;
+  function checkDefault(fieldDefault, dataType) {
+    if (fieldDefault.length > 0) {
+      let defaultString = `${tab}DEFAULT `;
+      if (dataType === 'String') defaultString += `'${fieldDefault}'`;
+      else defaultString += fieldDefault;
+      return defaultString;
+    }
     return '';
   }
 

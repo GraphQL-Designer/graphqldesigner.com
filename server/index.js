@@ -32,7 +32,6 @@ app.post('/write-files', (req, res) => {
   const data = req.body; // data.data is state.tables from schemaReducer. See Navbar component
   const dateStamp = Date.now();
 
-
   buildDirectories(dateStamp, () => {
     fs.writeFileSync(path.join(PATH, `build-files${dateStamp}/readme.md`), createReadMe());
     fs.writeFileSync(path.join(PATH, `build-files${dateStamp}/index.js`), buildExpressServer(data.database));
@@ -43,12 +42,10 @@ app.post('/write-files', (req, res) => {
       if (data.database === 'MySQL') buildForMySQL(data.data, dateStamp);
       if (data.database === 'PostgreSQL') buildForPostgreSQL(data.data, dateStamp);
 
-
       sendResponse(dateStamp, res, () => {
         setTimeout(() => {
           deleteTempFiles(data.database, data.data, dateStamp, () => {
             deleteTempFolders(dateStamp, () => {
-              console.log('Deleted Temp Files');
             });
           });
         }, 5000);
@@ -90,12 +87,12 @@ function buildForMongo(data, dateStamp) {
 
 function buildForMySQL(data, dateStamp) {
   fs.writeFileSync(path.join(PATH, `build-files${dateStamp}/server/db/mysql_pool.js`), sqlPool('MySQL'));
-  fs.writeFileSync(path.join(PATH, `build-files${dateStamp}/server/db/mysql_scripts.md`), parseMySQLTables(data));
+  fs.writeFileSync(path.join(PATH, `build-files${dateStamp}/server/db/mysql_scripts.sql`), parseMySQLTables(data));
 }
 
 function buildForPostgreSQL(data, dateStamp) {
   fs.writeFileSync(path.join(PATH, `build-files${dateStamp}/server/db/postgresql_pool.js`), sqlPool('Postgres'));
-  fs.writeFileSync(path.join(PATH, `build-files${dateStamp}/server/db/postgresql_scripts.md`), parsePostgresTables(data));
+  fs.writeFileSync(path.join(PATH, `build-files${dateStamp}/server/db/postgresql_scripts.sql`), parsePostgresTables(data));
 }
 
 function deleteTempFiles(database, data, dateStamp, cb) {
@@ -108,12 +105,12 @@ function deleteTempFiles(database, data, dateStamp, cb) {
 
   if (database === 'PostgreSQL') {
     fs.unlinkSync(path.join(PATH, `build-files${dateStamp}/server/db/postgresql_pool.js`));
-    fs.unlinkSync(path.join(PATH, `build-files${dateStamp}/server/db/postgresql_scripts.md`));
+    fs.unlinkSync(path.join(PATH, `build-files${dateStamp}/server/db/postgresql_scripts.sql`));
   }
 
   if (database === 'MySQL') {
     fs.unlinkSync(path.join(PATH, `build-files${dateStamp}/server/db/mysql_pool.js`));
-    fs.unlinkSync(path.join(PATH, `build-files${dateStamp}/server/db/mysql_scripts.md`));
+    fs.unlinkSync(path.join(PATH, `build-files${dateStamp}/server/db/mysql_scripts.sql`));
   }
 
   if (database === 'MongoDB') {
@@ -123,9 +120,7 @@ function deleteTempFiles(database, data, dateStamp, cb) {
       if (i < indexes.length) {
         fs.unlinkSync(path.join(PATH, `build-files${dateStamp}/server/db/${data[indexes[i]].type.toLowerCase()}.js`));
         step(i + 1);
-      } else {
-        return cb();
-      }
+      } 
     }
     step(0);
   }
@@ -148,11 +143,10 @@ function sendResponse(dateStamp, res, cb) {
   zipper.sync.zip(path.join(PATH, `build-files${dateStamp}`)).compress().save(path.join(PATH, `graphql${dateStamp}.zip`));
 
   const file = path.join(PATH, `graphql${dateStamp}.zip`);
-  res.setHeader('Content-Type', 'application/force-download');
-  res.setHeader('Content-disposition', 'filename=graphql.zip');
+  res.setHeader('Content-Type', 'application/zip');
+  res.setHeader('Content-disposition', 'attachment');
   res.download(file, (err) => {
     if (err) console.log(err);
-
     console.log('Download Complete!');
     return cb();
   });

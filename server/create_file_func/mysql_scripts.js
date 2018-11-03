@@ -2,7 +2,8 @@ function parseSQLTables(tables) {
   const foreignKeys = {};
   let primaryKey = [];
   let createTablesCode = ``;
-  let tab = `  `
+  const tab = `  `;
+  
   for (const tableId in tables) {
     parseSQLTable(tables[tableId]);
   }
@@ -67,7 +68,7 @@ function parseSQLTables(tables) {
     fieldCode += checkAutoIncrement(field.autoIncrement);
     fieldCode += checkRequired(field.required);
     fieldCode += checkUnique(field.unique);
-    fieldCode += checkDefault(field.defaultValue);
+    fieldCode += checkDefault(field.defaultValue, field.type);
 
     if (field.primaryKey) {
       primaryKey.push(field.name);
@@ -91,13 +92,13 @@ function parseSQLTables(tables) {
   function checkDataType(dataType) {
     switch(dataType){
       case 'String':
-      return `VARCHAR`;
+      return `VARCHAR(255)`;
       case 'Number':
       return `INT`;
       case 'Boolean':
       return `BOOLEAN`;
       case 'ID':
-      return 'VARCHAR';
+      return 'INT';
     }
   }
 
@@ -116,8 +117,13 @@ function parseSQLTables(tables) {
     return '';
   }
 
-  function checkDefault(fieldDefault) {
-    if (fieldDefault.length > 0) return `${tab}DEFAULT '${fieldDefault}'`;
+  function checkDefault(fieldDefault, dataType) {
+    if (fieldDefault.length > 0) {
+      let defaultString = `${tab}DEFAULT `;
+      if (dataType === 'String') defaultString += `'${fieldDefault}'`;
+      else defaultString += fieldDefault;
+      return defaultString;
+    }
     return '';
   }
 }

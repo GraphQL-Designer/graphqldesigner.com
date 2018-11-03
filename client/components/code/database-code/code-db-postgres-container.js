@@ -43,10 +43,9 @@ const CodeDBPostgresSchemaContainer = (props) => {
           createTablesCode += `"${key}", `;
         }
       });
-      createTablesCode += `${enter}) WITH (${enter}  OIDS=FALSE${enter});${enter}${enter}`;
-    } else {
-      createTablesCode += `${enter});${enter}${enter}`
-    }
+    } 
+    createTablesCode += `${enter}) WITH (${enter}  OIDS=FALSE${enter});${enter}${enter}`;
+    
     // reset primaryKey to empty so primary keys don't slip into the next table
     primaryKey = [];
   }
@@ -56,7 +55,7 @@ const CodeDBPostgresSchemaContainer = (props) => {
     fieldCode += `${tab}"${field.name}"${tab}${checkDataType(field.type, field.autoIncrement)}`;
     fieldCode += checkRequired(field.required);
     fieldCode += checkUnique(field.unique);
-    fieldCode += checkDefault(field.defaultValue);
+    fieldCode += checkDefault(field.defaultValue, field.type);
 
     if (field.primaryKey) {
       primaryKey.push(field.name);
@@ -78,7 +77,7 @@ const CodeDBPostgresSchemaContainer = (props) => {
   }
 
   function checkDataType(dataType, autoIncrement) {
-    if (autoIncrement) return "serial"
+    if (autoIncrement) return "serial";
     switch(dataType){
       case "String":
         return "varchar";
@@ -101,9 +100,14 @@ const CodeDBPostgresSchemaContainer = (props) => {
     else return '';
   }
 
-  function checkDefault(fieldDefault) {
-    if (fieldDefault.length > 0) return `${tab}DEFAULT "${fieldDefault}"`;
-    else return '';
+  function checkDefault(fieldDefault, dataType) {
+    if (fieldDefault.length > 0) {
+      let defaultString = `${tab}DEFAULT `;
+      if (dataType === 'String') defaultString += `'${fieldDefault}'`;
+      else defaultString += fieldDefault;
+      return defaultString;
+    }
+    return '';
   }
 
   // loop through tables and create build script for each table

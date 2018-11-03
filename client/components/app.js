@@ -33,7 +33,6 @@ const mapStateToProps = store => ({
 
 const mapDispatchToProps = dispatch => ({
   chooseApp: app => dispatch(actions.chooseApp(app)),
-  chooseDatabase: dbName => dispatch(actions.chooseDatabase(dbName)),
   handleSnackbarUpdate: status => dispatch(actions.handleSnackbarUpdate(status))
 });
 
@@ -61,7 +60,7 @@ class App extends Component {
     return (
       <div className="app-container">
         <MainNav />
-        <Welcome chooseDatabase={this.props.chooseDatabase} />
+        <Welcome />
         <div className="app-body-container">
           <Tabs className="tabs">
             <Tab id="schemaTab" label="Schemas" style={style.tabStyle}>
