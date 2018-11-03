@@ -101,23 +101,20 @@ const reducers = (state = initialState, action) => {
     },
   });
 
-  // action.payload is how you can access the info
   switch (action.type) {
-    case types.CHOOSE_DATABASE:
+    case 'CHOOSE_DATABASE':
       const database = action.payload;
       // go to the schema tab if they start a new project
-      document.getElementById('schemaTab').click()
+      document.getElementById('schemaTab').click();
+      let selectedTable = state.selectedTable;
+      if (database === 'MongoDB') {
+        selectedTable = mongoTable;
+      }
 
       return {
         ...state,
         database,
-      };
-
-    // --------------------------- Format to Mongo Onload -------------------------------//
-    case 'TABLES_TO_MONGO_FORMAT':
-      return {
-        ...state,
-        selectedTable: mongoTable,
+        selectedTable
       };
 
       // ----------------------------- Open Table Creator ---------------------------------//

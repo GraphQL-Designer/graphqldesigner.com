@@ -32,7 +32,6 @@ app.post('/write-files', (req, res) => {
   const data = req.body; // data.data is state.tables from schemaReducer. See Navbar component
   const dateStamp = Date.now();
 
-
   buildDirectories(dateStamp, () => {
     fs.writeFileSync(path.join(PATH, `build-files${dateStamp}/readme.md`), createReadMe());
     fs.writeFileSync(path.join(PATH, `build-files${dateStamp}/index.js`), buildExpressServer(data.database));
@@ -42,7 +41,6 @@ app.post('/write-files', (req, res) => {
       if (data.database === 'MongoDB') buildForMongo(data.data, dateStamp);
       if (data.database === 'MySQL') buildForMySQL(data.data, dateStamp);
       if (data.database === 'PostgreSQL') buildForPostgreSQL(data.data, dateStamp);
-
 
       sendResponse(dateStamp, res, () => {
         setTimeout(() => {
@@ -98,6 +96,7 @@ function buildForPostgreSQL(data, dateStamp) {
 }
 
 function deleteTempFiles(database, data, dateStamp, cb) {
+  console.log('delete files')
   fs.unlinkSync(path.join(PATH, `build-files${dateStamp}/readme.md`));
   fs.unlinkSync(path.join(PATH, `build-files${dateStamp}/index.js`));
   fs.unlinkSync(path.join(PATH, `build-files${dateStamp}/client/graphql/queries/index.js`));
@@ -132,6 +131,7 @@ function deleteTempFiles(database, data, dateStamp, cb) {
 }
 
 function deleteTempFolders(dateStamp, cb) {
+  console.log('deletetempfolder')
   fs.rmdirSync(path.join(PATH, `build-files${dateStamp}`, 'server', 'graphql-schema'));
   fs.rmdirSync(path.join(PATH, `build-files${dateStamp}`, 'server', 'db'));
   fs.rmdirSync(path.join(PATH, `build-files${dateStamp}`, 'server'));
@@ -147,11 +147,10 @@ function sendResponse(dateStamp, res, cb) {
   zipper.sync.zip(path.join(PATH, `build-files${dateStamp}`)).compress().save(path.join(PATH, `graphql${dateStamp}.zip`));
 
   const file = path.join(PATH, `graphql${dateStamp}.zip`);
-  res.setHeader('Content-Type', 'application/force-download');
-  res.setHeader('Content-disposition', 'filename=graphql.zip');
+  res.setHeader('Content-Type', 'application/zip');
+  res.setHeader('Content-disposition', 'attachment');
   res.download(file, (err) => {
     if (err) console.log(err);
-
     console.log('Download Complete!');
     return cb();
   });

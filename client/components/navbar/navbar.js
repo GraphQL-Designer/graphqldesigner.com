@@ -78,6 +78,7 @@ class MainNav extends React.Component {
         .then(blob => URL.createObjectURL(blob))
         .then((file) => {
           let element = document.createElement('a');
+          document.body.appendChild(element); 
           element.href = file;
           element.download = 'graphql.zip';
           element.click();

@@ -12,7 +12,8 @@ const mapStatetoProps = store => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  tablesToMongoFormat: () => dispatch({ type: 'TABLES_TO_MONGO_FORMAT' }),
+  // tablesToMongoFormat: () => dispatch({ type: 'TABLES_TO_MONGO_FORMAT' }),
+  chooseDatabase: dbName => dispatch(actions.chooseDatabase(dbName)),
   handleNewProject: reset => dispatch(actions.handleNewProject(reset)),
 });
 
@@ -36,10 +37,9 @@ class Welcome extends React.Component {
     this.setState({ open: false });
   }
 
-  handleDatabaseClick(event) {
+  handleDatabaseClick(database, event) {
     this.props.handleNewProject(false);
-    this.props.chooseDatabase(event.target.innerHTML);
-    if (event.target.innerHTML === 'MongoDB') this.props.tablesToMongoFormat();
+    this.props.chooseDatabase(database);
   }
 
   render() {
@@ -68,13 +68,13 @@ class Welcome extends React.Component {
           <hr className='welcome-hr' />
           <h4>Select your database type</h4>
           <div id='buttonsContainer'>
-            <RaisedButton onClick={this.handleDatabaseClick} buttonStyle={styles}>
+            <RaisedButton onClick={this.handleDatabaseClick.bind(null, 'MongoDB')} buttonStyle={styles}>
               MongoDB
             </RaisedButton>
-            <RaisedButton onClick={this.handleDatabaseClick} buttonStyle={styles}>
+            <RaisedButton onClick={this.handleDatabaseClick.bind(null, 'MySQL')} buttonStyle={styles}>
               MySQL
             </RaisedButton>
-            <RaisedButton onClick={this.handleDatabaseClick} buttonStyle={styles}>
+            <RaisedButton onClick={this.handleDatabaseClick.bind(null, 'PostgreSQL')} buttonStyle={styles}>
               PostgreSQL
             </RaisedButton>
           </div>
