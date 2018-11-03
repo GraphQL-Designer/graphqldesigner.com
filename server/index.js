@@ -44,7 +44,9 @@ app.post('/write-files', (req, res) => {
 
       sendResponse(dateStamp, res, () => {
         setTimeout(() => {
+          console.log('in settimeout')
           deleteTempFiles(data.database, data.data, dateStamp, () => {
+            console.log('in deletetempfiles')
             deleteTempFolders(dateStamp, () => {
               console.log('Deleted Temp Files');
             });
@@ -121,12 +123,11 @@ function deleteTempFiles(database, data, dateStamp, cb) {
       if (i < indexes.length) {
         fs.unlinkSync(path.join(PATH, `build-files${dateStamp}/server/db/${data[indexes[i]].type.toLowerCase()}.js`));
         step(i + 1);
-      } else {
-        return cb();
-      }
+      } 
     }
     step(0);
   }
+  console.log('before return')
   return cb();
 }
 
