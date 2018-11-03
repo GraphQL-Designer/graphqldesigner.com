@@ -1,11 +1,8 @@
 
 .team{
-  width: 750px;
+  width: 700px;
   height: 450px;
   text-align: center;
-  /* background-color: rgb(50,54,60); */
-  /* min-width: 80%;*/
-  /* min-height: 400px; */
   color: rgba(255, 255, 255, 0.980); 
   margin: 10;
   padding: 10;
@@ -16,6 +13,7 @@
 }
 .team-heading{
   font-size: 30px !important;
+  font-weight: initial;
   align-items: flex-start;
   text-align: center;
   margin: 0;
@@ -24,11 +22,13 @@
 #team-title{
   font-size: 0.8rem;
   text-align: center;
+  font-weight: initial;
 }
 
 .team-member h4 {
   margin-top: 20px;
   display: flex;
+  font-weight: initial;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
@@ -40,6 +40,7 @@
   width: 100%;
   height: 100%;
   flex-direction: row;
+  justify-content: space-between;
 }
 
 .row {
