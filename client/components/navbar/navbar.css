@@ -30,13 +30,6 @@
   color: rgb(255,66,128); 
 }
 
-.cancel-btn {
-  border: 1px  white;
-  width: 125px;
-  font-size: 1.2em;
-  color: rgb(255,66,128); 
-  justify-content: flex-end;
-}
 
 .overlay {
   z-index: 99;

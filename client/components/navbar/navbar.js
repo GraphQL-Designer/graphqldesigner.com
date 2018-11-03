@@ -10,11 +10,13 @@ import * as actions from '../../actions/actions.js';
 
 // styling
 import './navbar.css';
+import './team.css';
+
 
 // componenets
 import GraphqlLoader from '../loader/index.js';
-import About from './about.js';
-import Team from './team.js';
+import About from './info.jsx';
+import Team from './team.jsx';
 
 
 const mapStateToProps = store => ({
@@ -106,7 +108,7 @@ class MainNav extends React.Component {
   handleAboutOpen() {
     this.setState({ about: true });
   }
-  
+
   handleTeamOpen() {
     this.setState({ team: true });    
   }
@@ -116,7 +118,12 @@ class MainNav extends React.Component {
   }
 
   render() {
-    
+    const style = {
+      height: '70%',
+      width: '100%',
+      margin: '10',
+      textAlign: 'center',
+    };
     return (
       <div>
         <nav id="navbar">
@@ -127,15 +134,14 @@ class MainNav extends React.Component {
             <FlatButton style={{ color: '#FF4280' }} label="Export Code" onClick={this.handleExport} />
           </div>
           <div id="nav-right">
-            <FlatButton onClick={this.handleAboutOpen}>About</FlatButton>
+            <FlatButton onClick={this.handleAboutOpen}>Info</FlatButton>
             <Dialog
               modal={true}
               open={this.state.about}
               onClose={this.handleClose}
               autoScrollBodyContent={true}
-              aria-labelledby="scroll-dialog-title"
+              style={style}
               className='about-container'
-              paperClassName='about-box'
             >
               <About />
               <FlatButton id='cancel-btn' onClick={this.handleClose} >
@@ -148,7 +154,6 @@ class MainNav extends React.Component {
               modal={true}
               open={this.state.team}
               onClose={this.handleClose}
-              autoScrollBodyContent={true}
             >
               <Team />
               <FlatButton id='cancel-btn' onClick={this.handleClose} >
