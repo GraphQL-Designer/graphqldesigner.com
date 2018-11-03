@@ -53,7 +53,8 @@ if ( !db.includes('join') ) {
         query += '\t\t"knex": "^0.15.2",\n\t\t"join-monster": "^2.1.0",\n\t\t"mysql": "^2.16.0"'
     }
 } else {
-    query += '\t\t"body-parser": "^1.17.2",\n\t\t"graphql-server-express": "^0.8.0",\n\t\t"esm": "^3.0.84"'
+    query += '\t\t"body-parser": "^1.17.2",\n\t\t"graphql-server-express": "^0.8.0",\n\t\t"apollo-server": "^2.1.0"'
+
     if ( db === 'PostgreSQL' ) {
         query += '\t\t"knex": "^0.15.2",\n\t\t"join-monster": "^2.1.0",\n\t\t"pg": "^7.5.0"'
     }

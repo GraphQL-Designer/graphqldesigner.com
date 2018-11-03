@@ -33,9 +33,9 @@ app.listen(PORT, () => {
 });
 `;
 } else {
-  query += `import { ApolloServer } from 'apollo-server-express';
-import typeDefs from './schema';
-import resolvers from './resolvers';
+  query += `const { ApolloServer } = require('apollo-server-express');
+const typeDefs = require('./schema');
+Const resolvers = require('./resolvers');
 import models from './models';
 
 app.disable('x-powered-by');

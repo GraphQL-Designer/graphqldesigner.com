@@ -38,10 +38,12 @@ app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, '../public')));
 
 app.post('/write-files', (req, res) => {
+  console.log(req.body)
   const { data, database } = req.body; // data.data is state.tables from schemaReducer. See Navbar component
   const dateStamp = Date.now();
+  console.log('database:', database)
 
-  buildDirectories(data.databdateStamp, () => {
+  buildDirectories(database, dateStamp, () => {
 
     fs.writeFileSync(path.join(PATH, `build-files${dateStamp}/readme.md`), createReadMe());
     fs.writeFileSync(path.join(PATH, `build-files${dateStamp}/package.json`), buildPackageJSON(database));
@@ -79,7 +81,6 @@ app.post('/write-files', (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server Listening to ${PORT}!`);
 });
-
 
 function buildDirectories(database, dateStamp, cb) {
   fs.mkdirSync(path.join(PATH, `build-files${dateStamp}`));
