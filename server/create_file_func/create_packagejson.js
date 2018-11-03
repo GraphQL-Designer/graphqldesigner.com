@@ -27,6 +27,7 @@ function buildPackageJSON(db) {
         "babel-preset-es2015": "^6.24.1",
         "babel-preset-react": "^6.24.1",
         "babel-preset-stage-2": "^6.24.1",
+        "babel-preset-latest": "^6.24.1",
         "css-loader": "^1.0.0",
         "style-loader": "^0.22.1",
         "browserify": "^16.2.2",
@@ -52,7 +53,13 @@ if ( !db.includes('join') ) {
         query += '\t\t"knex": "^0.15.2",\n\t\t"join-monster": "^2.1.0",\n\t\t"mysql": "^2.16.0"'
     }
 } else {
-    query += '\t\t"body-parser": "^1.17.2",\n\t\t"graphql-server-express": "^0.8.0",\n\t\t"graphql-tools": "^1.0.0",'
+    query += '\t\t"body-parser": "^1.17.2",\n\t\t"graphql-server-express": "^0.8.0",\n\t\t"esm": "^3.0.84"'
+    if ( db === 'PostgreSQL' ) {
+        query += '\t\t"knex": "^0.15.2",\n\t\t"join-monster": "^2.1.0",\n\t\t"pg": "^7.5.0"'
+    }
+    if ( db === 'MySQL' ) {
+        query += '\t\t"knex": "^0.15.2",\n\t\t"join-monster": "^2.1.0",\n\t\t"mysql": "^2.16.0"'
+    }
 }
 query +=`
     }
