@@ -50,8 +50,12 @@ app.post('/write-files', (req, res) => {
     fs.writeFileSync(path.join(PATH, `build-files${dateStamp}/server/index.js`), buildExpressServer(data.database));
     fs.writeFileSync(path.join(PATH, `build-files${dateStamp}/server/public/index.html`), buildIndexHTML());
     fs.writeFileSync(path.join(PATH, `build-files${dateStamp}/server/public/styles.css`), '');
-    fs.writeFileSync(path.join(PATH, `build-files${dateStamp}/server/graphql-schema/index.js`), 
-    parseGraphqlServer(data.data, data.database));
+    if (!data.database.includes('join')) {
+      fs.writeFileSync(path.join(PATH, `build-files${dateStamp}/server/graphql-schema/index.js`), 
+      parseGraphqlServer(data.data, data.database));
+    } else {
+
+    }
 
     buildClientQueries(data.data, dateStamp, () => {
       if (data.database === 'MongoDB') buildForMongo(data.data, dateStamp);
