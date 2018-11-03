@@ -34,7 +34,7 @@ Next create a table for every GraphQL type your application will need. Each tabl
 
 The fields can be customized to meet your desired database structure, and using relations, can dynamically make the resolvers for each GraphQL type. By default at this point, our application can auto generate a server file, database setup code, and GraphQL types, root queries, mutations, and client queries.
 
-![](Screenshots/Screenshot-QueryUpdated.png)
+![](Screenshots/Screenshot-CodeUpdated.png)
 
 Lastly export your code!
 
