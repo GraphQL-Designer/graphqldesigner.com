@@ -135,7 +135,7 @@ class MainNav extends React.Component {
             </FlatButton>
             </Dialog>  
             <a href="https://github.com/GraphQL-Designer/graphqldesigner.com"> 
-              <img src="../../../public/images/githubicon.png" />
+              <img src="./images/githubicon.png" />
             </a>  
           </div>
         </nav>
