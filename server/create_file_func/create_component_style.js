@@ -1,11 +1,24 @@
 function buildComponentStyle() {
-    let query = `.pageWrapper {
+    let query = `
+* {
+    margin: 0; 
+    padding: 0; 
+    font-family: "Roboto", sans-serif
+}
+
+a {
+    color: #EB38A5;
+}
+
+.pageWrapper {
     height: 100vh;
     width: 100vw;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    background-color: #2a2e33; 
+    color: white; 
 }
     
 .loader {
@@ -60,7 +73,7 @@ function buildComponentStyle() {
 }
 
 .inner {
-    background-color:white;
+    background-color:#2a2e33;
     -webkit-transform: scale(.86, .86);
     -moz-transform: scale(.86, .86);
     transform: scale(.86, .86);
@@ -68,13 +81,12 @@ function buildComponentStyle() {
 }
 
 .inner:before {
-    border-bottom: 25px solid white;
+    border-bottom: 25px solid #2a2e33;
 }
 
 .inner:after {
-    border-top: 25px solid white;
+    border-top: 25px solid #2a2e33;
 } 
-
 
 .triangleContainer {
     position: absolute;
@@ -99,7 +111,7 @@ function buildComponentStyle() {
     top: 11px;
     left: -24px;
     z-index: 4;
-    border-bottom: solid 42px white;
+    border-bottom: solid 42px #2a2e33;
     border-right: solid 24px transparent;
     border-left: solid 24px transparent;
 }
@@ -240,13 +252,6 @@ function buildComponentStyle() {
     width: 290px;
     height: 40px;
     background-image: linear-gradient(-45deg, transparent, transparent, transparent, transparent, transparent, transparent, transparent, transparent,transparent, transparent, transparent, transparent,transparent, transparent, transparent, transparent, transparent, transparent, transparent, transparent, transparent, transparent, transparent, transparent, transparent, dodgerblue, transparent, crimson, transparent, transparent, transparent);
-}
-
-.text {
-    position: absolute;
-    color: white;
-    left: 50px;
-    top: -10px;
 }
 `;
     return query;
