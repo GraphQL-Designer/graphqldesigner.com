@@ -12,7 +12,7 @@ const WelcomeIntro = props => {
     <div>
       <div id='subheading'>Use Join Monster?</div>
       <br/>
-      <p id='join-monster'>Join Monster is a query planner between GraphQL and SQL for the Node.js graphql-js reference implementation. It's a function that takes a GraphQL query and dynamically translates GraphQL to SQL for efficient, batched data retrieval before resolution. It fetches only the data you need - nothing more, nothing less.</p>
+      <p id='join-monster'>Join Monster is a query planner between GraphQL and SQL for the Node.js graphql-js reference implementation. It is a function that takes a GraphQL query and dynamically translates GraphQL to SQL for efficient, batched data retrieval before resolution. It fetches only the data you need - nothing more, nothing less.</p>
       <br/>
       <hr className='welcome-hr' />
       <div id='buttonsContainer'>
