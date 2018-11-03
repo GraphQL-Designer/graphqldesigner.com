@@ -44,11 +44,8 @@ app.post('/write-files', (req, res) => {
 
       sendResponse(dateStamp, res, () => {
         setTimeout(() => {
-          console.log('in settimeout')
           deleteTempFiles(data.database, data.data, dateStamp, () => {
-            console.log('in deletetempfiles')
             deleteTempFolders(dateStamp, () => {
-              console.log('Deleted Temp Files');
             });
           });
         }, 6000);
@@ -98,7 +95,6 @@ function buildForPostgreSQL(data, dateStamp) {
 }
 
 function deleteTempFiles(database, data, dateStamp, cb) {
-  console.log('delete files')
   fs.unlinkSync(path.join(PATH, `build-files${dateStamp}/readme.md`));
   fs.unlinkSync(path.join(PATH, `build-files${dateStamp}/index.js`));
   fs.unlinkSync(path.join(PATH, `build-files${dateStamp}/client/graphql/queries/index.js`));
@@ -127,12 +123,10 @@ function deleteTempFiles(database, data, dateStamp, cb) {
     }
     step(0);
   }
-  console.log('before return')
   return cb();
 }
 
 function deleteTempFolders(dateStamp, cb) {
-  console.log('deletetempfolder')
   fs.rmdirSync(path.join(PATH, `build-files${dateStamp}`, 'server', 'graphql-schema'));
   fs.rmdirSync(path.join(PATH, `build-files${dateStamp}`, 'server', 'db'));
   fs.rmdirSync(path.join(PATH, `build-files${dateStamp}`, 'server'));
