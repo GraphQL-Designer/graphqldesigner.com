@@ -53,9 +53,10 @@ const CodeDBPostgresSchemaContainer = (props) => {
   function createSchemaField(field) {
     let fieldCode = ``;
     fieldCode += `${tab}"${field.name}"${tab}${checkDataType(field.type, field.autoIncrement)}`;
-    fieldCode += checkDefault(field.defaultValue, field.type);
     fieldCode += checkRequired(field.required);
     fieldCode += checkUnique(field.unique);
+    fieldCode += checkDefault(field.defaultValue, field.type);
+
 
     if (field.primaryKey) {
       primaryKey.push(field.name);
@@ -101,7 +102,6 @@ const CodeDBPostgresSchemaContainer = (props) => {
   }
 
   function checkDefault(fieldDefault, dataType) {
-    if (dataType === 'String' && fieldDefault.length) return `(${fieldDefault})`;
     if (fieldDefault.length > 0) return `${tab}DEFAULT '${fieldDefault}'`;
     return '';
   }
