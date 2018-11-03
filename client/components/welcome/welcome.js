@@ -3,16 +3,21 @@ import { connect } from 'react-redux';
 import * as actions from '../../actions/actions.js';
 
 // styling
-import RaisedButton from 'material-ui/RaisedButton';
 import Dialog from 'material-ui/Dialog';
 import './welcome.css';
+
+//components
+import WelcomeIntro from './welcome-modals/welcome-intro.js';
+import WelcomeNoSQL from './welcome-modals/welcome-nosql.js';
+import WelcomeSQL from './welcome-modals/welcome-sql.js';
+import WelcomeJoinMonster from './welcome-modals/welcome-joinmonster.js';
+
 
 const mapStatetoProps = store => ({
   projectReset: store.schema.projectReset,
 });
 
 const mapDispatchToProps = dispatch => ({
-  // tablesToMongoFormat: () => dispatch({ type: 'TABLES_TO_MONGO_FORMAT' }),
   chooseDatabase: dbName => dispatch(actions.chooseDatabase(dbName)),
   handleNewProject: reset => dispatch(actions.handleNewProject(reset)),
 });
@@ -20,11 +25,13 @@ const mapDispatchToProps = dispatch => ({
 class Welcome extends React.Component {
   constructor(props) {
     super(props);
+    this.handleClose = this.handleClose.bind(this);
+    this.handleWelcomeVersion = this.handleWelcomeVersion.bind(this); 
     this.state = {
       open: false,
+      welcomeVersion: 'Intro',
+      welcomeModal: <WelcomeIntro handleWelcomeVersion={this.handleWelcomeVersion}/>
     };
-    this.handleClose = this.handleClose.bind(this);
-    this.handleDatabaseClick = this.handleDatabaseClick.bind(this);
   }
 
   componentDidMount() {
@@ -37,18 +44,44 @@ class Welcome extends React.Component {
     this.setState({ open: false });
   }
 
-  handleDatabaseClick(database, event) {
-    this.props.handleNewProject(false);
-    this.props.chooseDatabase(database);
+  handleWelcomeVersion(version, close, SQLType, event){ 
+    if (close){
+      console.log('choose', version)
+      this.props.chooseDatabase(version)
+      this.props.handleNewProject(false);
+      this.setState({
+        open: false,
+        welcomeModal: <WelcomeIntro handleWelcomeVersion={this.handleWelcomeVersion}/>
+      })
+    } else {
+      switch(version) {
+        case 'NoSQL':
+          this.setState({welcomeModal: <WelcomeNoSQL handleWelcomeVersion={this.handleWelcomeVersion}/>});
+          break; 
+        case 'SQL':
+          this.setState({welcomeModal: <WelcomeSQL handleWelcomeVersion={this.handleWelcomeVersion}/>});
+          break; 
+        case 'JoinMonster':
+          this.setState({welcomeModal: <WelcomeJoinMonster SQLType={SQLType} handleWelcomeVersion={this.handleWelcomeVersion}/>});
+          break; 
+      }
+    }
   }
 
   render() {
-    const styles = {
-      border: '1px solid white',
-      width: '125px',
-      fontSize: '1.2em',
-      color: 'white',
-    };
+    // let welcomeModal =  <WelcomeIntro handleWelcomeVersion={this.handleWelcomeVersion}/>;
+    // switch(this.state.welcomeVersion) {
+    //   case 'NoSQL':
+    //     welcomeModal = <WelcomeNoSQL handleWelcomeVersion={this.handleDatabaseClick}/>;
+    //     break; 
+    //   case 'SQL':
+    //     welcomeModal = <WelcomeSQL handleWelcomeVersion={this.handleWelcomeVersion}/>;
+    //     break; 
+    //   case 'JoinMonster':
+    //     welcomeModal = <WelcomeJoinMonster handleDatabaseClick={this.handleDatabaseClick}/>;
+    //     break; 
+    // }
+
     return (
       <div>
         <Dialog
@@ -59,25 +92,7 @@ class Welcome extends React.Component {
           className='welcome-container'
           paperClassName='welcome-box'
         >
-          <div id='subheading'>Rapidly prototype a full stack React GraphQL Application.</div>
-          <div className='iconContainer'>
-            <img id='icon_graphql' src='./images/graphql.png' />
-            <img id='icon_express' src='./images/express.png' />
-            <img id='icon_react' src='./images/react.png' />
-          </div>
-          <hr className='welcome-hr' />
-          <h4>Select your database type</h4>
-          <div id='buttonsContainer'>
-            <RaisedButton onClick={this.handleDatabaseClick.bind(null, 'MongoDB')} buttonStyle={styles}>
-              MongoDB
-            </RaisedButton>
-            <RaisedButton onClick={this.handleDatabaseClick.bind(null, 'MySQL')} buttonStyle={styles}>
-              MySQL
-            </RaisedButton>
-            <RaisedButton onClick={this.handleDatabaseClick.bind(null, 'PostgreSQL')} buttonStyle={styles}>
-              PostgreSQL
-            </RaisedButton>
-          </div>
+          {this.state.welcomeModal}
         </Dialog>
       </div>
     );

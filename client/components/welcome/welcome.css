@@ -5,7 +5,11 @@
 
 .welcome-box{
   min-width: 300px;
-  min-height: 400px; 
+  /* min-height: 400px;  */
+  display: flex;
+  flex-direction: column;
+  /* height: 500px; */
+  height: 100%; 
 }
 
 #icon_graphql{
