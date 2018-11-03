@@ -14,7 +14,6 @@ const parseGraphqlServer = require('./create_file_func/graphql_server');
 const parseMongoSchema = require('./create_file_func/mongo_schema');
 const parseMySQLTables = require('./create_file_func/mysql_scripts');
 const parsePostgreTables = require('./create_file_func/postgresql_scripts');
-const knexPool = require('./create_file_func/knex_pool');
 const buildPackageJSON = require('./create_file_func/create_packagejson');
 const buildWebpack = require('./create_file_func/create_webpack');
 const buildIndexHTML = require('./create_file_func/create_indexhtml');
@@ -22,6 +21,7 @@ const buildClientRootIndex = require('./create_file_func/create_client_root_inde
 const buildComponentIndex = require('./create_file_func/create_component_index');
 const buildComponentStyle = require('./create_file_func/create_component_style');
 const sqlPool = require('./create_file_func/sql_pool');
+//const knexPool = require('./create_file_func/knex_pool');
 
 const PORT = process.env.PORT || 4100;
 let PATH;
