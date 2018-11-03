@@ -15,7 +15,7 @@ import './team.css';
 
 // componenets
 import GraphqlLoader from '../loader/index.js';
-import About from './info.jsx';
+import About from './about.jsx';
 import Team from './team.jsx';
 
 
@@ -85,6 +85,7 @@ class MainNav extends React.Component {
         .then(blob => URL.createObjectURL(blob))
         .then((file) => {
           let element = document.createElement('a');
+          document.body.appendChild(element);
           element.href = file;
           element.download = 'graphql.zip';
           element.click();
@@ -134,7 +135,7 @@ class MainNav extends React.Component {
             <FlatButton style={{ color: '#FF4280' }} label="Export Code" onClick={this.handleExport} />
           </div>
           <div id="nav-right">
-            <FlatButton onClick={this.handleAboutOpen}>Info</FlatButton>
+            {/* <FlatButton onClick={this.handleClickOpen}>About</FlatButton> */}
             <Dialog
               modal={true}
               open={this.state.about}

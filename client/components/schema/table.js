@@ -59,7 +59,6 @@ class Table extends Component {
     const fieldIndex = event.currentTarget.value; // need currentTarget because of Material-UI
     const field = this.props.tables[tableIndex].fields[fieldIndex];
     if(field.relation.tableIndex > -1 || field.refBy.size) {
-        console.log('yes')
         this.props.deletedFieldRelationUpdate({ tableIndex, fieldIndex })
       }
     this.props.deleteField([tableIndex, fieldIndex]);
