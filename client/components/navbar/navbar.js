@@ -78,6 +78,7 @@ class MainNav extends React.Component {
         .then(blob => URL.createObjectURL(blob))
         .then((file) => {
           let element = document.createElement('a');
+          document.body.appendChild(element); 
           element.href = file;
           element.download = 'graphql.zip';
           element.click();
@@ -112,13 +113,12 @@ class MainNav extends React.Component {
       <div>
         <nav id="navbar">
           <div id="nav-left">
-          {/* <img id='logo' src='./images/Logo.svg' /> */}
-            {/* <h2 id="header-name">GraphQL Designer</h2> */}
+          <img id='logo' src='./images/Logo.svg' />
             <FlatButton label="New Project" onClick={this.handleNewProject} />
             <FlatButton style={{ color: '#FF4280' }} label="Export Code" onClick={this.handleExport} />
           </div>
           <div id="nav-right">
-            <FlatButton onClick={this.handleClickOpen}>About</FlatButton>
+            {/* <FlatButton onClick={this.handleClickOpen}>About</FlatButton> */}
             <Dialog
               modal={true}
               open={this.state.open}
@@ -128,13 +128,13 @@ class MainNav extends React.Component {
               className='about-container'
               paperClassName='about-box'
             >
-            <About />
+            {/* <About /> */}
             <FlatButton className='about-btn' primary={true} onClick={this.handleClose} >
               Cancel  
             </FlatButton>
             </Dialog>  
             <a href="https://github.com/GraphQL-Designer/graphqldesigner.com"> 
-              <img src="../../../public/images/githubicon.png" />
+              <img src="./images/githubicon.png" />
             </a>  
           </div>
         </nav>
