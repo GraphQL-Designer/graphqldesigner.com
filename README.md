@@ -1,4 +1,3 @@
-
 # GraphQL Designer ![alt text](https://travis-ci.org/GraphQL-Designer/graphqldesigner.com.svg?branch=dev)
 
 [GraphQL Designer](https://www.graphqldesigner.com/) is a prototyping tool to develop full-stack GraphQL applications.
@@ -9,9 +8,10 @@ With a few simple inputs, GraphQL Designer auto generates code for download, to 
 
 ## Background
 
-GraphQL is an emerging open source data query and manipulation language that can be a preferred method over RESTful architecture, fulfilling queries with less API calls, and limiting over-fetching and under-fetching of data.  Although GraphQL is a powerful query language, starting a new GraphQL application can be time consuming due to its redundant structure. This repetitive code can make developing a GraphQL application more intuitive, but this could also mean that for every GraphQL type created, a large amount of additional code would be required.
+GraphQL is an emerging open source data query and manipulation language that can be a preferred method over RESTful architecture, fulfilling queries with less API calls, and limiting over-fetching and under-fetching of data. Although GraphQL is a powerful query language, starting a new GraphQL application can be time consuming due to its redundant structure. This repetitive code can make developing a GraphQL application more intuitive, but this could also mean that for every GraphQL type created, a large amount of additional code would be required.
 
 For example, adding a new GraphQL type "User" with the fields "id", "age", and "messages" may require the following:
+
 - A root query for an individual User by id
 - A root query for all the Users
 - Mutation to create a User with an id, age, and messages
@@ -30,11 +30,11 @@ Visit [GraphQL Designer](https://www.graphqldesigner.com/) and choose a database
 
 Next create a table for every GraphQL type your application will need. Each table created will also represent the structure of your NoSQL schema or SQL table. Each created table in our application can have several fields, which not only becomes a GraphQL field, but a SQL column or NoSQL key as well.
 
-![](Screenshots/Screenshot-Schema.png)
+![](Screenshots/Screenshot-SchemaUpdated.png)
 
 The fields can be customized to meet your desired database structure, and using relations, can dynamically make the resolvers for each GraphQL type. By default at this point, our application can auto generate a server file, database setup code, and GraphQL types, root queries, mutations, and client queries.
 
-![](Screenshots/Screenshot-Query.png)
+![](Screenshots/Screenshot-QueryUpdated.png)
 
 Lastly export your code!
 
@@ -53,6 +53,7 @@ Lastly export your code!
 Use `npm run dev` for hot module reloading
 
 To start the server:
+
 ```
 npm install
 npm run pack
