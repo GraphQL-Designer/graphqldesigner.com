@@ -101,7 +101,6 @@ const reducers = (state = initialState, action) => {
     },
   });
 
-  // action.payload is how you can access the info
   switch (action.type) {
     case 'CHOOSE_DATABASE':
       const database = action.payload;

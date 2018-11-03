@@ -56,7 +56,6 @@ const CodeDBSQLContainer = (props) => {
     fieldCode += checkUnique(field.unique);
     fieldCode += checkDefault(field.defaultValue, field.type);
 
-
     if (field.primaryKey) {
       primaryKey.push(field.name);
     }
@@ -105,7 +104,12 @@ const CodeDBSQLContainer = (props) => {
   }
 
   function checkDefault(fieldDefault, dataType) {
-    if (fieldDefault.length > 0) return `${tab}DEFAULT '${fieldDefault}'`;
+    if (fieldDefault.length > 0) {
+      let defaultString = `${tab}DEFAULT `;
+      if (dataType === 'String') defaultString += `'${fieldDefault}'`;
+      else defaultString += fieldDefault;
+      return defaultString;
+    }
     return '';
   }
 

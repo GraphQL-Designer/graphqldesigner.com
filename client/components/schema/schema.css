@@ -4,7 +4,6 @@
   width: 100%;
   min-height: 450px;
   height: calc(100vh - 98px);
-  border: 1px solid black;
   position: relative;
 }
 
