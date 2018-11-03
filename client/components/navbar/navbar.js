@@ -1,14 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import FlatButton from 'material-ui/FlatButton';
-
-import Dialog from 'material-ui/Dialog';
-
-
 import * as actions from '../../actions/actions.js';
 
 // styling
 import './navbar.css';
+import FlatButton from 'material-ui/FlatButton';
+import Dialog from 'material-ui/Dialog';
 
 // componenets
 import GraphqlLoader from '../loader/index.js';
