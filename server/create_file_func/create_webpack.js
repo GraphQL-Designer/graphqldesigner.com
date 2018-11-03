@@ -9,7 +9,7 @@ module.exports = {
     output: {
     path: path.join(__dirname, '/server/public'),
     filename: 'main.js',
-    publicPath: '/public'
+    publicPath: '/server/public'
     },
     mode: 'development',
     // watch: true, //Bundle on saved changes

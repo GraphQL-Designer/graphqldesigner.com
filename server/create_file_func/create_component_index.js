@@ -39,7 +39,7 @@ class Index extends Component {
                     </div>
                     <h1>Thanks For Using GraphQL Designer!</h1>
                     <p>Please star us on GitHub to show the love! Also include any bugs for us to work on during this growing period. Link below!</p>
-                    <a href="https://github.com/GraphQL-Designer/graphqldesigner.com" target="blank">LINK</a>
+                    <a href="https://github.com/GraphQL-Designer/graphqldesigner.com" target="blank">GraphQL Designer Github</a>
                 </div>
             </div>
         );
