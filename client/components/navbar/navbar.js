@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import FlatButton from 'material-ui/FlatButton';
 
+
 import Dialog from 'material-ui/Dialog';
 
 
@@ -9,10 +10,14 @@ import * as actions from '../../actions/actions.js';
 
 // styling
 import './navbar.css';
+import './team.css';
+
 
 // componenets
 import GraphqlLoader from '../loader/index.js';
-import About from './about'
+import About from './about.jsx';
+import Team from './team.jsx';
+
 
 const mapStateToProps = store => ({
   tables: store.schema.tables,
@@ -28,10 +33,12 @@ class MainNav extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      open: false,
+      about: false,
+      team: false,
       modal: false,
     };
-    this.handleClickOpen = this.handleClickOpen.bind(this);   
+    this.handleAboutOpen = this.handleAboutOpen.bind(this);
+    this.handleTeamOpen = this.handleTeamOpen.bind(this);
     this.handleClose = this.handleClose.bind(this);
     this.handleExport = this.handleExport.bind(this);
     this.handleNewProject = this.handleNewProject.bind(this);
@@ -44,27 +51,27 @@ class MainNav extends React.Component {
 
     // JSON.stringify doesn't work with Sets. Change Sets to arrays for export
     const tables = this.props.tables;
-    const changedTables = {}
+    const changedTables = {};
     for (let tableId in tables) {
-      const changedFields = {}
+      const changedFields = {};
       for (let fieldId in tables[tableId].fields) {
         const field = tables[tableId].fields[fieldId];
-        const refBy = field.refBy
+        const refBy = field.refBy;
         if (refBy.size > 0) {
-          const refByArray = []
+          const refByArray = [];
           refBy.forEach(ele => {
             refByArray.push(ele);
-          })
-          changedFields[fieldId] = (Object.assign({}, field, { 'refBy': refByArray }))
+          });
+          changedFields[fieldId] = (Object.assign({}, field, { 'refBy': refByArray }));
         }
       }
       if (Object.keys(changedFields).length > 0) {
-        const fields = Object.assign({}, tables[tableId].fields, changedFields)
-        changedTables[tableId] = (Object.assign({}, tables[tableId], { 'fields': fields }))
+        const fields = Object.assign({}, tables[tableId].fields, changedFields);
+        changedTables[tableId] = (Object.assign({}, tables[tableId], { 'fields': fields }));
       }
     }
-    const tableData = Object.assign({}, tables, changedTables)
-    const data = Object.assign({}, { 'data': tableData }, { 'database': this.props.database })
+    const tableData = Object.assign({}, tables, changedTables);
+    const data = Object.assign({}, { 'data': tableData }, { 'database': this.props.database });
 
     setTimeout(() => {
       fetch('/write-files', {
@@ -78,7 +85,7 @@ class MainNav extends React.Component {
         .then(blob => URL.createObjectURL(blob))
         .then((file) => {
           let element = document.createElement('a');
-          document.body.appendChild(element); 
+          document.body.appendChild(element);
           element.href = file;
           element.download = 'graphql.zip';
           element.click();
@@ -98,22 +105,32 @@ class MainNav extends React.Component {
   handleNewProject() {
     this.props.handleNewProject(true);
   }
-  
-  handleClickOpen = () => {
-    this.setState({ open: true });
-  };
 
+  handleAboutOpen() {
+    this.setState({ about: true });
+  }
 
-  handleClose = () => {
-    this.setState({ open: false });
-  };
+  handleTeamOpen() {
+    this.setState({ team: true });    
+  }
+
+  handleClose() {
+    this.setState({ team: false, about: false });
+  }
 
   render() {
+    const style = {
+      height: '70%',
+      width: '100%',
+      margin: '10',
+      textAlign: 'center',
+    };
     return (
       <div>
         <nav id="navbar">
           <div id="nav-left">
-          <img id='logo' src='./images/Logo.svg' />
+            {/* <img id='logo' src='./images/Logo.svg' /> */}
+            {/* <h2 id="header-name">GraphQL Designer</h2> */}
             <FlatButton label="New Project" onClick={this.handleNewProject} />
             <FlatButton style={{ color: '#FF4280' }} label="Export Code" onClick={this.handleExport} />
           </div>
@@ -121,21 +138,33 @@ class MainNav extends React.Component {
             {/* <FlatButton onClick={this.handleClickOpen}>About</FlatButton> */}
             <Dialog
               modal={true}
-              open={this.state.open}
+              open={this.state.about}
               onClose={this.handleClose}
               autoScrollBodyContent={true}
-              aria-labelledby="scroll-dialog-title"
+              style={style}
               className='about-container'
-              paperClassName='about-box'
             >
-            {/* <About /> */}
-            <FlatButton className='about-btn' primary={true} onClick={this.handleClose} >
-              Cancel  
-            </FlatButton>
+              <About />
+              <FlatButton id='cancel-btn' onClick={this.handleClose} >
+                Cancel  
+              </FlatButton>
+            </Dialog>
+            
+            <FlatButton onClick={this.handleTeamOpen}>Team</FlatButton>
+            <Dialog
+              modal={true}
+              open={this.state.team}
+              onClose={this.handleClose}
+            >
+              <Team />
+              <FlatButton id='cancel-btn' onClick={this.handleClose} >
+                Cancel  
+              </FlatButton>
             </Dialog>  
-            <a href="https://github.com/GraphQL-Designer/graphqldesigner.com"> 
-              <img src="./images/githubicon.png" />
-            </a>  
+
+            <a href="https://github.com/GraphQL-Designer/graphqldesigner.com">
+              <img src="../../../public/images/githubicon.png" />
+            </a>
           </div>
         </nav>
         {this.state.modal && (

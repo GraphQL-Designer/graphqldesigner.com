@@ -23,13 +23,11 @@
   align-items: center; 
 }
 
-
 #header-name {
   color: white; 
   padding: 0px 0px 0px 10px;
   color: rgb(255,66,128); 
 }
-
 
 .overlay {
   z-index: 99;
