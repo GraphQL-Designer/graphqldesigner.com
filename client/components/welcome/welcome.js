@@ -30,7 +30,7 @@ class Welcome extends React.Component {
     this.state = {
       open: false,
       welcomeVersion: 'Intro',
-      welcomeModal: <WelcomeIntro handleWelcomeVersion={this.handleWelcomeVersion}/>
+      welcomeModal: <WelcomeIntro handleWelcomeVersion={this.handleWelcomeVersion} />
     };
   }
 
@@ -44,14 +44,14 @@ class Welcome extends React.Component {
     this.setState({ open: false });
   }
 
-  handleWelcomeVersion(version, close, SQLType, event){ 
-    if (close){
-      this.props.chooseDatabase(version)
+  handleWelcomeVersion(version, close, SQLType, event) { 
+    if (close) {
       this.props.handleNewProject(false);
+      this.props.chooseDatabase(version);
       this.setState({
         open: false,
-        welcomeModal: <WelcomeIntro handleWelcomeVersion={this.handleWelcomeVersion}/>
-      })
+        welcomeModal: <WelcomeIntro handleWelcomeVersion={this.handleWelcomeVersion} />
+      });
     } else {
       switch(version) {
         case 'NoSQL':
