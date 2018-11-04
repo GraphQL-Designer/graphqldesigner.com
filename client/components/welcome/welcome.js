@@ -30,7 +30,7 @@ class Welcome extends React.Component {
     this.state = {
       open: false,
       welcomeVersion: 'Intro',
-      welcomeModal: <WelcomeIntro handleWelcomeVersion={this.handleWelcomeVersion}/>
+      welcomeModal: <WelcomeIntro handleWelcomeVersion={this.handleWelcomeVersion} />
     };
   }
 
