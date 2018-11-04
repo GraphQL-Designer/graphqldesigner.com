@@ -2,16 +2,13 @@ import React from 'react';
 import { connect } from 'react-redux';
 import FlatButton from 'material-ui/FlatButton';
 
-
 import Dialog from 'material-ui/Dialog';
-
 
 import * as actions from '../../actions/actions.js';
 
 // styling
 import './navbar.css';
 import './team.css';
-
 
 // componenets
 import GraphqlLoader from '../loader/index.js';
@@ -120,7 +117,7 @@ class MainNav extends React.Component {
 
   render() {
     const style = {
-      height: '70%',
+      height: '100%',
       width: '100%',
       margin: '10',
       textAlign: 'center',
@@ -129,13 +126,13 @@ class MainNav extends React.Component {
       <div>
         <nav id="navbar">
           <div id="nav-left">
-            {/* <img id='logo' src='./images/Logo.svg' /> */}
+            <img id='logo' src='./images/Logo.svg' />
             {/* <h2 id="header-name">GraphQL Designer</h2> */}
             <FlatButton label="New Project" onClick={this.handleNewProject} />
             <FlatButton style={{ color: '#FF4280' }} label="Export Code" onClick={this.handleExport} />
           </div>
           <div id="nav-right">
-            {/* <FlatButton onClick={this.handleInfoOpen}>Info</FlatButton> */}
+            <FlatButton onClick={this.handleInfoOpen}>Info</FlatButton> 
             <Dialog
               modal={true}
               open={this.state.info}
@@ -148,8 +145,7 @@ class MainNav extends React.Component {
               <FlatButton id='cancel-btn' onClick={this.handleClose} >
                 Cancel  
               </FlatButton>
-            </Dialog>
-            
+            </Dialog>    
             <FlatButton onClick={this.handleTeamOpen}>Team</FlatButton>
             <Dialog
               modal={true}
@@ -161,7 +157,6 @@ class MainNav extends React.Component {
                 Cancel  
               </FlatButton>
             </Dialog>  
-
             <a href="https://github.com/GraphQL-Designer/graphqldesigner.com">
               <img src="./images/githubicon.png" />
             </a>

@@ -1,39 +1,39 @@
 
 .team{
-  width: 700px;
-  height: 450px;
   text-align: center;
   color: rgba(255, 255, 255, 0.980); 
-  margin: 10;
-  padding: 10;
+  margin: 10px;
+  padding: 20px;
   display: flex; 
   flex-direction: column;
   justify-content: space-evenly;
 
 }
-.team-heading{
-  font-size: 30px !important;
+
+.team-heading h3{
+  font-size: 42px !important;
   font-weight: initial;
   align-items: flex-start;
   text-align: center;
-  margin: 0;
-  padding: 0;
+  margin: 1px;
+  padding: 8px;
 }
+
 #team-title{
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   text-align: center;
   font-weight: initial;
 }
 
 .team-member h4 {
-  margin-top: 20px;
+  margin-top: 15px;
+  font-size: 1.2rem;
   display: flex;
   font-weight: initial;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
 }
-
 
 .team-links{
   padding: 4px; 
@@ -43,8 +43,13 @@
   justify-content: space-between;
 }
 
+.team-links a {
+  padding: 3px; 
+}
+
 .row {
+  margin-top: 12px;
   display: flex;
   flex-direction: row;
-  justify-content: space-evenly;
+  justify-content: space-around;
 }
