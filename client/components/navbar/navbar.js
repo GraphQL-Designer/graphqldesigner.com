@@ -15,7 +15,7 @@ import './team.css';
 
 // componenets
 import GraphqlLoader from '../loader/index.js';
-import About from './about.jsx';
+import Info from './info.jsx';
 import Team from './team.jsx';
 
 
@@ -33,11 +33,11 @@ class MainNav extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      about: false,
+      info: false,
       team: false,
       modal: false,
     };
-    this.handleAboutOpen = this.handleAboutOpen.bind(this);
+    this.handleInfoOpen = this.handleInfoOpen.bind(this);
     this.handleTeamOpen = this.handleTeamOpen.bind(this);
     this.handleClose = this.handleClose.bind(this);
     this.handleExport = this.handleExport.bind(this);
@@ -106,16 +106,16 @@ class MainNav extends React.Component {
     this.props.handleNewProject(true);
   }
 
-  handleAboutOpen() {
-    this.setState({ about: true });
+  handleInfoOpen() {
+    this.setState({ info: true });
   }
 
   handleTeamOpen() {
-    this.setState({ team: true });    
+    this.setState({ team: true });
   }
 
   handleClose() {
-    this.setState({ team: false, about: false });
+    this.setState({ team: false, info: false });
   }
 
   render() {
@@ -135,16 +135,16 @@ class MainNav extends React.Component {
             <FlatButton style={{ color: '#FF4280' }} label="Export Code" onClick={this.handleExport} />
           </div>
           <div id="nav-right">
-            {/* <FlatButton onClick={this.handleClickOpen}>About</FlatButton> */}
+            {/* <FlatButton onClick={this.handleInfoOpen}>Info</FlatButton> */}
             <Dialog
               modal={true}
-              open={this.state.about}
+              open={this.state.info}
               onClose={this.handleClose}
               autoScrollBodyContent={true}
               style={style}
-              className='about-container'
+              className='info-container'
             >
-              <About />
+              <Info />
               <FlatButton id='cancel-btn' onClick={this.handleClose} >
                 Cancel  
               </FlatButton>
@@ -163,7 +163,7 @@ class MainNav extends React.Component {
             </Dialog>  
 
             <a href="https://github.com/GraphQL-Designer/graphqldesigner.com">
-              <img src="../../../public/images/githubicon.png" />
+              <img src="./images/githubicon.png" />
             </a>
           </div>
         </nav>
