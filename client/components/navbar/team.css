@@ -9,8 +9,8 @@
   display: flex; 
   flex-direction: column;
   justify-content: space-evenly;
-
 }
+
 .team-heading{
   font-size: 30px !important;
   font-weight: initial;
@@ -19,6 +19,7 @@
   margin: 0;
   padding: 0;
 }
+
 #team-title{
   font-size: 0.8rem;
   text-align: center;
@@ -41,6 +42,10 @@
   height: 100%;
   flex-direction: row;
   justify-content: space-between;
+}
+
+.team-links a {
+  padding: 5px; 
 }
 
 .row {
