@@ -46,8 +46,8 @@ class Welcome extends React.Component {
 
   handleWelcomeVersion(version, close, SQLType, event){ 
     if (close){
-      this.props.chooseDatabase(version)
       this.props.handleNewProject(false);
+      this.props.chooseDatabase(version)
       this.setState({
         open: false,
         welcomeModal: <WelcomeIntro handleWelcomeVersion={this.handleWelcomeVersion}/>
