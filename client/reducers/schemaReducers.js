@@ -156,8 +156,6 @@ const reducers = (state = initialState, action) => {
         });
       }
 
-      if (action.payload) {
-      }
       return newState;
 
     // ---------------------------- Change Table Name -----------------------------------//
