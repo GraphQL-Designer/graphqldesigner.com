@@ -11,8 +11,9 @@ const app = express();
   if (database === 'MongoDB') {
     query += `
 const mongoose = require('mongoose');
+const MongoDB = process.env.MONGO_URI || 'mongodb://localhost/graphql';
 
-mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true }, () => console.log('connected to database'));
+mongoose.connect(MongoDB, { useNewUrlParser: true }, () => console.log('connected to database'));
 `;
   }
 

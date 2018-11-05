@@ -3,6 +3,25 @@ const bodyParser = require('body-parser');
 const fs = require('fs');
 const zipper = require('zip-local');
 const path = require('path');
+const app = express();
+
+//Build Function Import 
+const createReadMe = require('./create_file_func/create_readme');
+const buildExpressServer = require('./create_file_func/express_server');
+const parseClientQueries = require('./create_file_func/client_queries');
+const parseClientMutations = require('./create_file_func/client_mutations');
+const parseGraphqlServer = require('./create_file_func/graphql_server');
+const parseMongoSchema = require('./create_file_func/mongo_schema');
+const parseMySQLTables = require('./create_file_func/mysql_scripts');
+const parsePostgreTables = require('./create_file_func/postgresql_scripts');
+const buildPackageJSON = require('./create_file_func/create_packagejson');
+const buildWebpack = require('./create_file_func/create_webpack');
+const buildIndexHTML = require('./create_file_func/create_indexhtml');
+const buildClientRootIndex = require('./create_file_func/create_client_root_index');
+const buildComponentIndex = require('./create_file_func/create_component_index');
+const buildComponentStyle = require('./create_file_func/create_component_style');
+const sqlPool = require('./create_file_func/sql_pool');
+//const knexPool = require('./create_file_func/knex_pool');
 
 const PORT = process.env.PORT || 4100;
 let PATH;
@@ -13,18 +32,6 @@ if (process.env.MODE === 'prod') {
   PATH = path.join(__dirname, '../../');
 }
 
-const app = express();
-
-const createReadMe = require('./create_file_func/create_readme');
-const buildExpressServer = require('./create_file_func/express_server');
-const parseClientQueries = require('./create_file_func/client_queries');
-const parseClientMutations = require('./create_file_func/client_mutations');
-const parseGraphqlServer = require('./create_file_func/graphql_server');
-const parseMongoSchema = require('./create_file_func/mongo_schema');
-const parseMySQLTables = require('./create_file_func/mysql_scripts');
-const parsePostgresTables = require('./create_file_func/postgresql_scripts');
-const sqlPool = require('./create_file_func/sql_pool');
-
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, '../public')));
 
@@ -33,9 +40,18 @@ app.post('/write-files', (req, res) => {
   const dateStamp = Date.now();
 
   buildDirectories(dateStamp, () => {
+
     fs.writeFileSync(path.join(PATH, `build-files${dateStamp}/readme.md`), createReadMe());
-    fs.writeFileSync(path.join(PATH, `build-files${dateStamp}/index.js`), buildExpressServer(data.database));
-    fs.writeFileSync(path.join(PATH, `build-files${dateStamp}/server/graphql-schema/index.js`), parseGraphqlServer(data.data, data.database));
+    fs.writeFileSync(path.join(PATH, `build-files${dateStamp}/package.json`), buildPackageJSON(data.database));
+    fs.writeFileSync(path.join(PATH, `build-files${dateStamp}/webpack.config.js`), buildWebpack());
+    fs.writeFileSync(path.join(PATH, `build-files${dateStamp}/client/index.js`), buildClientRootIndex());
+    fs.writeFileSync(path.join(PATH, `build-files${dateStamp}/client/components/index.js`), buildComponentIndex());
+    fs.writeFileSync(path.join(PATH, `build-files${dateStamp}/client/components/index.css`), buildComponentStyle());
+    fs.writeFileSync(path.join(PATH, `build-files${dateStamp}/server/index.js`), buildExpressServer(data.database));
+    fs.writeFileSync(path.join(PATH, `build-files${dateStamp}/server/public/index.html`), buildIndexHTML());
+    fs.writeFileSync(path.join(PATH, `build-files${dateStamp}/server/public/styles.css`), '');
+    fs.writeFileSync(path.join(PATH, `build-files${dateStamp}/server/graphql-schema/index.js`), 
+    parseGraphqlServer(data.data, data.database));
 
     buildClientQueries(data.data, dateStamp, () => {
       if (data.database === 'MongoDB') buildForMongo(data.data, dateStamp);
@@ -48,7 +64,7 @@ app.post('/write-files', (req, res) => {
             deleteTempFolders(dateStamp, () => {
             });
           });
-        }, 6000);
+        }, 5000);
       });
     });
   });
@@ -58,15 +74,18 @@ app.listen(PORT, () => {
   console.log(`Server Listening to ${PORT}!`);
 });
 
+
 function buildDirectories(dateStamp, cb) {
   fs.mkdirSync(path.join(PATH, `build-files${dateStamp}`));
   fs.mkdirSync(path.join(PATH, `build-files${dateStamp}`, 'client'));
   fs.mkdirSync(path.join(PATH, `build-files${dateStamp}`, 'client', 'graphql'));
   fs.mkdirSync(path.join(PATH, `build-files${dateStamp}`, 'client', 'graphql', 'queries'));
   fs.mkdirSync(path.join(PATH, `build-files${dateStamp}`, 'client', 'graphql', 'mutations'));
+  fs.mkdirSync(path.join(PATH, `build-files${dateStamp}`, 'client', 'components'));
   fs.mkdirSync(path.join(PATH, `build-files${dateStamp}`, 'server'));
   fs.mkdirSync(path.join(PATH, `build-files${dateStamp}`, 'server', 'db'));
   fs.mkdirSync(path.join(PATH, `build-files${dateStamp}`, 'server', 'graphql-schema'));
+  fs.mkdirSync(path.join(PATH, `build-files${dateStamp}`, 'server', 'public'));
   return cb();
 }
 
@@ -96,10 +115,17 @@ function buildForPostgreSQL(data, dateStamp) {
 
 function deleteTempFiles(database, data, dateStamp, cb) {
   fs.unlinkSync(path.join(PATH, `build-files${dateStamp}/readme.md`));
-  fs.unlinkSync(path.join(PATH, `build-files${dateStamp}/index.js`));
+  fs.unlinkSync(path.join(PATH, `build-files${dateStamp}/package.json`));
+  fs.unlinkSync(path.join(PATH, `build-files${dateStamp}/webpack.config.js`));
+  fs.unlinkSync(path.join(PATH, `build-files${dateStamp}/client/index.js`));
   fs.unlinkSync(path.join(PATH, `build-files${dateStamp}/client/graphql/queries/index.js`));
   fs.unlinkSync(path.join(PATH, `build-files${dateStamp}/client/graphql/mutations/index.js`));
+  fs.unlinkSync(path.join(PATH, `build-files${dateStamp}/client/components/index.js`));
+  fs.unlinkSync(path.join(PATH, `build-files${dateStamp}/client/components/index.css`));
+  fs.unlinkSync(path.join(PATH, `build-files${dateStamp}/server/index.js`));
   fs.unlinkSync(path.join(PATH, `build-files${dateStamp}/server/graphql-schema/index.js`));
+  fs.unlinkSync(path.join(PATH, `build-files${dateStamp}/server/public/index.html`));
+  fs.unlinkSync(path.join(PATH, `build-files${dateStamp}/server/public/styles.css`));
   fs.unlinkSync(path.join(PATH, `graphql${dateStamp}.zip`));
 
   if (database === 'PostgreSQL') {
@@ -127,13 +153,15 @@ function deleteTempFiles(database, data, dateStamp, cb) {
 }
 
 function deleteTempFolders(dateStamp, cb) {
-  fs.rmdirSync(path.join(PATH, `build-files${dateStamp}`, 'server', 'graphql-schema'));
-  fs.rmdirSync(path.join(PATH, `build-files${dateStamp}`, 'server', 'db'));
-  fs.rmdirSync(path.join(PATH, `build-files${dateStamp}`, 'server'));
   fs.rmdirSync(path.join(PATH, `build-files${dateStamp}`, 'client', 'graphql', 'queries'));
   fs.rmdirSync(path.join(PATH, `build-files${dateStamp}`, 'client', 'graphql', 'mutations'));
   fs.rmdirSync(path.join(PATH, `build-files${dateStamp}`, 'client', 'graphql'));
+  fs.rmdirSync(path.join(PATH, `build-files${dateStamp}`, 'client', 'components'));
+  fs.rmdirSync(path.join(PATH, `build-files${dateStamp}`, 'server', 'public'));
+  fs.rmdirSync(path.join(PATH, `build-files${dateStamp}`, 'server', 'db'));
+  fs.rmdirSync(path.join(PATH, `build-files${dateStamp}`, 'server', 'graphql-schema'));
   fs.rmdirSync(path.join(PATH, `build-files${dateStamp}`, 'client'));
+  fs.rmdirSync(path.join(PATH, `build-files${dateStamp}`, 'server'));
   fs.rmdirSync(path.join(PATH, `build-files${dateStamp}`));
   return cb();
 }
