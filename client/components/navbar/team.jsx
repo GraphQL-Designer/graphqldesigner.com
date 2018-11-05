@@ -1,7 +1,7 @@
 import React from 'react';
 
 // styling
-
+import './team.css';
 class Team extends React.Component {
   render() {
     const styles = {
