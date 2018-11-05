@@ -169,16 +169,21 @@ const reducers = (state = initialState, action) => {
 
     // ----------------------------- Change Table ID ---------------------------------//
     case types.HANDLE_TABLE_ID:
+      // If table previously had unique ID, remove it
       if (!!state.selectedTable.fields[0]) {
         newFields = Object.assign({}, state.selectedTable.fields);
         delete newFields[0];
         newSelectedTable = Object.assign({}, state.selectedTable, { fields: newFields });
-      } else {
+      } 
+      // table did not previously have unique ID, add it
+      else {
         newFields = Object.assign({}, state.selectedTable.fields, { 0: idDefault });
-
+        // new table is being created, give it an unique ID
         if (state.selectedTable.tableID < 0) {
           newFields[0].tableNum = state.tableIndex;
-        } else {
+        } 
+        // table is being updated, and user clicked to add unique ID
+        else {
           newFields[0].tableNum = state.selectedTable.tableID;
         }
         newSelectedTable = Object.assign({}, state.selectedTable, { fields: newFields });
@@ -199,7 +204,6 @@ const reducers = (state = initialState, action) => {
         ...state,
         selectedTable: newSelectedTable,
         selectedField: fieldReset,
-        // selectedField: fieldReset //fieldReset is defined above the cases
       };
 
     // -------------------------------- Delete Table -------------------------------//
@@ -422,19 +426,6 @@ const reducers = (state = initialState, action) => {
             [rel[1]] : action.payload.value},
           ),
         });
-
-        // // Sets relation type name based on table index
-        // if (rel[1] === 'tableIndex') {
-        //   const tableIndex = action.payload.value
-        //   newSelectedField.relation.type = state.tables[tableIndex].type
-        // }
-        // // Sets relation field name based on field index
-        // if (rel[1] === 'fieldIndex') {
-        //   const tableIndex = newSelectedField.relation.tableIndex
-        //   const fieldIndex = action.payload.value
-        //   newSelectedField.relation.field = state.tables[tableIndex].fields[fieldIndex].name
-        // }
-
       } else {
         if (action.payload.value === 'true') action.payload.value = true;
         if (action.payload.value === 'false') action.payload.value = false;
