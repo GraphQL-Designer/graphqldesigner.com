@@ -105,7 +105,6 @@ const reducers = (state = initialState, action) => {
     case 'CHOOSE_DATABASE':
       const database = action.payload;
       // go to the schema tab if they start a new project
-      document.getElementById('schemaTab').click();
       let selectedTable = state.selectedTable;
       if (database === 'MongoDB') {
         selectedTable = mongoTable;
@@ -133,10 +132,10 @@ const reducers = (state = initialState, action) => {
         selectedField: newSelectedField,
       };
 
-    // ------------------------------- Add Table ------------------------------------//
+    // ------------------------------- Add Or Update Table -------------------------------//
     case types.SAVE_TABLE_DATA_INPUT:
+      // SAVE A NEW TABLE
       if (state.selectedTable.tableID < 0) {
-        // SAVE A NEW TABLE
         newTable = Object.assign({}, state.selectedTable, { tableID: state.tableIndex });
         newTables = Object.assign({}, state.tables, { [state.tableIndex]: newTable });
         newState = Object.assign({}, state, {
@@ -146,8 +145,9 @@ const reducers = (state = initialState, action) => {
         });
 
         if (state.database === 'MongoDB') newState.selectedTable.fields[0].tableNum++;
-      } else {
-        // UPDATE A SAVED TABLE
+      } 
+      // UPDATE A SAVED TABLE
+      else {
         newTableData = Object.assign({}, state.selectedTable);
         newTables = Object.assign({}, state.tables, { [state.selectedTable.tableID]: newTableData });
         newState = Object.assign({}, state, {
@@ -493,6 +493,7 @@ const reducers = (state = initialState, action) => {
     // User clicked New Project
     case types.HANDLE_NEW_PROJECT:
       newState = Object.assign({}, initialState, { projectReset: action.payload });
+      document.getElementById('schemaTab').click();
 
       return newState;
 
