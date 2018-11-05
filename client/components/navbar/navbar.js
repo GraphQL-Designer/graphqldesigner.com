@@ -8,7 +8,6 @@ import './team.css';
 import FlatButton from 'material-ui/FlatButton';
 import Dialog from 'material-ui/Dialog';
 
-
 // componenets
 import GraphqlLoader from '../loader/index.js';
 import Info from './info.jsx';
@@ -116,7 +115,7 @@ class MainNav extends React.Component {
 
   render() {
     const style = {
-      height: '70%',
+      height: '100%',
       width: '100%',
       margin: '10',
       textAlign: 'center',
@@ -130,7 +129,7 @@ class MainNav extends React.Component {
             <FlatButton style={{ color: '#FF4280' }} label="Export Code" onClick={this.handleExport} />
           </div>
           <div id="nav-right">
-            {/* <FlatButton onClick={this.handleInfoOpen}>Info</FlatButton> */}
+           {/*  <FlatButton onClick={this.handleInfoOpen}>Info</FlatButton> */}
             <Dialog
               modal={true}
               open={this.state.info}
@@ -140,11 +139,10 @@ class MainNav extends React.Component {
               className='info-container'
             >
               <Info />
-              <FlatButton id='cancel-btn' onClick={this.handleClose} >
+              <FlatButton style={{ justifyContent: 'flex-end' }} onClick={this.handleClose} >
                 Cancel  
               </FlatButton>
-            </Dialog>
-            
+            </Dialog>    
             <FlatButton onClick={this.handleTeamOpen}>Team</FlatButton>
             <Dialog
               modal={true}
@@ -152,11 +150,10 @@ class MainNav extends React.Component {
               onClose={this.handleClose}
             >
               <Team />
-              <FlatButton id='cancel-btn' onClick={this.handleClose} >
+              <FlatButton style={{ justifyContent: 'flex-end' }} onClick={this.handleClose} >
                 Cancel  
               </FlatButton>
             </Dialog>  
-
             <a href="https://github.com/GraphQL-Designer/graphqldesigner.com">
               <img src="./images/githubicon.png" />
             </a>

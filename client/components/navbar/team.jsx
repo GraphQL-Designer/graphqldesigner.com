@@ -7,7 +7,7 @@ class Team extends React.Component {
     const styles = {
       width: '150px',
       height: '150px',
-      'border-radius': '50%',
+      'borderRadius': '50%',
     };
     return (
       <div className="team-container">
@@ -17,7 +17,7 @@ class Team extends React.Component {
           </div>
             <div className='row'>
               <div className="team-member">
-                <img class="rounded-circle" style={styles} src='./images/Tsion.jpg' alt=""/>
+                <img className="rounded-circle" style={styles} src='./images/Tsion.jpg' alt=""/>
                 <h4>Tsion Adefres</h4>
                 <p id="team-title">Software Engineer</p>
                   <div className="team-links">
@@ -30,7 +30,7 @@ class Team extends React.Component {
                   </div>
               </div>
                 <div className="team-member">
-                  <img class="rounded-circle" style={styles} src='./images/Greg.jpg' alt=""/>
+                  <img className="rounded-circle" style={styles} src='./images/Greg.jpg' alt=""/>
                   <h4>Greg Shamalta</h4>
                   <p id="team-title">Software Engineer</p>
                     <div className="team-links">
@@ -43,7 +43,7 @@ class Team extends React.Component {
                     </div>
                 </div>
                   <div className="team-member">
-                    <img class="rounded-circle" style={styles} src='./images/James.jpg' alt=""/>
+                    <img className="rounded-circle" style={styles} src='./images/James.jpg' alt=""/>
                       <h4>James Sieu</h4>
                       <p id="team-title">Software Engineer</p>
                         <div className="team-links">
@@ -56,7 +56,7 @@ class Team extends React.Component {
                         </div>
                   </div>
                     <div className="team-member">
-                      <img class="rounded-circle" style={styles} src='./images/Patrick.jpg' alt=""/>
+                      <img className="rounded-circle" style={styles} src='./images/Patrick.jpg' alt=""/>
                       <h4>Patrick Slagle</h4>
                       <p id="team-title">Software Engineer</p>
                         <div className="team-links">
