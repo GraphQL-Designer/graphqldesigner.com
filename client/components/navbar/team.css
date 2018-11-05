@@ -7,11 +7,10 @@
   display: flex; 
   flex-direction: column;
   justify-content: space-evenly;
-
 }
 
-.team-heading h3{
-  font-size: 42px !important;
+.team-heading{
+  font-size: 30px !important;
   font-weight: initial;
   align-items: flex-start;
   text-align: center;
@@ -44,7 +43,7 @@
 }
 
 .team-links a {
-  padding: 3px; 
+  padding: 5px; 
 }
 
 .row {

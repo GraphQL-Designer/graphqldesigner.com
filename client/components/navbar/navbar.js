@@ -1,14 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import FlatButton from 'material-ui/FlatButton';
-
-import Dialog from 'material-ui/Dialog';
-
 import * as actions from '../../actions/actions.js';
 
 // styling
 import './navbar.css';
 import './team.css';
+import FlatButton from 'material-ui/FlatButton';
+import Dialog from 'material-ui/Dialog';
 
 // componenets
 import GraphqlLoader from '../loader/index.js';
@@ -142,7 +140,6 @@ class MainNav extends React.Component {
         <nav id="navbar">
           <div id="nav-left">
             <img id='logo' src='./images/Logo.svg' />
-            {/* <h2 id="header-name">GraphQL Designer</h2> */}
             <FlatButton label="New Project" onClick={this.handleNewProject} />
             <FlatButton style={{ color: '#FF4280' }} label="Export Code" onClick={this.handleExport} />
           </div>
