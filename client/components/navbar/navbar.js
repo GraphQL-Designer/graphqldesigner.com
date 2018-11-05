@@ -116,6 +116,21 @@ class MainNav extends React.Component {
   }
 
   render() {
+
+    // const style = {
+    //   modalBody: {
+    //     height: '100%',
+    //     width: '100%',
+    //     margin: '10',
+    //   },
+    //   modalFont: {
+    //     color: 'white',
+    //     textAlign: 'center',
+    //   },
+    //   buttonStyle: {
+    //     justifyContent: 'flex-end',
+    //   },
+    // };
     const style = {
       height: '100%',
       width: '100%',
@@ -132,7 +147,7 @@ class MainNav extends React.Component {
             <FlatButton style={{ color: '#FF4280' }} label="Export Code" onClick={this.handleExport} />
           </div>
           <div id="nav-right">
-            <FlatButton onClick={this.handleInfoOpen}>Info</FlatButton> 
+           {/*  <FlatButton onClick={this.handleInfoOpen}>Info</FlatButton> */}
             <Dialog
               modal={true}
               open={this.state.info}
@@ -142,7 +157,7 @@ class MainNav extends React.Component {
               className='info-container'
             >
               <Info />
-              <FlatButton id='cancel-btn' onClick={this.handleClose} >
+              <FlatButton style={{ justifyContent: 'flex-end' }} onClick={this.handleClose} >
                 Cancel  
               </FlatButton>
             </Dialog>    
@@ -153,7 +168,7 @@ class MainNav extends React.Component {
               onClose={this.handleClose}
             >
               <Team />
-              <FlatButton id='cancel-btn' onClick={this.handleClose} >
+              <FlatButton style={{ justifyContent: 'flex-end' }} onClick={this.handleClose} >
                 Cancel  
               </FlatButton>
             </Dialog>  
