@@ -4,7 +4,6 @@ import * as actions from '../../actions/actions.js';
 
 // styling
 import './navbar.css';
-import './team.css';
 import FlatButton from 'material-ui/FlatButton';
 import Dialog from 'material-ui/Dialog';
 
@@ -21,7 +20,6 @@ const mapStateToProps = store => ({
 
 const mapDispatchToProps = dispatch => ({
   handleNewProject: reset => dispatch(actions.handleNewProject(reset)),
-  tablesToMongoFormat: () => dispatch({ type: 'TABLES_TO_MONGO_FORMAT' }),
 });
 
 class MainNav extends React.Component {
