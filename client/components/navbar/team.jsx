@@ -43,7 +43,7 @@ class Team extends React.Component {
                     </div>
                 </div>
                   <div className="team-member">
-                    <img class="rounded-circle" style={styles} src='./images/James.jpg' alt=""/>
+                    <img className="rounded-circle" style={styles} src='./images/James.jpg' alt=""/>
                       <h4>James Sieu</h4>
                       <p id="team-title">Software Engineer</p>
                         <div className="team-links">

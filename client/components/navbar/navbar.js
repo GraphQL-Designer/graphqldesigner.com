@@ -114,21 +114,6 @@ class MainNav extends React.Component {
   }
 
   render() {
-
-    // const style = {
-    //   modalBody: {
-    //     height: '100%',
-    //     width: '100%',
-    //     margin: '10',
-    //   },
-    //   modalFont: {
-    //     color: 'white',
-    //     textAlign: 'center',
-    //   },
-    //   buttonStyle: {
-    //     justifyContent: 'flex-end',
-    //   },
-    // };
     const style = {
       height: '100%',
       width: '100%',
