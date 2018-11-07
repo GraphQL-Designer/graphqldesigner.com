@@ -80,7 +80,7 @@ class MainNav extends React.Component {
           let element = document.createElement('a');
           document.body.appendChild(element); 
           element.href = file;
-          element.download = 'graphql.zip';
+          element.download = 'GraphQLDesigner.zip';
           element.click();
           this.setState({
             modal: false,

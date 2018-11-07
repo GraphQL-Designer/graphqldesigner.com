@@ -1,6 +1,5 @@
 function sqlPool(database) {
   let query = '';
-  console.log('this is database', database); 
 
   // if MySQL, create MySQL specific code
   if (database === 'MySQL') {

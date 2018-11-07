@@ -40,26 +40,27 @@ function buildPackageJSON(db) {
         "express": "^4.16.3",
         "dotenv": "5.0.1",
         "apollo-boost": "^0.1.15",
+        "graphql": "^14.0.0",
 `
-if ( !db.includes('join') ) {
-    query += '\t\t"express-graphql": "^0.6.12",\n\t\t"graphql": "^14.0.0",'
+if ( !db.includes('Join') ) {
+    query += '\t\t"express-graphql": "^0.6.12",'
     if ( db === 'MongoDB' ) {
         query += '\t\t"mongoose": "^5.2.9"'
     }
-    if ( db === 'PostgreSQL' ) {
-        query += '\t\t"knex": "^0.15.2",\n\t\t"join-monster": "^2.1.0",\n\t\t"pg": "^7.5.0"'
+    if ( db.includes('PostgreSQL') ) {
+        query += ',\n\t\t"pg": "^7.5.0"'
     }
-    if ( db === 'MySQL' ) {
-        query += '\t\t"knex": "^0.15.2",\n\t\t"join-monster": "^2.1.0",\n\t\t"mysql": "^2.16.0"'
+    if ( db.includes('MySQL') ) {
+        query += ',\n\t\t"mysql": "^2.16.0"'
     }
 } else {
-    query += '\t\t"body-parser": "^1.17.2",\n\t\t"graphql-server-express": "^0.8.0",\n\t\t"apollo-server": "^2.1.0"'
+    query += '\t\t"body-parser": "^1.17.2",\n\t\t"graphql-server-express": "^0.8.0",\n\t\t"graphql-tools": "^4.0.3", \n\t\t"join-monster": "^2.1.0",\n\t\t"join-monster-graphql-tools-adapter": "0.0.3",\n\t\t"apollo-server": "^2.1.0",\n\t\t"apollo-server-express": "^2.1.0",'
 
-    if ( db === 'PostgreSQL' ) {
-        query += '\t\t"knex": "^0.15.2",\n\t\t"join-monster": "^2.1.0",\n\t\t"pg": "^7.5.0"'
+    if ( db.includes('PostgreSQL') ) {
+        query += '\n\t\t"pg": "^7.5.0"'
     }
-    if ( db === 'MySQL' ) {
-        query += '\t\t"knex": "^0.15.2",\n\t\t"join-monster": "^2.1.0",\n\t\t"mysql": "^2.16.0"'
+    if ( db.includes('MySQL') ) {
+        query += '\n\t\t"mysql": "^2.16.0"'
     }
 }
 query +=`
