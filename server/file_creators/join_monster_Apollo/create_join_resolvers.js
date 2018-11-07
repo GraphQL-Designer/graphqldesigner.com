@@ -170,14 +170,15 @@ module.exports = {`;
 
                 if(database.includes('MySQL')) {
                     query += `
-                    getConnection((err, con) => {
-                        con.query(sql, (err, result) => {
-                            if (err) throw err;
-                            con.release();
-                            return result;
-                        })
+                getConnection((err, con) => {
+                    con.query(sql, (err, result) => {
+                        if (err) throw err;
+                        con.release();
+                        return result;
                     })
-                })`
+                })
+            })
+        }`
                 } else {
                     query += `
                 getConnection((err, con, release) => {
