@@ -105,7 +105,6 @@ const reducers = (state = initialState, action) => {
     case 'CHOOSE_DATABASE':
       const database = action.payload;
       // go to the schema tab if they start a new project
-      document.getElementById('schemaTab').click();
       let selectedTable = state.selectedTable;
       if (database === 'MongoDB') {
         selectedTable = mongoTable;
@@ -133,10 +132,10 @@ const reducers = (state = initialState, action) => {
         selectedField: newSelectedField,
       };
 
-    // ------------------------------- Add Table ------------------------------------//
+    // ------------------------------- Add Or Update Table -------------------------------//
     case types.SAVE_TABLE_DATA_INPUT:
+      // SAVE A NEW TABLE
       if (state.selectedTable.tableID < 0) {
-        // SAVE A NEW TABLE
         newTable = Object.assign({}, state.selectedTable, { tableID: state.tableIndex });
         newTables = Object.assign({}, state.tables, { [state.tableIndex]: newTable });
         newState = Object.assign({}, state, {
@@ -146,8 +145,9 @@ const reducers = (state = initialState, action) => {
         });
 
         if (state.database === 'MongoDB') newState.selectedTable.fields[0].tableNum++;
-      } else {
-        // UPDATE A SAVED TABLE
+      } 
+      // UPDATE A SAVED TABLE
+      else {
         newTableData = Object.assign({}, state.selectedTable);
         newTables = Object.assign({}, state.tables, { [state.selectedTable.tableID]: newTableData });
         newState = Object.assign({}, state, {
@@ -156,8 +156,6 @@ const reducers = (state = initialState, action) => {
         });
       }
 
-      if (action.payload) {
-      }
       return newState;
 
     // ---------------------------- Change Table Name -----------------------------------//
@@ -171,16 +169,21 @@ const reducers = (state = initialState, action) => {
 
     // ----------------------------- Change Table ID ---------------------------------//
     case types.HANDLE_TABLE_ID:
+      // If table previously had unique ID, remove it
       if (!!state.selectedTable.fields[0]) {
         newFields = Object.assign({}, state.selectedTable.fields);
         delete newFields[0];
         newSelectedTable = Object.assign({}, state.selectedTable, { fields: newFields });
-      } else {
+      } 
+      // table did not previously have unique ID, add it
+      else {
         newFields = Object.assign({}, state.selectedTable.fields, { 0: idDefault });
-
+        // new table is being created, give it an unique ID
         if (state.selectedTable.tableID < 0) {
           newFields[0].tableNum = state.tableIndex;
-        } else {
+        } 
+        // table is being updated, and user clicked to add unique ID
+        else {
           newFields[0].tableNum = state.selectedTable.tableID;
         }
         newSelectedTable = Object.assign({}, state.selectedTable, { fields: newFields });
@@ -201,7 +204,6 @@ const reducers = (state = initialState, action) => {
         ...state,
         selectedTable: newSelectedTable,
         selectedField: fieldReset,
-        // selectedField: fieldReset //fieldReset is defined above the cases
       };
 
     // -------------------------------- Delete Table -------------------------------//
@@ -424,19 +426,6 @@ const reducers = (state = initialState, action) => {
             [rel[1]] : action.payload.value},
           ),
         });
-
-        // // Sets relation type name based on table index
-        // if (rel[1] === 'tableIndex') {
-        //   const tableIndex = action.payload.value
-        //   newSelectedField.relation.type = state.tables[tableIndex].type
-        // }
-        // // Sets relation field name based on field index
-        // if (rel[1] === 'fieldIndex') {
-        //   const tableIndex = newSelectedField.relation.tableIndex
-        //   const fieldIndex = action.payload.value
-        //   newSelectedField.relation.field = state.tables[tableIndex].fields[fieldIndex].name
-        // }
-
       } else {
         if (action.payload.value === 'true') action.payload.value = true;
         if (action.payload.value === 'false') action.payload.value = false;
@@ -493,6 +482,7 @@ const reducers = (state = initialState, action) => {
     // User clicked New Project
     case types.HANDLE_NEW_PROJECT:
       newState = Object.assign({}, initialState, { projectReset: action.payload });
+      document.getElementById('schemaTab').click();
 
       return newState;
 

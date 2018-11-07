@@ -13,7 +13,6 @@ export const handleSnackbarUpdate = status => ({
 });
 
 // ----------------------------- Schema App --------------------------------//
-
 export const openTableCreator = () => ({
   type: types.OPEN_TABLE_CREATOR,
 });

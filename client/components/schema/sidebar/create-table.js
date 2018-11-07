@@ -143,7 +143,6 @@ class CreateTable extends React.Component {
           {tableName(this.props.tableID, this.props.tables)}
 
           <TextField
-            // hintText="Table Name"
             floatingLabelText="Table Name"
             id="tableName"
             fullWidth={true}

@@ -42,7 +42,7 @@
     "webpack-dev-server": "^3.1.5"
   },
   "dependencies": {
-    "@material/top-app-bar": "^0.39.3",
+    "babel-jest": "^23.6.0",
     "babel-preset-stage-2": "^6.24.1",
     "eslint-config-airbnb": "^17.1.0",
     "express": "^4.16.3",
@@ -50,9 +50,9 @@
     "pack": "^2.1.0",
     "react-bootstrap": "^0.32.4",
     "react-redux": "^5.0.7",
-    "react-select": "^2.0.0",
     "react-transition-group": "^2.4.0",
     "redux": "^4.0.0",
+    "regenerator-runtime": "^0.12.1",
     "zip-local": "^0.3.4"
   }
 }

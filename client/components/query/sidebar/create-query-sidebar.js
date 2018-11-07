@@ -137,7 +137,7 @@ class CreateQuerySidebar extends Component {
   }
 
   render() {
-    console.log('newQuery', this.props.newQuery)
+    // console.log('newQuery', this.props.newQuery)
     // Dynamically set the GraphQL types that can be selected based on Schema setup
     const graphQLTypeOptions = [];
     const tableIndex = Number(this.props.newQuery.tableIndex);

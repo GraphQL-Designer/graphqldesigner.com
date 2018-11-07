@@ -1,9 +1,9 @@
-.about-container{
+.info-container{
   text-align: center;
   margin-top: -7vh;
 }
 
-.about-box{
+.info-box{
   width: 400px;
   height: 300px; 
 }
@@ -13,7 +13,7 @@
   font-size: 50px;
 }
 
-.about-btn{
+.info-btn{
   display: flex;
   justify-content: space-around;
   border: '1px solid white';
@@ -21,10 +21,4 @@
   font-size: '1.2em';
   color: 'white';
 }
-
-.welcome-hr{
-  height: 2px;
-  background-color: black;
-}
-
 

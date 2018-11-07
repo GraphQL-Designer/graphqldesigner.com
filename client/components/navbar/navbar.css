@@ -6,6 +6,7 @@
   flex-direction: row; 
   justify-content: space-between;
   align-items: center; 
+  padding: 0px 0px 0px 10px;
 }
 
 #nav-left{
@@ -21,7 +22,6 @@
   display: flex; 
   align-items: center; 
 }
-
 
 #header-name {
   color: white; 
@@ -41,3 +41,4 @@
   justify-content: center;
   align-items: center;
 }
+
