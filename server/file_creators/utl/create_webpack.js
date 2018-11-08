@@ -3,7 +3,6 @@ function buildWebpack() {
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = {
-    // devtool: 'inline-source-map',
     context: path.join(__dirname, '/client'),
     entry: './index.js',
     output: {
@@ -12,7 +11,8 @@ module.exports = {
     publicPath: '/server/public'
     },
     mode: 'development',
-    // watch: true, //Bundle on saved changes
+    //Set to rebundle on saved changes
+    // watch: true, 
     module: { 
     rules: [
         {

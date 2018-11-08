@@ -72,7 +72,7 @@ function checkFieldType(fieldType) {
 
 function buildDeleteMutationParams(table) {
   const idName = table.fields[0].name;
-  let query = `const delete${table.type}Mutation = gpq\`\n`;
+  let query = `const delete${table.type}Mutation = gql\`\n`;
   query += `${tab}mutation($${idName}: ${table.fields[0].type}!){\n`;
   query += `${tab}${tab}delete${table.type}(${idName}: $${idName}){\n`;
   return query;
