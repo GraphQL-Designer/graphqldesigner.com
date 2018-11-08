@@ -20,22 +20,22 @@ const CodeDBSQLContainer = (props) => {
   function parseSQLTable(table) {
     if (!table) return ``;
 
-    createTablesCode += `${enter}CREATE TABLE \`${table.type}\` (${enter}`;
+    createTablesCode += `${enter}CREATE TABLE \`${table.type}\` (`;
 
     // create code for each field
     for (const fieldId in table.fields) {
+      createTablesCode += enter; 
       createTablesCode += createSchemaField(table.fields[fieldId]);
       // so long as it's not the last field, add a comma
       const tableProps = Object.keys(table.fields);
       if (fieldId !== tableProps[tableProps.length - 1]) {
         createTablesCode += `,`;
       }
-      createTablesCode += `${enter}`; 
     }
 
     // if table has a primary key
     if (primaryKey.length > 0) {
-      createTablesCode += `${tab}PRIMARY KEY (`;
+      createTablesCode += `,${enter}${tab}PRIMARY KEY (`;
       primaryKey.forEach((key, i) => {
         if (i === primaryKey.length - 1) {
           createTablesCode += `\`${key}\`)${enter}`;

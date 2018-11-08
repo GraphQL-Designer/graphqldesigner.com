@@ -11,22 +11,22 @@ function parseSQLTables(tables) {
   function parseSQLTable(table) {
     if (!table) return ``;
 
-    createTablesCode += `CREATE TABLE \`${table.type}\` (\n`;
+    createTablesCode += `CREATE TABLE \`${table.type}\` (`;
 
     // create code for each field
     for (const fieldId in table.fields) {
+      createTablesCode += `\n`;
       createTablesCode += createTableField(table.fields[fieldId]);
       // so long as it's not the last field, add a comma
       const fieldIds = Object.keys(table.fields);
       if (fieldId !== fieldIds[fieldIds.length - 1]) {
         createTablesCode += `,`;
       }
-      createTablesCode += `\n`;
     }
 
     // if table has a primary key
     if (primaryKey.length > 0) {
-      createTablesCode += `${tab}PRIMARY KEY (`;
+      createTablesCode += `,${tab}PRIMARY KEY (`;
       primaryKey.forEach((key, i) => {
         if (i === primaryKey.length - 1) {
           createTablesCode += `\`${key}\`)\n`;
