@@ -33,9 +33,7 @@ app.listen(PORT, () => {
 });
 `;
 } else {
-  query += `const bodyParser = require('body-parser');
-const { ApolloServer } = require('apollo-server-express');
-const { graphiqlExpress, graphqlExpress } = require('graphql-server-express');
+  query += `const { ApolloServer } = require('apollo-server-express');
 const { makeExecutableSchema } = require('graphql-tools');
 const joinMonsterAdapt = require('join-monster-graphql-tools-adapter');
 const joinMonsterMetadata = require('./resolvers/join-monster-metadata');
@@ -66,6 +64,9 @@ app.listen(PORT, () => console.log(\`Listing on \${PORT}!\`));
 }
 
 module.exports = buildExpressServer;
+
+// const { graphiqlExpress, graphqlExpress } = require('graphql-server-express');
+// const bodyParser = require('body-parser');
 
 // app.use(
 //   '/graphiql',

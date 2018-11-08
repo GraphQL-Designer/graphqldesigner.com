@@ -12,8 +12,9 @@ module.exports = {`;
     let firstType = true;
     for ( const tableIndex in data) {
         const table = data[tableIndex];
-        let firstPrimaryKey = '';
         
+        //To find the primary key
+        let firstPrimaryKey = '';
         for (const index in table.fields) {
             const field = table.fields[index];
             if (field.primaryKey) {
@@ -31,16 +32,30 @@ module.exports = {`;
         type += `\n\t${table.type}: {`;
 
         query += `\n\t\tevery${table.type}: (parent, args, ctx, info) => {
-            joinMonster(info, args, sql => {
+            joinMonster(info, args, sql => {`
+            if(database.includes('MySQL')) {
+                query += `
                 getConnection((err, con) => {
-                    con.query(sql, (err, results) => {
+                    con.query(sql, (err, result) => {
                         if (err) throw err;
                         con.release();
-                        return results;
+                        return result;
                     })
                 })
             })
-        }`;
+        }`
+            } else {
+                query += `
+                getConnection((err, con, release) => {
+                    con.query(sql, (err, result) => {
+                        if (err) throw err;
+                        release();
+                        return result;
+                    })
+                })
+            })
+        }`
+            }
 
     mutation += `\n\t\tcreate${table.type}: (parent, args) => {
             let columns = '';
@@ -59,15 +74,30 @@ module.exports = {`;
                     values += args[prop];
                 }
             }
-            
+            `
+            if(database.includes('MySQL')) {
+                mutation += `
             getConnection((err, con) => {
-                con.query(sql, args, (err, result) => {
+                con.query(sql, (err, result) => {
                     if (err) throw err;
                     con.release();
                     return result;
                 })
             })
-        },
+        },`
+            } else {
+                mutation += `
+            getConnection((err, con, release) => {
+                con.query(sql, (err, result) => {
+                    if (err) throw err;
+                    release();
+                    return result;
+                })
+            })
+        },`
+            }
+
+        mutation += `
         update${table.type}: (parent, args) => {
             let updateValues = '';
             const sql = \`UPDATE ${table.type} SET \${updateValues} WHERE ${firstPrimaryKey} = \${args.${firstPrimaryKey}}\`;
@@ -82,18 +112,35 @@ module.exports = {`;
                     updateValues += \`\${prop} = '\${args[prop]}'\`
                 }
             }
-
+            `
+            if(database.includes('MySQL')) {
+                mutation += `
             getConnection((err, con) => {
-                con.query(sql, args, (err, result) => {
+                con.query(sql, (err, result) => {
                     if (err) throw err;
                     con.release();
                     return result;
                 })
             })
-        },
-        delete${table.type}: (parent, { ${firstPrimaryKey} }) => {
-            const sql = \`DELETE FROM ${table.type} WHERE ${firstPrimaryKey} = \${${firstPrimaryKey}}\`;
+        },`
+            } else {
+                mutation += `
+            getConnection((err, con, release) => {
+                con.query(sql, (err, result) => {
+                    if (err) throw err;
+                    release();
+                    return result;
+                })
+            })
+        },`
+            }
 
+        mutation += `
+        delete${table.type}: (parent, { ${firstPrimaryKey} }) => {
+            const sql = \`DELETE FROM ${table.type} WHERE ${firstPrimaryKey} = \${${firstPrimaryKey}}\`;`
+
+            if(database.includes('MySQL')) {
+                mutation += `
             getConnection((err, con) => {
                 con.query(sql, (err, result) => {
                     if (err) throw err;
@@ -102,13 +149,27 @@ module.exports = {`;
                 })
             })
         }`
+            } else {
+                mutation += `
+            getConnection((err, con, release) => {
+                con.query(sql, (err, result) => {
+                    if (err) throw err;
+                    release();
+                    return result;
+                })
+            })
+        }`
+            }
 
         for ( const fieldIndex in table.fields ) {
             const field = table.fields[fieldIndex];
 
             if (field.primaryKey) {
                 query += `,\n\t\tget${table.type}By${toTitleCase(field.name)}: (parent, args, ctx, info) => {
-            joinMonster(info, args, sql => {
+            joinMonster(info, args, sql => {`
+
+                if(database.includes('MySQL')) {
+                    query += `
                 getConnection((err, con) => {
                     con.query(sql, (err, result) => {
                         if (err) throw err;
@@ -118,6 +179,18 @@ module.exports = {`;
                 })
             })
         }`
+                } else {
+                    query += `
+                getConnection((err, con, release) => {
+                    con.query(sql, (err, result) => {
+                        if (err) throw err;
+                        release();
+                        return result;
+                    })
+                })
+            })
+        }`
+                }
             }
 
             // if (field.relation.tableIndex > -1) {
@@ -154,6 +227,9 @@ module.exports = {`;
     return type += query += mutation += '\n\t}\n};';
 };
 
+
+
+
 function toTitleCase(str) {
     return str.replace(
         /\w\S*/g,
@@ -163,10 +239,12 @@ function toTitleCase(str) {
     );
 }
 
+
 function isMultipleNameType(data) {
     if ( data === 'one to one' || data === 'many to one') return 'related'
     return 'everyRelated'
 }
+
 
 // function findSearchType(type) {
 //     if ( type === 'one to many' ) return 'findAll';
