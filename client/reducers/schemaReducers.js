@@ -430,8 +430,8 @@ const reducers = (state = initialState, action) => {
         if (action.payload.value === 'true') action.payload.value = true;
         if (action.payload.value === 'false') action.payload.value = false;
         newSelectedField = Object.assign({}, state.selectedField,
-          {[action.payload.name]: action.payload.value,
-          });
+          {[action.payload.name]: action.payload.value}
+        );
         // user toggled relation off
         if (action.payload.name === 'relationSelected' && action.payload.value === false){
           newSelectedField.relation = Object.assign({}, relationReset);
@@ -443,7 +443,6 @@ const reducers = (state = initialState, action) => {
       };
 
       // --------------------------- FIELD SELECTED FOR UPDATE -------------------------------//
-
     // when a user selects a field, it changes selectedField to be an object with the necessary
     // info from the selected table and field.
     case types.HANDLE_FIELDS_SELECT:
