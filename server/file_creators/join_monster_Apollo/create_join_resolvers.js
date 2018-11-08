@@ -32,7 +32,7 @@ module.exports = {`;
         type += `\n\t${table.type}: {`;
 
         query += `\n\t\tevery${table.type}: (parent, args, ctx, info) => {
-            joinMonster(info, args, sql => {`
+            return joinMonster(info, args, sql => {`
             if(database.includes('MySQL')) {
                 query += `
                 getConnection((err, con) => {
@@ -166,7 +166,7 @@ module.exports = {`;
 
             if (field.primaryKey) {
                 query += `,\n\t\tget${table.type}By${toTitleCase(field.name)}: (parent, args, ctx, info) => {
-            joinMonster(info, args, sql => {`
+            return joinMonster(info, args, sql => {`
 
                 if(database.includes('MySQL')) {
                     query += `

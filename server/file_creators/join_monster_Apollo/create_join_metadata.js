@@ -1,5 +1,5 @@
 module.exports = function(tables) {
-    let query = 'module.export = {\n\tQuery: {';
+    let query = 'module.exports = {\n\tQuery: {';
     let type = '';
     
     for (const tableIndex in tables) {
@@ -45,7 +45,7 @@ module.exports = function(tables) {
             } 
         }
         type += `\n\t${table.type}: {
-        sqlTable: '${table.type.toLowerCase()}',
+        sqlTable: '${table.type}',
         uniqueKey: '${firstPrimaryKey}',
         fields: {`
 
