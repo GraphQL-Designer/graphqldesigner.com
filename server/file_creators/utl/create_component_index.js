@@ -37,9 +37,9 @@ class Index extends Component {
                             <div class="balls ball6"></div>
                         </div>
                     </div>
-                    <h1>Thanks For Using GraphQL Designer!</h1>
-                    <p>Please star us on GitHub to show the love! Also include any bugs for us to work on during this growing period. Link below!</p>
-                    <a href="https://github.com/GraphQL-Designer/graphqldesigner.com" target="blank">GraphQL Designer Github</a>
+                    <h1 style={{marginTop: '15px'}}>Thanks For Using GraphQL Designer!</h1>
+                    <p style={{marginTop: '15px'}}>Please star us on GitHub to show the love! Also include any bugs for us to work on during this growing period. Link below!</p>
+                    <a style={{marginTop: '15px'}} href="https://github.com/GraphQL-Designer/graphqldesigner.com" target="blank">GraphQL Designer Github</a>
                 </div>
             </div>
         );

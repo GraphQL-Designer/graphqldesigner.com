@@ -10,7 +10,6 @@ function parseSQLTables(tables) {
 
   function parseSQLTable(table) {
     if (!table) return ``;
-
     createTablesCode += `CREATE TABLE \`${table.type}\` (`;
 
     // create code for each field
