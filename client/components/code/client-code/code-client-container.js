@@ -131,7 +131,7 @@ const CodeClientContainer = (props) => {
 
   function buildDeleteMutationParams(table) {
     const idName = table.fields[0].name;
-    let query = `const delete${table.type}Mutation = gpq\`${enter}`;
+    let query = `const delete${table.type}Mutation = gql\`${enter}`;
     query += `${tab}mutation($${idName}: ${table.fields[0].type}!){${enter}`;
     query += `${tab}${tab}delete${table.type}(${idName}: $${idName}){${enter}`;
     return query;
