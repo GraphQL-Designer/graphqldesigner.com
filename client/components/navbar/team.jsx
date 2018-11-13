@@ -3,7 +3,6 @@ import React from 'react';
 // styling
 import './team.css';
 
-// testing a merge
 class Team extends React.Component {
   render() {
     const styles = {
