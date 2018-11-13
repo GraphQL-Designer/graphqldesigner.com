@@ -18,7 +18,7 @@
     "pack": "webpack -p",
     "dev": "webpack-dev-server",
     "server": "nodemon server/index.js",
-    "start": "nodemon server/index.js",
+    "start": "node server/index.js",
     "test": "jest"
   },
   "devDependencies": {
