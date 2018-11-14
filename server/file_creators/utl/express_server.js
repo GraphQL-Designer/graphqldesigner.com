@@ -57,7 +57,7 @@ const server = new ApolloServer({ schema });
 
 server.applyMiddleware({ app });
 
-app.listen(PORT, () => console.log(\`Listing on \${PORT}!\`));
+app.listen(PORT, () => console.log(\`Listening on \${PORT}!\`));
 `;
 }
   return query;

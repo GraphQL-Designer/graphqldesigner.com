@@ -13,7 +13,8 @@ const pool = mysql.createPool({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME
+  database: process.env.DB_NAME,
+  port: process.env.DB_PORT
 })
 
 const getConnection = function(callback) {
@@ -38,9 +39,10 @@ const pool = new Pool({
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME
+  port: process.env.DB_PORT
 
   //Or you can use a connectiong string
-  //connectionString: 'postgresql://dbuser:secretpassword@database.server.com:3211/mydb' 
+  //connectionString: 'postgresql://dbuser:secretpassword@database.server.com:port/mydb' 
 })
 
 const getConnection = function(callback) {
