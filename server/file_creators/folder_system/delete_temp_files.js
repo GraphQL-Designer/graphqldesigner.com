@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-module.exports = function(database, PATH, dateStamp, cb) {
+module.exports = function(data, database, PATH, dateStamp, cb) {
     fs.unlinkSync(path.join(PATH, `build-files${dateStamp}/readme.md`));
     fs.unlinkSync(path.join(PATH, `build-files${dateStamp}/package.json`));
     fs.unlinkSync(path.join(PATH, `build-files${dateStamp}/webpack.config.js`));

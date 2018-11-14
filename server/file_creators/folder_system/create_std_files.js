@@ -12,7 +12,7 @@ const buildExpressServer = require('../utl/express_server');
 const buildIndexHTML = require('../utl/create_indexhtml');
 const parseGraphqlServer = require('../utl/graphql_server');
 
-module.exports = function(database, PATH, dateStamp, cb) {
+module.exports = function(data, database, PATH, dateStamp, cb) {
     fs.writeFileSync(path.join(PATH, `build-files${dateStamp}/readme.md`), createReadMe());
     fs.writeFileSync(path.join(PATH, `build-files${dateStamp}/package.json`), buildPackageJSON(database));
     fs.writeFileSync(path.join(PATH, `build-files${dateStamp}/webpack.config.js`), buildWebpack());

@@ -40,7 +40,7 @@ app.post('/write-files', (req, res) => {
       console.log('Download Complete!');
 
       setTimeout(() => {
-        deleteTempFiles(database, PATH, dateStamp, () => {
+        deleteTempFiles(data, database, PATH, dateStamp, () => {
           deleteTempFolders(database, PATH, dateStamp, () => {
           });
         });
