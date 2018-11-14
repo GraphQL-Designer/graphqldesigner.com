@@ -57,7 +57,7 @@ module.exports = {`;
         }`
             }
 
-    mutation += `\n\t\tcreate${table.type}: (parent, args) => {
+    mutation += `\n\t\tadd${table.type}: (parent, args) => {
             let columns = '';
             let values = '';
             const sql = \`INSERT INTO ${table.type} (\${columns}) VALUES (\${values})\`;
