@@ -60,7 +60,6 @@ module.exports = {`;
     mutation += `\n\t\tadd${table.type}: (parent, args) => {
             let columns = '';
             let values = '';
-            const sql = \`INSERT INTO ${table.type} (\${columns}) VALUES (\${values})\`;
             
             let firstLoop = true;
             for (const prop in args) {
@@ -70,10 +69,16 @@ module.exports = {`;
                         values += ', ';
                     }
                     firstLoop = false;
-                    columns += prop;
-                    values += args[prop];
+                    columns += \`"\${prop}"\`;
+                    if (typeof args[prop] === 'string') {
+                        values += \`'\${args[prop]}'\`;
+                    } else {
+                        values += args[prop];
+                    }
                 }
             }
+
+            const sql = \`INSERT INTO "${table.type}" (\${columns}) VALUES (\${values});\`;
             `
             if(database.includes('MySQL')) {
                 mutation += `
@@ -100,8 +105,7 @@ module.exports = {`;
         mutation += `
         update${table.type}: (parent, args) => {
             let updateValues = '';
-            const sql = \`UPDATE ${table.type} SET \${updateValues} WHERE ${firstPrimaryKey} = \${args.${firstPrimaryKey}}\`;
-
+            
             let firstLoop = true;
             for (const prop in args) {
                 if (prop !== 'id') {
@@ -112,6 +116,8 @@ module.exports = {`;
                     updateValues += \`\${prop} = '\${args[prop]}'\`
                 }
             }
+
+            const sql = \`UPDATE "${table.type}" SET \${updateValues} WHERE ${firstPrimaryKey} = \${args.${firstPrimaryKey}};\`;
             `
             if(database.includes('MySQL')) {
                 mutation += `
@@ -137,7 +143,7 @@ module.exports = {`;
 
         mutation += `
         delete${table.type}: (parent, { ${firstPrimaryKey} }) => {
-            const sql = \`DELETE FROM ${table.type} WHERE ${firstPrimaryKey} = \${${firstPrimaryKey}}\`;`
+            const sql = \`DELETE FROM "${table.type}" WHERE ${firstPrimaryKey} = \${${firstPrimaryKey}};\`;`
 
             if(database.includes('MySQL')) {
                 mutation += `
