@@ -9,7 +9,7 @@ const buildForJoinMonster = require('../join_monster_apollo');
 
 module.exports = function(database, data, PATH, dateStamp, cb) {
     buildDirectories(database, PATH, dateStamp, () => {
-        buildStdFiles(database, PATH, dateStamp, () => {
+        buildStdFiles(data, database, PATH, dateStamp, () => {
             buildClientQueries(data, PATH, dateStamp, () => {
 
             if (database === 'MongoDB') buildForMongo(data, PATH, dateStamp);
