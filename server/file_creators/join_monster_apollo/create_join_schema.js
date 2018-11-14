@@ -57,7 +57,7 @@ module.exports = function(data) {
         const table = data[tableIndex];
         if (!firstLoop) query += '\n';
         firstLoop = false
-        let createQuery = `\t\tcreate${table.type}(`
+        let createQuery = `\t\tadd${table.type}(`
         let updateQuery = `\t\tupdate${table.type}(`
         let deleteQuery = `\t\tdelete${table.type}(`
 
