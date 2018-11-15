@@ -87,7 +87,7 @@ const CodeClientContainer = (props) => {
   function buildClientQueryById(table) {
     let string = `const query${table.type}ById = gql\`${enter}`;
     string += `${tab}query($${table.fields[0].name}: ${table.fields[0].type}!) {${enter}`;
-    string += `${tab}${tab}${table.type}(${table.fields[0].name}: $${table.fields[0].name}) {${enter}`;
+    string += `${tab}${tab}${table.type.toLowerCase()}(${table.fields[0].name}: $${table.fields[0].name}) {${enter}`;
 
     for (const fieldId in table.fields) {
       string += `${tab}${tab}${tab}${table.fields[fieldId].name}${enter}`;
