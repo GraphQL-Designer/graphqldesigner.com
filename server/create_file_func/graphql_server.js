@@ -147,7 +147,7 @@ function createSubQuery(field, data, database) {
   if (database === 'MySQL' || database === 'PostgreSQL') {
     if (database === 'MySQL') query += `getConnection`
     if (database === 'PostgreSQL') query += `connect`
-    query += `((err, con) => {\n${tab}${tab}${tab}${tab}${tab}const sql = \`SELECT * FROM ${refTypeName} WHERE `;
+    query += `((err, con) => {\n${tab}${tab}${tab}${tab}${tab}const sql = \`SELECT * FROM "${refTypeName}" WHERE `;
 
     if (field.type === 'ID') {
       query += `${field.name} = \${parent.${field.name}}`;
@@ -228,7 +228,7 @@ function createFindAllRootQuery(table, database) {
   if (database === 'MySQL' || database === 'PostgreSQL') {
     if (database === 'MySQL') query += `getConnection`
     if (database === 'PostgreSQL') query += `connect`
-    query += `((err, con) => {\n${tab}${tab}${tab}${tab}${tab}const sql = \'SELECT * FROM ${table.type}\';\n${tab}${tab}${tab}${tab}${tab}con.query(sql, (err, results) => {\n${tab}${tab}${tab}${tab}${tab}${tab}if (err) throw err;\n${tab}${tab}${tab}${tab}${tab}${tab}con.release();\n${tab}${tab}${tab}${tab}${tab}${tab}return results;\n${tab}${tab}${tab}${tab}${tab}})\n${tab}${tab}${tab}${tab}})`;
+    query += `((err, con) => {\n${tab}${tab}${tab}${tab}${tab}const sql = \'SELECT * FROM "${table.type}"\';\n${tab}${tab}${tab}${tab}${tab}con.query(sql, (err, results) => {\n${tab}${tab}${tab}${tab}${tab}${tab}if (err) throw err;\n${tab}${tab}${tab}${tab}${tab}${tab}con.release();\n${tab}${tab}${tab}${tab}${tab}${tab}return results;\n${tab}${tab}${tab}${tab}${tab}})\n${tab}${tab}${tab}${tab}})`;
   }
 
   return query += `\n${tab}${tab}${tab}}\n${tab}${tab}}`;
@@ -246,7 +246,7 @@ function createFindByIdQuery(table, database) {
     if (database === 'MySQL') query += `getConnection`
     if (database === 'PostgreSQL') query += `connect`
     query += `((err, con) => {\n`;
-    query += `${tab}${tab}${tab}${tab}${tab}const sql = \`SELECT * FROM ${table.type} WHERE ${idFieldName} = \${args.${idFieldName}}\`;\n`;
+    query += `${tab}${tab}${tab}${tab}${tab}const sql = \`SELECT * FROM "${table.type}" WHERE ${idFieldName} = \${args.${idFieldName}}\`;\n`;
     query += `${tab}${tab}${tab}${tab}${tab}con.query(sql, (err, result) => {\n`;
     query += `${tab}${tab}${tab}${tab}${tab}${tab}if (err) throw err;\n`;
     query += `${tab}${tab}${tab}${tab}${tab}${tab}con.release();\n`;
@@ -285,7 +285,7 @@ function addMutation(table, database) {
   if (database === 'MySQL' || database === 'PostgreSQL') {
     if (database === 'MySQL') query += `getConnection`
     if (database === 'PostgreSQL') query += `connect`
-    query += `((err, con) => {\n${tab}${tab}${tab}${tab}${tab}const sql = 'INSERT INTO ${table.type} SET ?';\n${tab}${tab}${tab}${tab}${tab}con.query(sql, args, (err, result) => {\n${tab}${tab}${tab}${tab}${tab}${tab}if (err) throw err;\n${tab}${tab}${tab}${tab}${tab}${tab}con.release();\n${tab}${tab}${tab}${tab}${tab}${tab}return result;\n${tab}${tab}${tab}${tab}${tab}})\n${tab}${tab}${tab}${tab}})`;
+    query += `((err, con) => {\n${tab}${tab}${tab}${tab}${tab}const sql = 'INSERT INTO "${table.type}" SET ?';\n${tab}${tab}${tab}${tab}${tab}con.query(sql, args, (err, result) => {\n${tab}${tab}${tab}${tab}${tab}${tab}if (err) throw err;\n${tab}${tab}${tab}${tab}${tab}${tab}con.release();\n${tab}${tab}${tab}${tab}${tab}${tab}return result;\n${tab}${tab}${tab}${tab}${tab}})\n${tab}${tab}${tab}${tab}})`;
   }
 
   return query += `\n${tab}${tab}${tab}}\n${tab}${tab}}`;
@@ -321,7 +321,7 @@ function updateMutation(table, database) {
     query += `${tab}${tab}${tab}${tab}${tab}for (const prop in args) {\n`;
     query += `${tab}${tab}${tab}${tab}${tab}${tab}updateValues += \`\${prop} = '\${args[prop]}' \`\n`;
     query += `${tab}${tab}${tab}${tab}${tab}}\n`;
-    query += `${tab}${tab}${tab}${tab}${tab}const sql = \`UPDATE ${table.type} SET \${updateValues} WHERE ${idFieldName} = \${args.`;
+    query += `${tab}${tab}${tab}${tab}${tab}const sql = \`UPDATE "${table.type}" SET \${updateValues} WHERE ${idFieldName} = \${args.`;
     query += `${idFieldName}}\`;\n`;
     query += `${tab}${tab}${tab}${tab}${tab}con.query(sql, args, (err, result) => {\n`;
     query += `${tab}${tab}${tab}${tab}${tab}${tab}if (err) throw err;\n`;
@@ -352,7 +352,7 @@ function deleteMutation(table, database) {
     const idFieldName = table.fields[0].name;
 
     query += `((err, con) => {\n`;
-    query += `${tab}${tab}${tab}${tab}${tab}const sql = \`DELETE FROM ${table.type} WHERE ${idFieldName} = \${args.`;
+    query += `${tab}${tab}${tab}${tab}${tab}const sql = \`DELETE FROM "${table.type}" WHERE ${idFieldName} = \${args.`;
     query += `${idFieldName}}\`;\n`;
     query += `${tab}${tab}${tab}${tab}${tab}con.query(sql, (err, result) => {\n`;
     query += `${tab}${tab}${tab}${tab}${tab}${tab}if (err) throw err;\n`;

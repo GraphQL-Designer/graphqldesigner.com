@@ -164,7 +164,7 @@ const {
     if (database === 'MySQL' || database === 'PostgreSQL') {
       if (database === 'MySQL') query += `getConnection((err, con) => {${enter}`;
       if (database === 'PostgreSQL') query += `connect((err, con) => {${enter}`;
-      query += `${tab}${tab}${tab}${tab}${tab}const sql = \`SELECT * FROM ${refTypeName} WHERE `;
+      query += `${tab}${tab}${tab}${tab}${tab}const sql = \`SELECT * FROM "${refTypeName}" WHERE `;
 
       if (field.type === 'ID') {
         query += `${field.name} = \${parent.${field.name}}`;
@@ -247,7 +247,7 @@ const {
       if (database === 'MySQL') query += `getConnection((err, con) => {${enter}`;
       if (database === 'PostgreSQL') query += `connect((err, con) => {${enter}`;
 
-      query += `${tab}${tab}${tab}${tab}${tab}const sql = \'SELECT * FROM ${table.type}\';${enter}`;
+      query += `${tab}${tab}${tab}${tab}${tab}const sql = \'SELECT * FROM "${table.type}"\';${enter}`;
       query += `${tab}${tab}${tab}${tab}${tab}con.query(sql, (err, results) => {${enter}`;
       query += `${tab}${tab}${tab}${tab}${tab}${tab}if (err) throw err;${enter}`;
       query += `${tab}${tab}${tab}${tab}${tab}${tab}con.release();${enter}`;
@@ -275,7 +275,7 @@ const {
     if (database === 'MySQL' || database === 'PostgreSQL') {
       if (database === 'MySQL') query += `getConnection((err, con) => {${enter}`;
       if (database === 'PostgreSQL') query += `connect((err, con) => {${enter}`;
-      query += `${tab}${tab}${tab}${tab}${tab}const sql = \`SELECT * FROM ${table.type} WHERE ${idFieldName} = \${args.${idFieldName}}\`;${enter}`;
+      query += `${tab}${tab}${tab}${tab}${tab}const sql = \`SELECT * FROM "${table.type}" WHERE ${idFieldName} = \${args.${idFieldName}}\`;${enter}`;
       query += `${tab}${tab}${tab}${tab}${tab}con.query(sql, (err, result) => {${enter}`;
       query += `${tab}${tab}${tab}${tab}${tab}${tab}if (err) throw err;${enter}`;
       query += `${tab}${tab}${tab}${tab}${tab}${tab}con.release();${enter}`;
@@ -314,7 +314,7 @@ const {
     if (database === 'MySQL' || database === 'PostgreSQL') {
       if (database === 'MySQL') query += `getConnection`
       else query += `connect`
-      query += `((err, con) => {${enter}${tab}${tab}${tab}${tab}${tab}const sql = 'INSERT INTO ${table.type} SET ?';${enter}${tab}${tab}${tab}${tab}${tab}con.query(sql, args, (err, result) => {${enter}${tab}${tab}${tab}${tab}${tab}${tab}if (err) throw err;${enter}${tab}${tab}${tab}${tab}${tab}${tab}con.release();${enter}${tab}${tab}${tab}${tab}${tab}${tab}return result;${enter}${tab}${tab}${tab}${tab}${tab}})${enter}${tab}${tab}${tab}${tab}})`;
+      query += `((err, con) => {${enter}${tab}${tab}${tab}${tab}${tab}const sql = 'INSERT INTO "${table.type}" SET ?';${enter}${tab}${tab}${tab}${tab}${tab}con.query(sql, args, (err, result) => {${enter}${tab}${tab}${tab}${tab}${tab}${tab}if (err) throw err;${enter}${tab}${tab}${tab}${tab}${tab}${tab}con.release();${enter}${tab}${tab}${tab}${tab}${tab}${tab}return result;${enter}${tab}${tab}${tab}${tab}${tab}})${enter}${tab}${tab}${tab}${tab}})`;
     }
 
     return query += `${enter}${tab}${tab}${tab}}${enter}${tab}${tab}}`;
@@ -351,7 +351,7 @@ const {
       query += `${tab}${tab}${tab}${tab}${tab}for (const prop in args) {${enter}`;
       query += `${tab}${tab}${tab}${tab}${tab}${tab}updateValues += \`\${prop} = '\${args[prop]}' \`${enter}`;
       query += `${tab}${tab}${tab}${tab}${tab}}${enter}`;
-      query += `${tab}${tab}${tab}${tab}${tab}const sql = \`UPDATE ${table.type} SET \${updateValues} WHERE ${idFieldName} = \${args.`;
+      query += `${tab}${tab}${tab}${tab}${tab}const sql = \`UPDATE "${table.type}" SET \${updateValues} WHERE ${idFieldName} = \${args.`;
       query += `${idFieldName}}\`;${enter}`;
       query += `${tab}${tab}${tab}${tab}${tab}con.query(sql, args, (err, result) => {${enter}`;
       query += `${tab}${tab}${tab}${tab}${tab}${tab}if (err) throw err;${enter}`;
@@ -385,7 +385,7 @@ const {
       if (database === 'MySQL') query += `getConnection`;
       if (database === 'PostgreSQL') query += `connect`
       query += `((err, con) => {${enter}`;
-      query += `${tab}${tab}${tab}${tab}${tab}const sql = \`DELETE FROM ${table.type} WHERE ${idFieldName} = \${args.`;
+      query += `${tab}${tab}${tab}${tab}${tab}const sql = \`DELETE FROM "${table.type}" WHERE ${idFieldName} = \${args.`;
       query += `${idFieldName}}\`;${enter}`;
       query += `${tab}${tab}${tab}${tab}${tab}con.query(sql, (err, result) => {${enter}`;
       query += `${tab}${tab}${tab}${tab}${tab}${tab}if (err) throw err;${enter}`;
