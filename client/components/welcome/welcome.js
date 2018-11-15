@@ -16,6 +16,12 @@ const mapDispatchToProps = dispatch => ({
   handleNewProject: reset => dispatch(actions.handleNewProject(reset)),
 });
 
+const styles = {
+  border: '1px solid white',
+  width: '125px',
+  fontSize: '1.2em',
+  color: 'white',
+};
 class Welcome extends React.Component {
   constructor(props) {
     super(props);
@@ -37,18 +43,11 @@ class Welcome extends React.Component {
   }
 
   handleDatabaseClick(database) {
-    console.log('database', database)
     this.props.handleNewProject(false);
     this.props.chooseDatabase(database);
   }
 
   render() {
-    const styles = {
-      border: '1px solid white',
-      width: '125px',
-      fontSize: '1.2em',
-      color: 'white',
-    };
     return (
       <div>
         <Dialog
