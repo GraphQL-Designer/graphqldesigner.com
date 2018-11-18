@@ -1,5 +1,4 @@
 import React from 'react';
-import { connect } from 'react-redux';
 
 // components
 import CodeClientContainer from './code-containers/client-code.js';
