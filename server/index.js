@@ -6,22 +6,21 @@ const path = require('path');
 const app = express();
 
 //Build Function Import 
-const createReadMe = require('./create_file_func/create_readme');
-const buildExpressServer = require('./create_file_func/express_server');
-const parseClientQueries = require('./create_file_func/client_queries');
-const parseClientMutations = require('./create_file_func/client_mutations');
-const parseGraphqlServer = require('./create_file_func/graphql_server');
-const parseMongoSchema = require('./create_file_func/mongo_schema');
-const parseMySQLTables = require('./create_file_func/mysql_scripts');
-const parsePostgresTables = require('./create_file_func/postgresql_scripts');
-const buildPackageJSON = require('./create_file_func/create_packagejson');
-const buildWebpack = require('./create_file_func/create_webpack');
-const buildIndexHTML = require('./create_file_func/create_indexhtml');
-const buildClientRootIndex = require('./create_file_func/create_client_root_index');
-const buildComponentIndex = require('./create_file_func/create_component_index');
-const buildComponentStyle = require('./create_file_func/create_component_style');
-const sqlPool = require('./create_file_func/sql_pool');
-//const knexPool = require('./create_file_func/knex_pool');
+const createReadMe = require('../utl/create_file_func/create_readme');
+const buildExpressServer = require('../utl/create_file_func/express_server');
+const parseClientQueries = require('../utl/create_file_func/client_queries');
+const parseClientMutations = require('../utl/create_file_func/client_mutations');
+const parseGraphqlServer = require('../utl/create_file_func/graphql_server');
+const parseMongoSchema = require('../utl/create_file_func/mongo_schema');
+const parseMySQLTables = require('../utl/create_file_func/mysql_scripts');
+const parsePostgresTables = require('../utl/create_file_func/postgresql_scripts');
+const buildPackageJSON = require('../utl/create_file_func/create_packagejson');
+const buildWebpack = require('../utl/create_file_func/create_webpack');
+const buildIndexHTML = require('../utl/create_file_func/create_indexhtml');
+const buildClientRootIndex = require('../utl/create_file_func/create_client_root_index');
+const buildComponentIndex = require('../utl/create_file_func/create_component_index');
+const buildComponentStyle = require('../utl/create_file_func/create_component_style');
+const sqlPool = require('../utl/create_file_func/sql_pool');
 
 const PORT = process.env.PORT || 4100;
 let PATH;
