@@ -18,11 +18,9 @@ const CodeDBSQLContainer = (props) => {
   let header = '';
   const enter = `
 `
-  console.log('database', props.database)
 
   switch (props.database) {
     case 'MongoDB':
-    console.log('mongo')
       header = 'MongoDB Schemas';
       databaseCode = [];
       for (const tableId in props.tables) {
@@ -39,12 +37,10 @@ const CodeDBSQLContainer = (props) => {
     case 'PostgreSQL':
       databaseCode = buildPostgreSQLScripts(props.tables);
       header = 'PostgreSQL Create Scripts'
-      console.log('post')
       break; 
     case 'MySQL':
       databaseCode = buildMySQLScripts(props.tables);
       header = 'MySQL Create Scripts'
-      console.log('hi')
       break; 
   }
 
