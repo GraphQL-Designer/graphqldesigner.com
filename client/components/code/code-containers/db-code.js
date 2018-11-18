@@ -24,8 +24,9 @@ const CodeDBSQLContainer = (props) => {
     case 'MongoDB':
     console.log('mongo')
       header = 'MongoDB Schemas';
+      databaseCode = [];
       for (const tableId in props.tables) {
-        schemaCode.push(
+        databaseCode.push(
           <pre key={'mongoSchema' + tableId}>
             {buildMongoSchema(props.tables[tableId])};
             {enter}

@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 // components
-import CodeClientContainer from './client-code/code-client-container.js';
-import CodeServerContainer from './server-code/code-server-container.js';
-import DbCodeContainer from './database-code/code-db-container.js'
+import CodeClientContainer from './code-containers/client-code.js';
+import CodeServerContainer from './code-containers/server-code.js';
+import DbCodeContainer from './code-containers/db-code.js'
 
 const mapStateToProps = store => ({
   database: store.schema.database,
