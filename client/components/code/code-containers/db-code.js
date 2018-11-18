@@ -28,7 +28,7 @@ const CodeDBSQLContainer = (props) => {
       for (const tableId in props.tables) {
         databaseCode.push(
           <pre key={'mongoSchema' + tableId}>
-            {buildMongoSchema(props.tables[tableId])};
+            {buildMongoSchema(props.tables[tableId])}
             {enter}
             {enter}
             <hr/>

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 
 // components
@@ -6,16 +6,7 @@ import CodeClientContainer from './code-containers/client-code.js';
 import CodeServerContainer from './code-containers/server-code.js';
 import DbCodeContainer from './code-containers/db-code.js'
 
-const mapStateToProps = store => ({
-  database: store.schema.database,
-});
-
-class CodeApp extends Component {
-  constructor (props) {
-    super(props)
-  }
-
-  render() {
+const CodeApp = props => {
     return (
       <div className='code-app'>
         <div className='wallpaper-code'></div>
@@ -24,7 +15,6 @@ class CodeApp extends Component {
         <CodeClientContainer/>
       </div>
     )
-  }
 }
 
-export default connect(mapStateToProps, null)(CodeApp);
+export default CodeApp;
