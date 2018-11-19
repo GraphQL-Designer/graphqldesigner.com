@@ -271,6 +271,11 @@ function createFindAllRootQuery(table, database) {
   return query += `${tab}${tab}${tab}}\n${tab}${tab}}`;
 }
 
+/**
+ * @param {Object} table - table being iterated on
+ * @param {String} database - database selected
+ * @returns {String} - root query code to find an individual type
+ */
 function createFindByIdQuery(table, database) {
   const idFieldName = table.fields[0].name;
   let query = `,\n${tab}${tab}${table.type.toLowerCase()}: {\n`
@@ -281,10 +286,9 @@ function createFindByIdQuery(table, database) {
   if (database === 'MongoDB') {
     query += `${tab}${tab}${tab}${tab}return ${table.type}.findById(args.id);`;
   }
-
   if (database === 'MySQL' || database === 'PostgreSQL') {
     query += `${tab}${tab}${tab}${tab}const sql = \`SELECT * FROM "${table.type}" WHERE ${idFieldName} = '\${args.id}';\`;\n`
-    query += buildSQLPoolQuery('many'); 
+    query += buildSQLPoolQuery('one to one'); 
   }
 
   return query += `\n${tab}${tab}${tab}}\n${tab}${tab}}`;
@@ -300,27 +304,49 @@ function buildGraphqlMutationQuery(table, database) {
   return string;
 }
 
+function buildSQLPoolMutation() {
+  const string = ``;
+  string += `${tab}${tab}${tab}${tab}return pool.connect()\n`
+  string += `${tab}${tab}${tab}${tab}${tab}.then(client => {\n`
+  string += `${tab}${tab}${tab}${tab}${tab}${tab}client.release()\n`
+  string += `${tab}${tab}${tab}${tab}${tab}${tab}return res.rows[0]\n`
+  string += `${tab}${tab}${tab}${tab}${tab}})\n`
+  string += `${tab}${tab}${tab}${tab}${tab}.catch(err => {\n`
+  string += `${tab}${tab}${tab}${tab}${tab}${tab}client.release()\n`
+  string += `${tab}${tab}${tab}${tab}${tab}${tab}console.log('Error: ', err)\n`
+  string += `${tab}${tab}${tab}${tab}${tab}})\n`
+  string += `${tab}${tab}${tab}${tab}})\n`
+  return string; 
+}
+
 function addMutation(table, database) {
-  let query = `${tab}${tab}add${table.type}: {\n${tab}${tab}${tab}type: ${table.type}Type,\n${tab}${tab}${tab}args: {\n`;
+  let query = `${tab}${tab}add${table.type}: {\n`
+     query += `${tab}${tab}${tab}type: ${table.type}Type,\n`
+     query += `${tab}${tab}${tab}args: {\n`;
 
   let firstLoop = true;
   for (const prop in table.fields) {
     if (!firstLoop) query += ',\n';
     firstLoop = false;
 
-    query += `${tab}${tab}${tab}${tab}${table.fields[prop].name}: ${buildMutationArgType(table.fields[prop])}`;
+    query += `${tab}${tab}${tab}${tab}${table.fields[prop].name}: ${buildMutationArgType(table.fields[prop])}\n`;
   }
-  query += `\n${tab}${tab}${tab}},\n${tab}${tab}${tab}resolve(parent, args) {\n${tab}${tab}${tab}${tab}`;
+  query += `${tab}${tab}${tab}},\n`
+  query += `${tab}${tab}${tab}resolve(parent, args) {\n`;
 
-  if (database === 'MongoDB') query += `const ${table.type.toLowerCase()} = new ${table.type}(args);\n${tab}${tab}${tab}${tab}return ${table.type.toLowerCase()}.save();`;
+  if (database === 'MongoDB') {
+    query += `${tab}${tab}${tab}${tab}const ${table.type.toLowerCase()} = new ${table.type}(args);\n`
+    query += `${tab}${tab}${tab}${tab}return ${table.type.toLowerCase()}.save();\n`;
+  }
 
   if (database === 'MySQL' || database === 'PostgreSQL') {
-    if (database === 'MySQL') query += `getConnection`
-    if (database === 'PostgreSQL') query += `connect`
-    query += `((err, con) => {\n${tab}${tab}${tab}${tab}${tab}const sql = 'INSERT INTO "${table.type}" SET ?';\n${tab}${tab}${tab}${tab}${tab}con.query(sql, args, (err, result) => {\n${tab}${tab}${tab}${tab}${tab}${tab}if (err) throw err;\n${tab}${tab}${tab}${tab}${tab}${tab}con.release();\n${tab}${tab}${tab}${tab}${tab}${tab}return result;\n${tab}${tab}${tab}${tab}${tab}})\n${tab}${tab}${tab}${tab}})`;
+    query += `${tab}${tab}${tab}${tab}const columns = Object.keys(args).map(el => \`"${el}"\`);`
+    query += `${tab}${tab}${tab}${tab}const values = Object.values(args).map(el => \`'${el}'\`);`
+    query += `${tab}${tab}${tab}${tab}const sql = \`INSERT INTO "${table.type}" (${columns}) VALUES (${values}) RETURNING *\`;`
+    query += buildSQLPoolMutation(); 
   }
 
-  return query += `\n${tab}${tab}${tab}}\n${tab}${tab}}`;
+  return query += `${tab}${tab}${tab}}\n${tab}${tab}}`;
 
   function buildMutationArgType(field) {
     const query = `{ type: ${checkForRequired(field.required, 'front')}${checkForMultipleValues(field.multipleValues, 'front')}${tableTypeToGraphqlType(field.type)}${checkForMultipleValues(field.multipleValues, 'back')}${checkForRequired(field.required, 'back')} }`;
