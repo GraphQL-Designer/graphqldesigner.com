@@ -197,11 +197,6 @@ function createSubQuery(field, tables, database) {
   if (database === 'MySQL' || database === 'PostgreSQL') {
     query += `${tab}${tab}${tab}${tab}const sql = \`SELECT * FROM "${refTypeName}" WHERE "${refFieldName}" = '\${parent.${field.name}}';\`\n`
     query += buildSQLPoolQuery(field.relation.refType)
-    // if (field.type === 'ID') {
-    //   query += `${field.name} = \${parent.${field.name}}`;
-    // } else {
-    //   query += `${refFieldName} = \${parent.${field.name}}`;
-    // }
     query += `${tab}${tab}${tab}}\n`;
     query += `${tab}${tab}}`;
   }
