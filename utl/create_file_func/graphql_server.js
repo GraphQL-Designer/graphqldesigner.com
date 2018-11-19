@@ -274,7 +274,7 @@ function createFindAllRootQuery(table, database) {
   }
 
   if (database === 'MySQL' || database === 'PostgreSQL') {
-    query += `${tab}${tab}${tab}${tab}const sql = 'SELECT * FROM "${table.type}";\n`;
+    query += `${tab}${tab}${tab}${tab}const sql = 'SELECT * FROM "${table.type}";\`\n`;
     query += buildSQLPoolQuery('many')
   }
 
@@ -320,12 +320,12 @@ function buildSQLPoolMutation() {
   string += `${tab}${tab}${tab}${tab}${tab}.then(client => {\n`
   string += `${tab}${tab}${tab}${tab}${tab}${tab}return client.query(sql)\n`
   string += `${tab}${tab}${tab}${tab}${tab}${tab}${tab}.then(client => {\n`
-  string += `${tab}${tab}${tab}${tab}${tab}${tab}${tab}${tab}client.release()\n`
-  string += `${tab}${tab}${tab}${tab}${tab}${tab}${tab}${tab}return res.rows[0]\n`
+  string += `${tab}${tab}${tab}${tab}${tab}${tab}${tab}${tab}client.release();\n`
+  string += `${tab}${tab}${tab}${tab}${tab}${tab}${tab}${tab}return res.rows[0];\n`
   string += `${tab}${tab}${tab}${tab}${tab}${tab}${tab}})\n`
   string += `${tab}${tab}${tab}${tab}${tab}${tab}${tab}.catch(err => {\n`
-  string += `${tab}${tab}${tab}${tab}${tab}${tab}${tab}${tab}client.release()\n`
-  string += `${tab}${tab}${tab}${tab}${tab}${tab}${tab}${tab}console.log('Error: ', err)\n`
+  string += `${tab}${tab}${tab}${tab}${tab}${tab}${tab}${tab}client.release();\n`
+  string += `${tab}${tab}${tab}${tab}${tab}${tab}${tab}${tab}console.log('Error: ', err);\n`
   string += `${tab}${tab}${tab}${tab}${tab}${tab}${tab}})\n`
   string += `${tab}${tab}${tab}${tab}${tab}})\n`
   return string; 
@@ -382,7 +382,7 @@ function updateMutation(table, database) {
     query += `${tab}${tab}${tab}${tab}${tab}if (updateValues.length > 0) updateValues += \`, \`\n`
     query += `${tab}${tab}${tab}${tab}${tab}if (updateValues.length > 0) updateValues += \`, \`\n`    
     query += `${tab}${tab}${tab}${tab}}\n`
-    query += `${tab}${tab}${tab}${tab}UPDATE "${table.type}" SET \${updateValues} WHERE id = '\${args.id}' RETURNING *\n`;
+    query += `${tab}${tab}${tab}${tab}const sql = \`UPDATE "${table.type}" SET \${updateValues} WHERE id = '\${args.id}' RETURNING *;\`\n`;
     query += buildSQLPoolMutation(); 
   }
   return query += `${tab}${tab}${tab}}\n${tab}${tab}}`;
@@ -390,27 +390,21 @@ function updateMutation(table, database) {
 
 function deleteMutation(table, database) {
   const idFieldName = table.fields[0].name;
-  let query = `${tab}${tab}delete${table.type}: {\n${tab}${tab}${tab}type: ${table.type}Type,\n${tab}${tab}${tab}args: { ${idFieldName}: { type: ${tableTypeToGraphqlType(table.fields[0].type) }}},\n${tab}${tab}${tab}resolve(parent, args) {\n${tab}${tab}${tab}${tab}`;
+  let query = `${tab}${tab}delete${table.type}: {\n`
+     query += `${tab}${tab}${tab}type: ${table.type}Type,\n`
+     query += `${tab}${tab}${tab}args: { ${idFieldName}: { type: ${tableTypeToGraphqlType(table.fields[0].type) }}},\n`
+     query += `${tab}${tab}${tab}resolve(parent, args) {\n`;
 
-  if (database === 'MongoDB') query += `return ${table.type}.findByIdAndRemove(args.id);`;
-
-  if (database === 'MySQL' || database === 'PostgreSQL') {
-    if (database === 'MySQL') query += `getConnection`
-    if (database === 'PostgreSQL') query += `connect`
-    const idFieldName = table.fields[0].name;
-
-    query += `((err, con) => {\n`;
-    query += `${tab}${tab}${tab}${tab}${tab}const sql = \`DELETE FROM "${table.type}" WHERE ${idFieldName} = \${args.`;
-    query += `${idFieldName}}\`;\n`;
-    query += `${tab}${tab}${tab}${tab}${tab}con.query(sql, (err, result) => {\n`;
-    query += `${tab}${tab}${tab}${tab}${tab}${tab}if (err) throw err;\n`;
-    query += `${tab}${tab}${tab}${tab}${tab}${tab}con.release();\n`;
-    query += `${tab}${tab}${tab}${tab}${tab}${tab}return result;\n`;
-    query += `${tab}${tab}${tab}${tab}${tab}})\n`;
-    query += `${tab}${tab}${tab}${tab}})`;
+  if (database === 'MongoDB') {
+    query += `${tab}${tab}${tab}${tab}return ${table.type}.findByIdAndRemove(args.id);\n`;
   }
 
-  return query += `\n${tab}${tab}${tab}}\n${tab}${tab}}`;
+  if (database === 'MySQL' || database === 'PostgreSQL') {
+    query += `${tab}${tab}${tab}${tab}const sql = \`DELETE FROM "${table.type}" WHERE id = '\${args.id}' RETURNING *;\`\n`;
+    query += buildSQLPoolMutation(); 
+  }
+
+  return query += `${tab}${tab}${tab}}\n${tab}${tab}}`;
 }
 
 function checkForRequired(required, position) {
