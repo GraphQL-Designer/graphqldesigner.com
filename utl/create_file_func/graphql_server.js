@@ -274,7 +274,7 @@ function createFindAllRootQuery(table, database) {
   }
 
   if (database === 'MySQL' || database === 'PostgreSQL') {
-    query += `${tab}${tab}${tab}${tab}const sql = 'SELECT * FROM "${table.type}"`;
+    query += `${tab}${tab}${tab}${tab}const sql = 'SELECT * FROM "${table.type}";\n`;
     query += buildSQLPoolQuery('many')
   }
 
@@ -294,14 +294,14 @@ function createFindByIdQuery(table, database) {
      query += `${tab}${tab}${tab}resolve(parent, args) {\n`;
 
   if (database === 'MongoDB') {
-    query += `${tab}${tab}${tab}${tab}return ${table.type}.findById(args.id);`;
+    query += `${tab}${tab}${tab}${tab}return ${table.type}.findById(args.id);\n`;
   }
   if (database === 'MySQL' || database === 'PostgreSQL') {
     query += `${tab}${tab}${tab}${tab}const sql = \`SELECT * FROM "${table.type}" WHERE ${idFieldName} = '\${args.id}';\`;\n`
     query += buildSQLPoolQuery('one to one'); 
   }
 
-  return query += `\n${tab}${tab}${tab}}\n${tab}${tab}}`;
+  return query += `${tab}${tab}${tab}}\n${tab}${tab}}`;
 }
 
 function buildGraphqlMutationQuery(table, database) {
@@ -315,17 +315,19 @@ function buildGraphqlMutationQuery(table, database) {
 }
 
 function buildSQLPoolMutation() {
-  const string = ``;
+  let string = ``;
   string += `${tab}${tab}${tab}${tab}return pool.connect()\n`
   string += `${tab}${tab}${tab}${tab}${tab}.then(client => {\n`
-  string += `${tab}${tab}${tab}${tab}${tab}${tab}client.release()\n`
-  string += `${tab}${tab}${tab}${tab}${tab}${tab}return res.rows[0]\n`
+  string += `${tab}${tab}${tab}${tab}${tab}${tab}return client.query(sql)\n`
+  string += `${tab}${tab}${tab}${tab}${tab}${tab}${tab}.then(client => {\n`
+  string += `${tab}${tab}${tab}${tab}${tab}${tab}${tab}${tab}client.release()\n`
+  string += `${tab}${tab}${tab}${tab}${tab}${tab}${tab}${tab}return res.rows[0]\n`
+  string += `${tab}${tab}${tab}${tab}${tab}${tab}${tab}})\n`
+  string += `${tab}${tab}${tab}${tab}${tab}${tab}${tab}.catch(err => {\n`
+  string += `${tab}${tab}${tab}${tab}${tab}${tab}${tab}${tab}client.release()\n`
+  string += `${tab}${tab}${tab}${tab}${tab}${tab}${tab}${tab}console.log('Error: ', err)\n`
+  string += `${tab}${tab}${tab}${tab}${tab}${tab}${tab}})\n`
   string += `${tab}${tab}${tab}${tab}${tab}})\n`
-  string += `${tab}${tab}${tab}${tab}${tab}.catch(err => {\n`
-  string += `${tab}${tab}${tab}${tab}${tab}${tab}client.release()\n`
-  string += `${tab}${tab}${tab}${tab}${tab}${tab}console.log('Error: ', err)\n`
-  string += `${tab}${tab}${tab}${tab}${tab}})\n`
-  string += `${tab}${tab}${tab}${tab}})\n`
   return string; 
 }
 
@@ -350,9 +352,9 @@ function addMutation(table, database) {
   }
 
   if (database === 'MySQL' || database === 'PostgreSQL') {
-    query += `${tab}${tab}${tab}${tab}const columns = Object.keys(args).map(el => \`"${el}"\`);`
-    query += `${tab}${tab}${tab}${tab}const values = Object.values(args).map(el => \`'${el}'\`);`
-    query += `${tab}${tab}${tab}${tab}const sql = \`INSERT INTO "${table.type}" (${columns}) VALUES (${values}) RETURNING *\`;`
+    query += `${tab}${tab}${tab}${tab}const columns = Object.keys(args).map(el => \`"\${el}"\`);\n`
+    query += `${tab}${tab}${tab}${tab}const values = Object.values(args).map(el => \`'\${el}'\`);\n`
+    query += `${tab}${tab}${tab}${tab}const sql = \`INSERT INTO "${table.type}" (\${columns}) VALUES (\${values}) RETURNING *\`;\n`
     query += buildSQLPoolMutation(); 
   }
 
@@ -363,44 +365,27 @@ function updateMutation(table, database) {
   let query = `${tab}${tab}update${table.type}: {\n${tab}${tab}${tab}type: ${table.type}Type,\n${tab}${tab}${tab}args: {\n`;
 
   let firstLoop = true;
-  for (const prop in table.fields) {
+  for (const fieldIndex in table.fields) {
     if (!firstLoop) query += ',\n';
     firstLoop = false;
 
-    query += `${tab}${tab}${tab}${tab}${table.fields[prop].name}: ${buildMutationArgType(table.fields[prop])}`;
+    query += `${tab}${tab}${tab}${tab}${buildFieldItem(table.fields[fieldIndex])}`
   }
 
-  query += `\n${tab}${tab}${tab}},\n${tab}${tab}${tab}resolve(parent, args) {\n${tab}${tab}${tab}${tab}`;
+  query += `\n${tab}${tab}${tab}},\n${tab}${tab}${tab}resolve(parent, args) {\n`;
 
-  if (database === 'MongoDB') query += `return ${table.type}.findByIdAndUpdate(args.id, args);`;
+  if (database === 'MongoDB') query += `${tab}${tab}${tab}${tab}return ${table.type}.findByIdAndUpdate(args.id, args);\n`;
 
   if (database === 'MySQL' || database === 'PostgreSQL') {
-    if (database === 'MySQL') query += `getConnection`
-    if (database === 'PostgreSQL') query += `connect`
-    const idFieldName = table.fields[0].name;
-
-    query += `((err, con) => {\n`;
-    query += `${tab}${tab}${tab}${tab}${tab}let updateValues = '';\n`;
-    query += `${tab}${tab}${tab}${tab}${tab}for (const prop in args) {\n`;
-    query += `${tab}${tab}${tab}${tab}${tab}${tab}updateValues += \`\${prop} = '\${args[prop]}' \`\n`;
-    query += `${tab}${tab}${tab}${tab}${tab}}\n`;
-    query += `${tab}${tab}${tab}${tab}${tab}const sql = \`UPDATE "${table.type}" SET \${updateValues} WHERE ${idFieldName} = \${args.`;
-    query += `${idFieldName}}\`;\n`;
-    query += `${tab}${tab}${tab}${tab}${tab}con.query(sql, args, (err, result) => {\n`;
-    query += `${tab}${tab}${tab}${tab}${tab}${tab}if (err) throw err;\n`;
-    query += `${tab}${tab}${tab}${tab}${tab}${tab}con.release();\n`;
-    query += `${tab}${tab}${tab}${tab}${tab}${tab}return result;\n`;
-    query += `${tab}${tab}${tab}${tab}${tab}})\n`;
-    query += `${tab}${tab}${tab}${tab}})`;
+    query += `${tab}${tab}${tab}${tab}let updateValues = '';\n`
+    query += `${tab}${tab}${tab}${tab}for (const prop in args) {\n`
+    query += `${tab}${tab}${tab}${tab}${tab}if (updateValues.length > 0) updateValues += \`, \`\n`
+    query += `${tab}${tab}${tab}${tab}${tab}if (updateValues.length > 0) updateValues += \`, \`\n`    
+    query += `${tab}${tab}${tab}${tab}}\n`
+    query += `${tab}${tab}${tab}${tab}UPDATE "${table.type}" SET \${updateValues} WHERE id = '\${args.id}' RETURNING *\n`;
+    query += buildSQLPoolMutation(); 
   }
-
-  return query += `\n${tab}${tab}${tab}}\n${tab}${tab}}`;
-
-  function buildMutationArgType(field, database) {
-    const query = `{ type: ${checkForMultipleValues(field.multipleValues, 'front')}${tableTypeToGraphqlType(field.type)}${checkForMultipleValues(field.multipleValues, 'back')} }`;
-
-    return query;
-  }
+  return query += `${tab}${tab}${tab}}\n${tab}${tab}}`;
 }
 
 function deleteMutation(table, database) {
