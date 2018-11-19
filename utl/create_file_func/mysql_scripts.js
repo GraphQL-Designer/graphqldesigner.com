@@ -29,16 +29,15 @@ function parseSQLTables(tables) {
       createTablesCode += `,${tab}PRIMARY KEY (`;
       primaryKey.forEach((key, i) => {
         if (i === primaryKey.length - 1) {
-          createTablesCode += `\`${key}\`)\n`;
+          createTablesCode += `\`${key}\`)`;
         } else {
           createTablesCode += `\`${key}\`, `;
         }
       });
-      createTablesCode;
     }
     // reset primaryKey to empty so primary keys don't slip into the next table
     primaryKey = [];
-    createTablesCode += `);\n`;
+    createTablesCode += `\n);\n\n`;
   }
 
   // if any tables have relations, aka foreign keys

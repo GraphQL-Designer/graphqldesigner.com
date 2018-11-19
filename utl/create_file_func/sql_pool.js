@@ -1,6 +1,5 @@
 function sqlPool(database) {
   let query = '';
-  console.log('this is database', database); 
 
   // if MySQL, create MySQL specific code
   if (database === 'MySQL') {
@@ -31,14 +30,7 @@ const pool = new Pool({
   database: "mydb"
 })
 
-const getConnection = function(callback) {
-  pool.getConnection(function(err, con) {
-    if (err) return callback(err);
-    callback(err, con);
-  });
-};
-
-module.exports = getConnection;
+module.exports = pool;
 `;
   return query;
 }
