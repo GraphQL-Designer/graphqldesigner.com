@@ -104,7 +104,7 @@ function buildGraphQLTypeFields(table, tables, database) {
     if (!firstLoop) query+= ',';
     firstLoop = false;
 
-    query += `\n${tab}${tab}${table.fields[fieldIndex].name}: { type: ${checkForMultipleValues(table.fields[fieldIndex].multipleValues, 'front')}${tableTypeToGraphqlType(table.fields[fieldIndex].type)}${checkForMultipleValues(table.fields[fieldIndex].multipleValues, 'back')} }`;
+    query += `\n${tab}${tab}${buildFieldItem(table.fields[fieldIndex])}`;
     // check if the field has a relation to another field
     if (table.fields[fieldIndex].relation.tableIndex > -1) {
       query += createSubQuery(table.fields[fieldIndex], tables, database);
@@ -130,6 +130,16 @@ function buildGraphQLTypeFields(table, tables, database) {
   }
   return query; 
 }
+
+
+/**
+ * @param {Object} field - an object containing all the information for the field being iterated on
+ * @returns {String} - a field item (ex: 'id: { type: GraphQLID }')
+ */
+function buildFieldItem(field) {
+  return  `${field.name}: { type: ${checkForRequired(field.required, 'front')}${checkForMultipleValues(field.multipleValues, 'front')}${tableTypeToGraphqlType(field.type)}${checkForMultipleValues(field.multipleValues, 'back')}${checkForRequired(field.required, 'back')} }`;
+}
+
 
 /**
  * @param {String} type - the field type (ID, String, Number, Boolean, or Float)
@@ -325,11 +335,11 @@ function addMutation(table, database) {
      query += `${tab}${tab}${tab}args: {\n`;
 
   let firstLoop = true;
-  for (const prop in table.fields) {
+  for (const fieldIndex in table.fields) {
     if (!firstLoop) query += ',\n';
     firstLoop = false;
 
-    query += `${tab}${tab}${tab}${tab}${table.fields[prop].name}: ${buildMutationArgType(table.fields[prop])}\n`;
+    query += `${tab}${tab}${tab}${tab}${buildFieldItem(table.fields[fieldIndex])}\n`;
   }
   query += `${tab}${tab}${tab}},\n`
   query += `${tab}${tab}${tab}resolve(parent, args) {\n`;
@@ -347,11 +357,6 @@ function addMutation(table, database) {
   }
 
   return query += `${tab}${tab}${tab}}\n${tab}${tab}}`;
-
-  function buildMutationArgType(field) {
-    const query = `{ type: ${checkForRequired(field.required, 'front')}${checkForMultipleValues(field.multipleValues, 'front')}${tableTypeToGraphqlType(field.type)}${checkForMultipleValues(field.multipleValues, 'back')}${checkForRequired(field.required, 'back')} }`;
-    return query;
-  }
 }
 
 function updateMutation(table, database) {
