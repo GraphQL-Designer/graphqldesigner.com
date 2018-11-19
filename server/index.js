@@ -103,12 +103,12 @@ function buildForMongo(data, dateStamp) {
 }
 
 function buildForMySQL(data, dateStamp) {
-  fs.writeFileSync(path.join(PATH, `build-files${dateStamp}/server/db/mysql_pool.js`), sqlPool('MySQL'));
+  fs.writeFileSync(path.join(PATH, `build-files${dateStamp}/server/db/sql_pool.js`), sqlPool('MySQL'));
   fs.writeFileSync(path.join(PATH, `build-files${dateStamp}/server/db/mysql_scripts.sql`), parseMySQLTables(data));
 }
 
 function buildForPostgreSQL(data, dateStamp) {
-  fs.writeFileSync(path.join(PATH, `build-files${dateStamp}/server/db/postgresql_pool.js`), sqlPool('Postgres'));
+  fs.writeFileSync(path.join(PATH, `build-files${dateStamp}/server/db/sql_pool.js`), sqlPool('Postgres'));
   fs.writeFileSync(path.join(PATH, `build-files${dateStamp}/server/db/postgresql_scripts.sql`), parsePostgresTables(data));
 }
 
@@ -128,12 +128,12 @@ function deleteTempFiles(database, data, dateStamp, cb) {
   fs.unlinkSync(path.join(PATH, `graphql${dateStamp}.zip`));
 
   if (database === 'PostgreSQL') {
-    fs.unlinkSync(path.join(PATH, `build-files${dateStamp}/server/db/postgresql_pool.js`));
+    fs.unlinkSync(path.join(PATH, `build-files${dateStamp}/server/db/sql_pool.js`));
     fs.unlinkSync(path.join(PATH, `build-files${dateStamp}/server/db/postgresql_scripts.sql`));
   }
 
   if (database === 'MySQL') {
-    fs.unlinkSync(path.join(PATH, `build-files${dateStamp}/server/db/mysql_pool.js`));
+    fs.unlinkSync(path.join(PATH, `build-files${dateStamp}/server/db/sql_pool.js`));
     fs.unlinkSync(path.join(PATH, `build-files${dateStamp}/server/db/mysql_scripts.sql`));
   }
 
