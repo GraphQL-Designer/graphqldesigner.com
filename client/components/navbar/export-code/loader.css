@@ -1,0 +1,170 @@
+.loader {
+  position: relative;
+  height: 100px;
+  width: 100px;
+}
+   
+.hexContainer{
+  position: relative;
+  top: 27.5px;
+  -webkit-animation: spin 2.5s ease-in-out infinite;
+    animation: spin 2.5s ease-in-out infinite;
+}
+
+.hex {
+  width: 80px;
+  height: 45px;
+  background: rgb(255,66,128);
+  margin: auto auto;
+  position: relative;
+}
+
+.hex:before, .hex:after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+
+.hex:before {
+  top: -24px;
+  left: 0;
+  border-left: 40px solid transparent;
+  border-right: 40px solid transparent;
+  border-bottom: 25px solid rgb(255,66,128);
+}
+
+.hex:after {
+  bottom: -24px;
+  left: 0;
+  border-left: 40px solid transparent;
+  border-right: 40px solid transparent;
+  border-top: 25px solid rgb(255,66,128);
+}
+
+.inner {
+  background-color:rgb(36, 40, 46);
+  -webkit-transform: scale(.86, .86);
+  -moz-transform: scale(.86, .86);
+  transform: scale(.86, .86);
+  z-index:1;
+}
+
+.inner:before {
+  border-bottom: 25px solid rgb(36, 40, 46);
+}
+
+.inner:after {
+  border-top: 25px solid rgb(36, 40, 46);
+} 
+ 
+.triangleContainer {
+  position: absolute;
+  top: 16px;
+}
+
+.triangle {
+  display: inline-block;
+  height: 15px;
+  position: absolute;
+  top: -4px;
+  left: 15px;
+  z-index: 3;
+  border-bottom: solid 59px rgb(255,66,128);
+  border-right: solid 35px transparent;
+  border-left: solid 35px transparent;
+}
+
+.triangleInner {
+  display: inline-block;
+  height: 15px;
+  position: absolute;
+  top: 11px;
+  left: -23.5px;
+  z-index: 4;
+  border-bottom: solid 42px rgb(36, 40, 46);
+  border-right: solid 24px transparent;
+  border-left: solid 24px transparent;
+}
+   
+.ballContainer {
+  position: absolute;
+  top: 7px;
+  left: 7px;
+  z-index: 5;
+  height: 86px;
+  width: 86px;
+  border-radius: 50%;
+  -webkit-animation: spin 2.5s ease-in-out infinite;
+  animation: spin 2.5s ease-in-out infinite;
+}
+
+.balls {
+  height: 86px;
+  width: 86px;
+  border-radius: 50%;
+  position: absolute;
+  z-index: 6;
+}
+
+.balls:after {
+  content: "";
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  background-color: rgb(255,66,128);
+  position: relative;
+  display: block;
+}
+
+.ball1:after {
+  left: -2px;
+  top: 14px;
+}
+
+.ball2:after {
+  left: 33px;
+  top: -8px;
+}
+
+.ball3:after {
+  left: 70px;
+  top: 14px;
+}
+
+.ball4:after {
+  left: 70px;
+  top: 53px;
+}
+
+.ball5:after {
+  left: 33px;
+  top: 75px;
+}
+
+.ball6:after {
+  left: -2px;
+  top: 53px;
+}
+
+@-webkit-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+  }
+}
+
+@keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+  }
+}

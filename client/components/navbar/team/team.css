@@ -52,3 +52,9 @@
   flex-direction: row;
   justify-content: space-around;
 }
+
+.team-member-photo {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+}

@@ -173,7 +173,12 @@ function toTitleCase(refTypeName) {
   return name;
 }
 
-
+/**
+ * @param {Object} field - field being iterated on
+ * @param {Object} tables - all the tables made by the user. 
+ * @param {String} database - Datbase selected
+ * @returns {String} - Builds a sub type for any field with a relation. 
+ */
 function createSubQuery(field, tables, database) {
   const refTypeName = tables[field.relation.tableIndex].type;
   const refFieldName = tables[field.relation.tableIndex].fields[field.relation.fieldIndex].name;
