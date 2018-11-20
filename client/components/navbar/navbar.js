@@ -4,13 +4,15 @@ import * as actions from '../../actions/actions.js';
 
 // styling
 import './navbar.css';
+
+// google material ui components
 import FlatButton from 'material-ui/FlatButton';
 import Dialog from 'material-ui/Dialog';
 
-// componenets
-import GraphqlLoader from '../loader/index.js';
-import Info from './info.jsx';
-import Team from './team.jsx';
+// components
+import Team from './team/team-container.js';
+import ExportCode from './export-code/export-button.js'
+// import Info from './info/info.js';
 
 
 const mapStateToProps = store => ({
@@ -26,23 +28,18 @@ class MainNav extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      info: false,
       team: false,
-      modal: false,
+      loader: false,
     };
-    this.handleInfoOpen = this.handleInfoOpen.bind(this);
+    // this.handleInfoOpen = this.handleInfoOpen.bind(this);
     this.handleTeamOpen = this.handleTeamOpen.bind(this);
     this.handleClose = this.handleClose.bind(this);
     this.handleExport = this.handleExport.bind(this);
     this.handleNewProject = this.handleNewProject.bind(this);
+    this.changeSetsToArrays = this.changeSetsToArrays.bind(this); 
   }
 
-  handleExport() {
-    this.setState({
-      modal: true,
-    });
-
-    // JSON.stringify doesn't work with Sets. Change Sets to arrays for export
+  changeSetsToArrays() {
     const tables = this.props.tables;
     const changedTables = {};
     for (let tableId in tables) {
@@ -65,7 +62,16 @@ class MainNav extends React.Component {
     }
     const tableData = Object.assign({}, tables, changedTables);
     const data = Object.assign({}, { 'data': tableData }, { 'database': this.props.database });
+    return data; 
+  }
 
+  handleExport() {
+    this.setState({
+      loader: true,
+    });
+
+    // JSON.stringify doesn't work with Sets. Change Sets to arrays for export
+    const data = this.changeSetsToArrays()
     setTimeout(() => {
       fetch('/write-files', {
         method: 'POST',
@@ -99,10 +105,6 @@ class MainNav extends React.Component {
     this.props.handleNewProject(true);
   }
 
-  handleInfoOpen() {
-    this.setState({ info: true });
-  }
-
   handleTeamOpen() {
     this.setState({ team: true });
   }
@@ -112,35 +114,16 @@ class MainNav extends React.Component {
   }
 
   render() {
-    const style = {
-      height: '100%',
-      width: '100%',
-      margin: '10',
-      textAlign: 'center',
-    };
     return (
       <div>
         <nav id="navbar">
           <div id="nav-left">
             <img id='logo' src='./images/Logo.svg' />
             <FlatButton label="New Project" onClick={this.handleNewProject} />
-            <FlatButton style={{ color: '#FF4280' }} label="Export Code" onClick={this.handleExport} />
+            <ExportCode/>
           </div>
           <div id="nav-right">
-           {/*  <FlatButton onClick={this.handleInfoOpen}>Info</FlatButton> */}
-            <Dialog
-              modal={true}
-              open={this.state.info}
-              onClose={this.handleClose}
-              autoScrollBodyContent={true}
-              style={style}
-              className='info-container'
-            >
-              <Info />
-              <FlatButton style={{ justifyContent: 'flex-end' }} onClick={this.handleClose} >
-                Cancel  
-              </FlatButton>
-            </Dialog>    
+            {/* <Info/> */}
             <FlatButton onClick={this.handleTeamOpen}>Team</FlatButton>
             <Dialog
               modal={true}
@@ -157,18 +140,11 @@ class MainNav extends React.Component {
             </a>
           </div>
         </nav>
-        {this.state.modal && (
-          <div className="overlay">
-            <div>
-              <GraphqlLoader />
-              <h2 style={{ color: 'white' }}>Creating Your Code!</h2>
-            </div>
-          </div>
-        )}
       </div>
     );
   }
 }
+
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
