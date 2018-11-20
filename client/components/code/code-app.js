@@ -5,7 +5,7 @@ import CodeClientContainer from './code-containers/client-code.js';
 import CodeServerContainer from './code-containers/server-code.js';
 import DbCodeContainer from './code-containers/db-code.js'
 
-const CodeApp = props => {
+const CodeApp = () => {
     return (
       <div className='code-app'>
         <div className='wallpaper-code'></div>
