@@ -2,11 +2,17 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as actions from '../actions/actions.js';
 
+// Components
+import MainNav from './navbar/navbar';
+import Welcome from './welcome/welcome.js';
+import SchemaApp from './schema/schema-app.js';
+import CodeApp from './code/code-app.js';
+//import QueryApp from './query/query-app.js';
+
 // Styling
 import './app.css';
 import { Tabs, Tab } from 'material-ui/Tabs';
 import Snackbar from 'material-ui/Snackbar';
-
 const style = {
   snackBarStyle: {
     backgroundColor: 'rgb(255,66,128)'
@@ -20,13 +26,6 @@ const style = {
   }
 };
 
-// Components
-import MainNav from './navbar/navbar';
-import Welcome from './welcome/welcome.js';
-import SchemaApp from './schema/schema-app.js';
-//import QueryApp from './query/query-app.js';
-import CodeApp from './code/code-app.js';
-
 const mapStateToProps = store => ({
   snackBar: store.general.statusMessage
 });
@@ -39,11 +38,9 @@ const mapDispatchToProps = dispatch => ({
 class App extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
       open: false
     };
-
     this.handleTabSelect = this.handleTabSelect.bind(this);
     this.handleRequestClose = this.handleRequestClose.bind(this);
   }
