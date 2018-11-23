@@ -1,5 +1,5 @@
 import React from 'react';
-import TeamContainer from './team-container.js'
+import TeamContainer from './team-container'
 import FlatButton from 'material-ui/FlatButton';
 import Dialog from 'material-ui/Dialog';
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import TeamMember from './team-member.js'
+import TeamMember from './team-member';
 
 // styling
 import './team.css';
