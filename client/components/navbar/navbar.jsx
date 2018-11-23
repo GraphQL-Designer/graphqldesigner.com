@@ -7,8 +7,8 @@ import * as actions from '../../actions/actions';
 import './navbar.css';
 
 // components
-import Team from './team/team-button';
-import ExportCode from './export-code/export-button';
+import Team from './team/team-button.jsx';
+import ExportCode from './export-code/export-button.jsx';
 // import Info from './info/info';
 
 const mapDispatchToProps = dispatch => ({

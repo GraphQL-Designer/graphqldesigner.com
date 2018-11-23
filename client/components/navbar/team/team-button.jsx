@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import FlatButton from 'material-ui/FlatButton';
 import Dialog from 'material-ui/Dialog';
-import TeamContainer from './team-container';
+import TeamContainer from './team-container.jsx';
 
 class TeamButton extends Component {
   constructor(props) {

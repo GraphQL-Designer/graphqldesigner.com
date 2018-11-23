@@ -1,18 +1,19 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import * as actions from '../actions/actions.js';
+import * as actions from '../actions/actions';
 
 // Components
-import MainNav from './navbar/navbar';
-import Welcome from './welcome/welcome.js';
-import SchemaApp from './schema/schema-app.js';
-import CodeApp from './code/code-app.js';
-//import QueryApp from './query/query-app.js';
+import MainNav from './navbar/navbar.jsx';
+import Welcome from './welcome/welcome';
+import SchemaApp from './schema/schema-app';
+import CodeApp from './code/code-app.jsx';
+//import QueryApp from './query/query-app';
 
 // Styling
 import './app.css';
 import { Tabs, Tab } from 'material-ui/Tabs';
 import Snackbar from 'material-ui/Snackbar';
+
 const style = {
   snackBarStyle: {
     backgroundColor: 'rgb(255,66,128)'

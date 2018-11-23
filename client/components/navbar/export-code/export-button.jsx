@@ -1,26 +1,27 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 // Material UI Components
 import FlatButton from 'material-ui/FlatButton';
-import Loader from './loader.js';
+import Loader from './loader';
 
 const mapStateToProps = store => ({
   tables: store.schema.tables,
 });
 
-class ExportCode extends React.Component {
+class ExportCode extends Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
-      showLoader: false
-    }
-    this.handleExport = this.handleExport.bind(this); 
+      showLoader: false,
+    };
+    this.handleExport = this.handleExport.bind(this);
   }
 
   toggleLoader() {
+    const { showLoader } = this.state;
     this.setState({
-      showLoader: !this.state.showLoader,
+      showLoader: !showLoader,
     });
   }
 
