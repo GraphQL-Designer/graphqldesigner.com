@@ -1,37 +1,39 @@
-import React from 'react';
-import TeamContainer from './team-container'
+import React, { Component } from 'react';
 import FlatButton from 'material-ui/FlatButton';
 import Dialog from 'material-ui/Dialog';
+import TeamContainer from './team-container';
 
-class TeamButton extends React.Component{
+class TeamButton extends Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
-      showTeam: false
-    }
-    this.handleToggleTeam = this.handleToggleTeam.bind(this); 
+      showTeam: false,
+    };
+    this.handleToggleTeam = this.handleToggleTeam.bind(this);
   }
 
   handleToggleTeam() {
-    this.setState({ showTeam: !this.state.showTeam })
+    const { showTeam } = this.state;
+    this.setState({ showTeam: !showTeam });
   }
 
   render() {
+    const { showTeam } = this.state;
     return (
       <div>
         <FlatButton onClick={this.handleToggleTeam}>Team</FlatButton>
         <Dialog
           modal={true}
-          open={this.state.showTeam}
+          open={showTeam}
           onClose={this.handleToggleTeam}
         >
           <TeamContainer />
-          <FlatButton style={{ justifyContent: 'flex-end' }} onClick={this.handleToggleTeam} >
-            Cancel  
+          <FlatButton style={{ justifyContent: 'flex-end' }} onClick={this.handleToggleTeam}>
+            Cancel
           </FlatButton>
         </Dialog>
       </div>
-    )
+    );
   }
 }
 
