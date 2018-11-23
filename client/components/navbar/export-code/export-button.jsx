@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 // Material UI Components
 import FlatButton from 'material-ui/FlatButton';
-import Loader from './loader';
+import Loader from './loader.jsx';
 
 const mapStateToProps = store => ({
   tables: store.schema.tables,
