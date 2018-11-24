@@ -4,7 +4,7 @@ import * as actions from '../actions/actions';
 
 // Components
 import MainNav from './navbar/navbar.jsx';
-import Welcome from './welcome/welcome';
+import Welcome from './welcome/welcome.jsx';
 import SchemaApp from './schema/schema-app';
 import CodeApp from './code/code-app.jsx';
 //import QueryApp from './query/query-app';
