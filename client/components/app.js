@@ -5,14 +5,17 @@ import * as actions from '../actions/actions';
 // Components
 import MainNav from './navbar/navbar.jsx';
 import Welcome from './welcome/welcome.jsx';
-import SchemaApp from './schema/schema-app';
+import SchemaApp from './schema/schema-app.jsx';
 import CodeApp from './code/code-app.jsx';
 //import QueryApp from './query/query-app';
 
-// Styling
-import './app.css';
+// Material UI Components
 import { Tabs, Tab } from 'material-ui/Tabs';
 import Snackbar from 'material-ui/Snackbar';
+
+// Styling
+import './app.css';
+
 
 const style = {
   snackBarStyle: {
