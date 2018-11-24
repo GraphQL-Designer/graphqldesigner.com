@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
-
-// styling
 import FlatButton from 'material-ui/FlatButton';
 import Delete from 'material-ui/svg-icons/action/delete';
 import Close from 'material-ui/svg-icons/navigation/close';
-import * as actions from '../../actions/actions.js';
+import * as actions from '../../actions/actions';
 
 const style = {
   deleteStyle: {
@@ -58,9 +56,9 @@ class Table extends Component {
     const tableIndex = this.props.tableIndex;
     const fieldIndex = event.currentTarget.value; // need currentTarget because of Material-UI
     const field = this.props.tables[tableIndex].fields[fieldIndex];
-    if(field.relation.tableIndex > -1 || field.refBy.size) {
-        this.props.deletedFieldRelationUpdate({ tableIndex, fieldIndex })
-      }
+    if (field.relation.tableIndex > -1 || field.refBy.size) {
+      this.props.deletedFieldRelationUpdate({ tableIndex, fieldIndex })
+    }
     this.props.deleteField([tableIndex, fieldIndex]);
   }
 
@@ -89,9 +87,8 @@ class Table extends Component {
       if (multipleValues) {
         if (position === 'front') return '[ ';
         if (position === 'back') return ' ]';
-      } else {
-        return '';
       }
+      return '';
     }
 
     function checkForRequired(value) {

@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 
 // components
-import Table from './table.js';
+import Table from './table.jsx';
 import CreateTable from './sidebar/create-table.js';
 import TableOptions from './sidebar/table-options.js';
 
