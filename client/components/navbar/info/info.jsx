@@ -4,6 +4,7 @@ import Dialog from 'material-ui/Dialog';
 
 // styling
 import './info.css';
+
 const style = {
   height: '100%',
   width: '100%',
@@ -20,21 +21,23 @@ class Info extends React.Component {
   }
 
   handleInfoToggle() {
-    this.setState({ info: !this.state.info });
+    const { info } = this.state;
+    this.setState({ info: !info });
   }
 
   render() {
+    const { info } = this.state;
     return (
       <div>
-        <FlatButton onClick={this.handleInfoToggle}>Info</FlatButton> 
+        <FlatButton onClick={this.handleInfoToggle}>Info</FlatButton > 
         <Dialog
           modal={true}
-          open={this.state.info}
+          open={info}
           onClose={this.handleClose}
           autoScrollBodyContent={true}
           style={style}
-          className='info-container'
-          >
+          className="info-container"
+        >
           <div>
             <h3>GraphQL Designer</h3>
             <p>
@@ -42,10 +45,10 @@ class Info extends React.Component {
               Also available for download are the NoSQL schemas or SQL build scripts, and a server file
             </p>
           </div>
-          <FlatButton style={{ justifyContent: 'flex-end' }} onClick={this.handleInfoToggle} >
-            Cancel  
+          <FlatButton style={{ justifyContent: 'flex-end' }} onClick={this.handleInfoToggle}>
+            Cancel
           </FlatButton>
-        </Dialog>  
+        </Dialog>
       </div>
     );
   }
