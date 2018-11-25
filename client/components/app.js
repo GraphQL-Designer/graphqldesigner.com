@@ -43,7 +43,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      open: false
+      open: false,
     };
     this.handleTabSelect = this.handleTabSelect.bind(this);
     this.handleRequestClose = this.handleRequestClose.bind(this);
@@ -53,9 +53,9 @@ class App extends Component {
     this.props.chooseApp(event.target.innerHTML);
   }
 
-  handleRequestClose = () => {
+  handleRequestClose() {
     this.props.handleSnackbarUpdate('');
-  };
+  }
 
   render() {
     return (
@@ -90,5 +90,5 @@ class App extends Component {
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(App);
