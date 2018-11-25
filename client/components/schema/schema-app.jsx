@@ -27,24 +27,24 @@ class SchemaApp extends Component {
 
   render() {
     // Dynamically renders each table based on the number of tables.
-    let tableComponents = [];
-    let keyNum = 100; // React requires a key to avoid errors.
-    for (let property in this.props.tables){
+    const tableComponents = [];
+    const keyNum = 100; // React requires a key to avoid errors.
+    Object.keys(this.props.tables).forEach(tableIndex => (
       tableComponents.push(
         <CSSTransition
-        key={property}
-        timeout={100}
-        classNames="fadeScale"
+          key={tableIndex}
+          timeout={100}
+          classNames="fadeScale"
         >
           <Table
-            key={property}
-            tableData={this.props.tables[property]}
-            tableIndex={property}
-            fieldCount={this.props.tables[property].fieldCount}
+            key={tableIndex}
+            tableData={this.props.tables[tableIndex]}
+            tableIndex={tableIndex}
+            fieldCount={this.props.tables[tableIndex].fieldCount}
           />
-        </CSSTransition>
-      );
-    }
+        </CSSTransition>,
+      )
+    ));
 
     let sidebar = '';
     return (
