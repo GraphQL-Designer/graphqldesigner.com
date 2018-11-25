@@ -48,34 +48,33 @@ class SchemaApp extends Component {
 
     let sidebar = '';
     return (
-      <div className='schema-app-container'>
+      <div className="schema-app-container">
         <CSSTransition
           in={this.state.sidebar}
           timeout={200}
-          classNames='fade'
+          classNames="fade"
         >
-          <div id='sidebar-container'>
+          <div id="sidebar-container">
             <CSSTransition
               in={this.props.selectedField.tableNum < 0}
-              key='table'
+              key="table"
               timeout={200}
-              classNames='fade'
+              classNames="fade"
             >
               <CreateTable/>
             </CSSTransition>
 
             <CSSTransition
               in={this.props.selectedField.tableNum >= 0}
-              key='fields'
+              key="fields"
               timeout={200}
-              classNames='fade'
+              classNames="fade"
             >
               <TableOptions/>
             </CSSTransition>
           </div>
         </CSSTransition>
-        <TransitionGroup className='table-components-container' id='wallpaper-schema'>
-          {/* <img className='wallpaper' src='../../../public/images/graphql_wallpaper.png'/> */}
+        <TransitionGroup className="table-components-container" id="wallpaper-schema">
           {tableComponents}
         </TransitionGroup>
       </div>
