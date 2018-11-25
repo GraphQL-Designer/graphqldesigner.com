@@ -1,16 +1,16 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import * as actions from '../../../actions/actions.js';
-
-// styles
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import Checkbox from 'material-ui/Checkbox';
 import KeyboardArrowLeft from 'material-ui/svg-icons/hardware/keyboard-arrow-left';
 import FlatButton from 'material-ui/FlatButton';
-import {List, ListItem} from 'material-ui/List';
+import { List, ListItem } from 'material-ui/List';
 import Divider from 'material-ui/Divider';
 import Paper from 'material-ui/Paper';
+import * as actions from '../../../actions/actions';
+
+// styles
 import './sidebar.css';
 
 const style = {
@@ -22,12 +22,12 @@ const style = {
     marginLeft: '5px',
     backgroundColor: 'rgb(54, 58, 66)',
     paddingLeft: '0px',
-    paddingRight: '0px'
+    paddingRight: '0px',
   },
   relationDesc: {
-    fontSize: '12px'
-  }
-}
+    fontSize: '12px',
+  },
+};
 
 const mapStateToProps = store => ({
   tables: store.schema.tables,
@@ -35,7 +35,6 @@ const mapStateToProps = store => ({
   tableName: store.schema.selectedTable.type,
   tableID: store.schema.selectedTable.tableID,
   database: store.schema.database,
-  selectedTable: store.schema.selectedTable,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -113,7 +112,7 @@ class CreateTable extends React.Component {
   }
 
   handleCheck() {
-    this.props.idSelector()
+    this.props.idSelector();
   }
 
   handleOpenTableCreator(event) {
@@ -155,7 +154,7 @@ class CreateTable extends React.Component {
             style={{ marginTop: '10px' }}
             label="Unique ID"
             onCheck={this.handleCheck}
-            id='idCheckbox'
+            id="idCheckbox"
             checked={!!this.props.selectedTable.fields[0]}
             disabled={this.props.database === 'MongoDB'}
           />
@@ -171,25 +170,25 @@ class CreateTable extends React.Component {
         <br />
         <div>
           <Paper style={style.paper}>
-          <List style={{paddingLeft: '18px'}}>
-            <ListItem key='legend' disabled={true} style={{fontSize: '20px'}}><strong>Legend</strong></ListItem>
+          <List style={{paddingLeft: "18px"}}>
+            <ListItem key="legend" disabled={true} style={{fontSize: "20px"}}><strong>Legend</strong></ListItem>
             <Divider />
-            <ListItem key='legend-required' disabled={true}>Required : !</ListItem>
-            <ListItem key='unique' disabled={true}>Unique : *</ListItem>
-            <ListItem key='multiple-values' disabled={true}>Multiple Values : [ ]</ListItem>
-            <ListItem key='relation' disabled={true}
+            <ListItem key="legend-required" disabled={true}>Required : !</ListItem>
+            <ListItem key="unique" disabled={true}>Unique : *</ListItem>
+            <ListItem key="multiple-values" disabled={true}>Multiple Values : [ ]</ListItem>
+            <ListItem key="relation" disabled={true}
               nestedItems={[
-                <ListItem key='relation-desc1' disabled={true} style={style.relationDesc}>
+                <ListItem key="relation-desc1" disabled={true} style={style.relationDesc}>
                   Diagonal color on field (Name) indicates field is referenced by another field of that same color
                 </ListItem>,
-                <ListItem key='relation-pic' disabled={true}>
-                  <img src='./images/relation1.png'/>
+                <ListItem key="relation-pic" disabled={true}>
+                  <img src="./images/relation1.png"/>
                 </ListItem>,
-                <ListItem key='relation-desc2' disabled={true} style={style.relationDesc}>
+                <ListItem key="relation-desc2" disabled={true} style={style.relationDesc}>
                   Colored field (AuthorId) indicates it has relation to another field of that same color
                 </ListItem>,
-                <ListItem key='relation-pic2' disabled={true}>
-                  <img src='./images/relation2.png'/>
+                <ListItem key="relation-pic2" disabled={true}>
+                  <img src="./images/relation2.png"/>
                 </ListItem>
               ]}
             >
