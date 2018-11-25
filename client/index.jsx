@@ -19,6 +19,6 @@ const ThemedIndex = () => (
 
 render(
   <Provider store={store}>
-    <ThemedIndex/>
+    <ThemedIndex />
   </Provider>, document.getElementById('app'),
 );
