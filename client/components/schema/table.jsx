@@ -61,10 +61,6 @@ const Table = ({
     deleteField([tableIndex, fieldIndex]);
   }
 
-  function handleAddField() {
-    addField(tableIndex);
-  }
-
   function handleUpdateField(event) {
     handleFieldsSelect({
       location: event.currentTarget.value,
@@ -72,9 +68,6 @@ const Table = ({
     });
   }
 
-  function handleSelectedTable(event) {
-    handleSelectedTable(event.currentTarget.value);
-  }
 
     const colors = ['darkcyan', 'dodgerblue', 'crimson', 'orangered', 'darkviolet',
       'gold', 'hotpink', 'seagreen', 'darkorange', 'tomato', 'mediumspringgreen',
@@ -191,7 +184,7 @@ const Table = ({
             <FlatButton
               backgroundColor={colors[tableData.tableID]}
               value={tableIndex}
-              onClick={handleSelectedTable}
+              onClick={event => handleSelectedTable(event.currentTarget.value)}
               className="tableButton"
             >
               <h4>{tableData.type}</h4>
@@ -200,7 +193,7 @@ const Table = ({
               className="delete-button"
               icon={<Delete />}
               value={tableIndex}
-              onClick={handleDeleteTable}
+              onClick={event => deleteTable(event.currentTarget.value)}
               style={style.deleteStyle}
             />
           </div>
@@ -208,7 +201,7 @@ const Table = ({
         <TransitionGroup>
           { fields }
         </TransitionGroup>
-        <div onClick={handleAddField} className="addField">
+        <div onClick={() => addField(tableIndex)} className="addField">
           <p style={{ marginTop: '10px' }}>
               ADD FIELD
           </p>
