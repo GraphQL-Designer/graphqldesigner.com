@@ -13,14 +13,13 @@ import './schema.css';
 // We use store.data, because of index.js reduce function
 const mapStateToProps = store => ({
   tables: store.schema.tables,
-  tableIndex: store.schema.tableIndex,
   selectedField: store.schema.selectedField,
 });
 
-const SchemaApp = props => {
+const SchemaApp = ({ tables, selectedField }) => {
   // Dynamically renders each table based on the number of tables.
   function renderTables() {
-    return Object.keys(props.tables).map(tableIndex => (
+    return Object.keys(tables).map(tableIndex => (
       <CSSTransition
         key={tableIndex}
         timeout={100}
@@ -28,13 +27,12 @@ const SchemaApp = props => {
       >
         <Table
           key={tableIndex}
-          tableData={props.tables[tableIndex]}
+          tableData={tables[tableIndex]}
           tableIndex={tableIndex}
-          fieldCount={props.tables[tableIndex].fieldCount}
+          fieldCount={tables[tableIndex].fieldCount}
         />
       </CSSTransition>
     ));
-    return tables;
   }
 
   return (
@@ -46,20 +44,20 @@ const SchemaApp = props => {
       >
         <div id="sidebar-container">
           <CSSTransition
-            in={props.selectedField.tableNum < 0}
+            in={selectedField.tableNum < 0}
             key="table"
             timeout={200}
             classNames="fade"
           >
-            <CreateTable/>
+            <CreateTable />
           </CSSTransition>
           <CSSTransition
-            in={props.selectedField.tableNum >= 0}
+            in={selectedField.tableNum >= 0}
             key="fields"
             timeout={200}
             classNames="fade"
           >
-            <TableOptions/>
+            <TableOptions />
           </CSSTransition>
         </div>
       </CSSTransition>
