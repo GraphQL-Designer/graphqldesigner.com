@@ -21,7 +21,6 @@ const style = {
   },
 };
 
-// we use store.data, because of index.js reduce function
 const mapStateToProps = store => ({
   tables: store.schema.tables,
   database: store.schema.database,
@@ -37,47 +36,36 @@ const mapDispatchToProps = dispatch => ({
   deletedFieldRelationUpdate: indexes => dispatch(actions.deletedFieldRelationUpdate(indexes))
 });
 
-class Table extends Component {
-  constructor(props) {
-    super(props);
-
-    this.handleDeleteTable = this.handleDeleteTable.bind(this);
-    this.handleDeleteField = this.handleDeleteField.bind(this);
-    this.handleAddField = this.handleAddField.bind(this);
-    this.handleUpdateField = this.handleUpdateField.bind(this);
-    this.handleSelectedTable = this.handleSelectedTable.bind(this);
+const Table = (props) => {
+  function handleDeleteTable(event) {
+    props.deleteTable(event.currentTarget.value); // need currentTarget because of Material-UI
   }
 
-  handleDeleteTable(event) {
-    this.props.deleteTable(event.currentTarget.value); // need currentTarget because of Material-UI
-  }
-
-  handleDeleteField(event) {
-    const tableIndex = this.props.tableIndex;
+  function handleDeleteField(event) {
+    const tableIndex = props.tableIndex;
     const fieldIndex = event.currentTarget.value; // need currentTarget because of Material-UI
-    const field = this.props.tables[tableIndex].fields[fieldIndex];
+    const field = props.tables[tableIndex].fields[fieldIndex];
     if (field.relation.tableIndex > -1 || field.refBy.size) {
-      this.props.deletedFieldRelationUpdate({ tableIndex, fieldIndex })
+      props.deletedFieldRelationUpdate({ tableIndex, fieldIndex })
     }
-    this.props.deleteField([tableIndex, fieldIndex]);
+    props.deleteField([tableIndex, fieldIndex]);
   }
 
-  handleAddField(event) {
-    this.props.addField(this.props.tableIndex);
+  function handleAddField(event) {
+    props.addField(props.tableIndex);
   }
 
-  handleUpdateField(event) {
-    this.props.handleFieldsSelect({
+  function handleUpdateField(event) {
+    props.handleFieldsSelect({
       location: event.currentTarget.value,
       submitUpdate: false,
     });
   }
 
-  handleSelectedTable(event) {
-    this.props.handleSelectedTable(event.currentTarget.value);
+  function handleSelectedTable(event) {
+    props.handleSelectedTable(event.currentTarget.value);
   }
 
-  render() {
     const colors = ['darkcyan', 'dodgerblue', 'crimson', 'orangered', 'darkviolet',
       'gold', 'hotpink', 'seagreen', 'darkorange', 'tomato', 'mediumspringgreen',
       'purple', 'darkkhaki', 'firebrick', 'steelblue', 'limegreen', 'sienna',
@@ -106,20 +94,20 @@ class Table extends Component {
     }
 
     const fields = [];
-    for (let property in this.props.tableData.fields) {
-      const tableIndex = this.props.tableData.fields[property].tableNum;
-      const fieldIndex = this.props.tableData.fields[property].fieldNum;
-      const fieldName = this.props.tableData.fields[property].name;
-      const fieldType = this.props.tableData.fields[property].type;
-      const relation = this.props.tableData.fields[property].relation.tableIndex;
-      const multipleValues = this.props.tableData.fields[property].multipleValues;
-      const required = this.props.tableData.fields[property].required;
-      const unique = this.props.tableData.fields[property].unique;
-      const refBy = this.props.tableData.fields[property].refBy;
+    for (let property in props.tableData.fields) {
+      const tableIndex = props.tableData.fields[property].tableNum;
+      const fieldIndex = props.tableData.fields[property].fieldNum;
+      const fieldName = props.tableData.fields[property].name;
+      const fieldType = props.tableData.fields[property].type;
+      const relation = props.tableData.fields[property].relation.tableIndex;
+      const multipleValues = props.tableData.fields[property].multipleValues;
+      const required = props.tableData.fields[property].required;
+      const unique = props.tableData.fields[property].unique;
+      const refBy = props.tableData.fields[property].refBy;
 
       // if MongoDB is selected, the ID field is no longer clickable
       let buttonDisabled = false;
-      if (this.props.database === 'MongoDB' && this.props.tableData.fields[property].name === 'id') {
+      if (props.database === 'MongoDB' && props.tableData.fields[property].name === 'id') {
         buttonDisabled = true;
       }
       // button color is clear unless there is a relation
@@ -153,7 +141,7 @@ class Table extends Component {
                 <div className="fieldContainer2" style={{ background: `${refColor}` }}>
                   <FlatButton
                     value={`${tableIndex} ${fieldIndex}`}
-                    onClick={this.handleUpdateField}
+                    onClick={handleUpdateField}
                     className="fieldButton"
                     disabled={buttonDisabled}
                   >
@@ -173,7 +161,7 @@ class Table extends Component {
                     className="delete-button"
                     icon={<Close />}
                     value={property}
-                    onClick={this.handleDeleteField}
+                    onClick={handleDeleteField}
                     style={{ minWidth: '25px' }}
                     disabled={buttonDisabled}
                   />
@@ -187,22 +175,22 @@ class Table extends Component {
     }
 
     return (
-      <div className="table" style={{ border: `1px solid ${colors[this.props.tableData.tableID]}` }}>
+      <div className="table" style={{ border: `1px solid ${colors[props.tableData.tableID]}` }}>
         <div>
           <div className="type">
             <FlatButton
-              backgroundColor={colors[this.props.tableData.tableID]}
-              value={this.props.tableIndex}
-              onClick={this.handleSelectedTable}
+              backgroundColor={colors[props.tableData.tableID]}
+              value={props.tableIndex}
+              onClick={handleSelectedTable}
               className="tableButton"
             >
-              <h4>{this.props.tableData.type}</h4>
+              <h4>{props.tableData.type}</h4>
             </FlatButton>
             <FlatButton
               className="delete-button"
               icon={<Delete />}
-              value={this.props.tableIndex}
-              onClick={this.handleDeleteTable}
+              value={props.tableIndex}
+              onClick={handleDeleteTable}
               style={style.deleteStyle}
             />
           </div>
@@ -210,14 +198,13 @@ class Table extends Component {
         <TransitionGroup>
           { fields }
         </TransitionGroup>
-        <div onClick={this.handleAddField} className="addField">
+        <div onClick={handleAddField} className="addField">
           <p style={{ marginTop: '10px' }}>
               ADD FIELD
           </p>
         </div>
       </div>
     );
-  }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Table);
