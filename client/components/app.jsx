@@ -19,19 +19,19 @@ import './app.css';
 
 const style = {
   snackBarStyle: {
-    backgroundColor: 'rgb(255,66,128)'
+    backgroundColor: 'rgb(255,66,128)',
   },
   snackBarFont: {
-    color: 'white'
+    color: 'white',
   },
   tabStyle: {
     backgroundColor: 'rgb(38,42,48)',
-    color: 'white'
+    color: 'white',
   }
 };
 
 const mapStateToProps = store => ({
-  snackBar: store.general.statusMessage
+  snackBar: store.general.statusMessage,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -39,54 +39,39 @@ const mapDispatchToProps = dispatch => ({
   handleSnackbarUpdate: status => dispatch(actions.handleSnackbarUpdate(status))
 });
 
-class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      open: false,
-    };
-    this.handleTabSelect = this.handleTabSelect.bind(this);
-    this.handleRequestClose = this.handleRequestClose.bind(this);
+const App = ({ snackBar, chooseApp, handleSnackbarUpdate }) => {
+  function handleRequestClose() {
+    handleSnackbarUpdate('');
   }
 
-  handleTabSelect(event) {
-    this.props.chooseApp(event.target.innerHTML);
-  }
-
-  handleRequestClose() {
-    this.props.handleSnackbarUpdate('');
-  }
-
-  render() {
-    return (
-      <div className="app-container">
-        <MainNav />
-        <Welcome />
-        <div className="app-body-container">
-          <Tabs className="tabs">
-            <Tab id="schemaTab" label="Schemas" style={style.tabStyle}>
-              <SchemaApp/>
-            </Tab>
-            {/* <Tab label="Queries" style={style.tabStyle}>
-              <QueryApp />
-            </Tab> */}
-            <Tab label="Code" style={style.tabStyle}>
-              <CodeApp/>
-            </Tab>
-          </Tabs>
-          <Snackbar
-            open={!!this.props.snackBar}
-            message={this.props.snackBar}
-            autoHideDuration={3000}
-            onRequestClose={this.handleRequestClose}
-            bodyStyle={style.snackBarStyle}
-            contentStyle={style.snackBarFont}
-          />
-        </div>
+  return (
+    <div className="app-container">
+      <MainNav />
+      <Welcome />
+      <div className="app-body-container">
+        <Tabs className="tabs">
+          <Tab id="schemaTab" label="Schemas" style={style.tabStyle}>
+            <SchemaApp />
+          </Tab>
+          {/* <Tab label="Queries" style={style.tabStyle}>
+            <QueryApp />
+          </Tab> */}
+          <Tab label="Code" style={style.tabStyle}>
+            <CodeApp />
+          </Tab>
+        </Tabs>
+        <Snackbar
+          open={!!snackBar}
+          message={snackBar}
+          autoHideDuration={3000}
+          onRequestClose={handleRequestClose}
+          bodyStyle={style.snackBarStyle}
+          contentStyle={style.snackBarFont}
+        />
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
 export default connect(
   mapStateToProps,
