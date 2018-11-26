@@ -29,7 +29,6 @@ const SchemaApp = ({ tables, selectedField }) => {
           key={tableIndex}
           tableData={tables[tableIndex]}
           tableIndex={tableIndex}
-          fieldCount={tables[tableIndex].fieldCount}
         />
       </CSSTransition>
     ));
