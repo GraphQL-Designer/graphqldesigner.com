@@ -9,7 +9,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
 // Components
-import App from './components/app';
+import App from './components/app.jsx';
 
 const ThemedIndex = () => (
   <MuiThemeProvider muiTheme={getMuiTheme(darkBaseTheme)}>
@@ -19,6 +19,6 @@ const ThemedIndex = () => (
 
 render(
   <Provider store={store}>
-    <ThemedIndex/>
+    <ThemedIndex />
   </Provider>, document.getElementById('app'),
 );
