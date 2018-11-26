@@ -16,7 +16,6 @@ import Snackbar from 'material-ui/Snackbar';
 // Styling
 import './app.css';
 
-
 const style = {
   snackBarStyle: {
     backgroundColor: 'rgb(255,66,128)',
@@ -27,7 +26,7 @@ const style = {
   tabStyle: {
     backgroundColor: 'rgb(38,42,48)',
     color: 'white',
-  }
+  },
 };
 
 const mapStateToProps = store => ({
@@ -35,11 +34,10 @@ const mapStateToProps = store => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  chooseApp: app => dispatch(actions.chooseApp(app)),
-  handleSnackbarUpdate: status => dispatch(actions.handleSnackbarUpdate(status))
+  handleSnackbarUpdate: status => dispatch(actions.handleSnackbarUpdate(status)),
 });
 
-const App = ({ snackBar, chooseApp, handleSnackbarUpdate }) => {
+const App = ({ snackBar, handleSnackbarUpdate }) => {
   function handleRequestClose() {
     handleSnackbarUpdate('');
   }
