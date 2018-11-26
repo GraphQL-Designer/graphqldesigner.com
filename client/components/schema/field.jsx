@@ -1,15 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import * as actions from '../../actions/actions';
 import Close from 'material-ui/svg-icons/navigation/close';
 import FlatButton from 'material-ui/FlatButton';
+import * as actions from '../../actions/actions';
 
-const mapStateToProps = store => ({
-  // tables: store.schema.tables,
-});
 
 const mapDispatchToProps = dispatch => ({
-  addField: fieldName => dispatch(actions.addFieldClicked(fieldName)),
   deleteField: fieldName => dispatch(actions.deleteField(fieldName)),
   handleFieldsSelect: field => dispatch(actions.handleFieldsSelect(field)),
   deletedFieldRelationUpdate: indexes => dispatch(actions.deletedFieldRelationUpdate(indexes))
@@ -99,4 +95,4 @@ const Field = ({
   );
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Field);
+export default connect(null, mapDispatchToProps)(Field);
