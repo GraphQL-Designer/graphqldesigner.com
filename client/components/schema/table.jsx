@@ -36,34 +36,44 @@ const mapDispatchToProps = dispatch => ({
   deletedFieldRelationUpdate: indexes => dispatch(actions.deletedFieldRelationUpdate(indexes))
 });
 
-const Table = (props) => {
+const Table = ({
+  tables,
+  tableIndex,
+  tableData,
+  database,
+  deleteTable,
+  addField,
+  deleteField,
+  handleFieldsSelect,
+  handleSelectedTable,
+  deletedFieldRelationUpdate,
+}) => {
   function handleDeleteTable(event) {
-    props.deleteTable(event.currentTarget.value); // need currentTarget because of Material-UI
+    deleteTable(event.currentTarget.value); // need currentTarget because of Material-UI
   }
 
   function handleDeleteField(event) {
-    const tableIndex = props.tableIndex;
     const fieldIndex = event.currentTarget.value; // need currentTarget because of Material-UI
-    const field = props.tables[tableIndex].fields[fieldIndex];
+    const field = tables[tableIndex].fields[fieldIndex];
     if (field.relation.tableIndex > -1 || field.refBy.size) {
-      props.deletedFieldRelationUpdate({ tableIndex, fieldIndex })
+      deletedFieldRelationUpdate({ tableIndex, fieldIndex });
     }
-    props.deleteField([tableIndex, fieldIndex]);
+    deleteField([tableIndex, fieldIndex]);
   }
 
-  function handleAddField(event) {
-    props.addField(props.tableIndex);
+  function handleAddField() {
+    addField(tableIndex);
   }
 
   function handleUpdateField(event) {
-    props.handleFieldsSelect({
+    handleFieldsSelect({
       location: event.currentTarget.value,
       submitUpdate: false,
     });
   }
 
   function handleSelectedTable(event) {
-    props.handleSelectedTable(event.currentTarget.value);
+    handleSelectedTable(event.currentTarget.value);
   }
 
     const colors = ['darkcyan', 'dodgerblue', 'crimson', 'orangered', 'darkviolet',
@@ -94,20 +104,20 @@ const Table = (props) => {
     }
 
     const fields = [];
-    for (let property in props.tableData.fields) {
-      const tableIndex = props.tableData.fields[property].tableNum;
-      const fieldIndex = props.tableData.fields[property].fieldNum;
-      const fieldName = props.tableData.fields[property].name;
-      const fieldType = props.tableData.fields[property].type;
-      const relation = props.tableData.fields[property].relation.tableIndex;
-      const multipleValues = props.tableData.fields[property].multipleValues;
-      const required = props.tableData.fields[property].required;
-      const unique = props.tableData.fields[property].unique;
-      const refBy = props.tableData.fields[property].refBy;
+    for (let property in tableData.fields) {
+      const tableIndex = tableData.fields[property].tableNum;
+      const fieldIndex = tableData.fields[property].fieldNum;
+      const fieldName = tableData.fields[property].name;
+      const fieldType = tableData.fields[property].type;
+      const relation = tableData.fields[property].relation.tableIndex;
+      const multipleValues = tableData.fields[property].multipleValues;
+      const required = tableData.fields[property].required;
+      const unique = tableData.fields[property].unique;
+      const refBy = tableData.fields[property].refBy;
 
       // if MongoDB is selected, the ID field is no longer clickable
       let buttonDisabled = false;
-      if (props.database === 'MongoDB' && props.tableData.fields[property].name === 'id') {
+      if (database === 'MongoDB' && tableData.fields[property].name === 'id') {
         buttonDisabled = true;
       }
       // button color is clear unless there is a relation
@@ -175,21 +185,21 @@ const Table = (props) => {
     }
 
     return (
-      <div className="table" style={{ border: `1px solid ${colors[props.tableData.tableID]}` }}>
+      <div className="table" style={{ border: `1px solid ${colors[tableData.tableID]}` }}>
         <div>
           <div className="type">
             <FlatButton
-              backgroundColor={colors[props.tableData.tableID]}
-              value={props.tableIndex}
+              backgroundColor={colors[tableData.tableID]}
+              value={tableIndex}
               onClick={handleSelectedTable}
               className="tableButton"
             >
-              <h4>{props.tableData.type}</h4>
+              <h4>{tableData.type}</h4>
             </FlatButton>
             <FlatButton
               className="delete-button"
               icon={<Delete />}
-              value={props.tableIndex}
+              value={tableIndex}
               onClick={handleDeleteTable}
               style={style.deleteStyle}
             />
