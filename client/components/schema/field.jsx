@@ -2,12 +2,10 @@ import React from 'react';
 import { connect } from 'react-redux';
 import * as actions from '../../actions/actions';
 import Close from 'material-ui/svg-icons/navigation/close';
-import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import FlatButton from 'material-ui/FlatButton';
 
 const mapStateToProps = store => ({
-  tables: store.schema.tables,
-  // database: store.schema.database,
+  // tables: store.schema.tables,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -17,59 +15,88 @@ const mapDispatchToProps = dispatch => ({
   deletedFieldRelationUpdate: indexes => dispatch(actions.deletedFieldRelationUpdate(indexes))
 });
 
-const Field = (props) => {
-  function handleDeleteField(event) {
-    const fieldIndex = event.currentTarget.value; // need currentTarget because of Material-UI
-    const field = tables[tableIndex].fields[fieldIndex];
+const Field = ({ 
+  deletedFieldRelationUpdate,
+  deleteField,
+  handleFieldsSelect,
+  fieldIndex,
+  tableIndex,
+  buttonColor,
+  refColor,
+  buttonDisabled,
+  field,
+}) => {
+  function handleDeleteField() {
     if (field.relation.tableIndex > -1 || field.refBy.size) {
-      props.deletedFieldRelationUpdate({ tableIndex, fieldIndex });
+      deletedFieldRelationUpdate({ tableIndex, fieldIndex });
     }
-    props.deleteField([tableIndex, fieldIndex]);
+    deleteField([tableIndex, fieldIndex]);
   }
 
   function handleUpdateField(event) {
-    props.handleFieldsSelect({
+    handleFieldsSelect({
       location: event.currentTarget.value,
       submitUpdate: false,
     });
   }
 
-  return(
+  function generateFieldText() {
+    function checkForArray(position, multipleValues) {
+      if (multipleValues) {
+        if (position === 'front') return '[ ';
+        if (position === 'back') return ' ]';
+      }
+      return '';
+    }
 
-    <CSSTransition
-    key={props.fieldIndex}
-    timeout={100}
-    classNames="fadeScale"
-    >
-        <div>
-          <div key={props.fieldIndex} className="field">
-            <div className="fieldContainer1" style={{ backgroundColor: `${props.buttonColor}` }}>
-              <div className="fieldContainer2" style={{ background: `${props.refColor}` }}>
-                <FlatButton
-                  value={`${props.tableIndex} ${props.fieldNum}`}
-                  onClick={handleUpdateField}
-                  className="fieldButton"
-                  disabled={props.buttonDisabled}
-                >
-                <p style={{ fontSize: '1.1em' }}>
-                  { props.fieldText }
-                </p>
-                </FlatButton>
-                <FlatButton
-                  className="delete-button"
-                  icon={<Close />}
-                  value={props.fieldIndex}
-                  onClick={handleDeleteField}
-                  style={{ minWidth: '25px' }}
-                  disabled={props.buttonDisabled}
-                />
-              </div>
-            </div>
+    function checkForRequired(value) {
+      if (value) return ' !';
+      return '';
+    }
+
+    function checkForUnique(value) {
+      if (value) return ' *';
+      return '';
+    }
+
+    let fieldText = `${field.name} - `;
+    fieldText += checkForArray('front', field.multipleValues);
+    fieldText += field.type;
+    fieldText += checkForRequired(field.required);
+    fieldText += checkForUnique(field.unique);
+    fieldText += checkForArray('back', field.multipleValues);
+    return fieldText;
+  }
+
+  return (
+    <div>
+      <div className="field">
+        <div className="fieldContainer1" style={{ backgroundColor: `${buttonColor}` }}>
+          <div className="fieldContainer2" style={{ background: `${refColor}` }}>
+            <FlatButton
+              value={`${tableIndex} ${field.fieldNum}`}
+              onClick={handleUpdateField}
+              className="fieldButton"
+              disabled={buttonDisabled}
+            >
+              <p style={{ fontSize: '1.1em' }}>
+                { generateFieldText() }
+              </p>
+            </FlatButton>
+            <FlatButton
+              className="delete-button"
+              icon={<Close />}
+              value={fieldIndex}
+              onClick={handleDeleteField}
+              style={{ minWidth: '25px' }}
+              disabled={buttonDisabled}
+            />
           </div>
-          <hr className="fieldBreak" />
         </div>
-      </CSSTransition>
-  )
-}
+      </div>
+      <hr className="fieldBreak" />
+    </div>
+  );
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Field);
