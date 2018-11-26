@@ -19,9 +19,8 @@ const mapStateToProps = store => ({
 
 const SchemaApp = props => {
   // Dynamically renders each table based on the number of tables.
-  const tableComponents = [];
-  Object.keys(props.tables).forEach(tableIndex => (
-    tableComponents.push(
+  function renderTables() {
+    return Object.keys(props.tables).map(tableIndex => (
       <CSSTransition
         key={tableIndex}
         timeout={100}
@@ -33,9 +32,11 @@ const SchemaApp = props => {
           tableIndex={tableIndex}
           fieldCount={props.tables[tableIndex].fieldCount}
         />
-      </CSSTransition>,
-    )
-  ));
+      </CSSTransition>
+    ));
+    return tables;
+  }
+
   return (
     <div className="schema-app-container">
       <CSSTransition
@@ -63,7 +64,7 @@ const SchemaApp = props => {
         </div>
       </CSSTransition>
       <TransitionGroup className="table-components-container" id="wallpaper-schema">
-        {tableComponents}
+        {renderTables()}
       </TransitionGroup>
     </div>
   );
