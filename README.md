@@ -1,6 +1,6 @@
 # GraphQL Designer ![alt text](https://travis-ci.org/GraphQL-Designer/graphqldesigner.com.svg?branch=dev)
 
-[GraphQL Designer](https://www.graphqldesigner.com/) is a prototyping tool to develop full-stack GraphQL applications.
+[GraphQL Designer](http://graphqldesigner.com/) is a prototyping tool to develop full-stack GraphQL applications.
 
 With a few simple inputs, GraphQL Designer auto generates code for download, to start and implement your new application including GraphQL root queries, schemas, mutations, and client queries. Also available for download are the NoSQL schemas or SQL build scripts, and a server file.
 
@@ -25,7 +25,7 @@ GraphQL Designer solves this repetition by requiring the developer just to enter
 
 ## How To Use
 
-Visit [GraphQL Designer](https://www.graphqldesigner.com/) and choose a database model to implement (MongoDB or MySQL). Based on the database selected, our application will generate the code for your database schemas or build scripts and GraphQL resolvers.
+Visit [GraphQL Designer](http://graphqldesigner.com/) and choose a database model to implement (MongoDB or MySQL). Based on the database selected, our application will generate the code for your database schemas or build scripts and GraphQL resolvers.
 
 Next create a table for every GraphQL type your application will need. Each table created will also represent the structure of your NoSQL schema or SQL table. Each created table in our application can have several fields, which not only becomes a GraphQL field, but a SQL column or NoSQL key as well.
 
