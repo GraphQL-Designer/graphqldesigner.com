@@ -66,30 +66,32 @@ class CreateTable extends React.Component {
   }
 
   handleSnackbarUpdate(message) {
-    this.props.handleSnackbarUpdate(message);
+    const { handleSnackbarUpdate } = this.props;
+    handleSnackbarUpdate(message);
   }
 
   saveTableDataInput(e) {
+    const { tables, selectedTable, tableNameChange, saveTableDataInput } = this.props;
     e.preventDefault();
     let error = false;
 
     // remove whitespace and symbols
-    let name = this.props.selectedTable.type.replace(/[^\w]/gi, '');
+    let name = selectedTable.type.replace(/[^\w]/gi, '');
 
     if (name.length > 0) {
       // capitalize first letter
       name = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
 
       // get list of table indexes
-      const listTableIndexes = Object.getOwnPropertyNames(this.props.tables);
+      const listTableIndexes = Object.getOwnPropertyNames(tables);
 
       // remove the selected table from list of tables if updating to prevent snackbar from displaying table error
-      if (this.props.selectedTable.tableID !== -1) {
-        listTableIndexes.splice(listTableIndexes.indexOf(String(this.props.selectedTable.tableID)), 1);
+      if (selectedTable.tableID !== -1) {
+        listTableIndexes.splice(listTableIndexes.indexOf(String(selectedTable.tableID)), 1);
       }
 
       for (let x = 0; x < listTableIndexes.length; x += 1) {
-        if (this.props.tables[listTableIndexes[x]].type === name) {
+        if (tables[listTableIndexes[x]].type === name) {
           error = true;
         }
       }
@@ -98,8 +100,8 @@ class CreateTable extends React.Component {
         this.handleSnackbarUpdate('Error: Table name already exist');
       } else {
         // update table name with uppercase before saving/updating
-        this.props.tableNameChange(name);
-        this.props.saveTableDataInput();
+        tableNameChange(name);
+        saveTableDataInput();
         this.handleSnackbarUpdate('');
       }
     } else {
