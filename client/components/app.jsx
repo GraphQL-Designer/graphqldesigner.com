@@ -7,7 +7,7 @@ import MainNav from './navbar/navbar.jsx';
 import Welcome from './welcome/welcome.jsx';
 import SchemaApp from './schema/schema-app.jsx';
 import CodeApp from './code/code-app.jsx';
-//import QueryApp from './query/query-app';
+//import QueryApp from './query/query-app.jsx';
 
 // Material UI Components
 import { Tabs, Tab } from 'material-ui/Tabs';
