@@ -56,7 +56,7 @@ const CreateTable = ({
   idSelector,
   openTableCreator,
   handleSnackbarUpdate
- }) => {
+}) => {
   function saveTableDataInput(e) {
     e.preventDefault();
     let error = false;
@@ -107,7 +107,7 @@ const CreateTable = ({
     openTableCreator();
   }
 
-  function renderTableName(tableID, tables) {
+  function renderTableName() {
     if (tableID >= 0) {
       return <h2>{tables[tableID].type} Table</h2>;
     }
@@ -125,7 +125,7 @@ const CreateTable = ({
         />
       )}
       <form id="create-table-form" onSubmit={saveTableDataInput}>
-        {renderTableName(tableID, tables)}
+        {renderTableName()}
         <TextField
           floatingLabelText="Table Name"
           id="tableName"
