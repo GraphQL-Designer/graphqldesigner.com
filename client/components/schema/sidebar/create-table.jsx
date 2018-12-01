@@ -46,32 +46,28 @@ const mapDispatchToProps = dispatch => ({
   handleSnackbarUpdate: status => dispatch(actions.handleSnackbarUpdate(status)),
 });
 
-class CreateTable extends React.Component {
-  constructor(props) {
-    super(props);
+const CreateTable = ({
+  tables,
+  selectedTable,
+  tableName,
+  tableID,
+  database,
+  tablesToMongoFormat,
+  saveTableDataInput,
+  tableNameChange,
+  idSelector,
+  openTableCreator,
+  handleSnackbarUpdate
+ }) => {
 
-    this.saveTableDataInput = this.saveTableDataInput.bind(this);
-    this.capitalizeFirstLetter = this.capitalizeFirstLetter.bind(this);
-    this.handleChange = this.handleChange.bind(this);
-    this.handleCheck = this.handleCheck.bind(this);
-    this.handleOpenTableCreator = this.handleOpenTableCreator.bind(this);
-    this.handleSnackbarUpdate = this.handleSnackbarUpdate.bind(this);
-  }
-
-  capitalizeFirstLetter(string) {
+  function capitalizeFirstLetter(string) {
     if (string) {
       const newString = string.replace(' ', '');
       return newString.charAt(0).toUpperCase() + newString.slice(1);
     }
   }
 
-  handleSnackbarUpdate(message) {
-    const { handleSnackbarUpdate } = this.props;
-    handleSnackbarUpdate(message);
-  }
-
-  saveTableDataInput(e) {
-    const { tables, selectedTable, tableNameChange, saveTableDataInput } = this.props;
+  function saveTableDataInput(e) {
     e.preventDefault();
     let error = false;
 
@@ -97,120 +93,110 @@ class CreateTable extends React.Component {
       }
 
       if (error) {
-        this.handleSnackbarUpdate('Error: Table name already exist');
+        handleSnackbarUpdate('Error: Table name already exist');
       } else {
         // update table name with uppercase before saving/updating
         tableNameChange(name);
         saveTableDataInput();
-        this.handleSnackbarUpdate('');
+        handleSnackbarUpdate('');
       }
     } else {
-      this.handleSnackbarUpdate('Please enter a table name (no symbols or spaces)');
+      handleSnackbarUpdate('Please enter a table name (no symbols or spaces)');
     }
   }
 
-  handleChange(e) {
-    const { tableNameChange } = this.props;
+  function handleChange(e) {
     tableNameChange(e.target.value);
   }
 
-  handleCheck() {
-    const { idSelector } = this.props;
+  function handleCheck() {
     idSelector();
   }
 
-  handleOpenTableCreator() {
-    const { openTableCreator } = this.props;
+  function handleOpenTableCreator() {
     openTableCreator();
   }
 
-  renderTableName(tableID, tables) {
+  function renderTableName(tableID, tables) {
     if (tableID >= 0) {
       return <h2>{tables[tableID].type} Table</h2>;
     }
     return <h2>Create Table</h2>;
   }
 
-  render() {
-    const { tableID, tables, tableName, selectedTable, database } = this.props; 
-    return (
-      <div id="newTable" key={tableID}>
-        {tableID >= 0 && (
-          <FlatButton
-            id="back-to-create"
-            label="Create Table"
-            icon={<KeyboardArrowLeft />}
-            onClick={this.handleOpenTableCreator}
-          />
-        )}
-
-        <form id="create-table-form" onSubmit={this.saveTableDataInput}>
-          {renderTableName(tableID, tables)}
-
-          <TextField
-            floatingLabelText="Table Name"
-            id="tableName"
-            fullWidth={true}
-            autoFocus
-            onChange={this.handleChange}
-            value={tableName}
-          />
-          <h5 style={{ textAlign: 'center', marginTop: '-4px' }}>( Singular naming convention )</h5>
-          <Checkbox
-            style={{ marginTop: '10px' }}
-            label="Unique ID"
-            onCheck={this.handleCheck}
-            id="idCheckbox"
-            checked={!!selectedTable.fields[0]}
-            disabled={database === 'MongoDB'}
-          />
-          <RaisedButton
-            label={tableID >= 0 ? 'Update Table' : 'Create Table'}
-            fullWidth={true}
-            secondary={true}
-            type="submit"
-            style={{ marginTop: '25px' }}
-          />
-        </form>
-        <br />
-        <br />
-        <div>
-          <Paper style={style.paper}>
-          <List style={{paddingLeft: "18px"}}>
-            <ListItem key="legend" disabled={true} style={{fontSize: "20px"}}><strong>Legend</strong></ListItem>
-            <Divider />
-            <ListItem key="legend-required" disabled={true}>Required : !</ListItem>
-            <ListItem key="unique" disabled={true}>Unique : *</ListItem>
-            <ListItem key="multiple-values" disabled={true}>Multiple Values : [ ]</ListItem>
-            <ListItem key="relation" disabled={true}
-              nestedItems={[
-                <ListItem key="relation-desc1" disabled={true} style={style.relationDesc}>
-                  Diagonal color on field (Name) indicates field is referenced by another field of that same color
-                </ListItem>,
-                <ListItem key="relation-pic" disabled={true}>
-                  <img src="./images/relation1.png"/>
-                </ListItem>,
-                <ListItem key="relation-desc2" disabled={true} style={style.relationDesc}>
-                  Colored field (AuthorId) indicates it has relation to another field of that same color
-                </ListItem>,
-                <ListItem key="relation-pic2" disabled={true}>
-                  <img src="./images/relation2.png"/>
-                </ListItem>
-              ]}
-            >
-              Relation :
-            </ListItem>
-          </List>
-
-          </Paper>
-        </div>
+  return (
+    <div id="newTable" key={tableID}>
+      {tableID >= 0 && (
+        <FlatButton
+          id="back-to-create"
+          label="Create Table"
+          icon={<KeyboardArrowLeft />}
+          onClick={handleOpenTableCreator}
+        />
+      )}
+      <form id="create-table-form" onSubmit={saveTableDataInput}>
+        {renderTableName(tableID, tables)}
+        <TextField
+          floatingLabelText="Table Name"
+          id="tableName"
+          fullWidth={true}
+          autoFocus
+          onChange={handleChange}
+          value={tableName}
+        />
+        <h5 style={{ textAlign: 'center', marginTop: '-4px' }}>( Singular naming convention )</h5>
+        <Checkbox
+          style={{ marginTop: '10px' }}
+          label="Unique ID"
+          onCheck={handleCheck}
+          id="idCheckbox"
+          checked={!!selectedTable.fields[0]}
+          disabled={database === 'MongoDB'}
+        />
+        <RaisedButton
+          label={tableID >= 0 ? 'Update Table' : 'Create Table'}
+          fullWidth={true}
+          secondary={true}
+          type="submit"
+          style={{ marginTop: '25px' }}
+        />
+      </form>
+      <br />
+      <br />
+      <div>
+        <Paper style={style.paper}>
+        <List style={{paddingLeft: "18px"}}>
+          <ListItem key="legend" disabled={true} style={{fontSize: "20px"}}><strong>Legend</strong></ListItem>
+          <Divider />
+          <ListItem key="legend-required" disabled={true}>Required : !</ListItem>
+          <ListItem key="unique" disabled={true}>Unique : *</ListItem>
+          <ListItem key="multiple-values" disabled={true}>Multiple Values : [ ]</ListItem>
+          <ListItem key="relation" disabled={true}
+            nestedItems={[
+              <ListItem key="relation-desc1" disabled={true} style={style.relationDesc}>
+                Diagonal color on field (Name) indicates field is referenced by another field of that same color
+              </ListItem>,
+              <ListItem key="relation-pic" disabled={true}>
+                <img src="./images/relation1.png"/>
+              </ListItem>,
+              <ListItem key="relation-desc2" disabled={true} style={style.relationDesc}>
+                Colored field (AuthorId) indicates it has relation to another field of that same color
+              </ListItem>,
+              <ListItem key="relation-pic2" disabled={true}>
+                <img src="./images/relation2.png"/>
+              </ListItem>
+            ]}
+          >
+            Relation :
+          </ListItem>
+        </List>
+        </Paper>
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
 )(CreateTable);
-
