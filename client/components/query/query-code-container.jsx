@@ -1,7 +1,7 @@
 import React from 'react';
 import './query.css';
 import { connect } from 'react-redux';
-import CreateQuerySidebar from './sidebar/create-query-sidebar';
+import CreateQuerySidebar from './sidebar/create-query-sidebar.jsx';
 
 const mapStateToProps = store => ({
   // tables: store.schema.tables,
