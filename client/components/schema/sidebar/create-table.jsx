@@ -57,14 +57,6 @@ const CreateTable = ({
   openTableCreator,
   handleSnackbarUpdate
  }) => {
-
-  function capitalizeFirstLetter(string) {
-    if (string) {
-      const newString = string.replace(' ', '');
-      return newString.charAt(0).toUpperCase() + newString.slice(1);
-    }
-  }
-
   function saveTableDataInput(e) {
     e.preventDefault();
     let error = false;
