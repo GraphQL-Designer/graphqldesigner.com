@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import SubQuery from './subquery'
+import SubQuery from './subquery.jsx'
 
 // styles
 import TextField from 'material-ui/TextField';
