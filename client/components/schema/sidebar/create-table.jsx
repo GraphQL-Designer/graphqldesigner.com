@@ -110,15 +110,18 @@ class CreateTable extends React.Component {
   }
 
   handleChange(e) {
-    this.props.tableNameChange(e.target.value);
+    const { tableNameChange } = this.props;
+    tableNameChange(e.target.value);
   }
 
   handleCheck() {
-    this.props.idSelector();
+    const { idSelector } = this.props;
+    idSelector();
   }
 
-  handleOpenTableCreator(event) {
-    this.props.openTableCreator();
+  handleOpenTableCreator() {
+    const { openTableCreator } = this.props;
+    openTableCreator();
   }
 
   render() {
