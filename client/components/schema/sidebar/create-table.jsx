@@ -38,7 +38,6 @@ const mapStateToProps = store => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  tablesToMongoFormat: () => dispatch(actions.tablesToMongoFormat()),
   saveTableDataInput: database => dispatch(actions.saveTableDataInput(database)),
   tableNameChange: tableName => dispatch(actions.handleTableNameChange(tableName)),
   idSelector: () => dispatch(actions.handleTableID()),
@@ -52,7 +51,6 @@ const CreateTable = ({
   tableName,
   tableID,
   database,
-  tablesToMongoFormat,
   saveTableDataInput,
   tableNameChange,
   idSelector,
