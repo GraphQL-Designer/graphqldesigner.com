@@ -124,17 +124,18 @@ class CreateTable extends React.Component {
     openTableCreator();
   }
 
-  render() {
-    function tableName(tableID, tables) {
-      if (tableID >= 0) {
-        return <h2>{tables[tableID].type} Table</h2>;
-      }
-      return <h2>Create Table</h2>;
+  renderTableName(tableID, tables) {
+    if (tableID >= 0) {
+      return <h2>{tables[tableID].type} Table</h2>;
     }
+    return <h2>Create Table</h2>;
+  }
 
+  render() {
+    const { tableID, tables, tableName, selectedTable, database } = this.props; 
     return (
-      <div id="newTable" key={this.props.tableID}>
-        {this.props.tableID >= 0 && (
+      <div id="newTable" key={tableID}>
+        {tableID >= 0 && (
           <FlatButton
             id="back-to-create"
             label="Create Table"
@@ -144,7 +145,7 @@ class CreateTable extends React.Component {
         )}
 
         <form id="create-table-form" onSubmit={this.saveTableDataInput}>
-          {tableName(this.props.tableID, this.props.tables)}
+          {renderTableName(tableID, tables)}
 
           <TextField
             floatingLabelText="Table Name"
@@ -152,7 +153,7 @@ class CreateTable extends React.Component {
             fullWidth={true}
             autoFocus
             onChange={this.handleChange}
-            value={this.props.tableName}
+            value={tableName}
           />
           <h5 style={{ textAlign: 'center', marginTop: '-4px' }}>( Singular naming convention )</h5>
           <Checkbox
@@ -160,11 +161,11 @@ class CreateTable extends React.Component {
             label="Unique ID"
             onCheck={this.handleCheck}
             id="idCheckbox"
-            checked={!!this.props.selectedTable.fields[0]}
-            disabled={this.props.database === 'MongoDB'}
+            checked={!!selectedTable.fields[0]}
+            disabled={database === 'MongoDB'}
           />
           <RaisedButton
-            label={this.props.tableID >= 0 ? 'Update Table' : 'Create Table'}
+            label={tableID >= 0 ? 'Update Table' : 'Create Table'}
             fullWidth={true}
             secondary={true}
             type="submit"
