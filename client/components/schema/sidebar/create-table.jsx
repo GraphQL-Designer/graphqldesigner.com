@@ -103,10 +103,6 @@ const CreateTable = ({
     idSelector();
   }
 
-  function handleOpenTableCreator() {
-    openTableCreator();
-  }
-
   function renderTableName() {
     if (tableID >= 0) {
       return <h2>{tables[tableID].type} Table</h2>;
@@ -121,7 +117,7 @@ const CreateTable = ({
           id="back-to-create"
           label="Create Table"
           icon={<KeyboardArrowLeft />}
-          onClick={handleOpenTableCreator}
+          onClick={openTableCreator}
         />
       )}
       <form id="create-table-form" onSubmit={saveTableDataInput}>
@@ -174,7 +170,7 @@ const CreateTable = ({
               </ListItem>,
               <ListItem key="relation-pic2" disabled={true}>
                 <img src="./images/relation2.png"/>
-              </ListItem>
+              </ListItem>,
             ]}
           >
             Relation :
