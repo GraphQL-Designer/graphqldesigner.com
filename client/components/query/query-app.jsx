@@ -3,9 +3,9 @@ import { connect } from 'react-redux';
 
 
 // components
-import QueryCodeContainer from './query-code-container.js';
-import CustomizeQueryContainer from './customized-query-container.js'
-import CreateQuerySidebar from './sidebar/create-query-sidebar.js';
+import QueryCodeContainer from './query-code-container.jsx';
+import CustomizeQueryContainer from './customized-query-container.jsx'
+import CreateQuerySidebar from './sidebar/create-query-sidebar.jsx';
 
 const mapStateToProps = store => ({
   // queryMode: store.query.queryMode,
