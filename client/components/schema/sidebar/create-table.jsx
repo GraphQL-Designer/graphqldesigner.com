@@ -157,7 +157,9 @@ const CreateTable = ({
           <ListItem key="legend-required" disabled={true}>Required : !</ListItem>
           <ListItem key="unique" disabled={true}>Unique : *</ListItem>
           <ListItem key="multiple-values" disabled={true}>Multiple Values : [ ]</ListItem>
-          <ListItem key="relation" disabled={true}
+          <ListItem
+            key="relation"
+            disabled={true}
             nestedItems={[
               <ListItem key="relation-desc1" disabled={true} style={style.relationDesc}>
                 Diagonal color on field (Name) indicates field is referenced by another field of that same color
