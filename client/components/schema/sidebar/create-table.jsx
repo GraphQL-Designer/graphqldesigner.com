@@ -57,7 +57,7 @@ const CreateTable = ({
   openTableCreator,
   handleSnackbarUpdate
 }) => {
-  function saveTableDataInput(e) {
+  function handleTableDataInput(e) {
     e.preventDefault();
     let error = false;
 
@@ -120,7 +120,7 @@ const CreateTable = ({
           onClick={openTableCreator}
         />
       )}
-      <form id="create-table-form" onSubmit={saveTableDataInput}>
+      <form id="create-table-form" onSubmit={handleTableDataInput}>
         {renderTableName()}
         <TextField
           floatingLabelText="Table Name"
