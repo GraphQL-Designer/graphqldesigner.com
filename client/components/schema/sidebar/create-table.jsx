@@ -163,13 +163,13 @@ const CreateTable = ({
                 Diagonal color on field (Name) indicates field is referenced by another field of that same color
               </ListItem>,
               <ListItem key="relation-pic" disabled={true}>
-                <img src="./images/relation1.png"/>
+                <img src="./images/relation1.png" alt="relations" />
               </ListItem>,
               <ListItem key="relation-desc2" disabled={true} style={style.relationDesc}>
                 Colored field (AuthorId) indicates it has relation to another field of that same color
               </ListItem>,
               <ListItem key="relation-pic2" disabled={true}>
-                <img src="./images/relation2.png"/>
+                <img src="./images/relation2.png" alt="relations" />
               </ListItem>,
             ]}
           >
