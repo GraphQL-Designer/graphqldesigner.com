@@ -137,19 +137,19 @@ const TableOptions = ({
     }
   }
 
-  let renderedTables = [];
-  let renderedFields = [];
+  const renderedTables = [];
+  const renderedFields = [];
 
   // Generate relation type options
-  for (let types in tables) {
-      renderedTables.push(
-        <MenuItem
-          key={types}
-          value={types}
-          primaryText={tables[types].type}
-        />,
-      );
-  }
+  Object.keys(tables).forEach((tableIndex) => {
+    renderedTables.push(
+      <MenuItem
+        key={tableIndex}
+        value={tableIndex}
+        primaryText={tables[tableIndex].type}
+      />,
+    );
+  });
 
   const selectedTableIndex = selectedField.relation.tableIndex;
   if (selectedTableIndex >= 0) {
