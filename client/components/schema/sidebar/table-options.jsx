@@ -42,10 +42,6 @@ const mapDispatchToProps = dispatch => ({
 class TableOptions extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      selectedTableIndex: null,
-      open: false,
-    };
 
     this.submitOptions = this.submitOptions.bind(this);
     this.handleChange = this.handleChange.bind(this);
