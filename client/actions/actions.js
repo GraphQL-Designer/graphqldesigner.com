@@ -26,11 +26,6 @@ export const deleteTable = tableIndex => ({
   payload: tableIndex,
 });
 
-export const addField = fieldName => ({
-  type: types.ADD_FIELD,
-  payload: fieldName,
-});
-
 export const deleteField = tableIndex => ({
   type: types.DELETE_FIELD,
   payload: tableIndex,
