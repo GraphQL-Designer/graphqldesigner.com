@@ -24,15 +24,12 @@ const style = {
 
 const mapStateToProps = store => ({
   database: store.schema.database,
-  // tableIndex: store.schema.tableIndexSelected,
-  addFieldClicked: store.schema.addFieldClicked,
   selectedField: store.schema.selectedField,
-  updatedField: store.schema.fieldUpdated,
   tables: store.schema.tables,
 });
 
 const mapDispatchToProps = dispatch => ({
-  createField: field => dispatch(actions.addField(field)),
+  // createField: field => dispatch(actions.addField(field)),
   saveFieldInput: database => dispatch(actions.saveFieldInput(database)),
   handleChange: field => dispatch(actions.handleFieldsUpdate(field)),
   openTableCreator: () => dispatch(actions.openTableCreator()),
@@ -41,11 +38,8 @@ const mapDispatchToProps = dispatch => ({
 
 const TableOptions = ({
   database,
-  addFieldClicked,
   selectedField,
-  updatedField,
   tables,
-  createField,
   saveFieldInput,
   handleChange,
   openTableCreator,
