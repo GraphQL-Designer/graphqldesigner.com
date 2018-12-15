@@ -137,12 +137,12 @@ const TableOptions = ({
     }
   }
 
-  let tables = [];
-  let fields = [];
+  let renderedTables = [];
+  let renderedFields = [];
 
   // Generate relation type options
   for (let types in tables) {
-      tables.push(
+      renderedTables.push(
         <MenuItem
           key={types}
           value={types}
@@ -173,7 +173,7 @@ const TableOptions = ({
         // only push to fields if multiple values is false for the field,
         // and no relation exists to selected field
         if (!tables[selectedTableIndex].fields[field].multipleValues && noRelationExists) {
-          fields.push(
+          renderedFields.push(
             <MenuItem
               key={field}
               value={field}
