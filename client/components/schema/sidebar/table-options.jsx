@@ -39,60 +39,50 @@ const mapDispatchToProps = dispatch => ({
   handleSnackbarUpdate: status => dispatch(actions.handleSnackbarUpdate(status)),
 });
 
-class TableOptions extends React.Component {
-  constructor(props) {
-    super(props);
+const TableOptions = (props) => {
 
-    this.submitOptions = this.submitOptions.bind(this);
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSelectChange = this.handleSelectChange.bind(this);
-    this.handleToggle = this.handleToggle.bind(this);
-    this.handleOpenTableCreator = this.handleOpenTableCreator.bind(this);
-    this.handleSnackbarUpdate = this.handleSnackbarUpdate.bind(this);
+  function handleOpenTableCreator() {
+    props.openTableCreator();
   }
 
-  handleOpenTableCreator() {
-    this.props.openTableCreator();
-  }
-
-  handleToggle(name, event, value) {
-    this.props.handleChange({ name: name, value: value });
+  function handleToggle(name, event, value) {
+    props.handleChange({ name: name, value: value });
 
     // set required to true and disabled if primary key is selected for SQL
-    if (this.props.database !== 'MongoDB' && name === 'primaryKey' && value === true) {
-      this.props.handleChange({ name: 'required', value: true });
+    if (props.database !== 'MongoDB' && name === 'primaryKey' && value === true) {
+      props.handleChange({ name: 'required', value: true });
     }
   }
 
-  handleChange(event) {
-    this.props.handleChange({
+  function handleChange(event) {
+    props.handleChange({
       name: event.target.name,
       value: event.target.value,
     });
   }
 
-  handleSelectChange(name, event, index, value) {
-    this.props.handleChange({ name: name, value: value });
+  function handleSelectChange(name, event, index, value) {
+    props.handleChange({ name: name, value: value });
   }
 
-  handleSnackbarUpdate(message) {
-    this.props.handleSnackbarUpdate(message);
+  function handleSnackbarUpdate(message) {
+    props.handleSnackbarUpdate(message);
   }
 
-  submitOptions(event) {
+  function submitOptions(event) {
     event.preventDefault();
 
     let error = false;
-    let currTableNum = this.props.selectedField.tableNum;
+    let currTableNum = props.selectedField.tableNum;
 
     // remove whitespace and symbols
-    const originalFieldName = this.props.selectedField.name;
-    const newFieldName = this.props.selectedField.name.replace(/[^\w]/gi, '');
+    const originalFieldName = props.selectedField.name;
+    const newFieldName = props.selectedField.name.replace(/[^\w]/gi, '');
 
     if (newFieldName.length > 0) {
       // get list of field indexes
-      const listFieldIndexes = Object.keys(this.props.tables[currTableNum].fields);
-      const selectedFieldIndex = this.props.selectedField.fieldNum;
+      const listFieldIndexes = Object.keys(props.tables[currTableNum].fields);
+      const selectedFieldIndex = props.selectedField.fieldNum;
 
       // remove the selected field from list of tables if updating to prevent snackbar from displaying table error
       if (selectedFieldIndex !== -1) {
@@ -101,71 +91,70 @@ class TableOptions extends React.Component {
 
       // if there are at least 1 field, check if there's duplicate in the list of fields in the table
       for (let x = 0; x < listFieldIndexes.length; x += 1) {
-        if (this.props.tables[currTableNum].fields[listFieldIndexes[x]].name === newFieldName) {
+        if (props.tables[currTableNum].fields[listFieldIndexes[x]].name === newFieldName) {
           error = true;
         }
       }
 
       if (error) {
-        this.handleSnackbarUpdate('Error: Field name already exist');
+        handleSnackbarUpdate('Error: Field name already exist');
       }
       // check relation conditions
       else {
-        if (this.props.selectedField.relationSelected) {
+        if (props.selectedField.relationSelected) {
           // check if Type, Field, and RefType are selected if Relation is toggled
           let relationNotFilled;
           let message;
-          if (this.props.database === 'MongoDB') {
-            relationNotFilled = this.props.selectedField.relation.tableIndex === -1 || this.props.selectedField.relation.fieldIndex === -1 || !this.props.selectedField.relation.refType;
+          if (props.database === 'MongoDB') {
+            relationNotFilled = props.selectedField.relation.tableIndex === -1 || props.selectedField.relation.fieldIndex === -1 || !props.selectedField.relation.refType;
             message = 'Please fill out Type, Field, and RefType in Relation';
           } else {
-            relationNotFilled = this.props.selectedField.relation.tableIndex === -1 || this.props.selectedField.relation.fieldIndex === -1;
+            relationNotFilled = props.selectedField.relation.tableIndex === -1 || props.selectedField.relation.fieldIndex === -1;
             message = 'Please fill out Type and Field in Foreign Key';
           }
           if (relationNotFilled) {
-            return this.handleSnackbarUpdate(message);
+            return handleSnackbarUpdate(message);
           }
         }
         // update state if field name was modified to take out spaces and symbols.
         if (originalFieldName !== newFieldName) {
-          this.handleSnackbarUpdate('Spaces or symbols were removed from field name');
-          this.props.handleChange({
+          handleSnackbarUpdate('Spaces or symbols were removed from field name');
+          props.handleChange({
             name: 'name',
             value: newFieldName,
           });
         }
         // save or update table
-        this.props.saveFieldInput();
+        props.saveFieldInput();
       }
     } else {
-      this.handleSnackbarUpdate('Please enter a field name (no space, symbols allowed)');
+      handleSnackbarUpdate('Please enter a field name (no space, symbols allowed)');
     }
   }
 
-  render() {
-    let tables = [];
-    let fields = [];
+  let tables = [];
+  let fields = [];
 
-    // Generate relation type options
-    for (let types in this.props.tables) {
+  // Generate relation type options
+  for (let types in props.tables) {
       tables.push(
         <MenuItem
           key={types}
           value={types}
-          primaryText={this.props.tables[types].type}
+          primaryText={props.tables[types].type}
         />,
       );
-    }
+  }
 
-    const selectedTableIndex = this.props.selectedField.relation.tableIndex;
-    if (selectedTableIndex >= 0) {
-      for (let field in this.props.tables[selectedTableIndex].fields) {
+  const selectedTableIndex = props.selectedField.relation.tableIndex;
+  if (selectedTableIndex >= 0) {
+      for (let field in props.tables[selectedTableIndex].fields) {
         // check if field has a relation to selected field, if so, don't push
         let noRelationExists = true;
-        const tableIndex = this.props.selectedField.tableNum;
-        let fieldIndex = this.props.selectedField.fieldNum;
+        const tableIndex = props.selectedField.tableNum;
+        let fieldIndex = props.selectedField.fieldNum;
         if (fieldIndex >= 0) {
-          const refBy = this.props.tables[tableIndex].fields[fieldIndex].refBy;
+          const refBy = props.tables[tableIndex].fields[fieldIndex].refBy;
           if (refBy.size > 0) {
             const refTypes = ['one to one', 'one to many', 'many to one', 'many to many'];
             for (let i = 0; i < refTypes.length; i += 1) {
@@ -178,19 +167,19 @@ class TableOptions extends React.Component {
         }
         // only push to fields if multiple values is false for the field,
         // and no relation exists to selected field
-        if (!this.props.tables[selectedTableIndex].fields[field].multipleValues && noRelationExists) {
+        if (!props.tables[selectedTableIndex].fields[field].multipleValues && noRelationExists) {
           fields.push(
             <MenuItem
               key={field}
               value={field}
-              primaryText={this.props.tables[selectedTableIndex].fields[field].name}
+              primaryText={props.tables[selectedTableIndex].fields[field].name}
             />,
           );
         }
       }
-    }
+  }
 
-    function fieldName(fieldNum, tableNum, tables) {
+  function fieldName(fieldNum, tableNum, tables) {
       // Header text if adding a new field
       let h2Text = 'Add Field';
       let h4Text = `in ${tables[tableNum].type}`;
@@ -205,23 +194,23 @@ class TableOptions extends React.Component {
           <h4 style={{ fontWeight: '200', marginTop: '5px' }}>{h4Text}</h4>
         </div>
       );
-    }
+  }
 
-    return (
-      <div id="fieldOptions">
-        {this.props.selectedField.tableNum > -1 && (
+  return (
+    <div id="fieldOptions">
+        {props.selectedField.tableNum > -1 && (
           <div id="options" style={{ width: '250px' }}>
             <FlatButton
               id="back-to-create"
               label="Create Table"
               icon={<KeyboardArrowLeft />}
-              onClick={this.handleOpenTableCreator}
+              onClick={handleOpenTableCreator}
             />
             <form style={{ width: '100%' }}>
               {fieldName(
-                this.props.selectedField.fieldNum,
-                this.props.selectedField.tableNum,
-                this.props.tables,
+                props.selectedField.fieldNum,
+                props.selectedField.tableNum,
+                props.tables,
               )}
 
               <TextField
@@ -230,16 +219,16 @@ class TableOptions extends React.Component {
                 fullWidth={true}
                 name="name"
                 id="fieldNameOption"
-                onChange={this.handleChange}
-                value={this.props.selectedField.name}
+                onChange={handleChange}
+                value={props.selectedField.name}
                 autoFocus
               />
 
               <SelectField
                 floatingLabelText="Type"
                 fullWidth={true}
-                value={this.props.selectedField.type}
-                onChange={this.handleSelectChange.bind(null, 'type')} // we access 'type' as name in handleChange
+                value={props.selectedField.type}
+                onChange={handleSelectChange.bind(null, 'type')} // we access 'type' as name in handleChange
               >
                 <MenuItem value="String" primaryText="String" />
                 <MenuItem value="Number" primaryText="Number" />
@@ -253,68 +242,68 @@ class TableOptions extends React.Component {
                 fullWidth={true}
                 id="defaultValueOption"
                 name="defaultValue"
-                onChange={this.handleChange}
-                value={this.props.selectedField.defaultValue}
+                onChange={handleChange}
+                value={props.selectedField.defaultValue}
               />
 
-              {this.props.database !== 'MongoDB' && (
+              {props.database !== 'MongoDB' && (
                 <Toggle
                   label="Primary Key"
-                  toggled={this.props.selectedField.primaryKey}
-                  onToggle={this.handleToggle.bind(null, 'primaryKey')}
+                  toggled={props.selectedField.primaryKey}
+                  onToggle={handleToggle.bind(null, 'primaryKey')}
                   style={style.toggle}
                 />
               )}
 
               <Toggle
                 label="Required"
-                toggled={this.props.selectedField.required}
-                onToggle={this.handleToggle.bind(null, 'required')}
+                toggled={props.selectedField.required}
+                onToggle={handleToggle.bind(null, 'required')}
                 style={style.toggle}
-                disabled={this.props.selectedField.primaryKey}
+                disabled={props.selectedField.primaryKey}
               />
 
               <Toggle
                 label="Unique"
-                toggled={this.props.selectedField.unique}
-                onToggle={this.handleToggle.bind(null, 'unique')}
+                toggled={props.selectedField.unique}
+                onToggle={handleToggle.bind(null, 'unique')}
                 style={style.toggle}
               />
 
-              {this.props.database !== 'MongoDB' && (
+              {props.database !== 'MongoDB' && (
                 <Toggle
                   label="Auto Increment"
-                  toggled={this.props.selectedField.autoIncrement}
-                  onToggle={this.handleToggle.bind(null, 'autoIncrement')}
+                  toggled={props.selectedField.autoIncrement}
+                  onToggle={handleToggle.bind(null, 'autoIncrement')}
                   style={style.toggle}
                 />
               )}
 
-              {this.props.database === 'MongoDB' && (
+              {props.database === 'MongoDB' && (
                 <Toggle
                   label="Multiple Values"
-                  toggled={this.props.selectedField.multipleValues && !this.props.selectedField.relationSelected}
-                  onToggle={this.handleToggle.bind(null, 'multipleValues')}
+                  toggled={props.selectedField.multipleValues && !props.selectedField.relationSelected}
+                  onToggle={handleToggle.bind(null, 'multipleValues')}
                   style={style.toggle}
-                  disabled={this.props.selectedField.relationSelected || this.props.selectedField.refBy.size > 0}
+                  disabled={props.selectedField.relationSelected || props.selectedField.refBy.size > 0}
                 />
               )}
 
               <Toggle
-                label={this.props.database === 'MongoDB' ? 'Relation' : 'Foreign Key'}
-                toggled={this.props.selectedField.relationSelected && !this.props.selectedField.multipleValues}
-                onToggle={this.handleToggle.bind(null, 'relationSelected')}
+                label={props.database === 'MongoDB' ? 'Relation' : 'Foreign Key'}
+                toggled={props.selectedField.relationSelected && !props.selectedField.multipleValues}
+                onToggle={handleToggle.bind(null, 'relationSelected')}
                 style={style.toggle}
-                disabled={this.props.selectedField.multipleValues}
+                disabled={props.selectedField.multipleValues}
               />
 
-              {this.props.selectedField.relationSelected && !this.props.selectedField.multipleValues && (<span>
+              {props.selectedField.relationSelected && !props.selectedField.multipleValues && (<span>
                 <div className='relation-options'>
                   <p>Type:</p>
                   <DropDownMenu
-                    value={this.props.selectedField.relation.tableIndex}
+                    value={props.selectedField.relation.tableIndex}
                     style={style.customWidth}
-                    onChange={this.handleSelectChange.bind(null, 'relation.tableIndex')} // access 'relation.type' as name in handleChange
+                    onChange={handleSelectChange.bind(null, 'relation.tableIndex')} // access 'relation.type' as name in handleChange
                   >
                     {tables}
                   </DropDownMenu>
@@ -323,9 +312,9 @@ class TableOptions extends React.Component {
                 <div className='relation-options'>
                   <p>Field:</p>
                   <DropDownMenu
-                    value={this.props.selectedField.relation.fieldIndex}
+                    value={props.selectedField.relation.fieldIndex}
                     style={style.customWidth}
-                    onChange={this.handleSelectChange.bind(null, 'relation.fieldIndex')} // access 'relation.field' as name in handleChange
+                    onChange={handleSelectChange.bind(null, 'relation.fieldIndex')} // access 'relation.field' as name in handleChange
                   >
                     {fields}
                   </DropDownMenu>
@@ -334,9 +323,9 @@ class TableOptions extends React.Component {
                 <div className='relation-options'>
                   <p>RefType:</p>
                   <DropDownMenu
-                    value={this.props.selectedField.relation.refType}
+                    value={props.selectedField.relation.refType}
                     style={style.customWidth}
-                    onChange={this.handleSelectChange.bind(null, 'relation.refType')} // access 'relation.refType' as name in handleChange
+                    onChange={handleSelectChange.bind(null, 'relation.refType')} // access 'relation.refType' as name in handleChange
                   >
                     <MenuItem value='one to one' primaryText="one to one" />
                     <MenuItem value='one to many' primaryText="one to many" />
@@ -347,17 +336,16 @@ class TableOptions extends React.Component {
               </span>)}
               <RaisedButton
                 secondary={true}
-                label={this.props.selectedField.fieldNum > -1 ? 'Update Field' : 'Create Field'}
+                label={props.selectedField.fieldNum > -1 ? 'Update Field' : 'Create Field'}
                 type="submit"
-                onClick={this.submitOptions}
+                onClick={submitOptions}
                 style={{ marginTop: '25px' }}
               />
             </form>
           </div>
         )}
       </div>
-    );
-  }
+  );
 }
 
 export default connect(
