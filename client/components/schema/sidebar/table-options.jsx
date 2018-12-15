@@ -184,21 +184,22 @@ const TableOptions = ({
       }
   }
 
-  function fieldName(fieldNum, tableNum, tables) {
-      // Header text if adding a new field
-      let h2Text = 'Add Field';
-      let h4Text = `in ${tables[tableNum].type}`;
-      // Header text if updating a field
-      if (fieldNum >= 0) {
-        h2Text = `Update ${tables[tableNum].fields[fieldNum].name}`;
-        h4Text = `in ${tables[tableNum].type}`;
-      }
-      return (
-        <div style={{ marginTop: '10px' }}>
-          <h2>{h2Text}</h2>
-          <h4 style={{ fontWeight: '200', marginTop: '5px' }}>{h4Text}</h4>
-        </div>
-      );
+  function fieldName(fieldNum, tableNum) {
+    // Header text if adding a new field
+    let h2Text = 'Add Field';
+    let h4Text = `in ${tables[tableNum].type}`;
+    // Header text if updating a field
+    if (fieldNum >= 0) {
+      h2Text = `Update ${tables[tableNum].fields[fieldNum].name}`;
+      h4Text = `in ${tables[tableNum].type}`;
+    }
+
+    return (
+      <div style={{ marginTop: '10px' }}>
+        <h2>{h2Text}</h2>
+        <h4 style={{ fontWeight: '200', marginTop: '5px' }}>{h4Text}</h4>
+      </div>
+    );
   }
 
   return (
@@ -341,7 +342,7 @@ const TableOptions = ({
       )}
     </div>
   );
-}
+};
 
 export default connect(
   mapStateToProps,
