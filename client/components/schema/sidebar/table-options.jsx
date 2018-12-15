@@ -203,153 +203,143 @@ const TableOptions = ({
 
   return (
     <div id="fieldOptions">
-        {selectedField.tableNum > -1 && (
-          <div id="options" style={{ width: '250px' }}>
-            <FlatButton
-              id="back-to-create"
-              label="Create Table"
-              icon={<KeyboardArrowLeft />}
-              onClick={handleOpenTableCreator}
+      {selectedField.tableNum > -1 && (
+        <div id="options" style={{ width: '250px' }}>
+          <FlatButton
+            id="back-to-create"
+            label="Create Table"
+            icon={<KeyboardArrowLeft />}
+            onClick={handleOpenTableCreator}
+          />
+          <form style={{ width: '100%' }}>
+            {fieldName(
+              selectedField.fieldNum,
+              selectedField.tableNum,
+              tables,
+            )}
+            <TextField
+              hintText="Field Name"
+              floatingLabelText="Field Name"
+              fullWidth={true}
+              name="name"
+              id="fieldNameOption"
+              onChange={handleChange}
+              value={selectedField.name}
+              autoFocus
             />
-            <form style={{ width: '100%' }}>
-              {fieldName(
-                selectedField.fieldNum,
-                selectedField.tableNum,
-                tables,
-              )}
-
-              <TextField
-                hintText="Field Name"
-                floatingLabelText="Field Name"
-                fullWidth={true}
-                name="name"
-                id="fieldNameOption"
-                onChange={handleChange}
-                value={selectedField.name}
-                autoFocus
-              />
-
-              <SelectField
-                floatingLabelText="Type"
-                fullWidth={true}
-                value={selectedField.type}
-                onChange={handleSelectChange.bind(null, 'type')} // we access 'type' as name in handleChange
-              >
-                <MenuItem value="String" primaryText="String" />
-                <MenuItem value="Number" primaryText="Number" />
-                <MenuItem value="Boolean" primaryText="Boolean" />
-                <MenuItem value="ID" primaryText="ID" />
-              </SelectField>
-              
-              <TextField
-                hintText="Default Value"
-                floatingLabelText="Default Value"
-                fullWidth={true}
-                id="defaultValueOption"
-                name="defaultValue"
-                onChange={handleChange}
-                value={selectedField.defaultValue}
-              />
-
-              {database !== 'MongoDB' && (
-                <Toggle
-                  label="Primary Key"
-                  toggled={selectedField.primaryKey}
-                  onToggle={handleToggle.bind(null, 'primaryKey')}
-                  style={style.toggle}
-                />
-              )}
-
+            <SelectField
+              floatingLabelText="Type"
+              fullWidth={true}
+              value={selectedField.type}
+              onChange={handleSelectChange.bind(null, 'type')} // we access 'type' as name in handleChange
+            >
+              <MenuItem value="String" primaryText="String" />
+              <MenuItem value="Number" primaryText="Number" />
+              <MenuItem value="Boolean" primaryText="Boolean" />
+              <MenuItem value="ID" primaryText="ID" />
+            </SelectField>
+            
+            <TextField
+              hintText="Default Value"
+              floatingLabelText="Default Value"
+              fullWidth={true}
+              id="defaultValueOption"
+              name="defaultValue"
+              onChange={handleChange}
+              value={selectedField.defaultValue}
+            />
+            {database !== 'MongoDB' && (
               <Toggle
-                label="Required"
-                toggled={selectedField.required}
-                onToggle={handleToggle.bind(null, 'required')}
-                style={style.toggle}
-                disabled={selectedField.primaryKey}
-              />
-
-              <Toggle
-                label="Unique"
-                toggled={selectedField.unique}
-                onToggle={handleToggle.bind(null, 'unique')}
+                label="Primary Key"
+                toggled={selectedField.primaryKey}
+                onToggle={handleToggle.bind(null, 'primaryKey')}
                 style={style.toggle}
               />
-
-              {database !== 'MongoDB' && (
-                <Toggle
-                  label="Auto Increment"
-                  toggled={selectedField.autoIncrement}
-                  onToggle={handleToggle.bind(null, 'autoIncrement')}
-                  style={style.toggle}
-                />
-              )}
-
-              {database === 'MongoDB' && (
-                <Toggle
-                  label="Multiple Values"
-                  toggled={selectedField.multipleValues && !selectedField.relationSelected}
-                  onToggle={handleToggle.bind(null, 'multipleValues')}
-                  style={style.toggle}
-                  disabled={selectedField.relationSelected || selectedField.refBy.size > 0}
-                />
-              )}
-
+            )}
+            <Toggle
+              label="Required"
+              toggled={selectedField.required}
+              onToggle={handleToggle.bind(null, 'required')}
+              style={style.toggle}
+              disabled={selectedField.primaryKey}
+            />
+            <Toggle
+              label="Unique"
+              toggled={selectedField.unique}
+              onToggle={handleToggle.bind(null, 'unique')}
+              style={style.toggle}
+            />
+            {database !== 'MongoDB' && (
               <Toggle
-                label={database === 'MongoDB' ? 'Relation' : 'Foreign Key'}
-                toggled={selectedField.relationSelected && !selectedField.multipleValues}
-                onToggle={handleToggle.bind(null, 'relationSelected')}
+                label="Auto Increment"
+                toggled={selectedField.autoIncrement}
+                onToggle={handleToggle.bind(null, 'autoIncrement')}
                 style={style.toggle}
-                disabled={selectedField.multipleValues}
               />
-
-              {selectedField.relationSelected && !selectedField.multipleValues && (<span>
-                <div className='relation-options'>
-                  <p>Type:</p>
-                  <DropDownMenu
-                    value={selectedField.relation.tableIndex}
-                    style={style.customWidth}
-                    onChange={handleSelectChange.bind(null, 'relation.tableIndex')} // access 'relation.type' as name in handleChange
-                  >
-                    {tables}
-                  </DropDownMenu>
-                </div>
-
-                <div className='relation-options'>
-                  <p>Field:</p>
-                  <DropDownMenu
-                    value={selectedField.relation.fieldIndex}
-                    style={style.customWidth}
-                    onChange={handleSelectChange.bind(null, 'relation.fieldIndex')} // access 'relation.field' as name in handleChange
-                  >
-                    {fields}
-                  </DropDownMenu>
-                </div>
-
-                <div className='relation-options'>
-                  <p>RefType:</p>
-                  <DropDownMenu
-                    value={selectedField.relation.refType}
-                    style={style.customWidth}
-                    onChange={handleSelectChange.bind(null, 'relation.refType')} // access 'relation.refType' as name in handleChange
-                  >
-                    <MenuItem value='one to one' primaryText="one to one" />
-                    <MenuItem value='one to many' primaryText="one to many" />
-                    <MenuItem value='many to one' primaryText="many to one" />
-                    {/* <MenuItem value='many to many' primaryText="many to many" /> */}
-                  </DropDownMenu>
-                </div>
-              </span>)}
-              <RaisedButton
-                secondary={true}
-                label={selectedField.fieldNum > -1 ? 'Update Field' : 'Create Field'}
-                type="submit"
-                onClick={submitOptions}
-                style={{ marginTop: '25px' }}
+            )}
+            {database === 'MongoDB' && (
+              <Toggle
+                label="Multiple Values"
+                toggled={selectedField.multipleValues && !selectedField.relationSelected}
+                onToggle={handleToggle.bind(null, 'multipleValues')}
+                style={style.toggle}
+                disabled={selectedField.relationSelected || selectedField.refBy.size > 0}
               />
-            </form>
-          </div>
-        )}
-      </div>
+            )}
+            <Toggle
+              label={database === 'MongoDB' ? 'Relation' : 'Foreign Key'}
+              toggled={selectedField.relationSelected && !selectedField.multipleValues}
+              onToggle={handleToggle.bind(null, 'relationSelected')}
+              style={style.toggle}
+              disabled={selectedField.multipleValues}
+            />
+            {selectedField.relationSelected && !selectedField.multipleValues && (
+            <span>
+              <div className='relation-options'>
+                <p>Type:</p>
+                <DropDownMenu
+                  value={selectedField.relation.tableIndex}
+                  style={style.customWidth}
+                  onChange={handleSelectChange.bind(null, 'relation.tableIndex')} // access 'relation.type' as name in handleChange
+                >
+                  {tables}
+                </DropDownMenu>
+              </div>
+              <div className='relation-options'>
+                <p>Field:</p>
+                <DropDownMenu
+                  value={selectedField.relation.fieldIndex}
+                  style={style.customWidth}
+                  onChange={handleSelectChange.bind(null, 'relation.fieldIndex')} // access 'relation.field' as name in handleChange
+                >
+                  {fields}
+                </DropDownMenu>
+              </div>
+              <div className='relation-options'>
+                <p>RefType:</p>
+                <DropDownMenu
+                  value={selectedField.relation.refType}
+                  style={style.customWidth}
+                  onChange={handleSelectChange.bind(null, 'relation.refType')} // access 'relation.refType' as name in handleChange
+                >
+                  <MenuItem value='one to one' primaryText="one to one" />
+                  <MenuItem value='one to many' primaryText="one to many" />
+                  <MenuItem value='many to one' primaryText="many to one" />
+                  {/* <MenuItem value='many to many' primaryText="many to many" /> */}
+                </DropDownMenu>
+              </div>
+            </span>)}
+            <RaisedButton
+              secondary={true}
+              label={selectedField.fieldNum > -1 ? 'Update Field' : 'Create Field'}
+              type="submit"
+              onClick={submitOptions}
+              style={{ marginTop: '25px' }}
+            />
+          </form>
+        </div>
+      )}
+    </div>
   );
 }
 
