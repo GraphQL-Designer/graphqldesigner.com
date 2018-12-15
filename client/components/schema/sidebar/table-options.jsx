@@ -153,35 +153,35 @@ const TableOptions = ({
 
   const selectedTableIndex = selectedField.relation.tableIndex;
   if (selectedTableIndex >= 0) {
-      for (let field in tables[selectedTableIndex].fields) {
-        // check if field has a relation to selected field, if so, don't push
-        let noRelationExists = true;
-        const tableIndex = selectedField.tableNum;
-        let fieldIndex = selectedField.fieldNum;
-        if (fieldIndex >= 0) {
-          const refBy = tables[tableIndex].fields[fieldIndex].refBy;
-          if (refBy.size > 0) {
-            const refTypes = ['one to one', 'one to many', 'many to one', 'many to many'];
-            for (let i = 0; i < refTypes.length; i += 1) {
-              const refInfo = `${selectedTableIndex}.${field}.${refTypes[i]}`;
-              if (refBy.has(refInfo)) {
-                noRelationExists = false;
-              }
+    Object.keys(tables[selectedTableIndex]).forEach((field) => {
+      // check if field has a relation to selected field, if so, don't push
+      let noRelationExists = true;
+      const tableIndex = selectedField.tableNum;
+      let fieldIndex = selectedField.fieldNum;
+      if (fieldIndex >= 0) {
+        const refBy = tables[tableIndex].fields[fieldIndex].refBy;
+        if (refBy.size > 0) {
+          const refTypes = ['one to one', 'one to many', 'many to one', 'many to many'];
+          for (let i = 0; i < refTypes.length; i += 1) {
+            const refInfo = `${selectedTableIndex}.${field}.${refTypes[i]}`;
+            if (refBy.has(refInfo)) {
+              noRelationExists = false;
             }
           }
         }
-        // only push to fields if multiple values is false for the field,
-        // and no relation exists to selected field
-        if (!tables[selectedTableIndex].fields[field].multipleValues && noRelationExists) {
-          renderedFields.push(
-            <MenuItem
-              key={field}
-              value={field}
-              primaryText={tables[selectedTableIndex].fields[field].name}
-            />,
-          );
-        }
       }
+      // only push to fields if multiple values is false for the field,
+      // and no relation exists to selected field
+      if (!tables[selectedTableIndex].fields[field].multipleValues && noRelationExists) {
+        renderedFields.push(
+          <MenuItem
+            key={field}
+            value={field}
+            primaryText={tables[selectedTableIndex].fields[field].name}
+          />,
+        );
+      }
+    });
   }
 
   function fieldName(fieldNum, tableNum) {
