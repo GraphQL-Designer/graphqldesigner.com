@@ -70,15 +70,11 @@ const TableOptions = ({
     handleChange({ name: name, value: value });
   }
 
-  function handleSnackbarUpdate(message) {
-    handleSnackbarUpdate(message);
-  }
-
   function submitOptions(event) {
     event.preventDefault();
 
     let error = false;
-    let currTableNum = selectedField.tableNum;
+    const currTableNum = selectedField.tableNum;
 
     // remove whitespace and symbols
     const originalFieldName = selectedField.name;
