@@ -55,12 +55,12 @@ const TableOptions = ({
     }
   }
 
-  function handleChange(event) {
-    handleChange({
-      name: event.target.name,
-      value: event.target.value,
-    });
-  }
+  // function handleChange(event) {
+  //   handleChange({
+  //     name: event.target.name,
+  //     value: event.target.value,
+  //   });
+  // }
 
   function submitOptions(event) {
     event.preventDefault();
@@ -212,7 +212,7 @@ const TableOptions = ({
               fullWidth={true}
               name="name"
               id="fieldNameOption"
-              onChange={handleChange}
+              onChange={e => handleChange({ name: e.target.name, value: e.target.value })}
               value={selectedField.name}
               autoFocus
             />
