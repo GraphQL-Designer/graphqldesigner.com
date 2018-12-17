@@ -234,7 +234,7 @@ const TableOptions = ({
               fullWidth={true}
               id="defaultValueOption"
               name="defaultValue"
-              onChange={handleChange}
+              onChange={(e, i, value) => handleChange({ name: 'type', value })}
               value={selectedField.defaultValue}
             />
             {database !== 'MongoDB' && (
