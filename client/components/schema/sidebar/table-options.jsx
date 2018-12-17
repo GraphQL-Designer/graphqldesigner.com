@@ -46,10 +46,6 @@ const TableOptions = ({
   handleSnackbarUpdate,
 }) => {
 
-  function handleOpenTableCreator() {
-    openTableCreator();
-  }
-
   function handleToggle(name, event, value) {
     handleChange({ name: name, value: value });
 
@@ -206,7 +202,7 @@ const TableOptions = ({
             id="back-to-create"
             label="Create Table"
             icon={<KeyboardArrowLeft />}
-            onClick={handleOpenTableCreator}
+            onClick={openTableCreator}
           />
           <form style={{ width: '100%' }}>
             {fieldName(
