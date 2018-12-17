@@ -62,10 +62,6 @@ const TableOptions = ({
     });
   }
 
-  function handleSelectChange(name, event, index, value) {
-    handleChange({ name: name, value: value });
-  }
-
   function submitOptions(event) {
     event.preventDefault();
 
@@ -224,7 +220,7 @@ const TableOptions = ({
               floatingLabelText="Type"
               fullWidth={true}
               value={selectedField.type}
-              onChange={handleSelectChange.bind(null, 'type')} // we access 'type' as name in handleChange
+              onChange={(e, i, value) => handleChange({ name: 'type', value })}
             >
               <MenuItem value="String" primaryText="String" />
               <MenuItem value="Number" primaryText="Number" />
@@ -293,7 +289,7 @@ const TableOptions = ({
                 <DropDownMenu
                   value={selectedField.relation.tableIndex}
                   style={style.customWidth}
-                  onChange={handleSelectChange.bind(null, 'relation.tableIndex')} // access 'relation.type' as name in handleChange
+                  onChange={(e, i, value) => handleChange({ name: 'relation.tableIndex', value })}
                 >
                   {tables}
                 </DropDownMenu>
@@ -303,7 +299,7 @@ const TableOptions = ({
                 <DropDownMenu
                   value={selectedField.relation.fieldIndex}
                   style={style.customWidth}
-                  onChange={handleSelectChange.bind(null, 'relation.fieldIndex')} // access 'relation.field' as name in handleChange
+                  onChange={(e, i, value) => handleChange({ name: 'relation.fieldIndex', value })}
                 >
                   {fields}
                 </DropDownMenu>
@@ -313,7 +309,7 @@ const TableOptions = ({
                 <DropDownMenu
                   value={selectedField.relation.refType}
                   style={style.customWidth}
-                  onChange={handleSelectChange.bind(null, 'relation.refType')} // access 'relation.refType' as name in handleChange
+                  onChange={(e, i, value) => handleChange({ name: 'relation.refType', value })}
                 >
                   <MenuItem value='one to one' primaryText="one to one" />
                   <MenuItem value='one to many' primaryText="one to many" />
