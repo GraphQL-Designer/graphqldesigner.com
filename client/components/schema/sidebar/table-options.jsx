@@ -55,13 +55,6 @@ const TableOptions = ({
     }
   }
 
-  // function handleChange(event) {
-  //   handleChange({
-  //     name: event.target.name,
-  //     value: event.target.value,
-  //   });
-  // }
-
   function submitOptions(event) {
     event.preventDefault();
 
@@ -227,7 +220,7 @@ const TableOptions = ({
               <MenuItem value="Boolean" primaryText="Boolean" />
               <MenuItem value="ID" primaryText="ID" />
             </SelectField>
-            
+      
             <TextField
               hintText="Default Value"
               floatingLabelText="Default Value"
