@@ -234,28 +234,28 @@ const TableOptions = ({
               <Toggle
                 label="Primary Key"
                 toggled={selectedField.primaryKey}
-                onToggle={(name, event, value) => handleToggle('primaryKey', value)}
+                onToggle={(event, value) => handleToggle('primaryKey', value)}
                 style={style.toggle}
               />
             )}
             <Toggle
               label="Required"
               toggled={selectedField.required}
-              onToggle={(name, event, value) => handleToggle('required', value)}
+              onToggle={(event, value) => handleToggle('required', value)}
               style={style.toggle}
               disabled={selectedField.primaryKey}
             />
             <Toggle
               label="Unique"
               toggled={selectedField.unique}
-              onToggle={(name, event, value) => handleToggle('unique', value)}
+              onToggle={(event, value) => handleToggle('unique', value)}
               style={style.toggle}
             />
             {database !== 'MongoDB' && (
               <Toggle
                 label="Auto Increment"
                 toggled={selectedField.autoIncrement}
-                onToggle={(name, event, value) => handleToggle('autoIncrement', value)}
+                onToggle={(event, value) => handleToggle('autoIncrement', value)}
                 style={style.toggle}
               />
             )}
@@ -263,7 +263,7 @@ const TableOptions = ({
               <Toggle
                 label="Multiple Values"
                 toggled={selectedField.multipleValues && !selectedField.relationSelected}
-                onToggle={(name, event, value) => handleToggle('multipleValues', value)}
+                onToggle={(event, value) => handleToggle('multipleValues', value)}
                 style={style.toggle}
                 disabled={selectedField.relationSelected || selectedField.refBy.size > 0}
               />
@@ -271,7 +271,7 @@ const TableOptions = ({
             <Toggle
               label={database === 'MongoDB' ? 'Relation' : 'Foreign Key'}
               toggled={selectedField.relationSelected && !selectedField.multipleValues}
-              onToggle={(name, event, value) => handleToggle('relationSelected', value)}
+              onToggle={(event, value) => handleToggle('relationSelected', value)}
               style={style.toggle}
               disabled={selectedField.multipleValues}
             />
