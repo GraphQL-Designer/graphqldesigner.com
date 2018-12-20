@@ -45,7 +45,6 @@ const TableOptions = ({
   openTableCreator,
   handleSnackbarUpdate,
 }) => {
-
   function handleToggle(name, value) {
     handleChange({ name: name, value: value });
 
