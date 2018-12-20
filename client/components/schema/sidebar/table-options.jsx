@@ -271,7 +271,7 @@ const TableOptions = ({
             <Toggle
               label={database === 'MongoDB' ? 'Relation' : 'Foreign Key'}
               toggled={selectedField.relationSelected && !selectedField.multipleValues}
-              onToggle={handleToggle.bind(null, 'relationSelected')}
+              onToggle={(name, event, value) => handleToggle('relationSelected', value)}
               style={style.toggle}
               disabled={selectedField.multipleValues}
             />
