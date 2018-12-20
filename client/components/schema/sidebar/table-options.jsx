@@ -248,7 +248,7 @@ const TableOptions = ({
             <Toggle
               label="Unique"
               toggled={selectedField.unique}
-              onToggle={handleToggle.bind(null, 'unique')}
+              onToggle={(name, event, value) => handleToggle('unique', value)}
               style={style.toggle}
             />
             {database !== 'MongoDB' && (
