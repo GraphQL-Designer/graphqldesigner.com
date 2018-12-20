@@ -263,7 +263,7 @@ const TableOptions = ({
               <Toggle
                 label="Multiple Values"
                 toggled={selectedField.multipleValues && !selectedField.relationSelected}
-                onToggle={handleToggle.bind(null, 'multipleValues')}
+                onToggle={(name, event, value) => handleToggle('multipleValues', value)}
                 style={style.toggle}
                 disabled={selectedField.relationSelected || selectedField.refBy.size > 0}
               />
