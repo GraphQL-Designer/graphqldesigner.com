@@ -255,7 +255,7 @@ const TableOptions = ({
               <Toggle
                 label="Auto Increment"
                 toggled={selectedField.autoIncrement}
-                onToggle={handleToggle.bind(null, 'autoIncrement')}
+                onToggle={(name, event, value) => handleToggle('autoIncrement', value)}
                 style={style.toggle}
               />
             )}
