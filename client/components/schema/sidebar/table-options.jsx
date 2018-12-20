@@ -46,7 +46,7 @@ const TableOptions = ({
   handleSnackbarUpdate,
 }) => {
 
-  function handleToggle(name, event, value) {
+  function handleToggle(name, value) {
     handleChange({ name: name, value: value });
 
     // set required to true and disabled if primary key is selected for SQL
@@ -138,7 +138,7 @@ const TableOptions = ({
       // check if field has a relation to selected field, if so, don't push
       let noRelationExists = true;
       const tableIndex = selectedField.tableNum;
-      let fieldIndex = selectedField.fieldNum;
+      const fieldIndex = selectedField.fieldNum;
       if (fieldIndex >= 0) {
         const refBy = tables[tableIndex].fields[fieldIndex].refBy;
         if (refBy.size > 0) {
@@ -220,7 +220,7 @@ const TableOptions = ({
               <MenuItem value="Boolean" primaryText="Boolean" />
               <MenuItem value="ID" primaryText="ID" />
             </SelectField>
-      
+
             <TextField
               hintText="Default Value"
               floatingLabelText="Default Value"
@@ -234,7 +234,7 @@ const TableOptions = ({
               <Toggle
                 label="Primary Key"
                 toggled={selectedField.primaryKey}
-                onToggle={handleToggle.bind(null, 'primaryKey')}
+                onToggle={(name, event, value) => handleToggle('primaryKey', value)}
                 style={style.toggle}
               />
             )}
