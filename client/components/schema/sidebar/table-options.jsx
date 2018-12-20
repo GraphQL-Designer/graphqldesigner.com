@@ -241,7 +241,7 @@ const TableOptions = ({
             <Toggle
               label="Required"
               toggled={selectedField.required}
-              onToggle={handleToggle.bind(null, 'required')}
+              onToggle={(name, event, value) => handleToggle('required', value)}
               style={style.toggle}
               disabled={selectedField.primaryKey}
             />
