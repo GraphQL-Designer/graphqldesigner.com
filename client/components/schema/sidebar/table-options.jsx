@@ -133,7 +133,7 @@ const TableOptions = ({
 
   const selectedTableIndex = selectedField.relation.tableIndex;
   if (selectedTableIndex >= 0) {
-    Object.keys(tables[selectedTableIndex]).forEach((field) => {
+    Object.keys(tables[selectedTableIndex].fields).forEach((field) => {
       // check if field has a relation to selected field, if so, don't push
       let noRelationExists = true;
       const tableIndex = selectedField.tableNum;
@@ -283,7 +283,7 @@ const TableOptions = ({
                   style={style.customWidth}
                   onChange={(e, i, value) => handleChange({ name: 'relation.tableIndex', value })}
                 >
-                  {tables}
+                  {renderedTables}
                 </DropDownMenu>
               </div>
               <div className="relation-options">
@@ -293,7 +293,7 @@ const TableOptions = ({
                   style={style.customWidth}
                   onChange={(e, i, value) => handleChange({ name: 'relation.fieldIndex', value })}
                 >
-                  {fields}
+                  {renderedFields}
                 </DropDownMenu>
               </div>
               <div className="relation-options">
