@@ -46,7 +46,7 @@ const TableOptions = ({
   handleSnackbarUpdate,
 }) => {
   function handleToggle(name, value) {
-    handleChange({ name: name, value: value });
+    handleChange({ name, value });
 
     // set required to true and disabled if primary key is selected for SQL
     if (database !== 'MongoDB' && name === 'primaryKey' && value === true) {
