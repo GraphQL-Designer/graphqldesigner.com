@@ -276,7 +276,7 @@ const TableOptions = ({
             />
             {selectedField.relationSelected && !selectedField.multipleValues && (
             <span>
-              <div className='relation-options'>
+              <div className="relation-options">
                 <p>Type:</p>
                 <DropDownMenu
                   value={selectedField.relation.tableIndex}
@@ -286,7 +286,7 @@ const TableOptions = ({
                   {tables}
                 </DropDownMenu>
               </div>
-              <div className='relation-options'>
+              <div className="relation-options">
                 <p>Field:</p>
                 <DropDownMenu
                   value={selectedField.relation.fieldIndex}
@@ -296,17 +296,17 @@ const TableOptions = ({
                   {fields}
                 </DropDownMenu>
               </div>
-              <div className='relation-options'>
+              <div className="relation-options">
                 <p>RefType:</p>
                 <DropDownMenu
                   value={selectedField.relation.refType}
                   style={style.customWidth}
                   onChange={(e, i, value) => handleChange({ name: 'relation.refType', value })}
                 >
-                  <MenuItem value='one to one' primaryText="one to one" />
-                  <MenuItem value='one to many' primaryText="one to many" />
-                  <MenuItem value='many to one' primaryText="many to one" />
-                  {/* <MenuItem value='many to many' primaryText="many to many" /> */}
+                  <MenuItem value="one to one" primaryText="one to one" />
+                  <MenuItem value="one to many" primaryText="one to many" />
+                  <MenuItem value="many to one" primaryText="many to one" />
+                  {/* <MenuItem value="many to many" primaryText="many to many" /> */}
                 </DropDownMenu>
               </div>
             </span>)}
