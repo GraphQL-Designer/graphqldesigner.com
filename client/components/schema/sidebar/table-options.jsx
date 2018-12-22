@@ -88,17 +88,8 @@ const TableOptions = ({
       else {
         if (selectedField.relationSelected) {
           // check if Type, Field, and RefType are selected if Relation is toggled
-          let relationNotFilled;
-          let message;
-          if (database === 'MongoDB') {
-            relationNotFilled = selectedField.relation.tableIndex === -1 || selectedField.relation.fieldIndex === -1 || !selectedField.relation.refType;
-            message = 'Please fill out Type, Field, and RefType in Relation';
-          } else {
-            relationNotFilled = selectedField.relation.tableIndex === -1 || selectedField.relation.fieldIndex === -1;
-            message = 'Please fill out Type and Field in Foreign Key';
-          }
-          if (relationNotFilled) {
-            return handleSnackbarUpdate(message);
+          if (selectedField.relation.tableIndex === -1 || selectedField.relation.fieldIndex === -1 || !selectedField.relation.refType) {
+            return handleSnackbarUpdate('Please fill out Type, Field and RefType for matching field');
           }
         }
         // update state if field name was modified to take out spaces and symbols.
