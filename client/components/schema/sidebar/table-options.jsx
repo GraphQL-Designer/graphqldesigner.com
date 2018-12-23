@@ -96,7 +96,7 @@ const TableOptions = ({
     }
 
     // save or update table
-    saveFieldInput();
+    return saveFieldInput();
   }
 
   const renderedTables = [];
