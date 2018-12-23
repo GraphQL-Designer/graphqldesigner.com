@@ -56,8 +56,6 @@ const TableOptions = ({
 
   function submitOptions(event) {
     event.preventDefault();
-
-    let error = false;
     const currTableNum = selectedField.tableNum;
 
     // remove whitespace and symbols
@@ -77,32 +75,27 @@ const TableOptions = ({
       // if there are at least 1 field, check if there's duplicate in the list of fields in the table
       for (let x = 0; x < listFieldIndexes.length; x += 1) {
         if (tables[currTableNum].fields[listFieldIndexes[x]].name === newFieldName) {
-          error = true;
+          return handleSnackbarUpdate('Error: Field name already exist');
         }
       }
 
-      if (error) {
-        handleSnackbarUpdate('Error: Field name already exist');
-      }
       // check relation conditions
-      else {
-        if (selectedField.relationSelected) {
-          // check if Type, Field, and RefType are selected if Relation is toggled
-          if (selectedField.relation.tableIndex === -1 || selectedField.relation.fieldIndex === -1 || !selectedField.relation.refType) {
-            return handleSnackbarUpdate('Please fill out Type, Field and RefType for matching field');
-          }
+      if (selectedField.relationSelected) {
+        // check if Type, Field, and RefType are selected if Relation is toggled
+        if (selectedField.relation.tableIndex === -1 || selectedField.relation.fieldIndex === -1 || !selectedField.relation.refType) {
+          return handleSnackbarUpdate('Please fill out Type, Field and RefType for matching field');
         }
-        // update state if field name was modified to take out spaces and symbols.
-        if (originalFieldName !== newFieldName) {
-          handleSnackbarUpdate('Spaces or symbols were removed from field name');
-          handleChange({
-            name: 'name',
-            value: newFieldName,
-          });
-        }
-        // save or update table
-        saveFieldInput();
       }
+      // update state if field name was modified to take out spaces and symbols.
+      if (originalFieldName !== newFieldName) {
+        handleSnackbarUpdate('Spaces or symbols were removed from field name');
+        handleChange({
+          name: 'name',
+          value: newFieldName,
+        });
+      }
+      // save or update table
+      saveFieldInput();
     } else {
       handleSnackbarUpdate('Please enter a field name (no space, symbols allowed)');
     }
