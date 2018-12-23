@@ -99,10 +99,6 @@ const CreateTable = ({
     tableNameChange(e.target.value);
   }
 
-  function handleCheck() {
-    idSelector();
-  }
-
   function renderTableName() {
     if (tableID >= 0) {
       return <h2>{tables[tableID].type} Table</h2>;
@@ -134,7 +130,7 @@ const CreateTable = ({
         <Checkbox
           style={{ marginTop: '10px' }}
           label="Unique ID"
-          onCheck={handleCheck}
+          onCheck={() => idSelector()}
           id="idCheckbox"
           checked={!!selectedTable.fields[0]}
           disabled={database === 'MongoDB'}
