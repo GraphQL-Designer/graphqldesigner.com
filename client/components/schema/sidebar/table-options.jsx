@@ -68,23 +68,19 @@ const TableOptions = ({
 
     // get list of field indexes
     const listFieldIndexes = Object.keys(tables[currTableNum].fields);
-    const selectedFieldIndex = selectedField.fieldNum;
+    const selectedFieldIndex = String(selectedField.fieldNum);
 
-    // remove the selected field from list of tables if updating to prevent snackbar from displaying table error
-    if (selectedFieldIndex !== -1) {
-      listFieldIndexes.splice(listFieldIndexes.indexOf(String(selectedFieldIndex)), 1);
-    }
-
-    // if there are at least 1 field, check if there's duplicate in the list of fields in the table
-    listFieldIndexes.forEach((fieldIndex) => {
-      if (tables[currTableNum].fields[fieldIndex].name === newFieldName) {
+    // check that the new field name is not the same as a previous field name
+    for (let i = 0; i < listFieldIndexes.length; i += 1) {
+      const existingFieldName = tables[currTableNum].fields[listFieldIndexes[i]].name;
+      // if field name is a duplicate (not counting our selected field if updating)
+      if (existingFieldName === newFieldName && listFieldIndexes[i] !== selectedFieldIndex) {
         return handleSnackbarUpdate('Error: Field name already exist');
       }
-    });
+    }
 
-    // check relation conditions
+    // confirm Type, Field, and RefType are filled out if Relation is toggled
     if (selectedField.relationSelected) {
-      // confirm Type, Field, and RefType are filled out if Relation is toggled
       if (selectedField.relation.tableIndex === -1 || selectedField.relation.fieldIndex === -1 || !selectedField.relation.refType) {
         return handleSnackbarUpdate('Please fill out Type, Field and RefType for matching field');
       }
