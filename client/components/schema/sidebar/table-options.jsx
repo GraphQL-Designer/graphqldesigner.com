@@ -62,43 +62,45 @@ const TableOptions = ({
     const originalFieldName = selectedField.name;
     const newFieldName = selectedField.name.replace(/[^\w]/gi, '');
 
-    if (newFieldName.length > 0) {
-      // get list of field indexes
-      const listFieldIndexes = Object.keys(tables[currTableNum].fields);
-      const selectedFieldIndex = selectedField.fieldNum;
-
-      // remove the selected field from list of tables if updating to prevent snackbar from displaying table error
-      if (selectedFieldIndex !== -1) {
-        listFieldIndexes.splice(listFieldIndexes.indexOf(String(selectedFieldIndex)), 1);
-      }
-
-      // if there are at least 1 field, check if there's duplicate in the list of fields in the table
-      for (let x = 0; x < listFieldIndexes.length; x += 1) {
-        if (tables[currTableNum].fields[listFieldIndexes[x]].name === newFieldName) {
-          return handleSnackbarUpdate('Error: Field name already exist');
-        }
-      }
-
-      // check relation conditions
-      if (selectedField.relationSelected) {
-        // check if Type, Field, and RefType are selected if Relation is toggled
-        if (selectedField.relation.tableIndex === -1 || selectedField.relation.fieldIndex === -1 || !selectedField.relation.refType) {
-          return handleSnackbarUpdate('Please fill out Type, Field and RefType for matching field');
-        }
-      }
-      // update state if field name was modified to take out spaces and symbols.
-      if (originalFieldName !== newFieldName) {
-        handleSnackbarUpdate('Spaces or symbols were removed from field name');
-        handleChange({
-          name: 'name',
-          value: newFieldName,
-        });
-      }
-      // save or update table
-      saveFieldInput();
-    } else {
-      handleSnackbarUpdate('Please enter a field name (no space, symbols allowed)');
+    if (!newFieldName.length) {
+      return handleSnackbarUpdate('Please enter a field name (no space, symbols allowed)');
     }
+
+    // get list of field indexes
+    const listFieldIndexes = Object.keys(tables[currTableNum].fields);
+    const selectedFieldIndex = selectedField.fieldNum;
+
+    // remove the selected field from list of tables if updating to prevent snackbar from displaying table error
+    if (selectedFieldIndex !== -1) {
+      listFieldIndexes.splice(listFieldIndexes.indexOf(String(selectedFieldIndex)), 1);
+    }
+
+    // if there are at least 1 field, check if there's duplicate in the list of fields in the table
+    listFieldIndexes.forEach((fieldIndex) => {
+      if (tables[currTableNum].fields[fieldIndex].name === newFieldName) {
+        return handleSnackbarUpdate('Error: Field name already exist');
+      }
+    });
+
+    // check relation conditions
+    if (selectedField.relationSelected) {
+      // confirm Type, Field, and RefType are filled out if Relation is toggled
+      if (selectedField.relation.tableIndex === -1 || selectedField.relation.fieldIndex === -1 || !selectedField.relation.refType) {
+        return handleSnackbarUpdate('Please fill out Type, Field and RefType for matching field');
+      }
+    }
+
+    // update state if field name was modified to take out spaces and symbols.
+    if (originalFieldName !== newFieldName) {
+      handleSnackbarUpdate('Spaces or symbols were removed from field name');
+      handleChange({
+        name: 'name',
+        value: newFieldName,
+      });
+    }
+
+    // save or update table
+    saveFieldInput();
   }
 
   const renderedTables = [];
