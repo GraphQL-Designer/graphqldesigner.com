@@ -54,6 +54,7 @@ const TableOptions = ({
     }
   }
 
+  // user saves added or updated field
   function submitOptions(event) {
     event.preventDefault();
     const currTableNum = selectedField.tableNum;
