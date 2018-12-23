@@ -95,10 +95,6 @@ const CreateTable = ({
     }
   }
 
-  function handleChange(e) {
-    tableNameChange(e.target.value);
-  }
-
   function renderTableName() {
     if (tableID >= 0) {
       return <h2>{tables[tableID].type} Table</h2>;
@@ -123,7 +119,7 @@ const CreateTable = ({
           id="tableName"
           fullWidth={true}
           autoFocus
-          onChange={handleChange}
+          onChange={(e) => tableNameChange(e.target.value)}
           value={tableName}
         />
         <h5 style={{ textAlign: 'center', marginTop: '-4px' }}>( Singular naming convention )</h5>
