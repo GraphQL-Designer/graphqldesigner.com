@@ -57,42 +57,34 @@ const CreateTable = ({
   openTableCreator,
   handleSnackbarUpdate
 }) => {
-  function handleTableDataInput(e) {
+  function saveTableData(e) {
     e.preventDefault();
-    let error = false;
 
     // remove whitespace and symbols
     let name = selectedTable.type.replace(/[^\w]/gi, '');
 
-    if (name.length > 0) {
-      // capitalize first letter
-      name = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
-
-      // get list of table indexes
-      const listTableIndexes = Object.getOwnPropertyNames(tables);
-
-      // remove the selected table from list of tables if updating to prevent snackbar from displaying table error
-      if (selectedTable.tableID !== -1) {
-        listTableIndexes.splice(listTableIndexes.indexOf(String(selectedTable.tableID)), 1);
-      }
-
-      for (let x = 0; x < listTableIndexes.length; x += 1) {
-        if (tables[listTableIndexes[x]].type === name) {
-          error = true;
-        }
-      }
-
-      if (error) {
-        handleSnackbarUpdate('Error: Table name already exist');
-      } else {
-        // update table name with uppercase before saving/updating
-        tableNameChange(name);
-        saveTableDataInput();
-        handleSnackbarUpdate('');
-      }
-    } else {
-      handleSnackbarUpdate('Please enter a table name (no symbols or spaces)');
+    // confirm table name was entered
+    if (!name.length) {
+      return handleSnackbarUpdate('Please enter a table name (no symbols or spaces)');
     }
+
+    // capitalize first letter
+    name = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
+
+    const tableIndices = Object.keys(tables);
+    const selectedTableIndex = String(selectedTable.tableID);
+    // confirm table name does not exist
+    for (let x = 0; x < tableIndices.length; x += 1) {
+      const existingTableName = tables[tableIndices[x]].type;
+      // if table name is a duplicate (not counting our selected table if updating)
+      if (existingTableName === name && tableIndices[x] !== selectedTableIndex) {
+        return handleSnackbarUpdate('Error: Table name already exist');
+      }
+    }
+
+    // update table name with uppercase before saving/updating
+    tableNameChange(name);
+    return saveTableDataInput();
   }
 
   function renderTableName() {
@@ -112,7 +104,7 @@ const CreateTable = ({
           onClick={openTableCreator}
         />
       )}
-      <form id="create-table-form" onSubmit={handleTableDataInput}>
+      <form id="create-table-form" onSubmit={saveTableData}>
         {renderTableName()}
         <TextField
           floatingLabelText="Table Name"
