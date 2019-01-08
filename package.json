@@ -37,12 +37,13 @@
     "watchify": "^3.11.0",
     "webpack": "^4.17.0",
     "webpack-cli": "^3.1.0",
-    "webpack-dev-server": "^3.1.5"
+    "webpack-dev-server": "^3.1.14"
   },
   "dependencies": {
     "babel-jest": "^23.6.0",
     "babel-preset-stage-2": "^6.24.1",
     "eslint-config-airbnb": "^17.1.0",
+    "event-stream": "^3.3.4",
     "express": "^4.16.3",
     "material-ui": "^0.20.2",
     "pack": "^2.1.0",
