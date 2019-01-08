@@ -100,19 +100,18 @@ const TableOptions = ({
     return saveFieldInput();
   }
 
-  const renderedTables = [];
   const renderedFields = [];
 
-  // Generate relation type options
-  Object.keys(tables).forEach((tableIndex) => {
-    renderedTables.push(
+  // returns an array of the related tables
+  function renderRelatedTables() {
+    return Object.keys(tables).map(tableIndex => (
       <MenuItem
         key={tableIndex}
         value={tableIndex}
         primaryText={tables[tableIndex].type}
-      />,
-    );
-  });
+      />
+    ));
+  }
 
   const selectedTableIndex = selectedField.relation.tableIndex;
   if (selectedTableIndex >= 0) {
@@ -266,7 +265,7 @@ const TableOptions = ({
                   style={style.customWidth}
                   onChange={(e, i, value) => handleChange({ name: 'relation.tableIndex', value })}
                 >
-                  {renderedTables}
+                  {renderRelatedTables()}
                 </DropDownMenu>
               </div>
               <div className="relation-options">
