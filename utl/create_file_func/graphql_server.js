@@ -83,10 +83,10 @@ const {
  * @returns {String} - The GraphQL type code for the inputted table
  */
 function buildGraphqlTypeSchema(table, tables, database) {
-  let query = `const ${table.type}Type = new GraphQLObjectType({\n`
-     query += `${tab}name: '${table.type}',\n`
-     query += `${tab}fields: () => ({`;
-     query += buildGraphQLTypeFields(table, tables, database)
+  let query = `const ${table.type}Type = new GraphQLObjectType({\n`;
+  query += `${tab}name: '${table.type}',\n`;
+  query += `${tab}fields: () => ({`;
+  query += buildGraphQLTypeFields(table, tables, database);
   return query += `\n${tab}})\n});\n\n`;
 }
 
@@ -193,7 +193,7 @@ function createSubQuery(field, tables, database) {
   query += `\n${tab}${tab}${tab}resolve(parent, args) {\n`;
 
   if (database === 'MongoDB') {
-    query += `return ${refTypeName}.${findDbSearchMethod(refFieldName, refFieldType, field.relation.refType)}`;
+    query += `${tab}${tab}${tab}${tab}return ${refTypeName}.${findDbSearchMethod(refFieldName, refFieldType, field.relation.refType)}`;
     query += `(${createSearchObject(refFieldName, refFieldType, field)});\n`;
     query += `${tab}${tab}${tab}}\n`;
     query += `${tab}${tab}}`;
@@ -288,10 +288,10 @@ function createFindAllRootQuery(table, database) {
  */
 function createFindByIdQuery(table, database) {
   const idFieldName = table.fields[0].name;
-  let query = `,\n${tab}${tab}${table.type.toLowerCase()}: {\n`
-     query += `${tab}${tab}${tab}type: ${table.type}Type,\n`
-     query += `${tab}${tab}${tab}args: { ${idFieldName}: { type: ${tableTypeToGraphqlType(table.fields[0].type) }}},\n`
-     query += `${tab}${tab}${tab}resolve(parent, args) {\n`;
+  let query = `,\n${tab}${tab}${table.type.toLowerCase()}: {\n`;
+  query += `${tab}${tab}${tab}type: ${table.type}Type,\n`;
+  query += `${tab}${tab}${tab}args: { ${idFieldName}: { type: ${tableTypeToGraphqlType(table.fields[0].type)}}},\n`;
+  query += `${tab}${tab}${tab}resolve(parent, args) {\n`;
 
   if (database === 'MongoDB') {
     query += `${tab}${tab}${tab}${tab}return ${table.type}.findById(args.id);\n`;

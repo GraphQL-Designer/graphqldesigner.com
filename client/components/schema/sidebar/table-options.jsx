@@ -24,345 +24,287 @@ const style = {
 
 const mapStateToProps = store => ({
   database: store.schema.database,
-  // tableIndex: store.schema.tableIndexSelected,
-  addFieldClicked: store.schema.addFieldClicked,
   selectedField: store.schema.selectedField,
-  updatedField: store.schema.fieldUpdated,
   tables: store.schema.tables,
 });
 
 const mapDispatchToProps = dispatch => ({
-  createField: field => dispatch(actions.addField(field)),
+  // createField: field => dispatch(actions.addField(field)),
   saveFieldInput: database => dispatch(actions.saveFieldInput(database)),
   handleChange: field => dispatch(actions.handleFieldsUpdate(field)),
   openTableCreator: () => dispatch(actions.openTableCreator()),
   handleSnackbarUpdate: status => dispatch(actions.handleSnackbarUpdate(status)),
 });
 
-class TableOptions extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      selectedTableIndex: null,
-      open: false,
-    };
-
-    this.submitOptions = this.submitOptions.bind(this);
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSelectChange = this.handleSelectChange.bind(this);
-    this.handleToggle = this.handleToggle.bind(this);
-    this.handleOpenTableCreator = this.handleOpenTableCreator.bind(this);
-    this.handleSnackbarUpdate = this.handleSnackbarUpdate.bind(this);
-  }
-
-  handleOpenTableCreator() {
-    this.props.openTableCreator();
-  }
-
-  handleToggle(name, event, value) {
-    this.props.handleChange({ name: name, value: value });
+const TableOptions = ({
+  database,
+  selectedField,
+  tables,
+  saveFieldInput,
+  handleChange,
+  openTableCreator,
+  handleSnackbarUpdate,
+}) => {
+  function handleToggle(name, value) {
+    handleChange({ name, value });
 
     // set required to true and disabled if primary key is selected for SQL
-    if (this.props.database !== 'MongoDB' && name === 'primaryKey' && value === true) {
-      this.props.handleChange({ name: 'required', value: true });
+    if (database !== 'MongoDB' && name === 'primaryKey' && value === true) {
+      handleChange({ name: 'required', value: true });
     }
   }
 
-  handleChange(event) {
-    this.props.handleChange({
-      name: event.target.name,
-      value: event.target.value,
-    });
-  }
-
-  handleSelectChange(name, event, index, value) {
-    this.props.handleChange({ name: name, value: value });
-  }
-
-  handleSnackbarUpdate(message) {
-    this.props.handleSnackbarUpdate(message);
-  }
-
-  submitOptions(event) {
+  // user saves added or updated field
+  function submitOptions(event) {
     event.preventDefault();
-
-    let error = false;
-    let currTableNum = this.props.selectedField.tableNum;
+    const currTableNum = selectedField.tableNum;
 
     // remove whitespace and symbols
-    const originalFieldName = this.props.selectedField.name;
-    const newFieldName = this.props.selectedField.name.replace(/[^\w]/gi, '');
+    const originalFieldName = selectedField.name;
+    const newFieldName = selectedField.name.replace(/[^\w]/gi, '');
 
-    if (newFieldName.length > 0) {
-      // get list of field indexes
-      const listFieldIndexes = Object.keys(this.props.tables[currTableNum].fields);
-      const selectedFieldIndex = this.props.selectedField.fieldNum;
-
-      // remove the selected field from list of tables if updating to prevent snackbar from displaying table error
-      if (selectedFieldIndex !== -1) {
-        listFieldIndexes.splice(listFieldIndexes.indexOf(String(selectedFieldIndex)), 1);
-      }
-
-      // if there are at least 1 field, check if there's duplicate in the list of fields in the table
-      for (let x = 0; x < listFieldIndexes.length; x += 1) {
-        if (this.props.tables[currTableNum].fields[listFieldIndexes[x]].name === newFieldName) {
-          error = true;
-        }
-      }
-
-      if (error) {
-        this.handleSnackbarUpdate('Error: Field name already exist');
-      }
-      // check relation conditions
-      else {
-        if (this.props.selectedField.relationSelected) {
-          // check if Type, Field, and RefType are selected if Relation is toggled
-          let relationNotFilled;
-          let message;
-          if (this.props.database === 'MongoDB') {
-            relationNotFilled = this.props.selectedField.relation.tableIndex === -1 || this.props.selectedField.relation.fieldIndex === -1 || !this.props.selectedField.relation.refType;
-            message = 'Please fill out Type, Field, and RefType in Relation';
-          } else {
-            relationNotFilled = this.props.selectedField.relation.tableIndex === -1 || this.props.selectedField.relation.fieldIndex === -1;
-            message = 'Please fill out Type and Field in Foreign Key';
-          }
-          if (relationNotFilled) {
-            return this.handleSnackbarUpdate(message);
-          }
-        }
-        // update state if field name was modified to take out spaces and symbols.
-        if (originalFieldName !== newFieldName) {
-          this.handleSnackbarUpdate('Spaces or symbols were removed from field name');
-          this.props.handleChange({
-            name: 'name',
-            value: newFieldName,
-          });
-        }
-        // save or update table
-        this.props.saveFieldInput();
-      }
-    } else {
-      this.handleSnackbarUpdate('Please enter a field name (no space, symbols allowed)');
+    if (!newFieldName.length) {
+      return handleSnackbarUpdate('Please enter a field name (no space, symbols allowed)');
     }
+
+    // get list of field indexes
+    const listFieldIndexes = Object.keys(tables[currTableNum].fields);
+    const selectedFieldIndex = String(selectedField.fieldNum);
+
+    // check that the new field name is not the same as a previous field name
+    for (let i = 0; i < listFieldIndexes.length; i += 1) {
+      const existingFieldName = tables[currTableNum].fields[listFieldIndexes[i]].name;
+      // if field name is a duplicate (not counting our selected field if updating)
+      if (existingFieldName === newFieldName && listFieldIndexes[i] !== selectedFieldIndex) {
+        return handleSnackbarUpdate('Error: Field name already exist');
+      }
+    }
+
+    // confirm Type, Field, and RefType are filled out if Relation is toggled
+    if (selectedField.relationSelected) {
+      if (selectedField.relation.tableIndex === -1 || selectedField.relation.fieldIndex === -1 || !selectedField.relation.refType) {
+        return handleSnackbarUpdate('Please fill out Type, Field and RefType for matching field');
+      }
+    }
+
+    // update state if field name was modified to take out spaces and symbols.
+    if (originalFieldName !== newFieldName) {
+      handleSnackbarUpdate('Spaces or symbols were removed from field name');
+      handleChange({
+        name: 'name',
+        value: newFieldName,
+      });
+    }
+
+    // save or update table
+    return saveFieldInput();
   }
 
-  render() {
-    let tables = [];
-    let fields = [];
-
-    // Generate relation type options
-    for (let types in this.props.tables) {
-      tables.push(
-        <MenuItem
-          key={types}
-          value={types}
-          primaryText={this.props.tables[types].type}
-        />,
-      );
-    }
-
-    const selectedTableIndex = this.props.selectedField.relation.tableIndex;
+  // returns an array of the related tables
+  function renderRelatedTables() {
+    return Object.keys(tables).map(tableIndex => (
+      <MenuItem
+        key={tableIndex}
+        value={tableIndex}
+        primaryText={tables[tableIndex].type}
+      />
+    ));
+  }
+  
+  function renderRelatedFields() {
+    const renderedFields = [];
+    const selectedTableIndex = selectedField.relation.tableIndex;
     if (selectedTableIndex >= 0) {
-      for (let field in this.props.tables[selectedTableIndex].fields) {
+      Object.keys(tables[selectedTableIndex].fields).forEach((field) => {
         // check if field has a relation to selected field, if so, don't push
         let noRelationExists = true;
-        const tableIndex = this.props.selectedField.tableNum;
-        let fieldIndex = this.props.selectedField.fieldNum;
+        const tableIndex = selectedField.tableNum;
+        const fieldIndex = selectedField.fieldNum;
         if (fieldIndex >= 0) {
-          const refBy = this.props.tables[tableIndex].fields[fieldIndex].refBy;
-          if (refBy.size > 0) {
-            const refTypes = ['one to one', 'one to many', 'many to one', 'many to many'];
-            for (let i = 0; i < refTypes.length; i += 1) {
-              const refInfo = `${selectedTableIndex}.${field}.${refTypes[i]}`;
-              if (refBy.has(refInfo)) {
-                noRelationExists = false;
-              }
+          const { refBy } = tables[tableIndex].fields[fieldIndex];
+          const refTypes = ['one to one', 'one to many', 'many to one', 'many to many'];
+          for (let i = 0; i < refTypes.length; i += 1) {
+            const refInfo = `${selectedTableIndex}.${field}.${refTypes[i]}`;
+            if (refBy.has(refInfo)) {
+              noRelationExists = false;
             }
           }
         }
         // only push to fields if multiple values is false for the field,
         // and no relation exists to selected field
-        if (!this.props.tables[selectedTableIndex].fields[field].multipleValues && noRelationExists) {
-          fields.push(
+        if (!tables[selectedTableIndex].fields[field].multipleValues && noRelationExists) {
+          renderedFields.push(
             <MenuItem
               key={field}
               value={field}
-              primaryText={this.props.tables[selectedTableIndex].fields[field].name}
+              primaryText={tables[selectedTableIndex].fields[field].name}
             />,
           );
         }
-      }
+      });
     }
+    return renderedFields;
+  }
 
-    function fieldName(fieldNum, tableNum, tables) {
-      // Header text if adding a new field
-      let h2Text = 'Add Field';
-      let h4Text = `in ${tables[tableNum].type}`;
-      // Header text if updating a field
-      if (fieldNum >= 0) {
-        h2Text = `Update ${tables[tableNum].fields[fieldNum].name}`;
-        h4Text = `in ${tables[tableNum].type}`;
-      }
-      return (
-        <div style={{ marginTop: '10px' }}>
-          <h2>{h2Text}</h2>
-          <h4 style={{ fontWeight: '200', marginTop: '5px' }}>{h4Text}</h4>
-        </div>
-      );
+  function fieldName(fieldNum, tableNum) {
+    // Header text if adding a new field
+    let h2Text = 'Add Field';
+    let h4Text = `in ${tables[tableNum].type}`;
+    // Header text if updating a field
+    if (fieldNum >= 0) {
+      h2Text = `Update ${tables[tableNum].fields[fieldNum].name}`;
+      h4Text = `in ${tables[tableNum].type}`;
     }
 
     return (
-      <div id="fieldOptions">
-        {this.props.selectedField.tableNum > -1 && (
-          <div id="options" style={{ width: '250px' }}>
-            <FlatButton
-              id="back-to-create"
-              label="Create Table"
-              icon={<KeyboardArrowLeft />}
-              onClick={this.handleOpenTableCreator}
-            />
-            <form style={{ width: '100%' }}>
-              {fieldName(
-                this.props.selectedField.fieldNum,
-                this.props.selectedField.tableNum,
-                this.props.tables,
-              )}
-
-              <TextField
-                hintText="Field Name"
-                floatingLabelText="Field Name"
-                fullWidth={true}
-                name="name"
-                id="fieldNameOption"
-                onChange={this.handleChange}
-                value={this.props.selectedField.name}
-                autoFocus
-              />
-
-              <SelectField
-                floatingLabelText="Type"
-                fullWidth={true}
-                value={this.props.selectedField.type}
-                onChange={this.handleSelectChange.bind(null, 'type')} // we access 'type' as name in handleChange
-              >
-                <MenuItem value="String" primaryText="String" />
-                <MenuItem value="Number" primaryText="Number" />
-                <MenuItem value="Boolean" primaryText="Boolean" />
-                <MenuItem value="ID" primaryText="ID" />
-              </SelectField>
-              
-              <TextField
-                hintText="Default Value"
-                floatingLabelText="Default Value"
-                fullWidth={true}
-                id="defaultValueOption"
-                name="defaultValue"
-                onChange={this.handleChange}
-                value={this.props.selectedField.defaultValue}
-              />
-
-              {this.props.database !== 'MongoDB' && (
-                <Toggle
-                  label="Primary Key"
-                  toggled={this.props.selectedField.primaryKey}
-                  onToggle={this.handleToggle.bind(null, 'primaryKey')}
-                  style={style.toggle}
-                />
-              )}
-
-              <Toggle
-                label="Required"
-                toggled={this.props.selectedField.required}
-                onToggle={this.handleToggle.bind(null, 'required')}
-                style={style.toggle}
-                disabled={this.props.selectedField.primaryKey}
-              />
-
-              <Toggle
-                label="Unique"
-                toggled={this.props.selectedField.unique}
-                onToggle={this.handleToggle.bind(null, 'unique')}
-                style={style.toggle}
-              />
-
-              {this.props.database !== 'MongoDB' && (
-                <Toggle
-                  label="Auto Increment"
-                  toggled={this.props.selectedField.autoIncrement}
-                  onToggle={this.handleToggle.bind(null, 'autoIncrement')}
-                  style={style.toggle}
-                />
-              )}
-
-              {this.props.database === 'MongoDB' && (
-                <Toggle
-                  label="Multiple Values"
-                  toggled={this.props.selectedField.multipleValues && !this.props.selectedField.relationSelected}
-                  onToggle={this.handleToggle.bind(null, 'multipleValues')}
-                  style={style.toggle}
-                  disabled={this.props.selectedField.relationSelected || this.props.selectedField.refBy.size > 0}
-                />
-              )}
-
-              <Toggle
-                label={this.props.database === 'MongoDB' ? 'Relation' : 'Foreign Key'}
-                toggled={this.props.selectedField.relationSelected && !this.props.selectedField.multipleValues}
-                onToggle={this.handleToggle.bind(null, 'relationSelected')}
-                style={style.toggle}
-                disabled={this.props.selectedField.multipleValues}
-              />
-
-              {this.props.selectedField.relationSelected && !this.props.selectedField.multipleValues && (<span>
-                <div className='relation-options'>
-                  <p>Type:</p>
-                  <DropDownMenu
-                    value={this.props.selectedField.relation.tableIndex}
-                    style={style.customWidth}
-                    onChange={this.handleSelectChange.bind(null, 'relation.tableIndex')} // access 'relation.type' as name in handleChange
-                  >
-                    {tables}
-                  </DropDownMenu>
-                </div>
-
-                <div className='relation-options'>
-                  <p>Field:</p>
-                  <DropDownMenu
-                    value={this.props.selectedField.relation.fieldIndex}
-                    style={style.customWidth}
-                    onChange={this.handleSelectChange.bind(null, 'relation.fieldIndex')} // access 'relation.field' as name in handleChange
-                  >
-                    {fields}
-                  </DropDownMenu>
-                </div>
-
-                <div className='relation-options'>
-                  <p>RefType:</p>
-                  <DropDownMenu
-                    value={this.props.selectedField.relation.refType}
-                    style={style.customWidth}
-                    onChange={this.handleSelectChange.bind(null, 'relation.refType')} // access 'relation.refType' as name in handleChange
-                  >
-                    <MenuItem value='one to one' primaryText="one to one" />
-                    <MenuItem value='one to many' primaryText="one to many" />
-                    <MenuItem value='many to one' primaryText="many to one" />
-                    {/* <MenuItem value='many to many' primaryText="many to many" /> */}
-                  </DropDownMenu>
-                </div>
-              </span>)}
-              <RaisedButton
-                secondary={true}
-                label={this.props.selectedField.fieldNum > -1 ? 'Update Field' : 'Create Field'}
-                type="submit"
-                onClick={this.submitOptions}
-                style={{ marginTop: '25px' }}
-              />
-            </form>
-          </div>
-        )}
+      <div style={{ marginTop: '10px' }}>
+        <h2>{h2Text}</h2>
+        <h4 style={{ fontWeight: '200', marginTop: '5px' }}>{h4Text}</h4>
       </div>
     );
   }
-}
+
+  return (
+    <div id="fieldOptions">
+      {selectedField.tableNum > -1 && (
+        <div id="options" style={{ width: '250px' }}>
+          <FlatButton
+            id="back-to-create"
+            label="Create Table"
+            icon={<KeyboardArrowLeft />}
+            onClick={openTableCreator}
+          />
+          <form style={{ width: '100%' }}>
+            {fieldName(
+              selectedField.fieldNum,
+              selectedField.tableNum,
+              tables,
+            )}
+            <TextField
+              hintText="Field Name"
+              floatingLabelText="Field Name"
+              fullWidth={true}
+              name="name"
+              id="fieldNameOption"
+              onChange={e => handleChange({ name: e.target.name, value: e.target.value })}
+              value={selectedField.name}
+              autoFocus
+            />
+            <SelectField
+              floatingLabelText="Type"
+              fullWidth={true}
+              value={selectedField.type}
+              onChange={(e, i, value) => handleChange({ name: 'type', value })}
+            >
+              <MenuItem value="String" primaryText="String" />
+              <MenuItem value="Number" primaryText="Number" />
+              <MenuItem value="Boolean" primaryText="Boolean" />
+              <MenuItem value="ID" primaryText="ID" />
+            </SelectField>
+
+            <TextField
+              hintText="Default Value"
+              floatingLabelText="Default Value"
+              fullWidth={true}
+              id="defaultValueOption"
+              name="defaultValue"
+              onChange={e => handleChange({ name: e.target.name, value: e.target.value })}
+              value={selectedField.defaultValue}
+            />
+            {database !== 'MongoDB' && (
+              <Toggle
+                label="Primary Key"
+                toggled={selectedField.primaryKey}
+                onToggle={(event, value) => handleToggle('primaryKey', value)}
+                style={style.toggle}
+              />
+            )}
+            <Toggle
+              label="Required"
+              toggled={selectedField.required}
+              onToggle={(event, value) => handleToggle('required', value)}
+              style={style.toggle}
+              disabled={selectedField.primaryKey}
+            />
+            <Toggle
+              label="Unique"
+              toggled={selectedField.unique}
+              onToggle={(event, value) => handleToggle('unique', value)}
+              style={style.toggle}
+            />
+            {database !== 'MongoDB' && (
+              <Toggle
+                label="Auto Increment"
+                toggled={selectedField.autoIncrement}
+                onToggle={(event, value) => handleToggle('autoIncrement', value)}
+                style={style.toggle}
+              />
+            )}
+            {database === 'MongoDB' && (
+              <Toggle
+                label="Multiple Values"
+                toggled={selectedField.multipleValues && !selectedField.relationSelected}
+                onToggle={(event, value) => handleToggle('multipleValues', value)}
+                style={style.toggle}
+                disabled={selectedField.relationSelected || selectedField.refBy.size > 0}
+              />
+            )}
+            <Toggle
+              label={database === 'MongoDB' ? 'Relation' : 'Foreign Key'}
+              toggled={selectedField.relationSelected && !selectedField.multipleValues}
+              onToggle={(event, value) => handleToggle('relationSelected', value)}
+              style={style.toggle}
+              disabled={selectedField.multipleValues}
+            />
+            {selectedField.relationSelected && !selectedField.multipleValues && (
+            <span>
+              <div className="relation-options">
+                <p>Type:</p>
+                <DropDownMenu
+                  value={selectedField.relation.tableIndex}
+                  style={style.customWidth}
+                  onChange={(e, i, value) => handleChange({ name: 'relation.tableIndex', value })}
+                >
+                  {renderRelatedTables()}
+                </DropDownMenu>
+              </div>
+              <div className="relation-options">
+                <p>Field:</p>
+                <DropDownMenu
+                  value={selectedField.relation.fieldIndex}
+                  style={style.customWidth}
+                  onChange={(e, i, value) => handleChange({ name: 'relation.fieldIndex', value })}
+                >
+                  {renderRelatedFields()}
+                </DropDownMenu>
+              </div>
+              <div className="relation-options">
+                <p>RefType:</p>
+                <DropDownMenu
+                  value={selectedField.relation.refType}
+                  style={style.customWidth}
+                  onChange={(e, i, value) => handleChange({ name: 'relation.refType', value })}
+                >
+                  <MenuItem value="one to one" primaryText="one to one" />
+                  <MenuItem value="one to many" primaryText="one to many" />
+                  <MenuItem value="many to one" primaryText="many to one" />
+                  {/* <MenuItem value="many to many" primaryText="many to many" /> */}
+                </DropDownMenu>
+              </div>
+            </span>)}
+            <RaisedButton
+              secondary={true}
+              label={selectedField.fieldNum > -1 ? 'Update Field' : 'Create Field'}
+              type="submit"
+              onClick={submitOptions}
+              style={{ marginTop: '25px' }}
+            />
+          </form>
+        </div>
+      )}
+    </div>
+  );
+};
 
 export default connect(
   mapStateToProps,
