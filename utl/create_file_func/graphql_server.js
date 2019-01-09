@@ -193,7 +193,7 @@ function createSubQuery(field, tables, database) {
   query += `\n${tab}${tab}${tab}resolve(parent, args) {\n`;
 
   if (database === 'MongoDB') {
-    query += `return ${refTypeName}.${findDbSearchMethod(refFieldName, refFieldType, field.relation.refType)}`;
+    query += `${tab}${tab}${tab}${tab}return ${refTypeName}.${findDbSearchMethod(refFieldName, refFieldType, field.relation.refType)}`;
     query += `(${createSearchObject(refFieldName, refFieldType, field)});\n`;
     query += `${tab}${tab}${tab}}\n`;
     query += `${tab}${tab}}`;
