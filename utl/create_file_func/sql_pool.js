@@ -3,7 +3,7 @@ function sqlPool(database) {
 
   // if MySQL, create MySQL specific code
   if (database === 'MySQL') {
-    query += `const mysql = require('mysql')
+    query += `const mysql = require('promise-mysql')
 
 const pool = mysql.createPool({
   connectionLimit: 10,
