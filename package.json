@@ -19,7 +19,9 @@
     "dev": "webpack-dev-server",
     "server": "nodemon server/index.js",
     "start": "nodemon server/index.js",
-    "test": "jest"
+    "test": "jest",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",
@@ -52,6 +54,8 @@
     "react-transition-group": "^2.4.0",
     "redux": "^4.0.0",
     "regenerator-runtime": "^0.12.1",
-    "zip-local": "^0.3.4"
-  }
+    "zip-local": "^0.3.4",
+    "snyk": "^1.316.1"
+  },
+  "snyk": true
 }
